@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-04-28T13:52:38.000Z</updated>
+  <updated>2017-04-28T14:20:59.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -16,16 +16,40 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>demo1</title>
+    <link href="http://bestlixiang.site/2017/04/28/demo1/"/>
+    <id>http://bestlixiang.site/2017/04/28/demo1/</id>
+    <published>2017-04-28T14:18:41.000Z</published>
+    <updated>2017-04-28T14:20:59.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="大概就是这样"><a href="#大概就是这样" class="headerlink" title="大概就是这样"></a>大概就是这样</h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;大概就是这样&quot;&gt;&lt;a href=&quot;#大概就是这样&quot; class=&quot;headerlink&quot; title=&quot;大概就是这样&quot;&gt;&lt;/a&gt;大概就是这样&lt;/h2&gt;
+    
+    </summary>
+    
+      <category term="-Diary" scheme="http://bestlixiang.site/categories/Diary/"/>
+    
+    
+      <category term="-demo1" scheme="http://bestlixiang.site/tags/demo1/"/>
+    
+  </entry>
+  
+  <entry>
     <title>test</title>
     <link href="http://bestlixiang.site/2017/04/28/test/"/>
     <id>http://bestlixiang.site/2017/04/28/test/</id>
     <published>2017-04-28T13:52:38.000Z</published>
-    <updated>2017-04-28T13:52:38.000Z</updated>
+    <updated>2017-04-28T14:16:31.000Z</updated>
     
     <summary type="html">
     
     </summary>
     
+    
+      <category term="-test" scheme="http://bestlixiang.site/tags/test/"/>
     
   </entry>
   
