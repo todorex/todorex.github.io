@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-04-28T15:54:23.000Z</updated>
+  <updated>2017-04-29T00:31:47.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,107 +14,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>demo2</title>
-    <link href="http://bestlixiang.site/2017/04/28/demo2/"/>
-    <id>http://bestlixiang.site/2017/04/28/demo2/</id>
-    <published>2017-04-28T15:41:48.000Z</published>
-    <updated>2017-04-28T15:54:23.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="这样好不好"><a href="#这样好不好" class="headerlink" title="这样好不好"></a>这样好不好</h2>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;这样好不好&quot;&gt;&lt;a href=&quot;#这样好不好&quot; class=&quot;headerlink&quot; title=&quot;这样好不好&quot;&gt;&lt;/a&gt;这样好不好&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="life" scheme="http://bestlixiang.site/categories/life/"/>
-    
-    
-      <category term="abc:bcd" scheme="http://bestlixiang.site/tags/abc-bcd/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>demo1</title>
-    <link href="http://bestlixiang.site/2017/04/28/demo1/"/>
-    <id>http://bestlixiang.site/2017/04/28/demo1/</id>
-    <published>2017-04-28T14:18:41.000Z</published>
-    <updated>2017-04-28T15:37:36.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="大概就是这样le"><a href="#大概就是这样le" class="headerlink" title="大概就是这样le"></a>大概就是这样le</h2>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;大概就是这样le&quot;&gt;&lt;a href=&quot;#大概就是这样le&quot; class=&quot;headerlink&quot; title=&quot;大概就是这样le&quot;&gt;&lt;/a&gt;大概就是这样le&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="Testing" scheme="http://bestlixiang.site/categories/Testing/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>test</title>
-    <link href="http://bestlixiang.site/2017/04/28/test/"/>
-    <id>http://bestlixiang.site/2017/04/28/test/</id>
-    <published>2017-04-28T13:52:38.000Z</published>
-    <updated>2017-04-28T14:16:31.000Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-      <category term="-test" scheme="http://bestlixiang.site/tags/test/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>demo</title>
-    <link href="http://bestlixiang.site/2017/04/27/demo/"/>
-    <id>http://bestlixiang.site/2017/04/27/demo/</id>
-    <published>2017-04-27T14:35:54.000Z</published>
-    <updated>2017-04-27T14:35:54.000Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://bestlixiang.site/2017/04/27/hello-world/"/>
-    <id>http://bestlixiang.site/2017/04/27/hello-world/</id>
-    <published>2017-04-27T14:34:34.000Z</published>
-    <updated>2017-04-27T14:34:34.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>iis实现手机端访问电脑本地服务器</title>
