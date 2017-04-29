@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="服务器," />
+  <meta name="keywords" content="面试," />
 
 
 
@@ -89,17 +89,17 @@
 
 
 
-<meta name="description" content="引：对于很多没有服务器的人来说,实现手机端访问自己写的网页还是有困难的，虽然我们可以可以利用githubpage来实现挂载页面，但是调试起来还是不方便，所以iis就成为了一种简单的方式。">
-<meta name="keywords" content="服务器">
+<meta name="description" content="简单，不为人知.">
+<meta name="keywords" content="面试">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iis实现手机端访问电脑本地服务器">
-<meta property="og:url" content="http://bestlixiang.site/2017/04/24/iis实现手机端访问电脑本地服务器/index.html">
+<meta property="og:title" content="记一次失败的面试">
+<meta property="og:url" content="http://bestlixiang.site/2017/04/26/记一次失败的面试/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：对于很多没有服务器的人来说,实现手机端访问自己写的网页还是有困难的，虽然我们可以可以利用githubpage来实现挂载页面，但是调试起来还是不方便，所以iis就成为了一种简单的方式。">
-<meta property="og:updated_time" content="2017-04-29T01:19:25.000Z">
+<meta property="og:description" content="简单，不为人知.">
+<meta property="og:updated_time" content="2017-04-29T01:25:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iis实现手机端访问电脑本地服务器">
-<meta name="twitter:description" content="引：对于很多没有服务器的人来说,实现手机端访问自己写的网页还是有困难的，虽然我们可以可以利用githubpage来实现挂载页面，但是调试起来还是不方便，所以iis就成为了一种简单的方式。">
+<meta name="twitter:title" content="记一次失败的面试">
+<meta name="twitter:description" content="简单，不为人知.">
 
 
 
@@ -127,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/04/24/iis实现手机端访问电脑本地服务器/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/04/26/记一次失败的面试/"/>
 
 
 
 
 
-  <title> iis实现手机端访问电脑本地服务器 | rex note </title>
+  <title> 记一次失败的面试 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -252,7 +252,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/04/24/iis实现手机端访问电脑本地服务器/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/04/26/记一次失败的面试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -273,7 +273,7 @@
             
             
               
-                iis实现手机端访问电脑本地服务器
+                记一次失败的面试
               
             
           </h1>
@@ -288,8 +288,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T20:41:48+08:00">
-                2017-04-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-26T20:41:48+08:00">
+                2017-04-26
               </time>
             
 
@@ -311,8 +311,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/编程/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
+                  <a href="/categories/生活/" itemprop="url" rel="index">
+                    <span itemprop="name">生活</span>
                   </a>
                 </span>
 
@@ -346,21 +346,7 @@
       
 
       
-        <p>引：对于很多没有服务器的人来说,实现手机端访问自己写的网页还是有困难的，虽然我们可以可以利用githubpage来实现挂载页面，但是调试起来还是不方便，所以iis就成为了一种简单的方式。<a id="more"></a></p>
-<h2 id="iis简介"><a href="#iis简介" class="headerlink" title="iis简介"></a>iis简介</h2><p>iis（Internet Information Services）是由微软公司提供的基于运行Microsoft  Windows的互联网基本服务,其中包括Web服务器、FTP服务器、NNTP服务器和SMTP服务器，分别用于网页浏览、文件传输、新闻服务和邮件发送等方面，它使得在网络（包括互联网和局域网）上发布信息成了一件很容易的事。</p>
-<h2 id="iis安装"><a href="#iis安装" class="headerlink" title="iis安装"></a>iis安装</h2><p>这里我就不多说了，网上一搜，安装教程一大把，这里推荐一个链接<a href="https://jingyan.baidu.com/article/e2284b2b3cb58ae2e6118d22.html" target="_blank" rel="external">安装iis</a></p>
-<h2 id="有无线的时候使用"><a href="#有无线的时候使用" class="headerlink" title="有无线的时候使用"></a>有无线的时候使用</h2><p>大部分人，大部分时间，大部分地方，相信大家都会身处在无线之下，所以只要按照上面的链接使用就可以了。</p>
-<h2 id="没无线的时候使用"><a href="#没无线的时候使用" class="headerlink" title="没无线的时候使用"></a>没无线的时候使用</h2><p>这个时候就要借助流量与热点了</p>
-<ol>
-<li>打开手机热点</li>
-<li>查看电脑ip地址<br>一般这个时候ip地址已经变了，所有之前按照有无线的时候电脑的ip设置访问地址就有问题了，所以要利用新的ip地址设置访问地址</li>
-<li>用手机访问新的ip地址<br>一下子就爽歪歪了</li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li>iis对于windows用户来说真是出家旅行，调试代码必备之良品。</li>
-<li>当不能访问的时候一定要随时关注电脑的ip地址是否已经发生变化，做到随时更改</li>
-</ol>
-
+        <script src="/crypto-js.js"></script><script src="/mcommon.js"></script><h3 id="encrypt-message">大喊一声密码.</h3><link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script> <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> <div id="security"> <div> <div class="input-group"> <input type="text" class="form-control" aria-label="Enter the password." id="pass"/> <div class="input-group-btn"> <button type="button" class="btn btn-default" onclick="decryptAES()">Decrypt</button> </div> </div> </div> </div> <div id="encrypt-blog" style="display:none"> U2FsdGVkX1/Pw1cmNifaYuHEu++OHkQNFq4AN1Ur4Bu51VrJS4MHFEqkm5N4myoO4NojxywrWx0zjDzFgKi+y1HW/iRJ1+uFSueyZiNGlid/R6ZPgkJc8esP09JZ3fcVVl3IKtmT8i6kfhSKFNhzLiFQRrJ5Hot+BlOSQUiVD+JNVMM2rdAAnJoMI1DE4QSIGUM6RO4XUSFO8EjaMlDOe+wz/ssOTBgSlURF5tDwcd5f2iSXWME62LaAYkN5HjMSUIHTJ33JYTKTFdazpOSNQSBa7z6UsFg/kEBhYYBDcQ5KhSzYjSPTEolW9BQ5N5xJ71fclhfbg4pjbuA0PaRCtE0z8pgQNU5NOakPXxjIbYg8EPtzBe+kWI9/sMAGlWjbA2EpkOVM0ppQ6JOOpBPSL+f2uyVBCawqot6tSZzC5BaykSZHI1tDrrB4iIoKTc3A4QMx1V/Dv0RoHX0ooOzwLOhMlM+I6y0GmA7Qsirjq0FvSM84bDZ0i230N/2asWpQqUFNQJxFrXnNsW0X7HGh+9pONYsClJcwvRK7tJE6gNDHDAu9oXpMFcIbYlaLFDZCE6ELoaYMys9OLgpJ/vqIwbquXYxFslLBhdbu+8bkiW+obJExXohfHLO2i5K7FJQkHE5N8AAqjMbGi+s5TaF3c1vm3xcDx8gEZ6gknVE5/AzDxegcHi/Z74u2Q2R3QFOvrPkJWY3VZrIf2VCnUZwoy1P8BPtHtf+dm9jCSCKm6oatQYKH/zCsCfAzQJTVmReGSrKt40VNn9JKSwiBoFJNE2yQ/ql4gNGzjQ/pXW8Nd5lpxEDBRF2Jzj6rAkvPD6os2KkAmMjP1CqSKjx7gOOFkGnrwt8YYzYuNuWSD0srXRKyy2vDO4NOohZnSNFcZR5RtmJ3/KpagqxXj7kZl3eX+rJNV43JviDBVZbrJ12aDYuxgUHa8TpyD6eYNAXPmLEejobXKZYD0vVoo1amULA7pNQmuAab+x0ADfzTndzEsd4hk0OU+enuktiMN8jdyMwtp1fJvNUOxGuwpyStK3L6eXWq0jTa+OeBjG4Q8m1oO2aB+6qBe1cIaroZNZ7HpHqVhymps7F/mRq6tvpdTitlpT3gvMakrVziRiJ2i/zpoAIIDLPjg+CHMPcXqGSq2cP+hkXR0qC0v1ZnUUoCpLRo4g15Tfqt7SlQP4ie9wRNxNSlSlCl7HGoprB8DRPakBAiZ0d9gKjX96m2V4G+OUK7es+ccF3Xk3wNuJpz+snC+Hj2rBxLM0lLDnjgmUnObZ0+IsPVvYWjW21ZMwTybDqjT4mFpoX0f7uRnz10Pyqtsu0Kg4rR/CQZiNpihQb9kxPKq+bgx++2p+FaLPHWdkiUIJrZM4lnmXqV1QlIe26NaTioTRt2NiHDMqmRBgeuJrG3X14K+JiOXuso9OyPeuxwZn/PPPelfh2fyeoD2nJmO3icrRYeesj8gvORQWL0u5zJVPBoipUCw6XUyC3aWeSd/jOTHkildJuIbCFVrd+NxQqbsohakAc44d/KcfazlTs0r0qS6oi9/qNmAxX5MZjr2a02tBMY+HTiLkQTk5p/BMddempS4l0DpH33p5F+/UbmDOCP0dFwYLKK7ZXkGTizNNVdAIwdiMfub2tcivWP4gYHrtSPqx94Nj6dV70P8CFCtKx2d9WVwRVz+tHZOjPf+WmyyBJPZo/4nxv324PPert6IyzaL1473f+PB7pVaRmV6nVzRzPhGO9rrqsPH2ufL5f/GVZnCYcsNruhURXvcgFQscMHNR7Uv1GmlqFaCTBZ+st8VML1m9Zij48Sll5nJSGpTG9sGUbG62qAQtnUh+FYQRxZpQkt80suipImLjo/SjclpzsVtCH9y8aVrS79QZ9I+usixmk3cFCR/Uk9BT5I5q4EcEhA6H643dXSjZyOx9TsejaEGj5+xMM2b9njmvqK5QYUbuF3OohzCHOXXurJGgOqaARr0hhhQwCKEPvEJurow1jJopoCTHWOHB8Kah9Mh/Zi4vtBYGPfW0pYi3ppWdqYDEW7DzmkQPDIe1+smu+3wACodlLi9Lv1feb4JpUTHkBBa64xsIV3vPjJRgfWTpOCnuvHoRhY+VkJdGb/Uq1erFOux92xwOfdL/pI+VfwVS/wSbEiqYgIbTAQqWCnHVjMQtrt7xOOnPpFzC8GkE0ql82sPVA1LdyO56AMiwx9HhJkL+xF5607IJks2Kq3c3V/F9JGu7I3BWxbTAJf0ApggzoCh9TgrPUngclyfnW18WvbTTessCOqCOKQgWpq1rc/JrXrOKdLJE2H3hXzJDQw3HkdPffXN9u+rwDFrvQyhc+bezc/pDc9EHZTXwPVGXk3wcopuRHNEW5pba2RfkoJyDtPRIMkwMqmYDlEQYodWrJaPahANeY4JTvYRNd/mbO2L2d004di4ZP4Qb5nPMP7MX15dk6wtoQinp3TnF6gcy9W3PE2YikoJD5ti0yE0J1gGuoSl67atvUZitSer9k9tOXY+b8papu6y2pXL3KVkN0plPomIaVJBlsr5yyAXbgGSdTetLNkugghjAmginpKKwjFAsNI3t7PEEmb2pQopjr+o2GXSxayu9AT0Iz5nP7gNiCnocl0Mv0R+h7LI06lKEMopOvvM3MBUUFWWXagIjm4DhbMA2GU5cyZh2z999yjEQCvZC3hxnNy0rCvp64pdfLIwR8ADwUWTrBKDoXKKb7eKtQOeektACOYng3jIVlKd1wSNU/LOx6I8WSdYO9i4FBnTIEFJfQQrzZ+93grkf6FpJJ++AM9d/WqNY9BdAaQ8GHgJ5qioV1KEUG/oEmhW14x+DkYV7zGYBPxfgiAJc18UFZkyjuirqDpYru3NFyVzcaCChOedI1LIf852ScXgcT1qrk6ogscEsf2IV0BwoHOxVzZcmk88fa7SzPmruT5+PWNcmTZE8I59tasgOhST6Sm9rDhueEUnqge5y/KHrl/IQiaq70y3CAijX8U24smgC4tdiPIv1qxGCEQhk/F9YVz9ZIUsVbJsVhlASOyaMX2GpkuckG+EFSya/RGXEA58RdgjVtTldlCZxk8tHOi99QyE1vpY4dMiIwEK18pdvuwbp7rjqqFY4nNiAV3VPR0NOIoIr6toSgPoVeWIL/0b19z659UZnCYPueFmNlhwmJUC83XYY9fbkq34UUguAkbrO+dIuESsFnmotxD9TNBtSHQz+M1WRGXs36RqEhnoQSn/hJE/q/+rXcpW/DWNzgdtm6bVAYla2hWS4b86lEZ2IiwmIbc3LvvXOJwy9JQVdL+cjfTWWtqDIgtowB0VJ66pckGjgp2uP4BqbCGS/bEjk7p5qlcUTVqAV4BtcgRtBXQzRqu6VKLEyCLbcj0sB0dm1Gvyzr968gJKYOGwg8gt7J3HPxhdfUAe7gBGkMb+lgFL/P3cXtj4dowSADI8Ze0e+94bXT540r9yxncwS/uSDvIY6SQ7vgBkxv+fs8VJdZ69vJPCfaE++4o5275ec7m8gzBPm/l+mcxgyET2SP2UQEyVE1mlNLT2ZITADMjzPrMUi1QjHuymPy6l1TIg0rTya8SGzZK4dG0ZCztjRkJcrcE9XOCZNlw1Yei3NPzyxHC9/pnuBWBBDWmnvQQUPw0Wj1slYzDl8xGrVGDv/nUxBSb/YQIldUEZvZkCXnzACMJDanlwkZTf35sWec0cRVotCr83Y42OALXSwKAPjNLP3eZVWK+WNGTAncmmjdU7yn3wUzxJKH96OPQQTsShf6QYwsOIoz1tMKpx0io4UclGO/fkh6TStxlztTDrJapUCkE8eZneAB1Tj5llZrVXsGH77hpmfMMsuv79pQMECfr7u/fYBjCDagCR4PruX2zjNiAqIBw4hjhBAkHCYQ9T9ttwDCzgL6hw/wzpqMuEJiH+3NZ9Tm8yf2OnIRf/vVSO5VxdItUz/4YuFT0zv28FNMoftuBcCtdd3pyHOpkvvzMTnyvvBtrPR3+6XykRGEMPsTzsQ1I3o27iYHK2jgN2cknjMO04l9sZH15sTJmqkX0e4qWl1jyrd6fPe8Isiz+8zHRz+rlQ5RPye2zUnFwfBMYjXi+0zsFCmAkWOkWJQeUzeJxSBtIn4M3UXtYDwgLdNIt9BYVwCUSF5Q8+3zhw9yLCHbExmmUdhBkaG4U8rGPLHXk+MFaW85zoKt2ypXrzoIIP7iVArmNb7Ez5ycxSCyhUTQkfPw7h+gyvif9lKKV/G9y32Uwn+BWwJh6pUkK5AByVjFTNmanTR4uNpx7TXp4sndEfLFJa4bYrFZgqlljq9cD4CxOYybU6hcFGLoOTqQQhvDVRjsu6DQSlQ+3/NLHVmqGe/0r0pqJJq2o+i3Xqrh9EuHYLmYEZet5/7SNmB/ifyhNBNAhOgL9EV8YP7cO5xo0JlCQFh7uFE90/wm8ln8fhcKkZzWwV+Yq/Z7xVRkwICxXiiLdJ4mR+DL22rakIUzDBOtRqg0fjx9PijcT0d6fNGLosWiRKgENgQNqINO5ozjOGPxYf2tDR5BiLh8Z7CO7Wh/nuHqdExC7u5BAe1naTjLQhHsfVRk6Yp+WwrrNzbxTmmrsGfrlEIKAYneKCIPt/jKBXP6b5gzHEwuQS4fS6As54ADg1Hd+D2CJGSFXKX2AGS8emmYXyvmllAfx0uTlA49CcK2epwnufZ0qEfS5+uBebDhjH6KxPgcz6AriD7br7XPYva+ahlL0lMZH1il+kRVXA0KE3MweKes+cRet5R+lkUrOyvoBNhzG8ub+fa0gH4Zog11fwpg4bmEOxWojiVDpJHMh4iRUmnLqnkwteMoKVhdZSifrl/1XpsKungxMVrO2ZnakH+LSr6ujFP+8qyHAKdYHHq1tcGm2AcqQ3Mnl9VYXBisLToqv6PcSaxlp3XayKjru46vPkt7zVEbDRqlBJeC2gXB1N5X7NVwnCQT6TE7iFjz9RhLm738KT5d+S8m4jVyD5e8R5ZhSVOrm1MGvUikguHqca/rAEOARxD5rFrxRUgw0jmDECrJ1RCgmOt/TqCFmUGzUQ1R2ARsOaqp1EkALdtOO7jvqZJktc7kg7RjnbYuXqWibKLdJpc0q3wJo3smQRwys1ocSF8MMyEByDXnSSACwPZATTUMl67K/eZf3Wd1aOd8Oads55C9YiUuBcpzF/ArdHoEXH8jqy9NaVkFUIFofhwoUZXkSm3U81+xwzp5vFrJoxQTiQzaN3lx+pGO2ofbHtXdyDUjtaXUhGPpPEj5mHTXm50dRd2n1SGHFOH5X69KzV0hCq3GsELppxXsHyLYu5hQZD5P22mNlfbaxIaRWUseuCQby4YNtJcENNosPm91YF4+AHJS0FQFhreUHvySMco/NQrjTL0pzxrR7TdNXHMbdzvk410SrzpfBXvbmCPNnnb8nzQfTuDYGkT4VnQO7lchvAytrqD269eNbZMe+XvWuuBsF0n6X3mqsqfTkgJt8ApkqUK3i8V+0U0u+BfqXLUqW1agBEiTJbaFn6uRoemq3k4T1SiLI6S0lSC743JiI0o6uFPBuz+z25C4tVNKslN8gaJw30B03Y9CqpQmR5iHCcbPM4fokXXkyDA3OmXiWEAauJincwxVxyfqVZt0xLr/geWQE06AbPPC+TxpsOrO2+Fy5fiF+wz/s6DyuuYW71/9bwRbhYcW5qMtd2kFUVKp/Pr/D22swD+dOMFeZEhdDt3mdjdJDhB5FupRUdSpDuSWrdCUfrJO5LwQYDkIIaydDSyuDPqx9PaCnQnSaNYK65hxwWYseBysaYlaDIokC4Zzg9TR0ZMJCo4A8o3n1gvxplTTOOM6I1CW/8WRVeULeNCzteAcp4AqnwQVTFcpDLtIAf0lur5T9wE70kKPnaKnZLZ/BsB0UD1Yx2Ir9BWKJxQmq3QioA8Fzea1v6AvDNqL/2kLZD/gW5beM9YxtZbXjLuGyXFU4FQtBBU80Tkop2sGycRkUH0GaDAuPOMDplqBoicGQs95DjVmZB/pzkaeSd76SgMCm31cvWLWcWwL9cFko7WY+tvGTQelVf1RSOEcDC+nJ3K00ecUkWQN5RgrUI0GpB2JdCg1Cug92tYr7DFhK+GiqmgVcWTKnDqd41QWAILf0GkRJVGg2/YH6qgj4hWY7vTKHL+ALWfQOOhcSx0oQldJphZXlECPgRNJ6hj/b0RGx1JDpfO/sS6zt88F1SzFxWo/zI6qGt6loBAWcHyKxDQNCiQgYGRzIdfgUoG5ogT4ZBJJIGVM8GAEvBPnt8FhqJY/qxaiTRWyDtDWwziusQg5KLJRbsQgDnLwosKEUK9wwKWQtC6dnw24BONpbmz7KC8dX0uGXibF3psyejE7dH4zBJ/dpYdgJYbuNCZhFFjKjPlYobfk7cqLgf/Xll/FKbw41ii2RI8+kA8s0nVcAYx0MaArGpZcRSsq4QtnZGCOdbQTzZZASIKQqC+OgH1ZNEHjh6neFwfQLkqHA2W05qxswE6GzoDVeoiG5cFnOtP9osAKQWw+ACBJO4yKZWNSWGqsGu6aG1UBVa5ufGdW3c1JGeqaGKGxmHMJeLnciDusSFwCLpYBwSx/pPuvu/eq1jr59UX1C/P2ipFpGmxg62b7+07MBFskCw/BaqMswUpR6hF++zXtdGHb11kd1P4h4f7QS4uroccSYEmvux4LFQuYsn2LsCuzm82FWLtYMQg9SzW/MmH8tsNta3RTluhSmt7HHaUSR+IQMGAWdr2mkJqd9IH69xRyRlhGAHuo3NpX17Zh2KgeRmfjOeeEZ8hwz9ldaAwHrT053tvbAINPaHGftiat4SFqZnGgNaisHGe/shxBwrJRGhs14+ZAIWeasYTYPKEN1vM9Fqxiuk3wwaE3egxpbEGzsJxDXb53EN3vbr4iQNZ6VKYrqKTnhOkf11eG6I/oViH5x2Ezpamq0CuZO6Ds+vNLXz8I1AYNYGiiej9rUNlyum7Gz3fMNwL9X7/Ye/0QMfgMXsUnMuPSPoiQZiUAFsKCcVpXhaTjmcYHwnw0BWyDkesozCedtqRLnbq1XrX8FIWFcGYxm6ntO6AOZ2yiDb8cDQHNIN2lXYFQy1lQ7IwxtmgOOnuHFw/YEpPiuGm8g3AFR38fT0WEcoDtUQQeZNHb49VcqIY4+e4zqKgcjNPpkoye9/4k/OxzicpPqJI6SOFPJtNFwfozo1z4fvlwVb2OiKjwvA9JOzF6+j46D1z1EB7Zz80l0+eyeg/45u4h01pfhSmZAHTv5RFllAuoU20rWuvkof8XI7AqGpY7nJ5Fud7s9axpKJMR+eQtR3xPF+HGggaqsJISbgO9wVmE+/KyWiq2Z99hLLsVgMK127GDwbsAiZ/kHvB15K2aBwvJ7tZBoGEQBNEdQCdnZA/MWdrUYU1CMr3OKWTnDI3XvFqj3Suncl0QL5VnanxlVojghHGnfPB45hJfbBsfEwx2WAJgSWKsIHxB6IjFEnvKimd1+Pn+m04sYkaZNdbCn7gUCfFAT1KCKo2uDh+Nl2DruLJW1kLd0olqLCJSnxmCp7SSKa1CWsM7u07FUW4AwEVl596EuODvEUg+Y30PFNBGYsQqMwtgPbAUOvfy3uwxsZ41rlHcjSL1ysTLTA/qJ57lubP69cSG7Y/akv9TFQn7UT+wEWi4Nponac3tqPqfa05N5CY6GwHt/UaPv9Jc+h2fUgDzF1in6WoKbHXhEOXr1hTbVqfGbmo01HqfIy4OhT4ZGkIfernjTefscira8Cgg92tHH5uAmy86M/RLjh1wiu8xx4FJwaZ24PdHTEbSrcCB/TCUFrHX/1x73lWjeC82FsMWeu/oBLQF4Ik96uleRExz3rB/mzO615ice3gv3zOUwN9MTyTQuJfV5t20LDXjjzjiwLtKAoCxWbnam4iQEcJg/wGpbd2Oj3IQsiqjz6P+I0CtHnegTVTWoZ1+kIbZwPIxLIqLtCHHa1OllhDnABBQZlTTLLTnFlTqTUhlOuk4V6rH2vGH4tTUUKjr0Fj21YCRoErxjWGkMU3e2OqBtwS3ALbZ0ZULnOVnXDkPbiO7mU83ODt+26DyCvsfHa8WQkRnrKFV5vYy3AZkrgvEYBWFC3A3hUc8GpGi9Ng00FcZKaLO8aDctazXTj1qwRHYkynA0jahEnE4FNLDhlZ4gLgEzy1pUfU4+IrpNkicSYcTevDX64+cfcbnS6xEkHwVryOLpQJjwnmfpi0o9LOBWBKMGAWZrkKDHl6+lBZMFZjW0QN0EKQzubD5kpW/XBTDPT0Dvf27VMHI8jjB2gb7c6MrLO25fE+0Ae7fYKEkf3MAUYLwe59Z/l1KGSO0XVQgD26jzTw3ueGGwZCTZqDiD4a7Fp3F0a0AgE3yuhQxNyda+yajBa9JBh4EL8DHT2zBcdM6vaZNT7OqUfEebuyV9ENiwjogryXQS3xR632BOJWlevomb8iiDWfx2jRCVL3aVkpID9LOd29rS8L66bQZOcGOxPvuHFRr6XP+VfaSa9lDqDNyFHukeAVDsWYY6VwPKGh1p2OqMHHshQE+Y0idqqczoeu1UxbliA/y4nxUfW7Aw7VR9YnYklvFmmnVvYjS4sLQbjbMD9brtecTkv6l/eoYhhtovnt7msb12X4cGEJypJUlBHbLji6x1kqxb2aQbeCFERa22Gry48bae2FM+y1n+ngIdHK9LYyrI5wlN6pAijVUxvCjf8kmx4MA+Q3ILKFDGJXmIL7aXmAOOWzURqZTEjC0thQ74UVV1DN1YF4KcwRZuinaJC72dYcZCVtzxuUZ0LdKX+XAgC6BqE7rHh2gAmuVtT2CsIyrTFu8jYp04cSaCYFc18Bn9bB4UKWdwNvOI5nRNxAa5tYlN/EbHXtVAjm85sOVZq/TZiS1xDwX8K2dQDSSigmCZugiG79q8ZTXND4K7EDi34lgn5XE9zc/2b2dyfXjzoYMhCLj0UqYKDj2QiHGlihT8WcYwm2RdlfsvhOrZ3XFW5fOOEfBFPSM0k22x6MeJsIDsi0qOs0W4uJJpqd74O4+9gSpPpmY8CdWp0VzNLwoh7GL/SeaBiiv/cGzy59R5xEmh7Tkj40UNBUmcJAlAFz/3rDOUamFDNItfS5m6F7MDOtqPJ5xzcS3k/hgD2EROKsibT1D9c47ZN/xeGOrrl2Qk5OOgLhDqHk4hvGU8W4ySYf0jahDM69InICi495PTuwKT4u9zyAaqYi/dypWLjI+6Dp99KhYbZ51rgTv3jkTb3ND/RZLYUcrt/PEWbYmtuwQOiFtTuPPF9pzMLDdxCrNKFfa4FLVluRanNCI9u6/1O/mqIsWff0/8P+7KwKM5dY/3P5wGsMY6nXueOQ/1hw42HLyDyRJawi8ubaxiHsdZgn3HA5QYnETo0riYKReFRbUD0YLkVEiGQsY4+Dizv3c9Qw4GIif3fgp6rtwx18HhcoLbgcbTJhsURCeT8IsKK9TvfcpfyUZJBEaLMm/srVjXvFjhBQhNFQG1zEmbDvs+/y4J4hmlb/eZ6ViZbdEVAGkF+CrzXH5YycCREnyEhqv0TobO/MNU9gTNup1mh08mmKgClO5N+VyqCHtodyY09RnpNVkARIflG61ksqnhupRd/6IU87+ggZ4hVCFs7GO39K8Y6bKflHwVAfC3x3SIYEMwzGgcNJMZgG0VYzBaM6X+jksibK3y9M3M </div>
       
     </div>
 
@@ -389,7 +375,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/服务器/" rel="tag"># 服务器</a>
+            <a href="/tags/面试/" rel="tag"># 面试</a>
           
         </div>
       
@@ -402,14 +388,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/04/24/iis实现手机端访问电脑本地服务器/" rel="next" title="iis实现手机端访问电脑本地服务器">
+                <i class="fa fa-chevron-left"></i> iis实现手机端访问电脑本地服务器
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/04/26/记一次失败的面试/" rel="prev" title="记一次失败的面试">
-                记一次失败的面试 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/04/27/请不要无脑/" rel="prev" title="请不要无脑">
+                请不要无脑 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -584,7 +574,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#iis简介"><span class="nav-number">1.</span> <span class="nav-text">iis简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iis安装"><span class="nav-number">2.</span> <span class="nav-text">iis安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有无线的时候使用"><span class="nav-number">3.</span> <span class="nav-text">有无线的时候使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#没无线的时候使用"><span class="nav-number">4.</span> <span class="nav-text">没无线的时候使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#encrypt-message"><span class="nav-number">1.</span> <span class="nav-text">大喊一声密码.</span></a></li></ol></div>
             
 
           </div>
