@@ -249,6 +249,168 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/04/String-StringBuilder-StringBuffer区别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/05/04/String-StringBuilder-StringBuffer区别/" itemprop="url">
+                  String,StringBuilder,StringBuffer区别
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T19:50:29+08:00">
+                2017-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>引：最近心情非常的不静，我知道自己需要沉下心去沉淀，慢慢来，小朋友。</p>
+<h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><p>查看String源码的时候，我们很容易看到<br>&gt;<br>    public final class String</p>
+<p>从源码中对String的定义可以知道它是final类，这意味着她不可被继承，也不可被更改。而且总它的方法中也没有可以拼接字符串的函数。</p>
+<h2 id="StringBuilder"><a href="#StringBuilder" class="headerlink" title="StringBuilder"></a>StringBuilder</h2><p>查看StringBuilder源码的时候，我们也可以看到这样的定义：<br>&gt;<br>    public final class StringBuilder<br>    extends AbstractStringBuilder</p>
+<p>我们发现他也是final类，但是它却又append()方法，这是为什么，我们找到它的append():</p>
+<blockquote>
+<pre><code>@Override
+public StringBuilder append(String str) {
+    super.append(str);
+    return this;
+}
+</code></pre></blockquote>
+<p>我们看到他的append()方法是调用他的父类来的，所以我们继续看看他的父类是在搞什么鬼👻</p>
+<blockquote>
+<pre><code>    public AbstractStringBuilder append(String str) {
+    if (str == null)
+        return appendNull();
+    int len = str.length();
+    ensureCapacityInternal(count + len);
+    str.getChars(0, len, value, count);
+    count += len;
+    return this;
+}
+</code></pre></blockquote>
+<p>我们终于找到他怎么又这个添加字符串的方法了。具体AbstractStringBuilder是怎么实现添加的就让想要了解的人继续往下看源码就好了。</p>
+<p><strong>对比string:</strong> 我们可以从日常编写的代码可以了解到，用String拼接由于每次都是新建一个对象所以效率自然是低的，所以在使用字符串拼接的时候还是用StringBuilder比较好，但是对于单个常量字符串来说还是String好，因为它是放在常量池里，读取速度比放在堆中的对象自然是要快很多。</p>
+<h2 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a>StringBuffer</h2><p>这又是一个什么鬼，继续看源码吧</p>
+<blockquote>
+<pre><code>public final class StringBuffer
+extends AbstractStringBuilder
+</code></pre></blockquote>
+<p>这个和StringBuilder一样也是final类，但是我们可以很清楚的看到也是继承了AbstractStringBuilder，也就是说它也有append()方法，但是我们可以它的append()方法。</p>
+<blockquote>
+<pre><code>public synchronized StringBuffer append(String str) {
+    toStringCache = null;
+    super.append(str);
+    return this;
+}
+</code></pre></blockquote>
+<p>我们看到它的append()方法加入了synchronized关键字，所以它是个线程安全的类</p>
+<p><strong>和StringBuilder的区别：</strong> 由于他是线程安全的，所以自然牺牲了效率，在操作速度上没有StringBuilder快。</p>
+<p>总结：点点滴滴积累</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/04/27/请不要无脑/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -873,7 +1035,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -895,7 +1057,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
