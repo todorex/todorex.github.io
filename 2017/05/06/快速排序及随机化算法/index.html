@@ -98,7 +98,7 @@
 <meta property="og:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
 <meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg">
 <meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-05%20%E4%B8%8B%E5%8D%8810.15.58.png">
-<meta property="og:updated_time" content="2017-05-05T16:14:07.000Z">
+<meta property="og:updated_time" content="2017-05-05T23:42:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="快速排序及随机化算法">
 <meta name="twitter:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
@@ -360,7 +360,7 @@
         int x = a[r];
         int i = -1;
         int temp = 0;
-        for (int j = 0; j &lt; a.length; j++) {
+        for (int j = 0; j &lt; a.length-1; j++) {
             if(a[j]&lt;x){
                 i=i+1;
                 temp = a[i];
@@ -410,7 +410,7 @@ public class RandomQuickSort {
         int x = a[r];
         int i = -1;
         int temp = 0;
-        for (int j = 0; j &lt; a.length; j++) {
+        for (int j = 0; j &lt; a.length-1; j++) {
             if(a[j]&lt;x){
                 i=i+1;
                 temp = a[i];
@@ -427,7 +427,7 @@ public class RandomQuickSort {
     public int randompartition(int[] a,int p,int r){
         int temp = 0;
         Random random = new Random();
-        int i = random.nextInt(p);
+        int i = random.nextInt(r);
         temp = a[i];
         a[i] = a[r];
         a[r] = temp;
