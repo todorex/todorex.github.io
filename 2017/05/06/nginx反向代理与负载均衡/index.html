@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="算法导论,排序," />
+  <meta name="keywords" content="nginx,负载均衡," />
 
 
 
@@ -89,20 +89,19 @@
 
 
 
-<meta name="description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta name="keywords" content="算法导论,排序">
+<meta name="description" content="引：慢慢做项目的过程中，也就接触到了负载均衡，谈到负载均衡就会接触到反向代理服务器，这里介绍一下nginx。">
+<meta name="keywords" content="nginx,负载均衡">
 <meta property="og:type" content="article">
-<meta property="og:title" content="快速排序及随机化算法">
-<meta property="og:url" content="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/index.html">
+<meta property="og:title" content="nginx反向代理与负载均衡">
+<meta property="og:url" content="http://bestlixiang.site/2017/05/06/nginx反向代理与负载均衡/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-05%20%E4%B8%8B%E5%8D%8810.15.58.png">
-<meta property="og:updated_time" content="2017-05-05T23:42:16.000Z">
+<meta property="og:description" content="引：慢慢做项目的过程中，也就接触到了负载均衡，谈到负载均衡就会接触到反向代理服务器，这里介绍一下nginx。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86.png">
+<meta property="og:updated_time" content="2017-05-06T15:09:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="快速排序及随机化算法">
-<meta name="twitter:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg">
+<meta name="twitter:title" content="nginx反向代理与负载均衡">
+<meta name="twitter:description" content="引：慢慢做项目的过程中，也就接触到了负载均衡，谈到负载均衡就会接触到反向代理服务器，这里介绍一下nginx。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86.png">
 
 
 
@@ -130,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/05/06/nginx反向代理与负载均衡/"/>
 
 
 
 
 
-  <title> 快速排序及随机化算法 | rex note </title>
+  <title> nginx反向代理与负载均衡 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -255,7 +254,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/06/nginx反向代理与负载均衡/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -276,7 +275,7 @@
             
             
               
-                快速排序及随机化算法
+                nginx反向代理与负载均衡
               
             
           </h1>
@@ -291,7 +290,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-06T00:04:52+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-06T22:45:44+08:00">
                 2017-05-06
               </time>
             
@@ -314,8 +313,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
                   </a>
                 </span>
 
@@ -349,117 +348,23 @@
       
 
       
-        <p>引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。<a id="more"></a></p>
-<h2 id="快速排序算法"><a href="#快速排序算法" class="headerlink" title="快速排序算法"></a>快速排序算法</h2><ol>
-<li>核心思想<br>分治思想和原址运算：看一张图<br><img src="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg" alt="快速排序"></li>
-<li><p>算法具体实现 </p>
-<blockquote>
-</blockquote>
-<pre><code>public class QuickSort {
-    public int partition(int[] a,int p,int r){
-        int x = a[r];
-        int i = -1;
-        int temp = 0;
-        for (int j = 0; j &lt; a.length-1; j++) {
-            if(a[j]&lt;x){
-                i=i+1;
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
-        }
-        temp = a[i+1];
-        a[i+1] = x;
-        a[r] = temp;
-        return i+1;
-    }
-
-    public int[] quicksort(int[] b,int p,int r){
-        if(p&lt;r){
-            int q = partition(b,p,r);
-            quicksort(b, p, q-1);
-            quicksort(b, q+1, r);
-        }
-        return b;
-    }
-
-    public static void main(String[] args) {
-        QuickSort sort = new QuickSort();
-        int[] a = {2,8,7,1,3,5,6,4};
-        int[] b = sort.quicksort(a, 0, a.length-1);
-        for (int i : b) {
-            System.out.print(i+&quot; &quot;);
-        }
-    }
-}
-</code></pre></li>
+        <p>引：慢慢做项目的过程中，也就接触到了负载均衡，谈到负载均衡就会接触到反向代理服务器，这里介绍一下nginx。<a id="more"></a></p>
+<h2 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h2><h3 id="nginx简介"><a href="#nginx简介" class="headerlink" title="nginx简介"></a>nginx简介</h3><p>nginx是一个使用c语言开发的高性能的http服务器及反向代理服务器，是一款高性能的http 服务器/反向代理服务器及电子邮件（IMAP/POP3）代理服务器。由俄罗斯的程序设计师Igor Sysoev所开发，官方测试nginx能够支支撑5万并发链接，并且cpu、内存等资源消耗却非常低，运行非常稳定。<br>感觉棒棒哒。</p>
+<h3 id="nginx应用场景"><a href="#nginx应用场景" class="headerlink" title="nginx应用场景"></a>nginx应用场景</h3><ol>
+<li>http服务器。Nginx是一个http服务可以独立提供http服务。可以做网页静态服务器。</li>
+<li>虚拟主机。可以实现在一台服务器虚拟出多个网站。例如个人网站使用的虚拟主机。</li>
+<li>反向代理，负载均衡。当网站的访问量达到一定程度后，单台服务器不能满足用户的请求时，需要用多台服务器集群可以使用nginx做反向代理。并且多台服务器可以平均分担负载，不会因为某台服务器负载高宕机而某台服务器闲置的情况。</li>
 </ol>
-<p>3.时间复杂度</p>
-<p>通过分析我们最看重的平均复杂度是nlgn</p>
-<h2 id="随机化算法"><a href="#随机化算法" class="headerlink" title="随机化算法"></a>随机化算法</h2><ol>
-<li>核心思想</li>
-</ol>
-<p>在算法加入随机性，要么在使序列生成随机化，要么就是使主元随机化，这里我们使主元随机化。</p>
-<ol>
-<li><p>算法具体实现</p>
-<blockquote>
-</blockquote>
-<pre><code>import java.util.Random;    
-public class RandomQuickSort {
-    public int partition(int[] a,int p,int r){
-        int x = a[r];
-        int i = -1;
-        int temp = 0;
-        for (int j = 0; j &lt; a.length-1; j++) {
-            if(a[j]&lt;x){
-                i=i+1;
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
-        }
-        temp = a[i+1];
-        a[i+1] = x;
-        a[r] = temp;
-        return i+1;
-    }
-
-    public int randompartition(int[] a,int p,int r){
-        int temp = 0;
-        Random random = new Random();
-        int i = random.nextInt(r);
-        temp = a[i];
-        a[i] = a[r];
-        a[r] = temp;
-        return partition(a, p, r);
-    }
-
-    public int[] randomquicksort(int[] b,int p,int r){
-        if(p&lt;r){
-            int q = randompartition(b, p, r);
-            randomquicksort(b, p, q-1);
-            randomquicksort(b, q+1, r);
-        }
-        return b;
-    }
-
-    public static void main(String[] args) {
-        RandomQuickSort sort = new RandomQuickSort();
-        int[] a = {2,8,7,1,3,5,6,4};
-        int[] b = sort.randomquicksort(a, 0, a.length-1);
-        for (int i : b) {
-            System.out.print(i+&quot; &quot;);
-        }
-    }
-}
-</code></pre></li>
-<li><p>时间复杂度</p>
+<h3 id="nginx安装启动配置"><a href="#nginx安装启动配置" class="headerlink" title="nginx安装启动配置"></a>nginx安装启动配置</h3><ol>
+<li>安装：<br>nginx一般安装在linux下</li>
+<li>启动： <code>在sbin目录下执行: ./nginx</code> 如果访问不到，可能就是linux防火墙没有开启8080端口的访问——关闭：<code>在sbin目录下执行: ./nginx -s stop</code>——刷新配置：<code>在sbin目录下执行: ./nginx -s reload</code></li>
+<li>配置虚拟主机：在nginx.conf文件中添加一个Service节点，修改端口号就可以<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">	listen       81;</div><div class="line">	server_name  localhost;</div><div class="line"></div><div class="line">	#charset koi8-r;</div><div class="line"></div><div class="line">	#access_log  logs/host.access.log  main;</div><div class="line"></div><div class="line">	location / &#123;</div><div class="line">	root   html81;</div><div class="line">	index  index.html index.htm;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>通过分析我们最看重的平均复杂度是nlgn</p>
-<h2 id="基本排序算法"><a href="#基本排序算法" class="headerlink" title="基本排序算法"></a>基本排序算法</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-05%20%E4%B8%8B%E5%8D%8810.15.58.png" alt="排序"></p>
-<p>小结：同等情况下快速排序&gt;随机化算法&gt;归并排序&gt;插入排序；<br>在有序的情况下随机化算法&gt;快速排序</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>慢慢走，不要急！</p>
+<h2 id="nginx反向代理-1"><a href="#nginx反向代理-1" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h2><p>反向代理服务器是引用在服务端。决定哪台服务器提供服务。<br>用一张图来理解：<br><img src="http://o6plzvjf2.bkt.clouddn.com/nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86.png" alt="反向代理"></p>
+<h2 id="nginx负载均衡"><a href="#nginx负载均衡" class="headerlink" title="nginx负载均衡"></a>nginx负载均衡</h2><p>并发量大的时候自然会用到负载均衡，其实每台服务器的内容都是一样的，多台机器服务自然减轻了单台服务器的压力。在nginx中其实配置很简单，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">upstream tomcats&#123;</div><div class="line">	server 192.168.142.128:8080 weight=2;</div><div class="line">	server 192.168.142.128:8081;</div><div class="line">&#125;</div><div class="line"></div><div class="line">server&#123; </div><div class="line">	listen     80;</div><div class="line">	server_name  tomcat.taobao.com;</div><div class="line"></div><div class="line">	#charset koi8-r;</div><div class="line"></div><div class="line">	#access_log  logs/host.access.log  main;</div><div class="line">	location / &#123;</div><div class="line">	proxy_pass http://tomcats;</div><div class="line">	index  index.html index.htm;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>只需要在upstream的server后面添加一个weight即可代表权重。权重越高，分配请求的数量就越多。默认权重是1。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实很多东西没有自己想象的那么难，好好努力，每天积累！</p>
 
       
     </div>
@@ -489,9 +394,9 @@ public class RandomQuickSort {
       
         <div class="post-tags">
           
-            <a href="/tags/算法导论/" rel="tag"># 算法导论</a>
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
           
-            <a href="/tags/排序/" rel="tag"># 排序</a>
+            <a href="/tags/负载均衡/" rel="tag"># 负载均衡</a>
           
         </div>
       
@@ -504,8 +409,8 @@ public class RandomQuickSort {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/04/git个人使用与多人协作/" rel="next" title="git个人使用与多人协作">
-                <i class="fa fa-chevron-left"></i> git个人使用与多人协作
+              <a href="/2017/05/06/快速排序及随机化算法/" rel="next" title="快速排序及随机化算法">
+                <i class="fa fa-chevron-left"></i> 快速排序及随机化算法
               </a>
             
           </div>
@@ -513,10 +418,6 @@ public class RandomQuickSort {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/06/nginx反向代理与负载均衡/" rel="prev" title="nginx反向代理与负载均衡">
-                nginx反向代理与负载均衡 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -690,7 +591,7 @@ public class RandomQuickSort {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速排序算法"><span class="nav-number">1.</span> <span class="nav-text">快速排序算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机化算法"><span class="nav-number">2.</span> <span class="nav-text">随机化算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本排序算法"><span class="nav-number">3.</span> <span class="nav-text">基本排序算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#nginx反向代理"><span class="nav-number">1.</span> <span class="nav-text">nginx反向代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx简介"><span class="nav-number">1.1.</span> <span class="nav-text">nginx简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx应用场景"><span class="nav-number">1.2.</span> <span class="nav-text">nginx应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx安装启动配置"><span class="nav-number">1.3.</span> <span class="nav-text">nginx安装启动配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nginx反向代理-1"><span class="nav-number">2.</span> <span class="nav-text">nginx反向代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nginx负载均衡"><span class="nav-number">3.</span> <span class="nav-text">nginx负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
