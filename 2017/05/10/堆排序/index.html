@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="算法导论," />
 
 
 
@@ -89,16 +89,17 @@
 
 
 
-<meta name="description" content="简单，不为人知.">
+<meta name="description" content="引：真的是烦，连个hadoop集群环境都搭不好，发现一个人学还是很困难的，想想还是一个人看算法会简单些，所以来看看了，今天看堆排序！">
+<meta name="keywords" content="算法导论">
 <meta property="og:type" content="article">
-<meta property="og:title" content="请不要无脑">
-<meta property="og:url" content="http://bestlixiang.site/2017/04/27/请不要无脑/index.html">
+<meta property="og:title" content="堆排序">
+<meta property="og:url" content="http://bestlixiang.site/2017/05/10/堆排序/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="简单，不为人知.">
-<meta property="og:updated_time" content="2017-04-29T01:25:22.000Z">
+<meta property="og:description" content="引：真的是烦，连个hadoop集群环境都搭不好，发现一个人学还是很困难的，想想还是一个人看算法会简单些，所以来看看了，今天看堆排序！">
+<meta property="og:updated_time" content="2017-05-10T01:37:59.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="请不要无脑">
-<meta name="twitter:description" content="简单，不为人知.">
+<meta name="twitter:title" content="堆排序">
+<meta name="twitter:description" content="引：真的是烦，连个hadoop集群环境都搭不好，发现一个人学还是很困难的，想想还是一个人看算法会简单些，所以来看看了，今天看堆排序！">
 
 
 
@@ -126,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/04/27/请不要无脑/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/05/10/堆排序/"/>
 
 
 
 
 
-  <title> 请不要无脑 | rex note </title>
+  <title> 堆排序 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -251,7 +252,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/04/27/请不要无脑/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/10/堆排序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -272,7 +273,7 @@
             
             
               
-                请不要无脑
+                堆排序
               
             
           </h1>
@@ -287,8 +288,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-27T20:41:48+08:00">
-                2017-04-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-10T09:32:17+08:00">
+                2017-05-10
               </time>
             
 
@@ -310,8 +311,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/生活/" itemprop="url" rel="index">
-                    <span itemprop="name">生活</span>
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
                   </a>
                 </span>
 
@@ -345,7 +346,17 @@
       
 
       
-        <script src="/crypto-js.js"></script><script src="/mcommon.js"></script><h3 id="encrypt-message">大喊一声密码.</h3><link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script> <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> <div id="security"> <div> <div class="input-group"> <input type="text" class="form-control" aria-label="Enter the password." id="pass"/> <div class="input-group-btn"> <button type="button" class="btn btn-default" onclick="decryptAES()">Decrypt</button> </div> </div> </div> </div> <div id="encrypt-blog" style="display:none"> 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 </div>
+        <p>引：真的是烦，连个hadoop集群环境都搭不好，发现一个人学还是很困难的，想想还是一个人看算法会简单些，所以来看看了，今天看堆排序！<a id="more"></a></p>
+<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><h3 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h3><p>堆排序是原址运算，后来由于Java的原因我用了变址，但是算法的思想还是没有变得的.堆分为大顶堆，小顶堆，我们下面以大顶堆为例。</p>
+<h3 id="维护堆"><a href="#维护堆" class="headerlink" title="维护堆"></a>维护堆</h3><p>我们需要一个函数在任何情况下子节点要比根节点小。<br>函数如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">//取父节点</div><div class="line">public int parent(int i)&#123;</div><div class="line"> return (int)Math.ceil(i/2)-1;</div><div class="line">&#125;</div><div class="line">//取左子树</div><div class="line">public int left(int i)&#123;</div><div class="line">	if(i == 0)&#123;</div><div class="line">		return i+1;</div><div class="line">	&#125; else&#123;</div><div class="line">		return 2*i+1;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">//取右子树</div><div class="line">public int right(int i)&#123;</div><div class="line">	if(i == 0)&#123;</div><div class="line">		return i+2;</div><div class="line">	&#125; else&#123;</div><div class="line">		return 2*i+2;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">//维护大顶堆</div><div class="line">public int[] max_heapify(int[] a,int i)&#123;</div><div class="line">	int l = left(i);</div><div class="line">	int r = right(i);</div><div class="line">	int largest = 0;</div><div class="line">	int temp = 0;</div><div class="line">	if(l&gt;=a.length &amp;&amp; r&gt;=a.length)&#123;</div><div class="line">		return a;</div><div class="line">	&#125;</div><div class="line">	if(l&lt;a.length &amp;&amp; a[l]&gt;a[i])&#123;</div><div class="line">		largest = l;</div><div class="line">	&#125; else&#123;</div><div class="line">		largest = i;</div><div class="line">	&#125;</div><div class="line">	if(r&lt;a.length &amp;&amp; a[r]&gt;a[largest])&#123;</div><div class="line">		largest = r;</div><div class="line">	&#125;</div><div class="line">	if(largest!=i) &#123;</div><div class="line">		temp = a[i];</div><div class="line">		a[i] = a[largest];</div><div class="line">		a[largest] = temp;</div><div class="line">		max_heapify(a, largest);</div><div class="line">	&#125;</div><div class="line">	return a;		</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="建堆"><a href="#建堆" class="headerlink" title="建堆"></a>建堆</h3><p>在对数组遍历建立二叉树的时候，我们容易得出Math.floor(n/2)到n都是叶节点，其余是根节点，所以我们在建堆得时候冲根节点不断往前维护就好。<br>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">//建大堆</div><div class="line">public int[] bulid_max_heap(int[] a)&#123;</div><div class="line">	heap_size = a.length;</div><div class="line">	for(int i = (int)Math.floor(a.length/2)-1; i&gt;=0; i--)&#123;</div><div class="line">		max_heapify(a, i);</div><div class="line">	&#125;</div><div class="line">	return a;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="堆排序算法"><a href="#堆排序算法" class="headerlink" title="堆排序算法"></a>堆排序算法</h3><p>思想：先取出顶，再维护，再取顶，再维护，知道最后<br>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//堆排序算法</div><div class="line">public int[] heapsort(int[] a) &#123;</div><div class="line">	int[] b = new int[a.length];//无奈之举，java没有size这个属性，或者用list也可以</div><div class="line">	bulid_max_heap(a);</div><div class="line">	for(int i = a.length-1; i&gt;=1; i--)&#123;</div><div class="line">		b[i] = a[0];</div><div class="line">		a[0] = a[i];</div><div class="line">		a[i] = 0;//使最后一个元素不参与排序</div><div class="line">		max_heapify(a, 0);</div><div class="line">	&#125;</div><div class="line">	b[0] = a[0];</div><div class="line">	return b;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>算法时间复杂度：<strong>nlgn</strong></p>
+<h3 id="重要应用——优先队列"><a href="#重要应用——优先队列" class="headerlink" title="重要应用——优先队列"></a>重要应用——优先队列</h3><p>优先队列应用于共享计算机的系统的作业调度，最大优先队列记录将要执行的各个作业以及它们之间的相对优先级，在任何时候都可以调用insert把一个新作业加入到队列中来。<br>讲一下最大优先序列的几个操作。</p>
+<h4 id="maximum获取最大值"><a href="#maximum获取最大值" class="headerlink" title="maximum获取最大值"></a>maximum获取最大值</h4><p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">	//获取最大值</div><div class="line">public int maximum(int[] a)&#123;</div><div class="line">	return a[1];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="去掉并返回数组中的最大键值得元素"><a href="#去掉并返回数组中的最大键值得元素" class="headerlink" title="去掉并返回数组中的最大键值得元素"></a>去掉并返回数组中的最大键值得元素</h4><p>代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//去掉并返回数组中具有最大键值得元素</div><div class="line">public int extract_max(int[] a)&#123;</div><div class="line">	if(a.length&lt;1)&#123;</div><div class="line">		System.out.println(&quot;heap underflow&quot;);</div><div class="line">	&#125;</div><div class="line">	int max = a[0];</div><div class="line">	a[0] = a[a.length];</div><div class="line">	max_heapify(a, 0);</div><div class="line">	return max;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>加油呀加油！堆排序还是强大的，期待运用！ </p>
+
       
     </div>
 
@@ -372,6 +383,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/算法导论/" rel="tag"># 算法导论</a>
+          
+        </div>
+      
 
       
         
@@ -381,8 +398,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/26/记一次失败的面试/" rel="next" title="记一次失败的面试">
-                <i class="fa fa-chevron-left"></i> 记一次失败的面试
+              <a href="/2017/05/06/nginx反向代理与负载均衡/" rel="next" title="nginx反向代理与负载均衡">
+                <i class="fa fa-chevron-left"></i> nginx反向代理与负载均衡
               </a>
             
           </div>
@@ -390,10 +407,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/04/String-StringBuilder-StringBuffer区别/" rel="prev" title="String,StringBuilder,StringBuffer区别">
-                String,StringBuilder,StringBuffer区别 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -567,7 +580,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#encrypt-message"><span class="nav-number">1.</span> <span class="nav-text">大喊一声密码.</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#堆排序"><span class="nav-number">1.</span> <span class="nav-text">堆排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单介绍"><span class="nav-number">1.1.</span> <span class="nav-text">简单介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#维护堆"><span class="nav-number">1.2.</span> <span class="nav-text">维护堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建堆"><span class="nav-number">1.3.</span> <span class="nav-text">建堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆排序算法"><span class="nav-number">1.4.</span> <span class="nav-text">堆排序算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重要应用——优先队列"><span class="nav-number">1.5.</span> <span class="nav-text">重要应用——优先队列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#maximum获取最大值"><span class="nav-number">1.5.1.</span> <span class="nav-text">maximum获取最大值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#去掉并返回数组中的最大键值得元素"><span class="nav-number">1.5.2.</span> <span class="nav-text">去掉并返回数组中的最大键值得元素</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
