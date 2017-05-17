@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="git," />
+  <meta name="keywords" content="算法导论，java," />
 
 
 
@@ -89,21 +89,17 @@
 
 
 
-<meta name="description" content="引：因为没有加入到什么团队中，没有机会和别人一起合作过项目，所以对git使用并不熟练，但是这次比较空，就好好梳理一下吧！">
-<meta name="keywords" content="git">
+<meta name="description" content="引：上次看到过钟华老师的一个基于贪心算法的毕业设计，一直很好奇，今天终于能看看它了，只是知其然，不知所以然。">
+<meta name="keywords" content="算法导论，java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git个人使用与多人协作">
-<meta property="og:url" content="http://bestlixiang.site/2017/05/04/git个人使用与多人协作/index.html">
+<meta property="og:title" content="贪心算法">
+<meta property="og:url" content="http://bestlixiang.site/2017/05/17/贪心算法/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：因为没有加入到什么团队中，没有机会和别人一起合作过项目，所以对git使用并不熟练，但是这次比较空，就好好梳理一下吧！">
-<meta property="og:image" content="http://i4.buimg.com/1949/ae304bcf1db73902.jpg">
-<meta property="og:image" content="http://i2.muimg.com/593324/0b2d71ab51b7e2b6.jpg">
-<meta property="og:image" content="http://i1.piimg.com/593324/2e66bb0030802f7f.png">
-<meta property="og:updated_time" content="2017-05-04T15:55:37.000Z">
+<meta property="og:description" content="引：上次看到过钟华老师的一个基于贪心算法的毕业设计，一直很好奇，今天终于能看看它了，只是知其然，不知所以然。">
+<meta property="og:updated_time" content="2017-05-17T14:42:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git个人使用与多人协作">
-<meta name="twitter:description" content="引：因为没有加入到什么团队中，没有机会和别人一起合作过项目，所以对git使用并不熟练，但是这次比较空，就好好梳理一下吧！">
-<meta name="twitter:image" content="http://i4.buimg.com/1949/ae304bcf1db73902.jpg">
+<meta name="twitter:title" content="贪心算法">
+<meta name="twitter:description" content="引：上次看到过钟华老师的一个基于贪心算法的毕业设计，一直很好奇，今天终于能看看它了，只是知其然，不知所以然。">
 
 
 
@@ -131,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/05/04/git个人使用与多人协作/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/05/17/贪心算法/"/>
 
 
 
 
 
-  <title> git个人使用与多人协作 | rex note </title>
+  <title> 贪心算法 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -256,7 +252,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/04/git个人使用与多人协作/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/17/贪心算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -277,7 +273,7 @@
             
             
               
-                git个人使用与多人协作
+                贪心算法
               
             
           </h1>
@@ -292,8 +288,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T23:52:34+08:00">
-                2017-05-04
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-17T22:41:13+08:00">
+                2017-05-17
               </time>
             
 
@@ -315,8 +311,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具/" itemprop="url" rel="index">
-                    <span itemprop="name">工具</span>
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
                   </a>
                 </span>
 
@@ -350,28 +346,30 @@
       
 
       
-        <p>引：因为没有加入到什么团队中，没有机会和别人一起合作过项目，所以对git使用并不熟练，但是这次比较空，就好好梳理一下吧！<a id="more"></a></p>
-<h1 id="个人使用"><a href="#个人使用" class="headerlink" title="个人使用"></a>个人使用</h1><h2 id="git介绍"><a href="#git介绍" class="headerlink" title="git介绍"></a>git介绍</h2><p>特点就是分布式了，请看下图，每一台电脑都是一个仓库，大家都可以使用。</p>
-<p><img src="http://i4.buimg.com/1949/ae304bcf1db73902.jpg" alt="分布式"></p>
-<h2 id="仓库理解及操作"><a href="#仓库理解及操作" class="headerlink" title="仓库理解及操作"></a>仓库理解及操作</h2><p>先上图：</p>
-<p><img src="http://i2.muimg.com/593324/0b2d71ab51b7e2b6.jpg" alt="仓库"></p>
-<p>有个上面的图做铺垫，下面的操作也就好理解了</p>
-<p>添加文件：<code>git add file</code></p>
-<p>提交文件：<code>git commit -m &quot;提交描述&quot;</code></p>
-<p>查看状态:<code>git status</code></p>
-<p>查看日志：<code>git log</code> 相关版本号可以通过reset来回退到任何提交时间点</p>
-<p>添加远程库：<code>git remote add origin git@github.com:username/repository</code></p>
-<p>推送到远程库： 第一次用：<code>git push -u origin master</code>之后用<code>git push origin master</code><br>注意点：要将电脑的ssh添加到你的github里</p>
-<p>克隆远程库：<code>git clone origin git@github.com:username/repository</code></p>
-<h1 id="多人协作"><a href="#多人协作" class="headerlink" title="多人协作"></a>多人协作</h1><p>我想大家需要理解这样一张图：</p>
-<p><img src="http://i1.piimg.com/593324/2e66bb0030802f7f.png" alt="多人协作"></p>
-<p>推送分支：<code>$ git push origin branchname</code></p>
-<p>抓取分支：<code>git clone origin git@github.com:username/repository;git checkout -b dev origin/dev</code></p>
-<p>基本操作肯定会碰到问题：</p>
-<p>如果你的小伙伴已经向origin/dev分支推送了他的提交，而碰巧你也对同样的文件作了修改，并试图推送，那么就会提交被解决，这个时候就需要：</p>
-<p><code>git pull</code></p>
-<p>这个时候合并是有冲突的，需要你本地修改之后再提交上去。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>目前自己所要掌握的就是这些东西了，再遇到问题可以谷歌或者百度。<a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="external">最后感谢廖雪峰的git教程</a></p>
+        <p>引：上次看到过钟华老师的一个基于贪心算法的毕业设计，一直很好奇，今天终于能看看它了，只是知其然，不知所以然。<a id="more"></a></p>
+<h2 id="贪心算法总说"><a href="#贪心算法总说" class="headerlink" title="贪心算法总说"></a>贪心算法总说</h2><p>贪心算法在每一步都会做出看起来是最佳的选择，也就是说会做出局部最优的选择，希望以此能够得到最优解。</p>
+<h2 id="活动选择问题"><a href="#活动选择问题" class="headerlink" title="活动选择问题"></a>活动选择问题</h2><h3 id="贪心选择"><a href="#贪心选择" class="headerlink" title="贪心选择"></a>贪心选择</h3><p>我们要选择这样一个活动，选出它之后身下的资源能够被尽量多的其他任务所用，即选择最早结束的活动。</p>
+<h3 id="递归贪心算法"><a href="#递归贪心算法" class="headerlink" title="递归贪心算法"></a>递归贪心算法</h3><p>算法思路：用两个数组s和f表示活动的开始和结束时间。下表k是我们要求解的子问题，以及问题规模n，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">public class ActivitySelector &#123;</div><div class="line">public int[] s = new int[]&#123;1,3,0,5,3,5,6,8,8,2,12&#125;;</div><div class="line">public int[] f = new int[]&#123;4,5,6,7,9,9,10,11,12,14,16&#125;;</div><div class="line">public List&lt;Integer&gt; list = new ArrayList&lt;&gt;();</div><div class="line">public void recursiveActivitySelector(int[] s, int[] f,int k,int n)&#123;</div><div class="line">if(list.size()==0)&#123;</div><div class="line">list.add(1);</div><div class="line">&#125;</div><div class="line">int m = k+1;</div><div class="line">while (m&lt;n &amp;&amp; s[m]&lt;f[k])&#123;</div><div class="line">m = m+1;</div><div class="line">&#125;</div><div class="line">if(m&lt;n)&#123;</div><div class="line">list.add(m+1);</div><div class="line">recursiveActivitySelector(s, f, m, n);</div><div class="line">&#125; else &#123;</div><div class="line">return ;</div><div class="line">&#125;		</div><div class="line">&#125;</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">ActivitySelector activitySelector = new ActivitySelector();</div><div class="line"></div><div class="line">activitySelector.recursiveActivitySelector(activitySelector.s, activitySelector.f, 0, activitySelector.f.length);</div><div class="line">for (Integer i : activitySelector.list) &#123;</div><div class="line">System.out.println(i);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="迭代贪心算法"><a href="#迭代贪心算法" class="headerlink" title="迭代贪心算法"></a>迭代贪心算法</h3><p>这个过程是假设输入活动的结束时间是已经排好序的，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">public class GreedyActivitySelector &#123;</div><div class="line">public int[] s = new int[]&#123;1,3,0,5,3,5,6,8,8,2,12&#125;;</div><div class="line">public int[] f = new int[]&#123;4,5,6,7,9,9,10,11,12,14,16&#125;;</div><div class="line">public List&lt;Integer&gt; list = new ArrayList&lt;&gt;();</div><div class="line">public void greedActivitySelector(int[] s,int[] f)&#123;</div><div class="line">int n = s.length;</div><div class="line">list.add(1);</div><div class="line">int k = 1;</div><div class="line">for (int m = 1; m &lt; n; m++) &#123;</div><div class="line">if(s[m]&gt;=f[k])&#123;</div><div class="line">list.add(k);</div><div class="line">k = m;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">ActivitySelector activitySelector = new ActivitySelector();</div><div class="line"></div><div class="line">activitySelector.recursiveActivitySelector(activitySelector.s, activitySelector.f, 0, activitySelector.f.length);</div><div class="line">for (Integer i : activitySelector.list) &#123;</div><div class="line">System.out.println(i);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="贪心算法原理"><a href="#贪心算法原理" class="headerlink" title="贪心算法原理"></a>贪心算法原理</h2><p>设计贪心算法的过程</p>
+<ol>
+<li>确定问题的最优子结构</li>
+<li>设计一个递归算法</li>
+<li>证明一个贪心选择，则只剩下一个子问题</li>
+<li>证明贪心选择总是安全的</li>
+<li>设计一个递归算法实现贪心策略</li>
+<li>将递归算法转换为迭代算法</li>
+</ol>
+<p>证明一个贪心算法是否能求解一个最优化问题？具有下面性质就ok？</p>
+<ol>
+<li>贪心选择性质</li>
+</ol>
+<p>我们可以通过做出局部最优选择来构造全局最优解</p>
+<ol>
+<li>最优子结构</li>
+</ol>
+<p>如果一个问题的最优解包含子问题的最优解</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一步一步慢慢贪心，和做人是一样的，但是总的来说还是要考虑全局的！！！</p>
 
       
     </div>
@@ -401,7 +399,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/git/" rel="tag"># git</a>
+            <a href="/tags/算法导论，java/" rel="tag"># 算法导论，java</a>
           
         </div>
       
@@ -414,8 +412,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/04/String-StringBuilder-StringBuffer区别/" rel="next" title="String,StringBuilder,StringBuffer区别">
-                <i class="fa fa-chevron-left"></i> String,StringBuilder,StringBuffer区别
+              <a href="/2017/05/17/动态规划/" rel="next" title="动态规划">
+                <i class="fa fa-chevron-left"></i> 动态规划
               </a>
             
           </div>
@@ -423,10 +421,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/06/快速排序及随机化算法/" rel="prev" title="快速排序及随机化算法">
-                快速排序及随机化算法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -600,7 +594,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#个人使用"><span class="nav-number">1.</span> <span class="nav-text">个人使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#git介绍"><span class="nav-number">1.1.</span> <span class="nav-text">git介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#仓库理解及操作"><span class="nav-number">1.2.</span> <span class="nav-text">仓库理解及操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多人协作"><span class="nav-number">2.</span> <span class="nav-text">多人协作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.1.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#贪心算法总说"><span class="nav-number">1.</span> <span class="nav-text">贪心算法总说</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#活动选择问题"><span class="nav-number">2.</span> <span class="nav-text">活动选择问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#贪心选择"><span class="nav-number">2.1.</span> <span class="nav-text">贪心选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#递归贪心算法"><span class="nav-number">2.2.</span> <span class="nav-text">递归贪心算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迭代贪心算法"><span class="nav-number">2.3.</span> <span class="nav-text">迭代贪心算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#贪心算法原理"><span class="nav-number">3.</span> <span class="nav-text">贪心算法原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
