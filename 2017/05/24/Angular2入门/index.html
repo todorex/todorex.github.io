@@ -97,7 +97,7 @@
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
 <meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png">
-<meta property="og:updated_time" content="2017-05-24T12:31:16.000Z">
+<meta property="og:updated_time" content="2017-05-24T12:34:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular2入门">
 <meta name="twitter:description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
@@ -356,8 +356,9 @@
 <li><p>angular-in-memory-web-apia模块不存在</p>
 </li>
 </ol>
-<p>解决方法：通过命令行安装<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm i angular-in-memory-web-api</div></pre></td></tr></table></figure></p>
-<ol>
+<p>解决方法：通过命令行安装  </p>
+<pre><code>npm i angular-in-memory-web-api
+</code></pre><ol>
 <li><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">create(name: string): Promise&lt;Hero&gt; &#123;</div><div class="line">return this.http</div><div class="line">.post(this.heroesUrl, JSON.stringify(&#123;name: name&#125;), this.headers)</div><div class="line">.toPromise()</div><div class="line">.then(res =&gt; res.json().data as Hero)</div><div class="line">.catch(this.handleError);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
 </ol>
