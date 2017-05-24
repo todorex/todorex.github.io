@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="JWT,SpringSecurity,SpringBoot," />
 
 
 
@@ -89,12 +89,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="rex note">
-<meta property="og:url" content="http://bestlixiang.site/tags/电影/index.html">
+<meta name="description" content="引：在万老师的指引下，开始接触到了安全板块，SpringSecurity+JWT绝对能够让人欣喜">
+<meta name="keywords" content="JWT,SpringSecurity,SpringBoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringSecurity+JWT保驾SpringBoot(未完)">
+<meta property="og:url" content="http://bestlixiang.site/2017/05/24/SpringSecurity-JWT保驾SpringBoot-未完/index.html">
 <meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：在万老师的指引下，开始接触到了安全板块，SpringSecurity+JWT绝对能够让人欣喜">
+<meta property="og:updated_time" content="2017-05-24T15:57:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="rex note">
+<meta name="twitter:title" content="SpringSecurity+JWT保驾SpringBoot(未完)">
+<meta name="twitter:description" content="引：在万老师的指引下，开始接触到了安全板块，SpringSecurity+JWT绝对能够让人欣喜">
 
 
 
@@ -122,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/tags/电影/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/05/24/SpringSecurity-JWT保驾SpringBoot-未完/"/>
 
 
 
 
 
-  <title> 标签: 电影 | rex note </title>
+  <title> SpringSecurity+JWT保驾SpringBoot(未完) | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -153,7 +158,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -237,46 +242,185 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        电影
-        <small>标签</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/24/SpringSecurity-JWT保驾SpringBoot-未完/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SpringSecurity+JWT保驾SpringBoot(未完)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-24T23:55:33+08:00">
+                2017-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>引：在万老师的指引下，开始接触到了安全板块，SpringSecurity+JWT绝对能够让人欣喜<a id="more"></a></p>
+<h2 id="JWT介绍"><a href="#JWT介绍" class="headerlink" title="JWT介绍"></a>JWT介绍</h2><p>关于JWT说实话是最近才听到的，然后慢慢开始了解，这里简单记下一篇<a href="http://www.jianshu.com/p/576dbf44b2ae" target="_blank" rel="external">博文</a>。这篇博文在做过简单的应用之后发现还是不怎么全的 ，等自己再深入了解之后，再来补全。</p>
+<h2 id="SpringSecurity整合JWT"><a href="#SpringSecurity整合JWT" class="headerlink" title="SpringSecurity整合JWT"></a>SpringSecurity整合JWT</h2><p>看了几个SpringSecurity的应用，发现应该是大同小异，自己也找到一篇虽然结构不太好，但大部分内容都讲到的<a href="https://segmentfault.com/a/1190000009231329" target="_blank" rel="external">博文</a>。也是日后能够总结得好一点，再来补全。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一定要再来！！！！</p>
 
-      <h1 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/05/11/观《驴得水》呻吟/" itemprop="url">
-              
-                <span itemprop="name">观《驴得水》呻吟</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-11T15:48:01+08:00"
-              content="2017-05-11" >
-          05-11
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JWT/" rel="tag"># JWT</a>
+          
+            <a href="/tags/SpringSecurity/" rel="tag"># SpringSecurity</a>
+          
+            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/24/Angular2入门/" rel="next" title="Angular2入门">
+                <i class="fa fa-chevron-left"></i> Angular2入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -284,6 +428,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -303,8 +451,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/me.jpeg"
@@ -412,6 +569,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JWT介绍"><span class="nav-number">1.</span> <span class="nav-text">JWT介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringSecurity整合JWT"><span class="nav-number">2.</span> <span class="nav-text">SpringSecurity整合JWT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -518,6 +691,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
