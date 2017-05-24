@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="JavaScript,Angular2," />
 
 
 
@@ -89,12 +89,19 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="rex note">
-<meta property="og:url" content="http://bestlixiang.site/tags/电影/index.html">
+<meta name="description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
+<meta name="keywords" content="JavaScript,Angular2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular2入门">
+<meta property="og:url" content="http://bestlixiang.site/2017/05/24/Angular2入门/index.html">
 <meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png">
+<meta property="og:updated_time" content="2017-05-24T12:25:02.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="rex note">
+<meta name="twitter:title" content="Angular2入门">
+<meta name="twitter:description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png">
 
 
 
@@ -122,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/tags/电影/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/05/24/Angular2入门/"/>
 
 
 
 
 
-  <title> 标签: 电影 | rex note </title>
+  <title> Angular2入门 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -153,7 +160,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -237,46 +244,189 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        电影
-        <small>标签</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/24/Angular2入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Angular2入门
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-24T20:22:59+08:00">
+                2017-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。<a id="more"></a></p>
+<h2 id="Angular简介"><a href="#Angular简介" class="headerlink" title="Angular简介"></a>Angular简介</h2><p>在经过简单的了解与使用之后，感觉 到Angular2的强大与伟大，配的上说是一个优秀的前端框架。Angular2实现了前端一直提倡的组件化开发还解决了大部分项目路由混乱的问题。它还有具有MVC分层架构和依赖注入等一系列优秀的特性。现在贴上Angular2的一张架构图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png" alt="Angular2架构图"><br>上图描述了Angular2中8大主要构造块的关系，他们具体的理解，可以参考这篇<a href="http://www.cnblogs.com/1wen/p/5466620.html" target="_blank" rel="external">博文</a>。如果还有什么不理解，那我们可以相信实践见真知。</p>
+<h2 id="Angular起步"><a href="#Angular起步" class="headerlink" title="Angular起步"></a>Angular起步</h2><p>在这次学习中，我终于理解了前辈们所说的入门一门技术就好的方法就是去看官方文档了，<a href="https://angular.cn/docs/ts/latest/" target="_blank" rel="external">Angular2的官网文档</a>里面有中文版的，相信大家一定很开心吧。当然没有中文版也是要看的，比较都是最基础的入门，不要惧怕英文。</p>
+<p>在这次按照官方文档的教程（英雄编辑器）出现了两个问题，这里也说明一下：</p>
+<ol>
+<li>angular-in-memory-web-apia模块不存在</li>
+</ol>
+<p>解决方法：通过命令行安装<br><figure class="highlight plain"><figcaption><span>i angular-in-memory-web-api```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">2.</div></pre></td></tr></table></figure></p>
+<p>create(name: string): Promise<hero> {<br>return this.http<br>.post(this.heroesUrl, JSON.stringify({name: name}), this.headers)<br>.toPromise()<br>.then(res =&gt; res.json().data as Hero)<br>.catch(this.handleError);<br>}<br>```<br>这里的post方法中的第三个参数应该是this.headers,而不是像官方文档中的那样。</hero></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果遇到不懂得问候多看看文档吧，相信自己可以的，然后就是实践见真知了。</p>
 
-      <h1 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/05/11/观《驴得水》呻吟/" itemprop="url">
-              
-                <span itemprop="name">观《驴得水》呻吟</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-11T15:48:01+08:00"
-              content="2017-05-11" >
-          05-11
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/tags/Angular2/" rel="tag"># Angular2</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/23/简谈entity，model，domain/" rel="next" title="简谈entity，model，domain">
+                <i class="fa fa-chevron-left"></i> 简谈entity，model，domain
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -284,6 +434,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -303,8 +457,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/me.jpeg"
@@ -412,6 +575,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Angular简介"><span class="nav-number">1.</span> <span class="nav-text">Angular简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Angular起步"><span class="nav-number">2.</span> <span class="nav-text">Angular起步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -518,6 +697,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
