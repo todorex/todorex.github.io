@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-07-13T00:27:05.000Z</updated>
+  <updated>2017-07-15T01:06:00.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>java ftp 上传下载的坑 </title>
+    <link href="http://bestlixiang.site/2017/07/15/java-ftp-%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD%E7%9A%84%E5%9D%91/"/>
+    <id>http://bestlixiang.site/2017/07/15/java-ftp-上传下载的坑/</id>
+    <published>2017-07-15T01:04:43.000Z</published>
+    <updated>2017-07-15T01:06:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：还是项目需要，要定时执行一个文件下载业务，一开始方向有点错，但是还好纠正过来了，采用ftp下载，但是ftp下载也有各种坑！<a id="more"></a></p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>jar包：commons-net</p>
+<h2 id="ftp上传"><a href="#ftp上传" class="headerlink" title="ftp上传"></a>ftp上传</h2><p>程序：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">public static boolean uploadFile(</div><div class="line">String url,//服务器主机号</div><div class="line">int port,//服务器端口</div><div class="line">String username,//用户名</div><div class="line">String password,//密码</div><div class="line">String path, //上传路径</div><div class="line">String filename,//上传为服务器上的文件名</div><div class="line">InputStream //input本地上传的文件流</div><div class="line">) &#123;</div><div class="line">boolean success = false;</div><div class="line">FTPClient ftp = new FTPClient();</div><div class="line">try &#123;</div><div class="line">int reply;</div><div class="line">ftp.connect(url, port);//连接FTP服务器</div><div class="line">//如果采用默认端口，可以使用ftp.connect(url)的方式直接连接FTP服务器</div><div class="line">ftp.login(username, password);//登录</div><div class="line">reply = ftp.getReplyCode();</div><div class="line">if (!FTPReply.isPositiveCompletion(reply)) &#123;</div><div class="line">ftp.disconnect();</div><div class="line">return success;</div><div class="line">&#125;</div><div class="line">ftp.changeWorkingDirectory(path);</div><div class="line">ftp.storeFile(filename, input);</div><div class="line"></div><div class="line">input.close();</div><div class="line">ftp.logout();</div><div class="line">success = true;</div><div class="line">&#125; catch (IOException e) &#123;</div><div class="line">e.printStackTrace();</div><div class="line">&#125; finally &#123;</div><div class="line">if (ftp.isConnected()) &#123;</div><div class="line">try &#123;</div><div class="line">ftp.disconnect();</div><div class="line">&#125; catch (IOException ioe) &#123;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">return success;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>测试代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">File file = new File(&quot;/var/test.txt&quot;);</div><div class="line">InputStream is = new FileInputStream(file);</div><div class="line">uploadFile(&quot;127.0.0.1&quot;,21,&quot;test&quot;,&quot;123456&quot;,&quot;/var/data/test&quot;,&quot;testdemo.txt&quot;,is);</div></pre></td></tr></table></figure></p>
+<h2 id="ftp下载"><a href="#ftp下载" class="headerlink" title="ftp下载"></a>ftp下载</h2><p>程序：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line">public static boolean downFile(</div><div class="line">String url, //FTP服务器hostname</div><div class="line">int port,//FTP服务器端口</div><div class="line">String username, //FTP登录账号</div><div class="line">String password, //FTP登录密码</div><div class="line">String remotePath,//FTP服务器上的相对路径</div><div class="line">String fileName,//要下载文件关键字</div><div class="line">String localPath//下载后保存到本地的路径</div><div class="line"></div><div class="line">)  &#123;</div><div class="line">FTPClient ftpClient = null;</div><div class="line">boolean success = false;</div><div class="line"></div><div class="line">try &#123;</div><div class="line">ftpClient = new FTPClient();</div><div class="line"></div><div class="line">ftpClient.connect(url, port);// 连接FTP服务器</div><div class="line">ftpClient.login(username, password);// 登陆FTP服务器</div><div class="line">ftpClient.setControlEncoding(&quot;gb2312&quot;); // 中文支持</div><div class="line">ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);//设置文件格式</div><div class="line">ftpClient.enterLocalPassiveMode();</div><div class="line">logger.info(ftpClient.getReplyCode());</div><div class="line">if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) &#123;</div><div class="line">logger.warn(&quot;未连接到FTP，用户名或密码错误。&quot;);</div><div class="line">ftpClient.disconnect();</div><div class="line">&#125; else &#123;</div><div class="line">logger.info(&quot;FTP连接成功。&quot;);</div><div class="line">&#125;</div><div class="line">ftpClient.changeWorkingDirectory(remotePath);</div><div class="line">FTPFile[] fs = ftpClient.listFiles();</div><div class="line">File file = new File(localPath);</div><div class="line">if(!file.exists())&#123;</div><div class="line">file.mkdirs();</div><div class="line">&#125;</div><div class="line">for(FTPFile ff:fs)&#123;</div><div class="line">if(ff.getName().contains(fileName))&#123;</div><div class="line">File localFile = new File(localPath+&quot;/&quot;+ff.getName());</div><div class="line">if (localFile.exists())&#123;</div><div class="line">continue;</div><div class="line">&#125;</div><div class="line">OutputStream os = new FileOutputStream(localFile);</div><div class="line">long time1 = System.currentTimeMillis();</div><div class="line">boolean b = ftpClient.retrieveFile(new String(ff.getName().getBytes(&quot;gb2312&quot;),&quot;ISO8859-1&quot;), os);      </div><div class="line">os.flush();</div><div class="line">os.close();</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">ftpClient.logout();</div><div class="line">success = true;</div><div class="line">&#125; catch (SocketException e) &#123;</div><div class="line">e.printStackTrace();</div><div class="line">logger.warn(&quot;FTP的IP地址可能错误，请正确配置。&quot;);</div><div class="line">&#125; catch (IOException e) &#123;</div><div class="line">e.printStackTrace();</div><div class="line">logger.warn(&quot;FTP的端口错误,请正确配置。&quot;);</div><div class="line">&#125; finally &#123;</div><div class="line">if (ftpClient.isConnected()) &#123;</div><div class="line">try &#123;</div><div class="line">ftpClient.disconnect();</div><div class="line">&#125; catch (IOException ioe) &#123;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">return success;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>测试程序：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">downFile(&quot;127.0.0.1&quot;,21,&quot;test&quot;,&quot;123456&quot;,&quot;、var/data/test&quot;,&quot;demo&quot;,&quot;/var/alldata&quot;);</div></pre></td></tr></table></figure></p>
+<h2 id="一些坑"><a href="#一些坑" class="headerlink" title="一些坑"></a>一些坑</h2><ol>
+<li>客户端接受的编码<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.setControlEncoding(&quot;gb2312&quot;); // 中文支持</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>如果服务器上的文件名有中文，一定要加上这一句，具体编码要根据服务器的编码。</p>
+<ol>
+<li>客户端接受的文件类型<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);//设置文件格式</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>文件类型要根据下载的文件格式来定</p>
+<ol>
+<li>服务器端口设置</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.enterLocalPassiveMode();</div></pre></td></tr></table></figure>
+<p>调用FTPClient.enterLocalPassiveMode();这个方法的意思就是每次数据连接之前，ftp client告诉ftp server开通一个端口来传输数据，防止在新端口对外部不通，因为ftp server可能每次开启不同的端口来传输数据，但是在linux上，由于安全限制，可能某些端口没有开启，所以就出现阻塞。</p>
+<ol>
+<li>最大的坑（下载出0kb的文件：实质就是retrieveFile方法执行失败）<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.retrieveFile(new String(ff.getName().getBytes(&quot;gb2312&quot;),&quot;ISO8859-1&quot;), os)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>一定要给文件名换编码，让它识别中文，具体编码也是根据实际情况而定。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ftp客户端的速度也是要根据网速来的，可能比一般http快，但是面对网速慢的情况也是无可奈何！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：还是项目需要，要定时执行一个文件下载业务，一开始方向有点错，但是还好纠正过来了，采用ftp下载，但是ftp下载也有各种坑！
+    
+    </summary>
+    
+      <category term="编程" scheme="http://bestlixiang.site/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="ftp" scheme="http://bestlixiang.site/tags/ftp/"/>
+    
+  </entry>
   
   <entry>
     <title>js原型和原型链</title>
@@ -571,9 +622,9 @@
       <category term="算法" scheme="http://bestlixiang.site/categories/%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="线性时间排序" scheme="http://bestlixiang.site/tags/%E7%BA%BF%E6%80%A7%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F/"/>
-    
       <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
+    
+      <category term="线性时间排序" scheme="http://bestlixiang.site/tags/%E7%BA%BF%E6%80%A7%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F/"/>
     
   </entry>
   
@@ -890,26 +941,6 @@ extends AbstractStringBuilder
     
     
       <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>请不要无脑</title>
-    <link href="http://bestlixiang.site/2017/04/27/%E8%AF%B7%E4%B8%8D%E8%A6%81%E6%97%A0%E8%84%91/"/>
-    <id>http://bestlixiang.site/2017/04/27/请不要无脑/</id>
-    <published>2017-04-27T12:41:48.000Z</published>
-    <updated>2017-04-29T01:25:22.000Z</updated>
-    
-    <content type="html"><![CDATA[<script src="/crypto-js.js"></script><script src="/mcommon.js"></script><h3 id="encrypt-message">大喊一声密码.</h3><link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script> <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> <div id="security"> <div> <div class="input-group"> <input type="text" class="form-control" aria-label="Enter the password." id="pass"/> <div class="input-group-btn"> <button type="button" class="btn btn-default" onclick="decryptAES()">Decrypt</button> </div> </div> </div> </div> <div id="encrypt-blog" style="display:none"> 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 </div>]]></content>
-    
-    <summary type="html">
-    
-      简单，不为人知.
-    
-    </summary>
-    
-      <category term="生活" scheme="http://bestlixiang.site/categories/%E7%94%9F%E6%B4%BB/"/>
-    
     
   </entry>
   
