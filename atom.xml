@@ -64,7 +64,7 @@
     <link href="http://bestlixiang.site/2017/07/15/java-ftp-%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD%E7%9A%84%E5%9D%91/"/>
     <id>http://bestlixiang.site/2017/07/15/java-ftp-上传下载的坑/</id>
     <published>2017-07-15T01:04:43.000Z</published>
-    <updated>2017-07-15T04:37:50.000Z</updated>
+    <updated>2017-07-15T04:41:06.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：还是项目需要，要定时执行一个文件下载业务，一开始方向有点错，但是还好纠正过来了，采用ftp下载，但是ftp下载也有各种坑！<a id="more"></a></p>
 <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>jar包：commons-net</p>
@@ -73,25 +73,23 @@
 <h2 id="ftp下载"><a href="#ftp下载" class="headerlink" title="ftp下载"></a>ftp下载</h2><p>程序：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">downFile</span><span class="params">(</span></span></div><div class="line">String url, //FTP服务器hostname</div><div class="line"><span class="keyword">int</span> port,//FTP服务器端口</div><div class="line">String username, //FTP登录账号</div><div class="line">String password, //FTP登录密码</div><div class="line">String remotePath,//FTP服务器上的相对路径</div><div class="line">String fileName,//要下载文件关键字</div><div class="line">String localPath//下载后保存到本地的路径</div><div class="line"></div><div class="line">)  &#123;</div><div class="line">	FTPClient ftpClient = <span class="keyword">null</span>;</div><div class="line">	<span class="keyword">boolean</span> success = <span class="keyword">false</span>;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		ftpClient = <span class="keyword">new</span> FTPClient();</div><div class="line">		ftpClient.connect(url, port);<span class="comment">// 连接FTP服务器</span></div><div class="line">		ftpClient.login(username, password);<span class="comment">// 登陆FTP服务器</span></div><div class="line">		ftpClient.setControlEncoding(<span class="string">"gb2312"</span>); <span class="comment">// 中文支持</span></div><div class="line">		ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);<span class="comment">//设置文件格式</span></div><div class="line">		ftpClient.enterLocalPassiveMode();</div><div class="line">		logger.info(ftpClient.getReplyCode());</div><div class="line">		<span class="keyword">if</span> (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) &#123;</div><div class="line">			logger.warn(<span class="string">"未连接到FTP，用户名或密码错误。"</span>);</div><div class="line">			ftpClient.disconnect();</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			logger.info(<span class="string">"FTP连接成功。"</span>);</div><div class="line">		&#125;</div><div class="line">		ftpClient.changeWorkingDirectory(remotePath);</div><div class="line">		FTPFile[] fs = ftpClient.listFiles();</div><div class="line">		File file = <span class="keyword">new</span> File(localPath);</div><div class="line">		<span class="keyword">if</span>(!file.exists())&#123;</div><div class="line">			file.mkdirs();</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">for</span>(FTPFile ff:fs)&#123;</div><div class="line">		<span class="keyword">if</span>(ff.getName().contains(fileName))&#123;</div><div class="line">			File localFile = <span class="keyword">new</span> File(localPath+<span class="string">"/"</span>+ff.getName());</div><div class="line">			<span class="keyword">if</span> (localFile.exists())&#123;</div><div class="line">				<span class="keyword">continue</span>;</div><div class="line">			&#125;</div><div class="line">		OutputStream os = <span class="keyword">new</span> FileOutputStream(localFile);</div><div class="line">		<span class="keyword">long</span> time1 = System.currentTimeMillis();</div><div class="line">		<span class="keyword">boolean</span> b = ftpClient.retrieveFile(<span class="keyword">new</span> String(ff.getName().getBytes(<span class="string">"gb2312"</span>),<span class="string">"ISO8859-1"</span>), os);      </div><div class="line">		os.flush();</div><div class="line">		os.close();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		ftpClient.logout();</div><div class="line">		success = <span class="keyword">true</span>;</div><div class="line">	&#125; <span class="keyword">catch</span> (SocketException e) &#123;</div><div class="line">		e.printStackTrace();</div><div class="line">		logger.warn(<span class="string">"FTP的IP地址可能错误，请正确配置。"</span>);</div><div class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">		e.printStackTrace();</div><div class="line">		logger.warn(<span class="string">"FTP的端口错误,请正确配置。"</span>);</div><div class="line">	&#125; <span class="keyword">finally</span> &#123;</div><div class="line">		<span class="keyword">if</span> (ftpClient.isConnected()) &#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			ftpClient.disconnect();</div><div class="line">		&#125; <span class="keyword">catch</span> (IOException ioe) &#123;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> success;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>测试程序：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">downFile(&quot;127.0.0.1&quot;,21,&quot;test&quot;,&quot;123456&quot;,&quot;、var/data/test&quot;,&quot;demo&quot;,&quot;/var/alldata&quot;);</div></pre></td></tr></table></figure></p>
 <h2 id="一些坑"><a href="#一些坑" class="headerlink" title="一些坑"></a>一些坑</h2><ol>
-<li>客户端接受的编码<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.setControlEncoding(&quot;gb2312&quot;); // 中文支持</div></pre></td></tr></table></figure>
+<li><p>客户端接受的编码</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.setControlEncoding(&quot;gb2312&quot;); // 中文支持</div></pre></td></tr></table></figure>
+<p> 如果服务器上的文件名有中文，一定要加上这一句，具体编码要根据服务器的编码。</p>
+</li>
+<li><p>客户端接受的文件类型</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);//设置文件格式</div></pre></td></tr></table></figure>
+<p> 文件类型要根据下载的文件格式来定</p>
+</li>
+<li><p>服务器端口设置</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.enterLocalPassiveMode();</div></pre></td></tr></table></figure>
+<p> 调用FTPClient.enterLocalPassiveMode();这个方法的意思就是每次数据连接之前，ftp client告诉ftp server开通一个端口来传输数据，防止在新端口对外部不通，因为ftp server可能每次开启不同的端口来传输数据，但是在linux上，由于安全限制，可能某些端口没有开启，所以就出现阻塞。</p>
+</li>
+<li><p>最大的坑（下载出0kb的文件：实质就是retrieveFile方法执行失败）</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.retrieveFile(new String(ff.getName().getBytes(&quot;gb2312&quot;),&quot;ISO8859-1&quot;), os)</div></pre></td></tr></table></figure>
+<p> 一定要给文件名换编码，让它识别中文，具体编码也是根据实际情况而定。</p>
 </li>
 </ol>
-<p>如果服务器上的文件名有中文，一定要加上这一句，具体编码要根据服务器的编码。</p>
-<ol>
-<li>客户端接受的文件类型<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);//设置文件格式</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>文件类型要根据下载的文件格式来定</p>
-<ol>
-<li>服务器端口设置</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.enterLocalPassiveMode();</div></pre></td></tr></table></figure>
-<p>调用FTPClient.enterLocalPassiveMode();这个方法的意思就是每次数据连接之前，ftp client告诉ftp server开通一个端口来传输数据，防止在新端口对外部不通，因为ftp server可能每次开启不同的端口来传输数据，但是在linux上，由于安全限制，可能某些端口没有开启，所以就出现阻塞。</p>
-<ol>
-<li>最大的坑（下载出0kb的文件：实质就是retrieveFile方法执行失败）<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftpClient.retrieveFile(new String(ff.getName().getBytes(&quot;gb2312&quot;),&quot;ISO8859-1&quot;), os)</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>一定要给文件名换编码，让它识别中文，具体编码也是根据实际情况而定。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>ftp客户端的速度也是要根据网速来的，可能比一般http快，但是面对网速慢的情况也是无可奈何！</p>
 ]]></content>
     
@@ -666,9 +664,9 @@
       <category term="算法" scheme="http://bestlixiang.site/categories/%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
-    
       <category term="线性时间排序" scheme="http://bestlixiang.site/tags/%E7%BA%BF%E6%80%A7%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F/"/>
+    
+      <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
     
   </entry>
   
