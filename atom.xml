@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-07-15T01:40:22.000Z</updated>
+  <updated>2017-07-15T13:37:33.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,56 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>新系统开发环境的一系列配置</title>
+    <link href="http://bestlixiang.site/2017/07/15/%E6%96%B0%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E7%9A%84%E4%B8%80%E7%B3%BB%E5%88%97%E9%85%8D%E7%BD%AE/"/>
+    <id>http://bestlixiang.site/2017/07/15/新系统开发环境的一系列配置/</id>
+    <published>2017-07-15T13:35:54.000Z</published>
+    <updated>2017-07-15T13:37:33.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：总是不可避免的重装系统，人的脑子不可能那么好记住所有的操作，既然不想自己自己用博客记下所有操作，那么就把别人的博客（自己踩过）记录下来，以后备用。<a id="more"></a></p>
+<h2 id="window篇"><a href="#window篇" class="headerlink" title="window篇"></a>window篇</h2><ol>
+<li>JDK——java开发者起步</li>
+</ol>
+<p><a href="http://www.jianshu.com/p/ac13e424e950" target="_blank" rel="external">JDK的安装与环境变量的配置</a></p>
+<ol>
+<li>Node——前端好基友</li>
+</ol>
+<p><a href="http://www.jianshu.com/p/03a76b2e7e00" target="_blank" rel="external">Node.js安装及环境配置之Windows篇</a></p>
+<ol>
+<li>Sublime3——轻量级编辑器</li>
+</ol>
+<p><a href="http://www.jianshu.com/p/0e12a06c4578" target="_blank" rel="external">Sublime Text3安装与插件配置</a></p>
+<ol>
+<li>git——分布式版本控制工具</li>
+</ol>
+<p><a href="http://www.jianshu.com/p/dc90b9aac18c" target="_blank" rel="external">Git安装教程</a></p>
+<ol>
+<li>Idea——java开发利器</li>
+</ol>
+<p><a href="http://idea.lanyus.com/" target="_blank" rel="external">IntelliJ IDEA注册码</a></p>
+<ol>
+<li>Maven——项目依赖管理利器</li>
+</ol>
+<p><a href="http://www.jianshu.com/p/26fa41427a55" target="_blank" rel="external">Maven Windows10安装</a></p>
+<h2 id="Mac篇"><a href="#Mac篇" class="headerlink" title="Mac篇"></a>Mac篇</h2><p>待写</p>
+<h2 id="Ubuntu篇"><a href="#Ubuntu篇" class="headerlink" title="Ubuntu篇"></a>Ubuntu篇</h2><p>待写</p>
+<h2 id="双系统"><a href="#双系统" class="headerlink" title="双系统"></a>双系统</h2><p><a href="http://www.jianshu.com/p/16b36b912b02" target="_blank" rel="external">Win10和Ubuntu16.04双系统安装详解</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：总是不可避免的重装系统，人的脑子不可能那么好记住所有的操作，既然不想自己自己用博客记下所有操作，那么就把别人的博客（自己踩过）记录下来，以后备用。
+    
+    </summary>
+    
+      <category term="生活" scheme="http://bestlixiang.site/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="系统" scheme="http://bestlixiang.site/tags/%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
   
   <entry>
     <title>浅尝Apache Camel</title>
@@ -875,50 +925,6 @@ public class RandomQuickSort {
       <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
     
       <category term="排序" scheme="http://bestlixiang.site/tags/%E6%8E%92%E5%BA%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>git个人使用与多人协作</title>
-    <link href="http://bestlixiang.site/2017/05/04/git%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E4%B8%8E%E5%A4%9A%E4%BA%BA%E5%8D%8F%E4%BD%9C/"/>
-    <id>http://bestlixiang.site/2017/05/04/git个人使用与多人协作/</id>
-    <published>2017-05-04T15:52:34.000Z</published>
-    <updated>2017-05-04T15:55:37.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：因为没有加入到什么团队中，没有机会和别人一起合作过项目，所以对git使用并不熟练，但是这次比较空，就好好梳理一下吧！<a id="more"></a></p>
-<h1 id="个人使用"><a href="#个人使用" class="headerlink" title="个人使用"></a>个人使用</h1><h2 id="git介绍"><a href="#git介绍" class="headerlink" title="git介绍"></a>git介绍</h2><p>特点就是分布式了，请看下图，每一台电脑都是一个仓库，大家都可以使用。</p>
-<p><img src="http://i4.buimg.com/1949/ae304bcf1db73902.jpg" alt="分布式"></p>
-<h2 id="仓库理解及操作"><a href="#仓库理解及操作" class="headerlink" title="仓库理解及操作"></a>仓库理解及操作</h2><p>先上图：</p>
-<p><img src="http://i2.muimg.com/593324/0b2d71ab51b7e2b6.jpg" alt="仓库"></p>
-<p>有个上面的图做铺垫，下面的操作也就好理解了</p>
-<p>添加文件：<code>git add file</code></p>
-<p>提交文件：<code>git commit -m &quot;提交描述&quot;</code></p>
-<p>查看状态:<code>git status</code></p>
-<p>查看日志：<code>git log</code> 相关版本号可以通过reset来回退到任何提交时间点</p>
-<p>添加远程库：<code>git remote add origin git@github.com:username/repository</code></p>
-<p>推送到远程库： 第一次用：<code>git push -u origin master</code>之后用<code>git push origin master</code><br>注意点：要将电脑的ssh添加到你的github里</p>
-<p>克隆远程库：<code>git clone origin git@github.com:username/repository</code></p>
-<h1 id="多人协作"><a href="#多人协作" class="headerlink" title="多人协作"></a>多人协作</h1><p>我想大家需要理解这样一张图：</p>
-<p><img src="http://i1.piimg.com/593324/2e66bb0030802f7f.png" alt="多人协作"></p>
-<p>推送分支：<code>$ git push origin branchname</code></p>
-<p>抓取分支：<code>git clone origin git@github.com:username/repository;git checkout -b dev origin/dev</code></p>
-<p>基本操作肯定会碰到问题：</p>
-<p>如果你的小伙伴已经向origin/dev分支推送了他的提交，而碰巧你也对同样的文件作了修改，并试图推送，那么就会提交被解决，这个时候就需要：</p>
-<p><code>git pull</code></p>
-<p>这个时候合并是有冲突的，需要你本地修改之后再提交上去。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>目前自己所要掌握的就是这些东西了，再遇到问题可以谷歌或者百度。<a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="external">最后感谢廖雪峰的git教程</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：因为没有加入到什么团队中，没有机会和别人一起合作过项目，所以对git使用并不熟练，但是这次比较空，就好好梳理一下吧！
-    
-    </summary>
-    
-      <category term="工具" scheme="http://bestlixiang.site/categories/%E5%B7%A5%E5%85%B7/"/>
-    
-    
-      <category term="git" scheme="http://bestlixiang.site/tags/git/"/>
     
   </entry>
   
