@@ -103,7 +103,7 @@
     <link href="http://bestlixiang.site/2017/07/12/%E6%B5%85%E8%B0%88js%E9%97%AD%E5%8C%85/"/>
     <id>http://bestlixiang.site/2017/07/12/浅谈js闭包/</id>
     <published>2017-07-12T01:21:01.000Z</published>
-    <updated>2017-07-12T01:22:04.000Z</updated>
+    <updated>2017-07-15T01:08:57.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：最近项目前端用了angular2，里面使用的TypeScript,其实很多和Java挺像的，学起来还是挺快的。但是里面的很多变量的原理都是根据闭包来实现的，那就好好了解一下闭包。<a id="more"></a></p>
 <h2 id="闭包定义"><a href="#闭包定义" class="headerlink" title="闭包定义"></a>闭包定义</h2><p>根据Mozilla开发者文档定义：</p>
@@ -141,7 +141,7 @@
       <category term="编程" scheme="http://bestlixiang.site/categories/%E7%BC%96%E7%A8%8B/"/>
     
     
-      <category term="javasccript" scheme="http://bestlixiang.site/tags/javasccript/"/>
+      <category term="javascript" scheme="http://bestlixiang.site/tags/javascript/"/>
     
       <category term="闭包" scheme="http://bestlixiang.site/tags/%E9%97%AD%E5%8C%85/"/>
     
@@ -622,9 +622,9 @@
       <category term="算法" scheme="http://bestlixiang.site/categories/%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
-    
       <category term="线性时间排序" scheme="http://bestlixiang.site/tags/%E7%BA%BF%E6%80%A7%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F/"/>
+    
+      <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
     
   </entry>
   
