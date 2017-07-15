@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Springboot,ApacheCamel," />
 
 
 
@@ -89,16 +89,19 @@
 
 
 
-<meta name="description" content="简单，不为人知.">
+<meta name="description" content="引：最近项目有一个需求就是定时将一台服务器的文件传到另一个服务器，一开始想的竟然想的是用http去下载，后来在万老师的指点下，采取用ftp服务器（源文件所在地）与ftp客户端（源文件去向）的形式来处理，自己小试了一下，还不错！">
+<meta name="keywords" content="Springboot,ApacheCamel">
 <meta property="og:type" content="article">
-<meta property="og:title" content="请不要无脑">
-<meta property="og:url" content="http://bestlixiang.site/2017/04/27/请不要无脑/index.html">
+<meta property="og:title" content="浅尝Apache Camel">
+<meta property="og:url" content="http://bestlixiang.site/2017/07/15/浅尝Apache-Camel/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="简单，不为人知.">
-<meta property="og:updated_time" content="2017-04-29T01:25:22.000Z">
+<meta property="og:description" content="引：最近项目有一个需求就是定时将一台服务器的文件传到另一个服务器，一开始想的竟然想的是用http去下载，后来在万老师的指点下，采取用ftp服务器（源文件所在地）与ftp客户端（源文件去向）的形式来处理，自己小试了一下，还不错！">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/camel.png">
+<meta property="og:updated_time" content="2017-07-15T01:40:22.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="请不要无脑">
-<meta name="twitter:description" content="简单，不为人知.">
+<meta name="twitter:title" content="浅尝Apache Camel">
+<meta name="twitter:description" content="引：最近项目有一个需求就是定时将一台服务器的文件传到另一个服务器，一开始想的竟然想的是用http去下载，后来在万老师的指点下，采取用ftp服务器（源文件所在地）与ftp客户端（源文件去向）的形式来处理，自己小试了一下，还不错！">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/camel.png">
 
 
 
@@ -126,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/04/27/请不要无脑/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/07/15/浅尝Apache-Camel/"/>
 
 
 
 
 
-  <title> 请不要无脑 | rex note </title>
+  <title> 浅尝Apache Camel | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -251,7 +254,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/04/27/请不要无脑/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/07/15/浅尝Apache-Camel/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -272,7 +275,7 @@
             
             
               
-                请不要无脑
+                浅尝Apache Camel
               
             
           </h1>
@@ -287,8 +290,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-27T20:41:48+08:00">
-                2017-04-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-15T09:38:42+08:00">
+                2017-07-15
               </time>
             
 
@@ -310,8 +313,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/生活/" itemprop="url" rel="index">
-                    <span itemprop="name">生活</span>
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
                   </a>
                 </span>
 
@@ -345,7 +348,27 @@
       
 
       
-        <script src="/crypto-js.js"></script><script src="/mcommon.js"></script><h3 id="encrypt-message">大喊一声密码.</h3><link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script> <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> <div id="security"> <div> <div class="input-group"> <input type="text" class="form-control" aria-label="Enter the password." id="pass"/> <div class="input-group-btn"> <button type="button" class="btn btn-default" onclick="decryptAES()">Decrypt</button> </div> </div> </div> </div> <div id="encrypt-blog" style="display:none"> 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 </div>
+        <p>引：最近项目有一个需求就是定时将一台服务器的文件传到另一个服务器，一开始想的竟然想的是用http去下载，后来在万老师的指点下，采取用ftp服务器（源文件所在地）与ftp客户端（源文件去向）的形式来处理，自己小试了一下，还不错！<a id="more"></a></p>
+<h2 id="Apache-Camel简介"><a href="#Apache-Camel简介" class="headerlink" title="Apache Camel简介"></a>Apache Camel简介</h2><p>Apache Camel是Apache基金会下的一个开源项目,它是一个基于规则路由和处理的引擎，提供企业集成模式的Java对象的实现，通过应用程序接口 或称为陈述式的Java领域特定语言(DSL)来配置路由和处理的规则。其核心的思想就是从一个from源头得到数据,通过processor处理,再发到一个to目的的。</p>
+<p>这个from和to可以是我们在项目集成中经常碰到的类型:一个FTP文件夹中的文件,一个MQ的queue（jms）,一个HTTP request/response,一个webservice等等.</p>
+<h2 id="Apache-Camel架构"><a href="#Apache-Camel架构" class="headerlink" title="Apache Camel架构"></a>Apache Camel架构</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/camel.png" alt="架构图"></p>
+<p>其实理解起来很简单：始端》（过滤器+路由处理器）》终端</p>
+<h2 id="Apache-Camel核心概念"><a href="#Apache-Camel核心概念" class="headerlink" title="Apache Camel核心概念"></a>Apache Camel核心概念</h2><ol>
+<li><p>endpoint,所谓的endpoint,就是一种可以接收或发送数据的组件。可以支持多种协议，如jms,http,file等。</p>
+</li>
+<li><p>processor,它是用来处理具体业务逻辑的组件。</p>
+</li>
+<li><p>route,用来路由，指示数据从哪里来到哪里去，中间用哪个processor处理。</p>
+</li>
+<li><p>exchange,processor之间用exchange对象来传送数据，有点像jms,通俗一点就像上学时传的小纸条,所以：exchange对象就是processor，endpoint所有camel组件之间传送数据的小纸条:)。</p>
+</li>
+<li><p>filter，用来确定哪些东西可以传递，哪些东西不可以传递。 </p>
+</li>
+</ol>
+<h2 id="Apache-Camel例子（以ftp为例）"><a href="#Apache-Camel例子（以ftp为例）" class="headerlink" title="Apache Camel例子（以ftp为例）"></a>Apache Camel例子（以ftp为例）</h2><p>老师指导的例子，是结合Springboot的，放在github上了。<br><a href="https://github.com/todorex/ApacheCamel" target="_blank" rel="external">ApacheCamleDemo</a></p>
+<p>里面包括了动态路由和单路由的例子，稍微结合Springboot就可以理解并改成自己的代码。</p>
+<h2 id="什么时候用Apache-Camel"><a href="#什么时候用Apache-Camel" class="headerlink" title="什么时候用Apache Camel"></a>什么时候用Apache Camel</h2><p>参考网上的说法：camel就是企业信息集成框架，它提供了很多简单好用而又强大的组件，用户可以根据场景来选择不同的EIP（企业集成模式）来实现自己的需求，以响应快速变化的业务。可以把它当成企业信息总线（ESB）的轻量级实现。</p>
+
       
     </div>
 
@@ -372,6 +395,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Springboot/" rel="tag"># Springboot</a>
+          
+            <a href="/tags/ApacheCamel/" rel="tag"># ApacheCamel</a>
+          
+        </div>
+      
 
       
         
@@ -381,8 +412,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/26/记一次失败的面试/" rel="next" title="记一次失败的面试">
-                <i class="fa fa-chevron-left"></i> 记一次失败的面试
+              <a href="/2017/07/15/java-ftp-上传下载的坑/" rel="next" title="java ftp 上传下载的坑 ">
+                <i class="fa fa-chevron-left"></i> java ftp 上传下载的坑 
               </a>
             
           </div>
@@ -390,10 +421,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/04/String-StringBuilder-StringBuffer区别/" rel="prev" title="String,StringBuilder,StringBuffer区别">
-                String,StringBuilder,StringBuffer区别 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -567,7 +594,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#encrypt-message"><span class="nav-number">1.</span> <span class="nav-text">大喊一声密码.</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Camel简介"><span class="nav-number">1.</span> <span class="nav-text">Apache Camel简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Camel架构"><span class="nav-number">2.</span> <span class="nav-text">Apache Camel架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Camel核心概念"><span class="nav-number">3.</span> <span class="nav-text">Apache Camel核心概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Camel例子（以ftp为例）"><span class="nav-number">4.</span> <span class="nav-text">Apache Camel例子（以ftp为例）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么时候用Apache-Camel"><span class="nav-number">5.</span> <span class="nav-text">什么时候用Apache Camel</span></a></li></ol></div>
             
 
           </div>

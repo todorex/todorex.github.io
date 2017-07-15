@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-07-15T01:06:00.000Z</updated>
+  <updated>2017-07-15T01:40:22.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>浅尝Apache Camel</title>
+    <link href="http://bestlixiang.site/2017/07/15/%E6%B5%85%E5%B0%9DApache-Camel/"/>
+    <id>http://bestlixiang.site/2017/07/15/浅尝Apache-Camel/</id>
+    <published>2017-07-15T01:38:42.000Z</published>
+    <updated>2017-07-15T01:40:22.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：最近项目有一个需求就是定时将一台服务器的文件传到另一个服务器，一开始想的竟然想的是用http去下载，后来在万老师的指点下，采取用ftp服务器（源文件所在地）与ftp客户端（源文件去向）的形式来处理，自己小试了一下，还不错！<a id="more"></a></p>
+<h2 id="Apache-Camel简介"><a href="#Apache-Camel简介" class="headerlink" title="Apache Camel简介"></a>Apache Camel简介</h2><p>Apache Camel是Apache基金会下的一个开源项目,它是一个基于规则路由和处理的引擎，提供企业集成模式的Java对象的实现，通过应用程序接口 或称为陈述式的Java领域特定语言(DSL)来配置路由和处理的规则。其核心的思想就是从一个from源头得到数据,通过processor处理,再发到一个to目的的。</p>
+<p>这个from和to可以是我们在项目集成中经常碰到的类型:一个FTP文件夹中的文件,一个MQ的queue（jms）,一个HTTP request/response,一个webservice等等.</p>
+<h2 id="Apache-Camel架构"><a href="#Apache-Camel架构" class="headerlink" title="Apache Camel架构"></a>Apache Camel架构</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/camel.png" alt="架构图"></p>
+<p>其实理解起来很简单：始端》（过滤器+路由处理器）》终端</p>
+<h2 id="Apache-Camel核心概念"><a href="#Apache-Camel核心概念" class="headerlink" title="Apache Camel核心概念"></a>Apache Camel核心概念</h2><ol>
+<li><p>endpoint,所谓的endpoint,就是一种可以接收或发送数据的组件。可以支持多种协议，如jms,http,file等。</p>
+</li>
+<li><p>processor,它是用来处理具体业务逻辑的组件。</p>
+</li>
+<li><p>route,用来路由，指示数据从哪里来到哪里去，中间用哪个processor处理。</p>
+</li>
+<li><p>exchange,processor之间用exchange对象来传送数据，有点像jms,通俗一点就像上学时传的小纸条,所以：exchange对象就是processor，endpoint所有camel组件之间传送数据的小纸条:)。</p>
+</li>
+<li><p>filter，用来确定哪些东西可以传递，哪些东西不可以传递。 </p>
+</li>
+</ol>
+<h2 id="Apache-Camel例子（以ftp为例）"><a href="#Apache-Camel例子（以ftp为例）" class="headerlink" title="Apache Camel例子（以ftp为例）"></a>Apache Camel例子（以ftp为例）</h2><p>老师指导的例子，是结合Springboot的，放在github上了。<br><a href="https://github.com/todorex/ApacheCamel" target="_blank" rel="external">ApacheCamleDemo</a></p>
+<p>里面包括了动态路由和单路由的例子，稍微结合Springboot就可以理解并改成自己的代码。</p>
+<h2 id="什么时候用Apache-Camel"><a href="#什么时候用Apache-Camel" class="headerlink" title="什么时候用Apache Camel"></a>什么时候用Apache Camel</h2><p>参考网上的说法：camel就是企业信息集成框架，它提供了很多简单好用而又强大的组件，用户可以根据场景来选择不同的EIP（企业集成模式）来实现自己的需求，以响应快速变化的业务。可以把它当成企业信息总线（ESB）的轻量级实现。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：最近项目有一个需求就是定时将一台服务器的文件传到另一个服务器，一开始想的竟然想的是用http去下载，后来在万老师的指点下，采取用ftp服务器（源文件所在地）与ftp客户端（源文件去向）的形式来处理，自己小试了一下，还不错！
+    
+    </summary>
+    
+      <category term="编程" scheme="http://bestlixiang.site/categories/%E7%BC%96%E7%A8%8B/"/>
+    
+    
+      <category term="Springboot" scheme="http://bestlixiang.site/tags/Springboot/"/>
+    
+      <category term="ApacheCamel" scheme="http://bestlixiang.site/tags/ApacheCamel/"/>
+    
+  </entry>
   
   <entry>
     <title>java ftp 上传下载的坑 </title>
@@ -877,70 +921,6 @@ public class RandomQuickSort {
     
     
       <category term="git" scheme="http://bestlixiang.site/tags/git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>String,StringBuilder,StringBuffer区别</title>
-    <link href="http://bestlixiang.site/2017/05/04/String-StringBuilder-StringBuffer%E5%8C%BA%E5%88%AB/"/>
-    <id>http://bestlixiang.site/2017/05/04/String-StringBuilder-StringBuffer区别/</id>
-    <published>2017-05-04T11:50:29.000Z</published>
-    <updated>2017-05-04T12:15:13.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：最近心情非常的不静，我知道自己需要沉下心去沉淀，慢慢来，小朋友。今天谈谈3个字符串类<a id="more"></a></p>
-<h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><p>查看String源码的时候，我们很容易看到<br>&gt;<br>    public final class String</p>
-<p>从源码中对String的定义可以知道它是final类，这意味着她不可被继承，也不可被更改。而且总它的方法中也没有可以拼接字符串的函数。</p>
-<h2 id="StringBuilder"><a href="#StringBuilder" class="headerlink" title="StringBuilder"></a>StringBuilder</h2><p>查看StringBuilder源码的时候，我们也可以看到这样的定义：<br>&gt;<br>    public final class StringBuilder<br>    extends AbstractStringBuilder</p>
-<p>我们发现他也是final类，但是它却又append()方法，这是为什么，我们找到它的append():</p>
-<blockquote>
-<pre><code>@Override
-public StringBuilder append(String str) {
-    super.append(str);
-    return this;
-}
-</code></pre></blockquote>
-<p>我们看到他的append()方法是调用他的父类来的，所以我们继续看看他的父类是在搞什么鬼👻</p>
-<blockquote>
-<pre><code>    public AbstractStringBuilder append(String str) {
-    if (str == null)
-        return appendNull();
-    int len = str.length();
-    ensureCapacityInternal(count + len);
-    str.getChars(0, len, value, count);
-    count += len;
-    return this;
-}
-</code></pre></blockquote>
-<p>我们终于找到他怎么又这个添加字符串的方法了。具体AbstractStringBuilder是怎么实现添加的就让想要了解的人继续往下看源码就好了。</p>
-<p><strong>对比string:</strong> 我们可以从日常编写的代码可以了解到，用String拼接由于每次都是新建一个对象所以效率自然是低的，所以在使用字符串拼接的时候还是用StringBuilder比较好，但是对于单个常量字符串来说还是String好，因为它是放在常量池里，读取速度比放在堆中的对象自然是要快很多。</p>
-<h2 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a>StringBuffer</h2><p>这又是一个什么鬼，继续看源码吧</p>
-<blockquote>
-<pre><code>public final class StringBuffer
-extends AbstractStringBuilder
-</code></pre></blockquote>
-<p>这个和StringBuilder一样也是final类，但是我们可以很清楚的看到也是继承了AbstractStringBuilder，也就是说它也有append()方法，但是我们可以它的append()方法。</p>
-<blockquote>
-<pre><code>public synchronized StringBuffer append(String str) {
-    toStringCache = null;
-    super.append(str);
-    return this;
-}
-</code></pre></blockquote>
-<p>我们看到它的append()方法加入了synchronized关键字，所以它是个线程安全的类</p>
-<p><strong>和StringBuilder的区别：</strong> 由于他是线程安全的，所以自然牺牲了效率，在操作速度上没有StringBuilder快。</p>
-<p>总结：点点滴滴积累</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：最近心情非常的不静，我知道自己需要沉下心去沉淀，慢慢来，小朋友。今天谈谈3个字符串类
-    
-    </summary>
-    
-      <category term="java基础" scheme="http://bestlixiang.site/categories/java%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
   </entry>
   
