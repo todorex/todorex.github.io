@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-09-21T01:48:37.000Z</updated>
+  <updated>2017-09-21T01:56:39.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -20,17 +20,19 @@
     <link href="http://bestlixiang.site/2017/09/21/mac%E4%B8%AD%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%9A%84%E9%85%8D%E7%BD%AE/"/>
     <id>http://bestlixiang.site/2017/09/21/mac中环境变量的配置/</id>
     <published>2017-09-21T01:46:33.000Z</published>
-    <updated>2017-09-21T01:48:37.000Z</updated>
+    <updated>2017-09-21T01:56:39.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：在使用ubuntu和mac这么久之后，环境变量的几个文件还弄不清楚，真是汗颜，这里记录一下，下次不会乱改。<a id="more"></a></p>
 <h2 id="环境变量的作用"><a href="#环境变量的作用" class="headerlink" title="环境变量的作用"></a>环境变量的作用</h2><ol>
 <li>使用场景<br>在命令行直接通过命令执行程序，这些程序就多了，最常见就有java，npm，maven，git,如果我们不配置环境变量的话，就需要到程序的安装目录去执行相关命令，大家都会感觉超级麻烦，加入要使用多个程序的话，要么去切换目录，要么就多开几个命令行窗口。顿时就会感觉超级无奈有么有？</li>
-<li><p>具体作用、<br>配置完程序的环境变量之后就可以无所欲为了，可以在任何目录下直接执行我们所要的程序了，是不是顿时感觉方便许多，基本上所有人都知道吧。</p>
+<li>具体作用<br>配置完程序的环境变量之后就可以无所欲为了，可以在任何目录下直接执行我们所要的程序了，是不是顿时感觉方便许多，基本上所有人都知道吧。</li>
+</ol>
 <h2 id="环境变量的配置"><a href="#环境变量的配置" class="headerlink" title="环境变量的配置"></a>环境变量的配置</h2><h3 id="单次环境变量配置"><a href="#单次环境变量配置" class="headerlink" title="单次环境变量配置"></a>单次环境变量配置</h3><p>假如你出了个意外，在命令行中突然不能使用各种命令了，也没事，至少接下来可以让你短暂的使用一些命令，命令行窗口关闭之后就失效了，我们要做的只是直接在命令行中输入：</p>
-<p> export PATH=/usr/bin:/usr/sbin:/bin:/sbin<br>当然后面你也能够添加一些你自己想要使用的程序命令。</p>
-<h3 id="环境变量文件配置"><a href="#环境变量文件配置" class="headerlink" title="环境变量文件配置"></a>环境变量文件配置</h3></li>
+<pre><code>export PATH=/usr/bin:/usr/sbin:/bin:/sbin
+</code></pre><p>当然后面你也能够添加一些你自己想要使用的程序命令。</p>
+<h3 id="环境变量文件配置"><a href="#环境变量文件配置" class="headerlink" title="环境变量文件配置"></a>环境变量文件配置</h3><ol>
 <li><p>环境变量的写法</p>
-<pre><code>export PATH=JAVA_HOME/bin**:$PATH**
+<pre><code>export PATH=JAVA_HOME/bin:$PATH
 </code></pre></li>
 <li><p>环境变量文件优先级</p>
 <p> /etc/profile  /etc/bashrc /etc/paths  ~/.bash_profile ~/.bash_login  ~/.profile  ~/.bashrc<br>其实后三个文件我也没怎么看到过，主要讲一下前面三个</p>
@@ -827,9 +829,9 @@
       <category term="算法" scheme="http://bestlixiang.site/categories/%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="线性时间排序" scheme="http://bestlixiang.site/tags/%E7%BA%BF%E6%80%A7%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F/"/>
-    
       <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
+    
+      <category term="线性时间排序" scheme="http://bestlixiang.site/tags/%E7%BA%BF%E6%80%A7%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F/"/>
     
   </entry>
   
