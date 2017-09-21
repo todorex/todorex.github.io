@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="mac,环境变量," />
 
 
 
@@ -89,12 +89,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="rex note">
-<meta property="og:url" content="http://bestlixiang.site/tags/web/index.html">
+<meta name="description" content="引：在使用ubuntu和mac这么久之后，环境变量的几个文件还弄不清楚，真是汗颜，这里记录一下，下次不会乱改。">
+<meta name="keywords" content="mac,环境变量">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mac中环境变量的配置">
+<meta property="og:url" content="http://bestlixiang.site/2017/09/21/mac中环境变量的配置/index.html">
 <meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：在使用ubuntu和mac这么久之后，环境变量的几个文件还弄不清楚，真是汗颜，这里记录一下，下次不会乱改。">
+<meta property="og:updated_time" content="2017-09-21T01:48:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="rex note">
+<meta name="twitter:title" content="mac中环境变量的配置">
+<meta name="twitter:description" content="引：在使用ubuntu和mac这么久之后，环境变量的几个文件还弄不清楚，真是汗颜，这里记录一下，下次不会乱改。">
 
 
 
@@ -122,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/tags/web/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/09/21/mac中环境变量的配置/"/>
 
 
 
 
 
-  <title> 标签: web | rex note </title>
+  <title> mac中环境变量的配置 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -153,7 +158,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -271,46 +276,252 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        web
-        <small>标签</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/09/21/mac中环境变量的配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                mac中环境变量的配置
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-21T09:46:33+08:00">
+                2017-09-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编程/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>引：在使用ubuntu和mac这么久之后，环境变量的几个文件还弄不清楚，真是汗颜，这里记录一下，下次不会乱改。<a id="more"></a></p>
+<h2 id="环境变量的作用"><a href="#环境变量的作用" class="headerlink" title="环境变量的作用"></a>环境变量的作用</h2><ol>
+<li>使用场景<br>在命令行直接通过命令执行程序，这些程序就多了，最常见就有java，npm，maven，git,如果我们不配置环境变量的话，就需要到程序的安装目录去执行相关命令，大家都会感觉超级麻烦，加入要使用多个程序的话，要么去切换目录，要么就多开几个命令行窗口。顿时就会感觉超级无奈有么有？</li>
+<li><p>具体作用、<br>配置完程序的环境变量之后就可以无所欲为了，可以在任何目录下直接执行我们所要的程序了，是不是顿时感觉方便许多，基本上所有人都知道吧。</p>
+<h2 id="环境变量的配置"><a href="#环境变量的配置" class="headerlink" title="环境变量的配置"></a>环境变量的配置</h2><h3 id="单次环境变量配置"><a href="#单次环境变量配置" class="headerlink" title="单次环境变量配置"></a>单次环境变量配置</h3><p>假如你出了个意外，在命令行中突然不能使用各种命令了，也没事，至少接下来可以让你短暂的使用一些命令，命令行窗口关闭之后就失效了，我们要做的只是直接在命令行中输入：</p>
+<p> export PATH=/usr/bin:/usr/sbin:/bin:/sbin<br>当然后面你也能够添加一些你自己想要使用的程序命令。</p>
+<h3 id="环境变量文件配置"><a href="#环境变量文件配置" class="headerlink" title="环境变量文件配置"></a>环境变量文件配置</h3></li>
+<li><p>环境变量的写法</p>
+<pre><code>export PATH=JAVA_HOME/bin**:$PATH**
+</code></pre></li>
+<li><p>环境变量文件优先级</p>
+<p> /etc/profile  /etc/bashrc /etc/paths  ~/.bash_profile ~/.bash_login  ~/.profile  ~/.bashrc<br>其实后三个文件我也没怎么看到过，主要讲一下前面三个</p>
+</li>
+<li>环境变量文件详解</li>
+</ol>
+<ul>
+<li>/etc/profile：全局配置文件，不管是哪一个用户登录，都会读取该文件（但是超级不建议修改，容易出现大问题，想试试什么大问题，自己体会）</li>
+<li>/etc/bashrc 全局配置文件，bash shell执行时，不管是何种方式，都会读取此文件（一般在这个文件中添加系统级环境变量）</li>
+<li>~/.bash_profile：每个用户都可使用该文件输入专用于自己使用的shell信息,当用户登录时,该文件仅仅执行一次!（一般在这个文件中添加用户级环境变量）</li>
+</ul>
+<ol>
+<li><p>立即生效环境变量配置</p>
+<pre><code>source ~/.bash_profile
+</code></pre></li>
+</ol>
+<h2 id="软连接"><a href="#软连接" class="headerlink" title="软连接"></a>软连接</h2><p>自己一开始也会特别的惊讶，自己在mac上没有设置环境变量有的时候也可以直接就访问到了某些文件。这个是为什么呢？答案是用了软连接。</p>
+<h3 id="查看加载文件"><a href="#查看加载文件" class="headerlink" title="查看加载文件"></a>查看加载文件</h3><pre><code>rexdeMacBook-Pro:etc rex$ cat /etc/paths
+/usr/local/bin
+/usr/bin
+/bin
+/usr/sbin
+/sbin
+</code></pre><p>然后就可以去看这些文件夹下面的东西了，弄不清楚也没关系，其实就是软链接。开机后，mac会自动加载paths文件下面的这些目录。在这些文件夹下面建立软连接，可以达到同样的效果（日后学习）。</p>
+<h3 id="软连接查看"><a href="#软连接查看" class="headerlink" title="软连接查看"></a>软连接查看</h3><p>在拥有软连接的目录下使用下面命令</p>
+<pre><code>ls -li
 
-      <h2 class="post-title">
+
+406876 lrwxr-xr-x   1 root   wheel        73  7  9  2016 jar -&gt; /System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/jar
+406877 lrwxr-xr-x   1 root   wheel        79  7  9  2016 jarsigner -&gt; /System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/jarsigner
+406878 lrwxr-xr-x   1 root   wheel        74  7  9  2016 java -&gt; /System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/java
+406879 lrwxr-xr-x   1 root   wheel        75  7  9  2016 javac -&gt; /System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/javac
+406880 lrwxr-xr-x   1 root   wheel        77  7  9  2016 javadoc -&gt; /System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/javadoc
+</code></pre><h3 id="建立软连接"><a href="#建立软连接" class="headerlink" title="建立软连接"></a>建立软连接</h3><p>等自己看了linux的相关知识再来说吧。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>希望下次自己再也不要因为环境变量配置错出各种问题了，thanks god！</p>
+<p>参考：<a href="http://blog.csdn.net/u010416101/article/details/54618621" target="_blank" rel="external">Mac 中环境变量的配置和理解</a></p>
+
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/05/23/简谈entity，model，domain/" itemprop="url">
-              
-                <span itemprop="name">简谈entity，model，domain</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-23T13:58:35+08:00"
-              content="2017-05-23" >
-          05-23
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mac/" rel="tag"># mac</a>
+          
+            <a href="/tags/环境变量/" rel="tag"># 环境变量</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/16/Github-Pages-Hexo-SEO引擎优化/" rel="next" title="Github Pages+Hexo SEO引擎优化">
+                <i class="fa fa-chevron-left"></i> Github Pages+Hexo SEO引擎优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
 
 
           </div>
@@ -318,6 +529,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
 
         </div>
         
@@ -337,8 +554,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/me.jpeg"
@@ -445,6 +671,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境变量的作用"><span class="nav-number">1.</span> <span class="nav-text">环境变量的作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境变量的配置"><span class="nav-number">2.</span> <span class="nav-text">环境变量的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单次环境变量配置"><span class="nav-number">2.1.</span> <span class="nav-text">单次环境变量配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#环境变量文件配置"><span class="nav-number">2.2.</span> <span class="nav-text">环境变量文件配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软连接"><span class="nav-number">3.</span> <span class="nav-text">软连接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看加载文件"><span class="nav-number">3.1.</span> <span class="nav-text">查看加载文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#软连接查看"><span class="nav-number">3.2.</span> <span class="nav-text">软连接查看</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建立软连接"><span class="nav-number">3.3.</span> <span class="nav-text">建立软连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -572,6 +814,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
