@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-11-20T10:51:30.000Z</updated>
+  <updated>2017-11-20T10:55:18.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://bestlixiang.site/2017/11/20/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-1-JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"/>
     <id>http://bestlixiang.site/2017/11/20/深入理解JVM-1-JVM内存模型/</id>
     <published>2017-11-20T10:41:36.000Z</published>
-    <updated>2017-11-20T10:51:30.000Z</updated>
+    <updated>2017-11-20T10:55:18.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。<a id="more"></a></p>
 <h1 id="Java内存模型组成"><a href="#Java内存模型组成" class="headerlink" title="Java内存模型组成"></a>Java内存模型组成</h1><p>这里讲的是Java虚拟机在执行Java程序的过程中会把它所管理的内存划分五大区域。</p>
@@ -58,7 +58,9 @@
 <h1 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h1><h2 id="什么是本地方法栈"><a href="#什么是本地方法栈" class="headerlink" title="什么是本地方法栈"></a>什么是本地方法栈</h2><p>本地方法栈描述的是本地方法执行的内存模型，它发挥的作用与虚拟机栈发挥的作用是非常相似的，如Sun HotSpot虚拟机直接把本地方法栈和虚拟机栈合二为一，它与虚拟机栈一样，本地方法栈区域也会抛出StackOverflowError和OutOfMemoryError异常。</p>
 <h1 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h1><h2 id="什么是Java堆"><a href="#什么是Java堆" class="headerlink" title="什么是Java堆"></a>什么是Java堆</h2><ol>
 <li>Java堆是存放对象实例的内存区域</li>
-<li><strong>几乎所有</strong>对象实例都在这里分配内存<h2 id="Java堆的特点"><a href="#Java堆的特点" class="headerlink" title="Java堆的特点"></a>Java堆的特点</h2></li>
+<li><strong>几乎所有</strong>对象实例都在这里分配内存</li>
+</ol>
+<h2 id="Java堆的特点"><a href="#Java堆的特点" class="headerlink" title="Java堆的特点"></a>Java堆的特点</h2><ol>
 <li>Java虚拟机管理的内存中最大的一块</li>
 <li>线程共享，在虚拟机启动时创建</li>
 <li>垃圾收集器管理的主要区域，从内存回收的角度来看，由于现在收集器都采用分代收集算法，所以可分为新生代和老年代，再细致一点可以分为Eden空间、From Survivor空间和To Survivor空间等。从内存分配来看，线程共享的Java堆可能划分出多个线程私有的分配缓存区TLAB,进一步划分的目的是为了更好地回收内存，或者更快的分配内存</li>
