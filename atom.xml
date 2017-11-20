@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-10-20T09:04:55.000Z</updated>
+  <updated>2017-11-20T10:51:30.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,101 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入理解JVM_1_JVM内存模型</title>
+    <link href="http://bestlixiang.site/2017/11/20/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-1-JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"/>
+    <id>http://bestlixiang.site/2017/11/20/深入理解JVM-1-JVM内存模型/</id>
+    <published>2017-11-20T10:41:36.000Z</published>
+    <updated>2017-11-20T10:51:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。<a id="more"></a></p>
+<h1 id="Java内存模型组成"><a href="#Java内存模型组成" class="headerlink" title="Java内存模型组成"></a>Java内存模型组成</h1><p>这里讲的是Java虚拟机在执行Java程序的过程中会把它所管理的内存划分五大区域。</p>
+<ol>
+<li>程序计算器</li>
+<li>Java虚拟机栈</li>
+<li>本地方法栈</li>
+<li>Java堆</li>
+<li>方法区</li>
+</ol>
+<p>下面也把来自深入理解Java虚拟机的图片贴一下：</p>
+<p><img src="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaRunningDataModel.jpg" alt="image"></p>
+<p>接着我们重点理解一下这五大区域。</p>
+<h1 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h1><h2 id="什么是程序计数器"><a href="#什么是程序计数器" class="headerlink" title="什么是程序计数器"></a>什么是程序计数器</h2><ol>
+<li>程序计数器是一块较小的内存空间，他可以看做当前<strong>线程</strong>所执行的字节码的行号指示器。</li>
+<li>如果<strong>线程</strong>在执行一个Java方法的时候，这个计数器记录的是正在执行的虚拟机字节码指令地址，如果正在执行的是Native方法，这个计数器值则为空。</li>
+</ol>
+<h2 id="程序计数器的作用"><a href="#程序计数器的作用" class="headerlink" title="程序计数器的作用"></a>程序计数器的作用</h2><ol>
+<li>单线程的时候：通过改变这个计数器的值来选取下一条需要执行的字节码指令，从而实现分支、循环、跳转、异常处理、线程回复等基础功能。</li>
+<li>多线程的时候：当每个线程都有独立的程序计数器，则线程切换后就能回复到正确的执行位置。<br><strong>PS：</strong> Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式来实现的。</li>
+</ol>
+<h2 id="程序计数器的特点"><a href="#程序计数器的特点" class="headerlink" title="程序计数器的特点"></a>程序计数器的特点</h2><ol>
+<li>存储空间较小</li>
+<li>线程私有，每个线程都有一个程序计数器</li>
+<li>唯一一个没有规定任何OutOfMemoryError情况的区域</li>
+<li>生命周期与线程相同</li>
+</ol>
+<h1 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h1><h2 id="什么是Java虚拟机栈"><a href="#什么是Java虚拟机栈" class="headerlink" title="什么是Java虚拟机栈"></a>什么是Java虚拟机栈</h2><p>Java虚拟机栈描述的是Java方法执行的内存模型：每个方法在执行的同时都会创建一个<strong>栈帧</strong>用于存储局部变量表（包括基本数据类型，对象引用和returnAddress,其中long和double会占据2个局部变量空间，其他只占用一个）、操作数栈、动态链接、方法出口等信息。每个方法从调用直至执行完成的过程，就对应着一个<strong>栈帧</strong>在虚拟机栈中入栈到出栈的过程。</p>
+<p><strong>Ps：</strong> 人们常说的Java内存区分为“堆”和“栈”，“堆”存放对象（可以），“栈”只是值其中的局部变量表（不可以），这是不正确的。</p>
+<h2 id="Java虚拟机栈的特点"><a href="#Java虚拟机栈的特点" class="headerlink" title="Java虚拟机栈的特点"></a>Java虚拟机栈的特点</h2><ol>
+<li>线程私有，生命周期与线程相同</li>
+<li>如果线程请求的栈深度大于虚拟机所允许的深度，将抛出StackOverflowError异常</li>
+<li>虚拟机栈可以动态扩展，也可以固定长度，在动态扩展的时候如果无法申请到足够的内存，就会抛出OutOfMemoryError异常</li>
+</ol>
+<h1 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h1><h2 id="什么是本地方法栈"><a href="#什么是本地方法栈" class="headerlink" title="什么是本地方法栈"></a>什么是本地方法栈</h2><p>本地方法栈描述的是本地方法执行的内存模型，它发挥的作用与虚拟机栈发挥的作用是非常相似的，如Sun HotSpot虚拟机直接把本地方法栈和虚拟机栈合二为一，它与虚拟机栈一样，本地方法栈区域也会抛出StackOverflowError和OutOfMemoryError异常。</p>
+<h1 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h1><h2 id="什么是Java堆"><a href="#什么是Java堆" class="headerlink" title="什么是Java堆"></a>什么是Java堆</h2><ol>
+<li>Java堆是存放对象实例的内存区域</li>
+<li><strong>几乎所有</strong>对象实例都在这里分配内存<h2 id="Java堆的特点"><a href="#Java堆的特点" class="headerlink" title="Java堆的特点"></a>Java堆的特点</h2></li>
+<li>Java虚拟机管理的内存中最大的一块</li>
+<li>线程共享，在虚拟机启动时创建</li>
+<li>垃圾收集器管理的主要区域，从内存回收的角度来看，由于现在收集器都采用分代收集算法，所以可分为新生代和老年代，再细致一点可以分为Eden空间、From Survivor空间和To Survivor空间等。从内存分配来看，线程共享的Java堆可能划分出多个线程私有的分配缓存区TLAB,进一步划分的目的是为了更好地回收内存，或者更快的分配内存</li>
+<li>实现中可以固定大小，也可以是可扩展的，如果在堆中没有内存完成实例的分配，并且堆也无法再扩展时，就会抛出OutOfMemoryError异常</li>
+</ol>
+<h1 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h1><h2 id="什么是方法区"><a href="#什么是方法区" class="headerlink" title="什么是方法区"></a>什么是方法区</h2><ol>
+<li>Java虚拟机规范把方法区描述为堆的一个逻辑部分。</li>
+<li>他用于存储被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码</li>
+</ol>
+<h2 id="方法区的特点"><a href="#方法区的特点" class="headerlink" title="方法区的特点"></a>方法区的特点</h2><ol>
+<li>线程共享，在虚拟机启动时创建</li>
+<li>永久代是因为HotSpot选择将GC分代收集器扩展到方法区，或者使用永久代来实现方法区，对于HotSpot官方发布的路线图信息，现在也有放弃永久代逐步采用Native Memory来实现方法区的规划了，并且已经把原本放在永久代的字符串常量池移除</li>
+<li>不需要连续的内存，可以选择固定大小或者可扩展，还可以选择不实现垃圾回收</li>
+<li>内存回收的主要目标主要是针对常量池的回收和对类型的卸载，但是回收效率低</li>
+<li>当方法区无法满足内存分配的需求的时候，将抛出OutOfMemoryError的异常</li>
+</ol>
+<h2 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h2><ol>
+<li>Class文件除了包含类的版本<br>字段、方法、接口等描述信息外，还有一项信息是常量池</li>
+<li>常量池用于存放编译期间生成的各种字面量和符号引用，这部分内容在类加载后进入运行时常量池中存放</li>
+<li>运行时常量池相对于Class文件常量池具有动态性，Java语言不要求只有Class文件中的常量池的内容才能进入运行时常量池，运行时也可能将新的常量放入池中，如String类的intern方法</li>
+<li>当常量池无法再申请内存时将会抛出OutOfMemoryError异常</li>
+</ol>
+<p><strong>PS：</strong> jdk1.7的常量池移到了堆中，同时在jdk1.8中移除整个永久代，取而代之的是一个叫元空间（Metaspace）的区域</p>
+<h1 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h1><ol>
+<li>通过一个存储在Java堆中的DirectByteBuffer对象最为这块内存的引用进行操作，这个可以显著提高性能，因为避免了在Java堆和Native堆中来回复制数据</li>
+<li>案例是NIO类引入一种基于通道与缓存区的I/O方式，它可以使用Native函数库直接分配对外内存，然后通过DirectByteBuffer进行操作</li>
+<li>本机直接内存的分配不会受到Java堆大小的限制，但是会受到本机总内存大小和处理器寻址空间的限制，也可能会抛出OutOfMemoryError异常</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本篇文章是参考《深入理解Java虚拟机》第二版所写，当时作者用的是jdk1.7，结果现在jdk1.9都出了，最大的改变就是方法区了，目前还没有能力改正，也就将就了，望作者早日更新，或者自己成为大牛，将这部分重新整理。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://blog.csdn.net/u010425776/article/details/51170118" target="_blank" rel="external">深入理解JVM(一)——JVM内存模型</a></li>
+<li><a href="http://blog.csdn.net/zhyhang/article/details/17246223/" target="_blank" rel="external">Java 8: 从永久代（PermGen）到元空间（Metaspace）
+</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
+    
+  </entry>
   
   <entry>
     <title>springboot静态资源的处理</title>
@@ -861,37 +956,6 @@
     
       <category term="算法" scheme="http://bestlixiang.site/categories/%E7%AE%97%E6%B3%95/"/>
     
-    
-      <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>“线性时间排序（未完，待续）”</title>
-    <link href="http://bestlixiang.site/2017/05/10/%E2%80%9C%E7%BA%BF%E6%80%A7%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F%EF%BC%88%E6%9C%AA%E5%AE%8C%EF%BC%8C%E5%BE%85%E7%BB%AD%EF%BC%89%E2%80%9D/"/>
-    <id>http://bestlixiang.site/2017/05/10/“线性时间排序（未完，待续）”/</id>
-    <published>2017-05-10T02:11:16.000Z</published>
-    <updated>2017-05-10T02:13:31.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：排序慢慢来，今天要接触到线性时间排序了：计数排序，基数排序，桶排序。<a id="more"></a></p>
-<h2 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a>计数排序</h2><p>前提条件：知道输入数组的最大值。<br>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public int[] countingsort(int[] a,int k)&#123;</div><div class="line">//初始化临时数组,k为数组的最大值</div><div class="line">int[] c = new int[k+1];</div><div class="line">for(int i=0; i&lt;=k; i++) &#123;</div><div class="line">c[i]=0;</div><div class="line">&#125;</div><div class="line">//获得等于i的元素个数</div><div class="line">for(int i= 0; i&lt;a.length-1;i++) &#123;</div><div class="line">c[a[i]] = c[a[i]]+1;</div><div class="line">&#125;</div><div class="line">//获得小于等于i的元素个数(隐含了递归调用)</div><div class="line">for(int i = 1; i&lt;=k; i++) &#123;</div><div class="line">c[i] = c[i] +c[i-1];</div><div class="line">&#125;</div><div class="line">//按顺序分到输出数组</div><div class="line">int[] b = new int[a.length];</div><div class="line">for(int i = a.length-1; i&gt;=0; i--) &#123;</div><div class="line">b[c[a[i]]] = a[i];</div><div class="line">c[a[i]] = c[a[i]]-1;</div><div class="line">&#125;</div><div class="line">return b;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>优劣：实现了线性时间，但是空间损失惨重，像是叫你排序这三个数：1，3，1000000000000，马上高低立见。</p>
-<h2 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h2><p>IBM创始人发明，利用进制数的位进行从低到高比较。其中会将原来的数转化为r进制数，使时间复杂度变为线性。<br>写一下伪代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">redix-sort(A,d)</div><div class="line">for i = 1 to d</div><div class="line">use a stable sort to sort array A on digit i</div></pre></td></tr></table></figure></p>
-<h2 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h2><p>桶排序假设数据服从均匀分布，讲一个区间分成若干个桶，先将数据放到桶中分开排序再合并。<br>伪代码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">bucket-sort(A)</div><div class="line">n = A.length</div><div class="line">let B[0.. n-1] be a new array</div><div class="line">for i = 0 to n - 1</div><div class="line">make  B[i] an empty list</div><div class="line">for i = 1 to n </div><div class="line">insert A[i] into list B[nA[i]]</div><div class="line">for i = 0 to n - 1</div><div class="line">sort list B[i] with insertion sort</div><div class="line">concatenete the lists B[0],B[1].. B[n-1] together in order</div></pre></td></tr></table></figure></p>
-<p>它的期望时间为线形。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其中对于基数排序和桶排序理解得不是很好，需要加深理解，写出具体实现代码，未完，待续…</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：排序慢慢来，今天要接触到线性时间排序了：计数排序，基数排序，桶排序。
-    
-    </summary>
-    
-      <category term="算法" scheme="http://bestlixiang.site/categories/%E7%AE%97%E6%B3%95/"/>
-    
-    
-      <category term="线性时间排序" scheme="http://bestlixiang.site/tags/%E7%BA%BF%E6%80%A7%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F/"/>
     
       <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
     
