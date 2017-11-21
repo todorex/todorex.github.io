@@ -98,7 +98,7 @@
 <meta property="og:description" content="引：总有些人会思考对象是如果创建、如何布局、以及如何访问的？对于这些问题，我们必须把讨论范围限定在具体的虚拟机和集中在某一个内存区域才有意义。基于实用原则，我们以常用的虚拟机HotSpot和常用的内存区域Java堆为例。">
 <meta property="og:image" content="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaHandlerInvite.jpg">
 <meta property="og:image" content="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaHandlerInvite.jpg">
-<meta property="og:updated_time" content="2017-11-21T03:15:23.000Z">
+<meta property="og:updated_time" content="2017-11-21T03:23:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解JVM_1_HotSpot对象揭秘">
 <meta name="twitter:description" content="引：总有些人会思考对象是如果创建、如何布局、以及如何访问的？对于这些问题，我们必须把讨论范围限定在具体的虚拟机和集中在某一个内存区域才有意义。基于实用原则，我们以常用的虚拟机HotSpot和常用的内存区域Java堆为例。">
@@ -400,15 +400,16 @@
 </li>
 <li><p>空闲列表</p>
 <p>  假如Java堆中的内存并不是完整的，已使用的内存和空闲的内存相互交错，虚拟机就必须维护一个列表，记录那些内存块是可用的，在分配的时候从列表中找到一块足够大的空间划分给实例，并更新列表上的记录。</p>
+<p>解决在并发情况下不安全的方案:</p>
+</li>
+<li><p>对分配内存空间的动作进行同步处理——虚拟机采用CAS配上失败重试的方式保证更新操作的原子性</p>
+</li>
+<li><p>把内存分配的动作按线程划分在不同的空间之中进行，即每个线程在Java堆中预先分配一小块内存，称为本地线程分配缓冲，只有需要重新分配的时候才同步锁定</p>
 </li>
 </ul>
 </li>
-</ol>
-<pre><code>解决在并发情况下不安全的方案
-* 对分配内存空间的动作进行同步处理——虚拟机采用CAS配上失败重试的方式保证更新操作的原子性
-* 把内存分配的动作按线程划分在不同的空间之中进行，即每个线程在Java堆中预先分配一小块内存，称为本地线程分配缓冲，只有需要重新分配的时候才同步锁定。
-</code></pre><ol>
-<li>虚拟机将分配到的内存空间都初始化为零值（默认初始化），保证了对象实例在Java代码中可以不赋初始值就可以使用。</li>
+<li><p>虚拟机将分配到的内存空间都初始化为零值（默认初始化），保证了对象实例在Java代码中可以不赋初始值就可以使用。</p>
+</li>
 <li>设置对象头</li>
 <li>利用构造函数进行初始化</li>
 </ol>
