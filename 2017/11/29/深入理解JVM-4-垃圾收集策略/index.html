@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JavaScript,Angular2," />
+  <meta name="keywords" content="java,jvm," />
 
 
 
@@ -89,19 +89,17 @@
 
 
 
-<meta name="description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
-<meta name="keywords" content="JavaScript,Angular2">
+<meta name="description" content="引：Java与C++之间有一堵内存动态分配与垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。那我们就先来看看JVM到底是怎么进行垃圾收集的？">
+<meta name="keywords" content="java,jvm">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Angular2入门">
-<meta property="og:url" content="http://bestlixiang.site/2017/05/24/Angular2入门/index.html">
+<meta property="og:title" content="深入理解JVM_4_垃圾收集策略">
+<meta property="og:url" content="http://bestlixiang.site/2017/11/29/深入理解JVM-4-垃圾收集策略/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png">
-<meta property="og:updated_time" content="2017-05-24T12:34:36.000Z">
+<meta property="og:description" content="引：Java与C++之间有一堵内存动态分配与垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。那我们就先来看看JVM到底是怎么进行垃圾收集的？">
+<meta property="og:updated_time" content="2017-11-29T11:35:07.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Angular2入门">
-<meta name="twitter:description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png">
+<meta name="twitter:title" content="深入理解JVM_4_垃圾收集策略">
+<meta name="twitter:description" content="引：Java与C++之间有一堵内存动态分配与垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。那我们就先来看看JVM到底是怎么进行垃圾收集的？">
 
 
 
@@ -129,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/05/24/Angular2入门/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/11/29/深入理解JVM-4-垃圾收集策略/"/>
 
 
 
 
 
-  <title> Angular2入门 | rex note </title>
+  <title> 深入理解JVM_4_垃圾收集策略 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -288,7 +286,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/24/Angular2入门/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/11/29/深入理解JVM-4-垃圾收集策略/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -309,7 +307,7 @@
             
             
               
-                Angular2入门
+                深入理解JVM_4_垃圾收集策略
               
             
           </h2>
@@ -324,8 +322,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-24T20:22:59+08:00">
-                2017-05-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-29T19:33:14+08:00">
+                2017-11-29
               </time>
             
 
@@ -347,8 +345,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/编程/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
+                  <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
+                    <span itemprop="name">深入理解Java虚拟机</span>
                   </a>
                 </span>
 
@@ -387,22 +385,69 @@
       
 
       
-        <p>引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。<a id="more"></a></p>
-<h2 id="Angular简介"><a href="#Angular简介" class="headerlink" title="Angular简介"></a>Angular简介</h2><p>在经过简单的了解与使用之后，感觉 到Angular2的强大与伟大，配的上说是一个优秀的前端框架。Angular2实现了前端一直提倡的组件化开发还解决了大部分项目路由混乱的问题。它还有具有MVC分层架构和依赖注入等一系列优秀的特性。现在贴上Angular2的一张架构图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png" alt="Angular2架构图"><br>上图描述了Angular2中8大主要构造块的关系，他们具体的理解，可以参考这篇<a href="http://www.cnblogs.com/1wen/p/5466620.html" target="_blank" rel="external">博文</a>。如果还有什么不理解，那我们可以相信实践见真知。</p>
-<h2 id="Angular起步"><a href="#Angular起步" class="headerlink" title="Angular起步"></a>Angular起步</h2><p>在这次学习中，我终于理解了前辈们所说的入门一门技术就好的方法就是去看官方文档了，<a href="https://angular.cn/docs/ts/latest/" target="_blank" rel="external">Angular2的官网文档</a>里面有中文版的，相信大家一定很开心吧。当然没有中文版也是要看的，比较都是最基础的入门，不要惧怕英文。</p>
-<p>在这次按照官方文档的教程（英雄编辑器）出现了两个问题，这里也说明一下：</p>
+        <p>引：Java与C++之间有一堵内存动态分配与垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。那我们就先来看看JVM到底是怎么进行垃圾收集的？<a id="more"></a></p>
+<h1 id="垃圾回收，回收哪里？"><a href="#垃圾回收，回收哪里？" class="headerlink" title="垃圾回收，回收哪里？"></a>垃圾回收，回收哪里？</h1><p>之前介绍过Java内存运行时区域的各个部分，其中程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭，这几个区域的内存分配和回收都具有确定性，方法结束或者线程结束，内存自然就跟着回收了，但是Java堆和方法区（元空间）则不一样，我们只有在运行期间才知道会创建哪些对象，这部分内存的分配和回收都是动态的，所有垃圾回收就是回收这里。</p>
+<h1 id="对象已死么？"><a href="#对象已死么？" class="headerlink" title="对象已死么？"></a>对象已死么？</h1><p>垃圾收集器在对堆进行回收前，第一件事就是要确定这些对象之中还有那些还“存活”者，哪些已经“死去”（即不可能再被任何途径使用的对象）。</p>
 <ol>
-<li><p>angular-in-memory-web-apia模块不存在</p>
+<li><p>引用计数算法</p>
+<p> 给每个对象添加一个引用计数器，每当有一个地方引用它时，计数器就加一；当引用失效时，计数器值就减一；任何时刻计数器为0的对象就是不可能再被使用的。</p>
+</li>
+<li><p>可达性分析算法（Java使用）</p>
+<p> 通过一系列称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径被称为引用链，当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。</p>
+<p> 在Java语言中，可作为GC Roots的对象包括下面几种：</p>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
+<li>方法区中类静态属性应用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中JNI（即一般说的Native方法）引用的对象</li>
+</ul>
 </li>
 </ol>
-<p>解决方法：通过命令行安装  </p>
-<pre><code>npm i angular-in-memory-web-api
-</code></pre><ol>
-<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">create(name: string): Promise&lt;Hero&gt; &#123;</div><div class="line">return this.http</div><div class="line">.post(this.heroesUrl, JSON.stringify(&#123;name: name&#125;), this.headers)</div><div class="line">.toPromise()</div><div class="line">.then(res =&gt; res.json().data as Hero)</div><div class="line">.catch(this.handleError);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h1><ol>
+<li>强引用：类似”Object obj = new Object()”这类的引用，只要强引用还存在，垃圾收集器永远不会回收掉被引用的对象。</li>
+<li>软引用：用来描述还有用但非必须的对象，对于软引用关联着的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。它是通过SoftReference类来实现软引用的。</li>
+<li>弱引用：用来描述非必需对象的，被弱引用关联的对象只能生存到下一次垃圾收集发生之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象，它是通过WeakReference类来实现弱引用的。</li>
+<li>虚引用：只要发生垃圾回收，它就会被收集，它唯一的目的就是能在这个对象被收集器回收时收到一个系统通知，它是用过PhantomReference类来实现虚引用。</li>
+</ol>
+<h1 id="方法区（元空间）的回收"><a href="#方法区（元空间）的回收" class="headerlink" title="方法区（元空间）的回收"></a>方法区（元空间）的回收</h1><p>类和其元数据的生命周期和其对应的类加载器是相同的。话句话说，只要类加载器存活，其加载的类的元数据也是存活的，因而不会被回收掉。准确的来说，每一个类加载器的存储区域都称作一个元空间，所有的元空间合在一起就是我们一直说的元空间。当一个类加载器被垃圾回收器标记为不再存活，其对应的元空间会被回收。在元空间的回收过程中没有重定位和压缩等操作。但是元空间内的元数据会进行扫描来确定Java引用。</p>
+<h1 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p>流程：</p>
+<ol>
+<li>标记出所有需要回收的对象</li>
+<li>在标记完成后统一回收所有被标记的对象</li>
+</ol>
+<p>不足：</p>
+<ol>
+<li><p>效率问题</p>
+<p> 标记和清除两个过程效率都不高</p>
+</li>
+<li><p>空间问题</p>
+<p> 标记清除以后会产生大量不连续的空间碎片，无法存储大对象</p>
 </li>
 </ol>
-<p>这里的post方法中的第三个参数应该是this.headers,而不是像官方文档中的那样。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果遇到不懂得问候多看看文档吧，相信自己可以的，然后就是实践见真知了。</p>
+<h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>流程：</p>
+<ol>
+<li>将可用内存按容量分为大小相同的两块</li>
+<li>在第一块分配内存，并标记出所有需要回收的对象</li>
+<li>当第一块内存用完了，将所有活着的对象复制到另外一块上</li>
+<li>将第一块所使用过的内存空间一次性清除</li>
+</ol>
+<p>好处：解决了空间碎片问题</p>
+<p>不足：降低了空间利用率</p>
+<p>现在的商业虚拟机都用这种收集算法来回收新生代，因为新生代中的对象98%是“朝生夕死”的，所以不需要1:1划分空间,而是将内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还活着的对象那个一次性复制到另一块Survivor空间上，最后清理掉前两块空间。HotSpot虚拟机默认Eden和Survivor的大小比例为8:1，所以只有10%的内存会被“浪费”，当Survivor空间不够用时，需要依赖其他内存（这里指老年代）进行分配担保。</p>
+<p>内存的分配担保是指如果放着存活对象的Survivor空间没有足够空间放上一次新生代收集下来的存活对象时，这些对象将直接通过分配担保机制进入老年代。</p>
+<h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p>适合老年代</p>
+<p>流程：</p>
+<ol>
+<li>标记出所有需要回收的对象</li>
+<li>让所有存活的对象都向一端移动</li>
+<li>直接清理掉端边界以外的内存</li>
+</ol>
+<h2 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h2><p>将内存划分为老年代和新生代。老年代中存放寿命较长的对象，新生代中存放“朝生夕死”的对象。然后在不同的区域使用不同的垃圾收集算法。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从上面我们了解了对象存活判定算法和垃圾回收算法，但是不同虚拟机的具体实现还是不同的，而且不同的垃圾收集器的内存回收的具体实现也是不同的，我们要因机而议。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入理解Java虚拟机》</li>
+<li><a href="http://blog.csdn.net/qq_16681169/article/details/70471010" target="_blank" rel="external">JDK8 从永久代到元空间</a></li>
+</ol>
 
       
     </div>
@@ -432,9 +477,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+            <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/Angular2/" rel="tag"># Angular2</a>
+            <a href="/tags/jvm/" rel="tag"># jvm</a>
           
         </div>
       
@@ -447,8 +492,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/23/简谈entity，model，domain/" rel="next" title="简谈entity，model，domain">
-                <i class="fa fa-chevron-left"></i> 简谈entity，model，domain
+              <a href="/2017/11/29/深入理解JVM-3-OutOfMemoryError异常现场/" rel="next" title="深入理解JVM_3_OutOfMemoryError异常现场">
+                <i class="fa fa-chevron-left"></i> 深入理解JVM_3_OutOfMemoryError异常现场
               </a>
             
           </div>
@@ -456,10 +501,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/24/SpringSecurity-JWT保驾SpringBoot-未完/" rel="prev" title="SpringSecurity+JWT保驾SpringBoot(未完)">
-                SpringSecurity+JWT保驾SpringBoot(未完) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -658,7 +699,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Angular简介"><span class="nav-number">1.</span> <span class="nav-text">Angular简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Angular起步"><span class="nav-number">2.</span> <span class="nav-text">Angular起步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#垃圾回收，回收哪里？"><span class="nav-number">1.</span> <span class="nav-text">垃圾回收，回收哪里？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对象已死么？"><span class="nav-number">2.</span> <span class="nav-text">对象已死么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引用类型"><span class="nav-number">3.</span> <span class="nav-text">引用类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法区（元空间）的回收"><span class="nav-number">4.</span> <span class="nav-text">方法区（元空间）的回收</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">5.</span> <span class="nav-text">垃圾收集算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#标记-清除算法"><span class="nav-number">5.1.</span> <span class="nav-text">标记-清除算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制算法"><span class="nav-number">5.2.</span> <span class="nav-text">复制算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标记-整理算法"><span class="nav-number">5.3.</span> <span class="nav-text">标记-整理算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分代收集算法"><span class="nav-number">5.4.</span> <span class="nav-text">分代收集算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>

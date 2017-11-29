@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-11-29T07:26:31.000Z</updated>
+  <updated>2017-11-29T11:35:07.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,93 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入理解JVM_4_垃圾收集策略</title>
+    <link href="http://bestlixiang.site/2017/11/29/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-4-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AD%96%E7%95%A5/"/>
+    <id>http://bestlixiang.site/2017/11/29/深入理解JVM-4-垃圾收集策略/</id>
+    <published>2017-11-29T11:33:14.000Z</published>
+    <updated>2017-11-29T11:35:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：Java与C++之间有一堵内存动态分配与垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。那我们就先来看看JVM到底是怎么进行垃圾收集的？<a id="more"></a></p>
+<h1 id="垃圾回收，回收哪里？"><a href="#垃圾回收，回收哪里？" class="headerlink" title="垃圾回收，回收哪里？"></a>垃圾回收，回收哪里？</h1><p>之前介绍过Java内存运行时区域的各个部分，其中程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭，这几个区域的内存分配和回收都具有确定性，方法结束或者线程结束，内存自然就跟着回收了，但是Java堆和方法区（元空间）则不一样，我们只有在运行期间才知道会创建哪些对象，这部分内存的分配和回收都是动态的，所有垃圾回收就是回收这里。</p>
+<h1 id="对象已死么？"><a href="#对象已死么？" class="headerlink" title="对象已死么？"></a>对象已死么？</h1><p>垃圾收集器在对堆进行回收前，第一件事就是要确定这些对象之中还有那些还“存活”者，哪些已经“死去”（即不可能再被任何途径使用的对象）。</p>
+<ol>
+<li><p>引用计数算法</p>
+<p> 给每个对象添加一个引用计数器，每当有一个地方引用它时，计数器就加一；当引用失效时，计数器值就减一；任何时刻计数器为0的对象就是不可能再被使用的。</p>
+</li>
+<li><p>可达性分析算法（Java使用）</p>
+<p> 通过一系列称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径被称为引用链，当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。</p>
+<p> 在Java语言中，可作为GC Roots的对象包括下面几种：</p>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
+<li>方法区中类静态属性应用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中JNI（即一般说的Native方法）引用的对象</li>
+</ul>
+</li>
+</ol>
+<h1 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h1><ol>
+<li>强引用：类似”Object obj = new Object()”这类的引用，只要强引用还存在，垃圾收集器永远不会回收掉被引用的对象。</li>
+<li>软引用：用来描述还有用但非必须的对象，对于软引用关联着的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。它是通过SoftReference类来实现软引用的。</li>
+<li>弱引用：用来描述非必需对象的，被弱引用关联的对象只能生存到下一次垃圾收集发生之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象，它是通过WeakReference类来实现弱引用的。</li>
+<li>虚引用：只要发生垃圾回收，它就会被收集，它唯一的目的就是能在这个对象被收集器回收时收到一个系统通知，它是用过PhantomReference类来实现虚引用。</li>
+</ol>
+<h1 id="方法区（元空间）的回收"><a href="#方法区（元空间）的回收" class="headerlink" title="方法区（元空间）的回收"></a>方法区（元空间）的回收</h1><p>类和其元数据的生命周期和其对应的类加载器是相同的。话句话说，只要类加载器存活，其加载的类的元数据也是存活的，因而不会被回收掉。准确的来说，每一个类加载器的存储区域都称作一个元空间，所有的元空间合在一起就是我们一直说的元空间。当一个类加载器被垃圾回收器标记为不再存活，其对应的元空间会被回收。在元空间的回收过程中没有重定位和压缩等操作。但是元空间内的元数据会进行扫描来确定Java引用。</p>
+<h1 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p>流程：</p>
+<ol>
+<li>标记出所有需要回收的对象</li>
+<li>在标记完成后统一回收所有被标记的对象</li>
+</ol>
+<p>不足：</p>
+<ol>
+<li><p>效率问题</p>
+<p> 标记和清除两个过程效率都不高</p>
+</li>
+<li><p>空间问题</p>
+<p> 标记清除以后会产生大量不连续的空间碎片，无法存储大对象</p>
+</li>
+</ol>
+<h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>流程：</p>
+<ol>
+<li>将可用内存按容量分为大小相同的两块</li>
+<li>在第一块分配内存，并标记出所有需要回收的对象</li>
+<li>当第一块内存用完了，将所有活着的对象复制到另外一块上</li>
+<li>将第一块所使用过的内存空间一次性清除</li>
+</ol>
+<p>好处：解决了空间碎片问题</p>
+<p>不足：降低了空间利用率</p>
+<p>现在的商业虚拟机都用这种收集算法来回收新生代，因为新生代中的对象98%是“朝生夕死”的，所以不需要1:1划分空间,而是将内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还活着的对象那个一次性复制到另一块Survivor空间上，最后清理掉前两块空间。HotSpot虚拟机默认Eden和Survivor的大小比例为8:1，所以只有10%的内存会被“浪费”，当Survivor空间不够用时，需要依赖其他内存（这里指老年代）进行分配担保。</p>
+<p>内存的分配担保是指如果放着存活对象的Survivor空间没有足够空间放上一次新生代收集下来的存活对象时，这些对象将直接通过分配担保机制进入老年代。</p>
+<h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p>适合老年代</p>
+<p>流程：</p>
+<ol>
+<li>标记出所有需要回收的对象</li>
+<li>让所有存活的对象都向一端移动</li>
+<li>直接清理掉端边界以外的内存</li>
+</ol>
+<h2 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h2><p>将内存划分为老年代和新生代。老年代中存放寿命较长的对象，新生代中存放“朝生夕死”的对象。然后在不同的区域使用不同的垃圾收集算法。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从上面我们了解了对象存活判定算法和垃圾回收算法，但是不同虚拟机的具体实现还是不同的，而且不同的垃圾收集器的内存回收的具体实现也是不同的，我们要因机而议。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入理解Java虚拟机》</li>
+<li><a href="http://blog.csdn.net/qq_16681169/article/details/70471010" target="_blank" rel="external">JDK8 从永久代到元空间</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：Java与C++之间有一堵内存动态分配与垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。那我们就先来看看JVM到底是怎么进行垃圾收集的？
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+    
+  </entry>
   
   <entry>
     <title>深入理解JVM_3_OutOfMemoryError异常现场</title>
@@ -967,54 +1054,6 @@
     <summary type="html">
     
       &lt;p&gt;引：上次看到过钟华老师的一个基于贪心算法的毕业设计，一直很好奇，今天终于能看看它了，只是知其然，不知所以然。
-    
-    </summary>
-    
-      <category term="算法" scheme="http://bestlixiang.site/categories/%E7%AE%97%E6%B3%95/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>动态规划</title>
-    <link href="http://bestlixiang.site/2017/05/17/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
-    <id>http://bestlixiang.site/2017/05/17/动态规划/</id>
-    <published>2017-05-17T11:52:35.000Z</published>
-    <updated>2017-05-17T11:55:36.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：慢慢就步入了算法导论的高级设计与分析技术模块，先来看看动态规划。ps:快毕业的心情org。<a id="more"></a></p>
-<h2 id="动态规划总说"><a href="#动态规划总说" class="headerlink" title="动态规划总说"></a>动态规划总说</h2><p>动态规划虽然与分治方法相似，但是它能够解决子问题重叠的情况，这样就提高了效率。它通常是用来求解最优化的问题。求得是<strong>一个</strong>最优解。一般按如下4个步骤来设计一个动态规划算法。</p>
-<ol>
-<li>刻画一个最优解的结构特征</li>
-<li>递归地定义最优解的值</li>
-<li>计算最优解的值，通常采用自底向上的方法</li>
-<li>利用计算出的信息构造出一个最优解</li>
-</ol>
-<h2 id="钢条切割"><a href="#钢条切割" class="headerlink" title="钢条切割"></a>钢条切割</h2><p>先看以前常用的分治方法即自顶向下方法,代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public class CutRod &#123;</div><div class="line">//a[i]表示长度为i的钢条利润是多少</div><div class="line">public int[] a = new int[]&#123;1,5,8,9,10,17,17,20,24,30&#125;;</div><div class="line">//自顶向下递归设计</div><div class="line">public int cutRod(int[] a,int n) &#123;</div><div class="line">if(n == 0)&#123;</div><div class="line">return 0;</div><div class="line">&#125;</div><div class="line">int q = 0;</div><div class="line">for (int i = 0; i&lt;n; i++)&#123;</div><div class="line">q = max(q,a[i]+cutRod(a,n-1-i));</div><div class="line">&#125;</div><div class="line">return q;</div><div class="line">&#125;</div><div class="line">//求最大值函数</div><div class="line">public int max(int a, int b)&#123;</div><div class="line">if(a&gt;b)&#123;</div><div class="line">return a;</div><div class="line">&#125; else &#123;</div><div class="line">return b;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">CutRod cut = new CutRod(); </div><div class="line">int lost = cut.cutRod(cut.a,10);</div><div class="line">System.out.println(lost);</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>问题：反复地用相同的参数值对自身进行递归调用，造成了运行时间为n的指数函数。</p>
-<p>为了解决这个问题，我们可以采用动态规划方法求解最优钢条切割问题。</p>
-<ol>
-<li><p>采用带备忘的自顶向下法<br>核心是利用一个数组存储已经求解过的最优解，避免了重复的计算，具体的代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">public class MemoizedCutRod &#123;</div><div class="line">//a[i]表示长度为i的钢条利润是多少</div><div class="line">public int[] a = new int[]&#123;1,5,8,9,10,17,17,20,24,30&#125;;</div><div class="line">//带备忘的自顶向下函数</div><div class="line">public int memoizedCutRod(int[] a,int n)&#123;</div><div class="line">//创建一个备忘的数组存储一个之前计算过的最优解</div><div class="line">int[] r = new int[n];</div><div class="line">//初始化数组</div><div class="line">for (int i : r) &#123;</div><div class="line">i = 0;</div><div class="line">&#125;</div><div class="line">//借助辅助函数计算</div><div class="line">return memoizedCutRodAux(a, n, r);</div><div class="line">&#125;</div><div class="line">//带备忘的自顶向下法辅助函数</div><div class="line">public int memoizedCutRodAux(int[] a,int n,int[] r) &#123;</div><div class="line">//定义利润</div><div class="line">int q = 0;</div><div class="line">if(n == 0)&#123;</div><div class="line">return 0;</div><div class="line">&#125; </div><div class="line">//判断原先是否已经计算过，若计算过就不用再计算</div><div class="line">if(r[n-1] &gt;0)&#123;</div><div class="line">return r[n-1]; </div><div class="line">&#125;else &#123;</div><div class="line">for (int i = 0; i&lt;n; i++)&#123;</div><div class="line">q = max(q,a[i]+memoizedCutRodAux(a, n-1-i, r));</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">r[n-1] = q;</div><div class="line">return q;</div><div class="line">&#125;</div><div class="line">//求最大值函数</div><div class="line">public int max(int a, int b)&#123;</div><div class="line">if(a&gt;b)&#123;</div><div class="line">return a;</div><div class="line">&#125; else &#123;</div><div class="line">return b;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">MemoizedCutRod cut = new MemoizedCutRod();</div><div class="line">int lost = cut.memoizedCutRod(cut.a, 10);</div><div class="line">System.out.println(lost);</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>采用由底向上的方法<br>核心是从小算到大算出每一个长度的最优解，然后返回想要的长度的最优解。代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">public class BottomUpTopCutRod &#123;</div><div class="line">//a[i]表示长度为i的钢条利润是多少</div><div class="line">public int[] a = new int[]&#123;1,5,8,9,10,17,17,20,24,30&#125;;</div><div class="line">public int bottomUpTopCutRod(int[] a, int n)&#123;</div><div class="line">int[] r = new int[n+1];</div><div class="line">//长度为0的时候，收益为0</div><div class="line">r[0] = 0;</div><div class="line">int q = 0;</div><div class="line">for(int i = 0; i&lt;n; i++)&#123;</div><div class="line">for(int j = 0; j&lt;=i; j++)&#123;</div><div class="line">q = max(q,a[j]+r[i-j]);</div><div class="line">&#125;</div><div class="line">r[i+1] = q;</div><div class="line">&#125;</div><div class="line">return r[n];</div><div class="line">&#125;</div><div class="line">//求最大值函数</div><div class="line">public int max(int a, int b)&#123;</div><div class="line">if(a&gt;b)&#123;</div><div class="line">return a;</div><div class="line">&#125; else &#123;</div><div class="line">return b;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">BottomUpTopCutRod cut = new BottomUpTopCutRod();</div><div class="line">int lost = cut.bottomUpTopCutRod(cut.a, 10);</div><div class="line">System.out.println(lost);</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>优势：实现了运行时间复杂度n*n</p>
-<h2 id="动态规划原理"><a href="#动态规划原理" class="headerlink" title="动态规划原理"></a>动态规划原理</h2><p>适用应用动态规划方法求解的最优化问题应该具备的两个要素：最优子结构和子问题重叠</p>
-<h3 id="最优子结构"><a href="#最优子结构" class="headerlink" title="最优子结构"></a>最优子结构</h3><p>如果一个问题的最优解包含其子问题的最优解，我们就称这个问题具有最优子结构性质。例如：无权最短路径。</p>
-<h3 id="重叠子问题"><a href="#重叠子问题" class="headerlink" title="重叠子问题"></a>重叠子问题</h3><p>如果递归算法反复求解相同的子问题，我们就称最优化问题具有重叠子问题性质。例如钢条切割。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>慢慢懂一点小算法思想。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：慢慢就步入了算法导论的高级设计与分析技术模块，先来看看动态规划。ps:快毕业的心情org。
     
     </summary>
     
