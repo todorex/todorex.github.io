@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-11-30T06:33:33.000Z</updated>
+  <updated>2017-11-30T13:47:53.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入理解JVM_6_JVM调优实战</title>
+    <link href="http://bestlixiang.site/2017/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-6-JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/"/>
+    <id>http://bestlixiang.site/2017/11/30/深入理解JVM-6-JVM调优实战/</id>
+    <published>2017-11-30T13:46:19.000Z</published>
+    <updated>2017-11-30T13:47:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：带着浅尝基本的Java诊断工具就这样把《深入理解Java虚拟机》的调优部分看完了，似懂非懂，我想待自己经历过一次性能调优，结合自身经历再来好好总结一番吧。&lt;!—more-&gt;</p>
+<h1 id="此处暂时省略一万字。。。"><a href="#此处暂时省略一万字。。。" class="headerlink" title="此处暂时省略一万字。。。"></a>此处暂时省略一万字。。。</h1>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：带着浅尝基本的Java诊断工具就这样把《深入理解Java虚拟机》的调优部分看完了，似懂非懂，我想待自己经历过一次性能调优，结合自身经历再来好好总结一番吧。&amp;lt;!—more-&amp;gt;&lt;/p&gt;
+&lt;h1 id=&quot;此处暂时省略一万字。。。&quot;&gt;&lt;a href=&quot;#此处暂时省略
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+    
+      <category term="jdk" scheme="http://bestlixiang.site/tags/jdk/"/>
+    
+  </entry>
   
   <entry>
     <title>深入理解JVM_5_内存分配策略</title>
@@ -1030,45 +1056,6 @@
       <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
       <category term="web" scheme="http://bestlixiang.site/tags/web/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>命令行运行hadoop程序</title>
-    <link href="http://bestlixiang.site/2017/05/20/%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BF%90%E8%A1%8Chadoop%E7%A8%8B%E5%BA%8F/"/>
-    <id>http://bestlixiang.site/2017/05/20/命令行运行hadoop程序/</id>
-    <published>2017-05-20T05:37:33.000Z</published>
-    <updated>2017-05-20T05:45:39.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：自己最近心态有点崩，毕竟很迷茫，趁现在比较空 ，也就微微看看hadoop。在运行《Hadoop权威指南》的时候，遇到了按照书上命令行无法运行的问题。<a id="more"></a></p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p><img src="https://drops.azureedge.net/drops/files/acc_558828/cM02q?rscd=inline%3B%20filename%3Dimage%252Fpng&amp;rsct=image%2Fpng&amp;se=2017-05-20T05%3A30%3A20Z&amp;sig=cRQBz%2FO6TM7UcO0YFpb8lkodVaMOOQkgOBI1uFeGYK8%3D&amp;sp=r&amp;sr=b&amp;st=2017-05-20T04%3A30%3A20Z&amp;sv=2013-08-15" alt="问题"></p>
-<p>大家都知道刚开始入门，就遇到问题了就必然是十分难受的，那么我们现在可以解决。</p>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>编辑 ~/.bash_profile<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export HADOOP_HOME=/usr/local/hadoop</div><div class="line">export CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath):$CLASSPATH</div></pre></td></tr></table></figure></p>
-<p>使其生效<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">source ~/.bash_profile</div></pre></td></tr></table></figure></p>
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><ol>
-<li><p>编译主类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">javac MaxTemperature.java</div></pre></td></tr></table></figure>
-</li>
-<li><p>把.class 文件打包成 jar，才能在 Hadoop 中运行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jar -cvf MaxTemperature.jar ./MaxTemperature*.class</div></pre></td></tr></table></figure>
-</li>
-<li><p>创建input文件夹的数据，就可以运行了(每次运行时，output文件夹都应该不存在)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hadoop MaxTemperature input/ncdc/sample.txt output</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然我自己还不知道书上的命令行为什么不能用，但是还是希望慢慢可以弄懂吧！</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：自己最近心态有点崩，毕竟很迷茫，趁现在比较空 ，也就微微看看hadoop。在运行《Hadoop权威指南》的时候，遇到了按照书上命令行无法运行的问题。
-    
-    </summary>
-    
-      <category term="大数据" scheme="http://bestlixiang.site/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
-    
-      <category term="hadoop" scheme="http://bestlixiang.site/tags/hadoop/"/>
     
   </entry>
   
