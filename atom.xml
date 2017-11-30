@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-11-29T11:35:07.000Z</updated>
+  <updated>2017-11-30T06:33:33.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,60 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入理解JVM_5_内存分配策略</title>
+    <link href="http://bestlixiang.site/2017/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-5-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/"/>
+    <id>http://bestlixiang.site/2017/11/30/深入理解JVM-5-内存分配策略/</id>
+    <published>2017-11-30T06:31:15.000Z</published>
+    <updated>2017-11-30T06:33:33.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：一直在说Java的垃圾回收，既然有回收，那么当然会有分配。<a id="more"></a></p>
+<p>Java技术体系中所提倡的自动内存管理可以归结为自动化地解决了两个问题：</p>
+<ol>
+<li>给对象分配内存</li>
+<li>回收分配给对象的内存</li>
+</ol>
+<p>之前垃圾回收已经讲了很多，接下来我们详细地来看看内存分配</p>
+<h1 id="内存分配总说"><a href="#内存分配总说" class="headerlink" title="内存分配总说"></a>内存分配总说</h1><p>对象的内存分配，主要是在堆上分配，对象主要分配在新生代的Eden区上，如果启动了本地线程的分配缓冲，将按线程优先在TLAB上分配，少数情况下（大对象）也可能直接分配在老年代中，分配的规则不是百分百固定的，其细节取决于当前使用的是哪一种垃圾收集器组合，还有虚拟机中与内存相关的参数的设置。</p>
+<h1 id="对象优先在Eden分配"><a href="#对象优先在Eden分配" class="headerlink" title="对象优先在Eden分配"></a>对象优先在Eden分配</h1><ol>
+<li>大多数情况，对象在新生代Eden区分配。当Eden区没有足够空间进行分配时，虚拟机会发起一次MinorGC。</li>
+<li>当MinorGC发现复制的对象大于Survivor区时，会通过分配担保机制提前转移到老年代中。</li>
+</ol>
+<h1 id="大对象直接进入老年代"><a href="#大对象直接进入老年代" class="headerlink" title="大对象直接进入老年代"></a>大对象直接进入老年代</h1><p>所谓大对象是指需要大量连续内存空间的Java对象，如数组。</p>
+<p>虚拟机提供了一个-XX:PretenureSizeThreshold参数，令大于这个设置值的对象直接在老年代分配，避免了在Eden区及Survivor区之间发生大量的内存复制。（新生代采用复制算法收集内存）</p>
+<h1 id="长期存活的对象将进入老年代"><a href="#长期存活的对象将进入老年代" class="headerlink" title="长期存活的对象将进入老年代"></a>长期存活的对象将进入老年代</h1><p>虚拟机给每个对象定义了一个对象年龄计数器。如果对象在Eden出生并经过第一次MinorGC后仍然存活，并且能被Survivor容纳的话，将被移动到Survivor空间中，并且对象年龄设置为1.对象在Survivor中每度过一次MinorGC，年龄就增加一岁，当他的年龄达到一定程度（默认15岁），就将被晋升到老年代中。对象的年龄阈值，可以通过参数-XX：MaxTenuringThreshold设置。</p>
+<h1 id="动态对象年龄判定"><a href="#动态对象年龄判定" class="headerlink" title="动态对象年龄判定"></a>动态对象年龄判定</h1><p>虚拟机不是永远要求对象的年龄必须达到MaxTenuringThreshold才晋升到老年代，如果Survivor空间中相同年龄所有对象大小总和大于Survivor空间的一半，年龄大于或等于改年龄的对象就可以直接进入老年代。</p>
+<h1 id="空间分配担保策略"><a href="#空间分配担保策略" class="headerlink" title="空间分配担保策略"></a>空间分配担保策略</h1><p>虽然有空间分配担保，但是也需要考虑老年代能否装下由于担保转存的内存大小，所以这个空间分配担保也需要一定的策略。</p>
+<ol>
+<li>在发生MinorGC之前，虚拟机会先检查老年代最大可用的连续空间是否大于新生代所有对象总空间</li>
+<li>如果上面条件成立，那么MinorGC就是安全的，可以进行</li>
+<li>如果上面条件不成立，虚拟机会查看HandlePromotionFailure设置值是否允许担保失败。</li>
+<li>如果允许担保失败，就会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</li>
+<li>如果大于，将尝试进行一次MinorGC</li>
+<li>如果小于，或者HandlePromotionFailure设置为不允许冒险，那这时需要进行一次FullGC</li>
+</ol>
+<p>在jdk 6 update 24之后的规则是只要老年代的连续空间大于新生代对象的总大小或者历次晋升平均大小就会进行MinorGC，否则进行FullGC。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过上面我们可以知道JAVA虚拟机是怎么自动进行内存分配的，然后在进行GC之后，内存是怎么转换的。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入理解JAVA虚拟机》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：一直在说Java的垃圾回收，既然有回收，那么当然会有分配。
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+    
+      <category term="jdk" scheme="http://bestlixiang.site/tags/jdk/"/>
+    
+  </entry>
   
   <entry>
     <title>深入理解JVM_4_垃圾收集策略</title>
@@ -1015,54 +1069,6 @@
     
     
       <category term="hadoop" scheme="http://bestlixiang.site/tags/hadoop/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>贪心算法</title>
-    <link href="http://bestlixiang.site/2017/05/17/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/"/>
-    <id>http://bestlixiang.site/2017/05/17/贪心算法/</id>
-    <published>2017-05-17T14:41:13.000Z</published>
-    <updated>2017-05-23T06:04:14.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：上次看到过钟华老师的一个基于贪心算法的毕业设计，一直很好奇，今天终于能看看它了，只是知其然，不知所以然。<a id="more"></a></p>
-<h2 id="贪心算法总说"><a href="#贪心算法总说" class="headerlink" title="贪心算法总说"></a>贪心算法总说</h2><p>贪心算法在每一步都会做出看起来是最佳的选择，也就是说会做出局部最优的选择，希望以此能够得到最优解。</p>
-<h2 id="活动选择问题"><a href="#活动选择问题" class="headerlink" title="活动选择问题"></a>活动选择问题</h2><h3 id="贪心选择"><a href="#贪心选择" class="headerlink" title="贪心选择"></a>贪心选择</h3><p>我们要选择这样一个活动，选出它之后身下的资源能够被尽量多的其他任务所用，即选择最早结束的活动。</p>
-<h3 id="递归贪心算法"><a href="#递归贪心算法" class="headerlink" title="递归贪心算法"></a>递归贪心算法</h3><p>算法思路：用两个数组s和f表示活动的开始和结束时间。下表k是我们要求解的子问题，以及问题规模n，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">public class ActivitySelector &#123;</div><div class="line">public int[] s = new int[]&#123;1,3,0,5,3,5,6,8,8,2,12&#125;;</div><div class="line">public int[] f = new int[]&#123;4,5,6,7,9,9,10,11,12,14,16&#125;;</div><div class="line">public List&lt;Integer&gt; list = new ArrayList&lt;&gt;();</div><div class="line">public void recursiveActivitySelector(int[] s, int[] f,int k,int n)&#123;</div><div class="line">if(list.size()==0)&#123;</div><div class="line">list.add(1);</div><div class="line">&#125;</div><div class="line">int m = k+1;</div><div class="line">while (m&lt;n &amp;&amp; s[m]&lt;f[k])&#123;</div><div class="line">m = m+1;</div><div class="line">&#125;</div><div class="line">if(m&lt;n)&#123;</div><div class="line">list.add(m+1);</div><div class="line">recursiveActivitySelector(s, f, m, n);</div><div class="line">&#125; else &#123;</div><div class="line">return ;</div><div class="line">&#125;		</div><div class="line">&#125;</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">ActivitySelector activitySelector = new ActivitySelector();</div><div class="line"></div><div class="line">activitySelector.recursiveActivitySelector(activitySelector.s, activitySelector.f, 0, activitySelector.f.length);</div><div class="line">for (Integer i : activitySelector.list) &#123;</div><div class="line">System.out.println(i);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="迭代贪心算法"><a href="#迭代贪心算法" class="headerlink" title="迭代贪心算法"></a>迭代贪心算法</h3><p>这个过程是假设输入活动的结束时间是已经排好序的，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">public class GreedyActivitySelector &#123;</div><div class="line">public int[] s = new int[]&#123;1,3,0,5,3,5,6,8,8,2,12&#125;;</div><div class="line">public int[] f = new int[]&#123;4,5,6,7,9,9,10,11,12,14,16&#125;;</div><div class="line">public List&lt;Integer&gt; list = new ArrayList&lt;&gt;();</div><div class="line">public void greedActivitySelector(int[] s,int[] f)&#123;</div><div class="line">int n = s.length;</div><div class="line">list.add(1);</div><div class="line">int k = 1;</div><div class="line">for (int m = 1; m &lt; n; m++) &#123;</div><div class="line">if(s[m]&gt;=f[k])&#123;</div><div class="line">list.add(k);</div><div class="line">k = m;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">ActivitySelector activitySelector = new ActivitySelector();</div><div class="line"></div><div class="line">activitySelector.recursiveActivitySelector(activitySelector.s, activitySelector.f, 0, activitySelector.f.length);</div><div class="line">for (Integer i : activitySelector.list) &#123;</div><div class="line">System.out.println(i);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="贪心算法原理"><a href="#贪心算法原理" class="headerlink" title="贪心算法原理"></a>贪心算法原理</h2><p>设计贪心算法的过程</p>
-<ol>
-<li>确定问题的最优子结构</li>
-<li>设计一个递归算法</li>
-<li>证明一个贪心选择，则只剩下一个子问题</li>
-<li>证明贪心选择总是安全的</li>
-<li>设计一个递归算法实现贪心策略</li>
-<li>将递归算法转换为迭代算法</li>
-</ol>
-<p>证明一个贪心算法是否能求解一个最优化问题？具有下面性质就ok？</p>
-<ol>
-<li>贪心选择性质</li>
-</ol>
-<p>我们可以通过做出局部最优选择来构造全局最优解</p>
-<ol>
-<li>最优子结构</li>
-</ol>
-<p>如果一个问题的最优解包含子问题的最优解</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一步一步慢慢贪心，和做人是一样的，但是总的来说还是要考虑全局的！！！</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：上次看到过钟华老师的一个基于贪心算法的毕业设计，一直很好奇，今天终于能看看它了，只是知其然，不知所以然。
-    
-    </summary>
-    
-      <category term="算法" scheme="http://bestlixiang.site/categories/%E7%AE%97%E6%B3%95/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="算法导论" scheme="http://bestlixiang.site/tags/%E7%AE%97%E6%B3%95%E5%AF%BC%E8%AE%BA/"/>
     
   </entry>
   
