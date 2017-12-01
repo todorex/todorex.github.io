@@ -96,7 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2017/12/01/深入理解JVM-7-探秘类文件/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：java代码编译的结果从本地机器码转变为字节码，并且生成了类文件，那么这个类文件里面是什么东西呢？">
-<meta property="og:updated_time" content="2017-12-01T12:54:11.000Z">
+<meta property="og:updated_time" content="2017-12-01T13:05:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解JVM_7_探秘类文件">
 <meta name="twitter:description" content="引：java代码编译的结果从本地机器码转变为字节码，并且生成了类文件，那么这个类文件里面是什么东西呢？">
@@ -387,8 +387,8 @@
       
         <p>引：java代码编译的结果从本地机器码转变为字节码，并且生成了类文件，那么这个类文件里面是什么东西呢？<a id="more"></a></p>
 <h1 id="JVM的无关性"><a href="#JVM的无关性" class="headerlink" title="JVM的无关性"></a>JVM的无关性</h1><p>一般提到Java的好处，其中必定有一条是平台无关性，但是这个太狭隘了，其实它有两点无关性。</p>
-<h1 id="平台无关性"><a href="#平台无关性" class="headerlink" title="平台无关性"></a>平台无关性</h1><p>Java在刚刚诞生之时就有一个著名的宣传口号：“一次编写，到处运行（Write Once, Run Anywhere）”。“与平台无关”的理想最终实现在操作系统的应用层上：其实就是Java虚拟机了，他可以载入和执行同一种平台无关的字节码，从而实现了程序的“一次编写，到处运行”。</p>
-<h1 id="语言无关性"><a href="#语言无关性" class="headerlink" title="语言无关性"></a>语言无关性</h1><p>目前已经一大批能够在JVM运行语言了，就我自己知道并且使用过就有Groovy、Jython、Scala等。实现语言无关性的基础仍然是虚拟机和字节码存储格式。其他语言通过自己的编译把程序代码编程成符合Java虚拟机规范的Class文件即可。</p>
+<h2 id="平台无关性"><a href="#平台无关性" class="headerlink" title="平台无关性"></a>平台无关性</h2><p>Java在刚刚诞生之时就有一个著名的宣传口号：“一次编写，到处运行（Write Once, Run Anywhere）”。“与平台无关”的理想最终实现在操作系统的应用层上：其实就是Java虚拟机了，他可以载入和执行同一种平台无关的字节码，从而实现了程序的“一次编写，到处运行”。</p>
+<h2 id="语言无关性"><a href="#语言无关性" class="headerlink" title="语言无关性"></a>语言无关性</h2><p>目前已经一大批能够在JVM运行语言了，就我自己知道并且使用过就有Groovy、Jython、Scala等。实现语言无关性的基础仍然是虚拟机和字节码存储格式。其他语言通过自己的编译把程序代码编程成符合Java虚拟机规范的Class文件即可。</p>
 <h1 id="类文件的结构"><a href="#类文件的结构" class="headerlink" title="类文件的结构"></a>类文件的结构</h1><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑排列在Class文件之中，中间没有任何分隔符。Class文件只有两种数据类型：无符号数和表</p>
 <ul>
 <li>无符号数：以u1，u2，u4，u8来分别代表1个字节，2个字节，4个字节和8个字节的无符号数，无符号数可以用来描述数字、索引引用、数值量或者按照UTF-8编码构成字符串值。</li>
@@ -513,8 +513,36 @@
 </ul>
 </li>
 <li><p>常量池的每一项常量都是表，常量的顺序可以参照javap解析出来的常量顺序，在JDK1.7以后共有14种不同类型的表，他们共同点是表的第一位是一个u1类型的标志位（tag），具体的标志对应的类型参照书《深入理解Java虚拟机》。这里提一下CONSTANT_UTF8_info这个表：</p>
-<p> 类型 | 名称 | 数量<br> —|—|—<br> u1 | tag | 1<br> u2 | length | 1<br> u1 | bytes | length<br> length值说明了UTF-8编码的字符串长度是多少字节，他后面跟着的长度为length字节的连续数据是一个使用UTF-8缩略编码表示的字符串。而u2最大值是65535，所以说如果Java程序如果定义了超过64KB（大约）英文字符的变量或者方法名，将无法编译。</p>
 </li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>u1</td>
+<td>tag</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>length</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u1</td>
+<td>bytes</td>
+<td>length</td>
+</tr>
+</tbody>
+</table>
+<pre><code>length值说明了UTF-8编码的字符串长度是多少字节，他后面跟着的长度为length字节的连续数据是一个使用UTF-8缩略编码表示的字符串。而u2最大值是65535，所以说如果Java程序如果定义了超过64KB（大约）英文字符的变量或者方法名，将无法编译。
+</code></pre><ol>
 <li>UTF-8缩略编码和UTF-8编码的区别：UTF-8编码都是使用3个字节编码，而UTF-8缩略编码可以使用1或2或3个字节编码。</li>
 </ol>
 <h2 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h2><p>在常量池结束之后，紧接着的两个字节代表访问标志，这个标志用于识别一些类或者接口层次的访问信息，包括：这个Class是类还是接口；是否定义public类型；是否定义为abstract类型；如果是类的话，是否被声明为final等，访问标志一共有16个标志位可以使用，当前只定义了8个。</p>
@@ -573,7 +601,44 @@
 <li>字段表有可能列出原本Java代码之中不存在的字段，譬如在内部类中为了保持对外部类的访问性，会自动添加执行外部类实例的字段。（不懂，大佬请指教）</li>
 <li>Java语言中字段是无法重载的，名称必须不一样，但是对于字节码来说，如果两个字段的描述符不一致，那么字段重名是合法的。</li>
 </ol>
-<h2 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h2><p>接下来是方法表，方法表的内容和字段表几乎完全一致。其中坑顶也看一下方法表的构成：<br>类型 | 名称 | 数量<br>—|—|—<br>u2 | 访问标志 | 1<br>u2 | 简单名称索引 | 1<br>u2 | 描述符索引 | 1<br>u2 | 属性数量 | 1<br>attribute_info | 属性表 | 属性数量<br>这里解释一下和字段表不一样的地方</p>
+<h2 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h2><p>接下来是方法表，方法表的内容和字段表几乎完全一致。其中坑顶也看一下方法表的构成：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>u2</td>
+<td>访问标志</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>简单名称索引</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>描述符索引</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>属性数量</td>
+<td>1</td>
+</tr>
+<tr>
+<td>attribute_info</td>
+<td>属性表</td>
+<td>属性数量</td>
+</tr>
+</tbody>
+</table>
+<p>这里解释一下和字段表不一样的地方</p>
 <ol>
 <li>简单名称索引：它指向一个CONSTANT_UTF8_info类型的常量，这里面存储了本字段的名字信息，像javap解析后的第11个常量inc。</li>
 <li>描述符索引：它的作用是用来描方法的参数列表（包括数量、类型以及顺序）和返回值，像javap解析后的第12个常量()I,表示的就是一个返回值为int的方法。</li>
@@ -591,7 +656,69 @@
 </ol>
 <h2 id="属性表集合"><a href="#属性表集合" class="headerlink" title="属性表集合"></a>属性表集合</h2><p>最后就是属性表集合了，在Class文件、字段表、方法表都可以携带自己的属性表集合，以及用于描述某些场景专有的信息。属性表集合不要求各个属性具有严格的顺序，并且只要不与已有属性名重复就好。</p>
 <p>上面程序的例子出现过几个属性表：Code、LineNumberTable、SourceFile、ConstantValue，接下来我们详细说一下：</p>
-<h3 id="Code属性"><a href="#Code属性" class="headerlink" title="Code属性"></a>Code属性</h3><p>Java程序方法体中的代码经过Javac编译器处理后，最终变为字节码指令存储在Code属性内，Code属性出现在方法表属性集合之中，我们先看看Code属性表的结构：<br>类型 | 名称 | 数量<br>—|—|—<br>u2 | 属性名索引 | 1<br>u4 | 属性长度 | 1<br>u2 | 操作数栈深度的最大值 | 1<br>u2 | 局部变量表所需的存储空间 | 1<br>u4 | Java方法代码字节码指令长度 | 1<br>u1 | Java方法代码字节码 | Java方法代码字节码指令长度<br>u2 | 显式异常表长度 | 1<br>exception_info | 显式异常表 | 显式异常表长度<br>u2 | 属性个数 | 1<br>attribute_info | 属性表 | 属性个数<br>接下来我们说明一下几个关键项：</p>
+<h3 id="Code属性"><a href="#Code属性" class="headerlink" title="Code属性"></a>Code属性</h3><p>Java程序方法体中的代码经过Javac编译器处理后，最终变为字节码指令存储在Code属性内，Code属性出现在方法表属性集合之中，我们先看看Code属性表的结构：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>u2</td>
+<td>属性名索引</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>属性长度</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>操作数栈深度的最大值</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>局部变量表所需的存储空间</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u4</td>
+<td>Java方法代码字节码指令长度</td>
+<td>1</td>
+</tr>
+<tr>
+<td>u1</td>
+<td>Java方法代码字节码</td>
+<td>Java方法代码字节码指令长度</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>显式异常表长度</td>
+<td>1</td>
+</tr>
+<tr>
+<td>exception_info</td>
+<td>显式异常表</td>
+<td>显式异常表长度</td>
+</tr>
+<tr>
+<td>u2</td>
+<td>属性个数</td>
+<td>1</td>
+</tr>
+<tr>
+<td>attribute_info</td>
+<td>属性表</td>
+<td>属性个数</td>
+</tr>
+</tbody>
+</table>
+<p>接下来我们说明一下几个关键项：</p>
 <ol>
 <li>属性名索引：它是一项指向CONSTANT_UTF8_info型的索引，常量值固定为“Code”，就像上面javap解析出来的常量池的第9个。</li>
 <li>属性长度：固定为整个属性表长度减去6个字节。</li>
@@ -865,7 +992,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM的无关性"><span class="nav-number">1.</span> <span class="nav-text">JVM的无关性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#平台无关性"><span class="nav-number">2.</span> <span class="nav-text">平台无关性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#语言无关性"><span class="nav-number">3.</span> <span class="nav-text">语言无关性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类文件的结构"><span class="nav-number">4.</span> <span class="nav-text">类文件的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#魔数"><span class="nav-number">4.1.</span> <span class="nav-text">魔数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Class文件的版本"><span class="nav-number">4.2.</span> <span class="nav-text">Class文件的版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常量池"><span class="nav-number">4.3.</span> <span class="nav-text">常量池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问标志"><span class="nav-number">4.4.</span> <span class="nav-text">访问标志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类索引、父类索引、接口索引集合"><span class="nav-number">4.5.</span> <span class="nav-text">类索引、父类索引、接口索引集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字段表集合"><span class="nav-number">4.6.</span> <span class="nav-text">字段表集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法表集合"><span class="nav-number">4.7.</span> <span class="nav-text">方法表集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性表集合"><span class="nav-number">4.8.</span> <span class="nav-text">属性表集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code属性"><span class="nav-number">4.8.1.</span> <span class="nav-text">Code属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LineNumberTable"><span class="nav-number">4.8.2.</span> <span class="nav-text">LineNumberTable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SourceFile"><span class="nav-number">4.8.3.</span> <span class="nav-text">SourceFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConstantValue"><span class="nav-number">4.8.4.</span> <span class="nav-text">ConstantValue</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM的无关性"><span class="nav-number">1.</span> <span class="nav-text">JVM的无关性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#平台无关性"><span class="nav-number">1.1.</span> <span class="nav-text">平台无关性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语言无关性"><span class="nav-number">1.2.</span> <span class="nav-text">语言无关性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类文件的结构"><span class="nav-number">2.</span> <span class="nav-text">类文件的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#魔数"><span class="nav-number">2.1.</span> <span class="nav-text">魔数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Class文件的版本"><span class="nav-number">2.2.</span> <span class="nav-text">Class文件的版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常量池"><span class="nav-number">2.3.</span> <span class="nav-text">常量池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问标志"><span class="nav-number">2.4.</span> <span class="nav-text">访问标志</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类索引、父类索引、接口索引集合"><span class="nav-number">2.5.</span> <span class="nav-text">类索引、父类索引、接口索引集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字段表集合"><span class="nav-number">2.6.</span> <span class="nav-text">字段表集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法表集合"><span class="nav-number">2.7.</span> <span class="nav-text">方法表集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性表集合"><span class="nav-number">2.8.</span> <span class="nav-text">属性表集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Code属性"><span class="nav-number">2.8.1.</span> <span class="nav-text">Code属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LineNumberTable"><span class="nav-number">2.8.2.</span> <span class="nav-text">LineNumberTable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SourceFile"><span class="nav-number">2.8.3.</span> <span class="nav-text">SourceFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConstantValue"><span class="nav-number">2.8.4.</span> <span class="nav-text">ConstantValue</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
