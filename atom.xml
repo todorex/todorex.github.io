@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-12-06T03:00:51.000Z</updated>
+  <updated>2017-12-09T12:04:06.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -16,11 +16,140 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>深入理解JVM_10_虚拟机字节码执行引擎</title>
+    <link href="http://bestlixiang.site/2017/12/09/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-10-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/"/>
+    <id>http://bestlixiang.site/2017/12/09/深入理解JVM-10-虚拟机字节码执行引擎/</id>
+    <published>2017-12-09T11:55:21.000Z</published>
+    <updated>2017-12-09T12:04:06.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？<a id="more"></a></p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="物理机与虚拟机"><a href="#物理机与虚拟机" class="headerlink" title="物理机与虚拟机"></a>物理机与虚拟机</h2><ol>
+<li>物理机的执行引擎：直接建立在处理器、硬件、指令集、和操作系统层面上。</li>
+<li>虚拟机的执行引擎：自己实现，可以自行制定指令集与执行引擎的结构体系，并且能够执行那些不被硬件直接支持的指令集格式。</li>
+</ol>
+<h2 id="虚拟机怎么执行代码"><a href="#虚拟机怎么执行代码" class="headerlink" title="虚拟机怎么执行代码"></a>虚拟机怎么执行代码</h2><ol>
+<li>解释执行：通过解释器执行</li>
+<li>编译执行：通过即时编译器产生本地代码执行</li>
+</ol>
+<h1 id="运行时栈帧结构"><a href="#运行时栈帧结构" class="headerlink" title="运行时栈帧结构"></a>运行时栈帧结构</h1><p>栈帧是用于支持虚拟机进行方法调用和方法执行的数据结构，他是虚拟机运行时数据区中的虚拟机栈的栈元素，栈帧存储了方法的局部变量表、操作数栈、动态链接和方法返回地址等信息。每一个方法从调用开始至执行完成的过程，都对应着一个栈帧在虚拟机栈里面从入栈到出栈的过程。</p>
+<p>一个线程的方法的调用链可能会很长，很多方法同时处于执行状态。对于执行引擎来说，在活动线程中，只有位于栈顶的栈帧才是有效的，称为当前栈帧，与这个栈帧相关联的方法称为当前方法，执行引擎运行的字节码指令都只针对当前栈帧进行操作，在概念模型上，典型的栈帧结构如下图：</p>
+<p><img src="http://img.blog.csdn.net/20160605105355400" alt="Stack Frame Model"></p>
+<p>接下来具体解释一下栈帧中的局部变量表、操作数栈、动态链接以及方法调用。</p>
+<h2 id="局部变量表"><a href="#局部变量表" class="headerlink" title="局部变量表"></a>局部变量表</h2><ol>
+<li>局部变量表示一组变量值存储空间，用于存放方法和方法内部定义的局部变量。</li>
+<li>局部变量表的容量以<strong>变量槽Slot</strong>为单位。虚拟机规范说每个Slot都应该存放一个boolean、byte、char、int、float、reference或returnAddress类型的数据。long和double使用两个Slot。</li>
+<li>reference类型在虚拟机中至少要实现能从该引用中直接或间接地查找到对象在Java堆中的数据存放的起始地址索引以及从该引用直接或者间接查找到对象所属数据类型在方法区中存储的类型信息。</li>
+<li>虚拟机通过索引定位的方式使用局部变量表，如果执行的实例方法，那局部变量表中第0位索引的Slot默认是用于传递方法所属对象实例的引用，可以使用“this”来访问，其余参数按照参数表顺序排列。</li>
+<li><p>局部变量表中的Slot是可以重用的，当某个变量除了它的作用域，那这个变量所对应的Slot就可以复用了，Slot的复用会直接影响到系统的垃圾收集行为，如下代码所示：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例1</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line"></div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 输出结果：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68209K-&gt;66072K(125952K), 0.0019584 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069900 secs]</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例2</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        &#123;</div><div class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        &#125;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 输出结果</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0010138 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069811 secs]</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 例3</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        &#123;</div><div class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        &#125;</div><div class="line">        int a = 0;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 输出结果</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016694 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0054452 secs]</div></pre></td></tr></table></figure>
+<p> placeholde能否被回收的根本原因是：局部变量的Slot是否还存有关于placeholder数组对象的引用。例1没有垃圾回收，例2代码虽然已经离开了placeholder的作用域，但是之后没有任何对局部变量表的读写操作，所有placeholder原来的Slot还没有被其他变量复用，所以GC Roots一部分的局部变量表仍然保持着对它的关联，当例3修改了局部变量表，那么就会进行垃圾回收了。</p>
+<p> 这里解释一个编码建议：<strong>不使用的对象应手动赋值null</strong></p>
+<p> 我们看看下面的代码：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例1</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        placeholder = null;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 输出结果：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016915 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0058140 secs]</div></pre></td></tr></table></figure>
+<p> 我们可以看到当placeholder赋值为null，会发生垃圾回收。</p>
+</li>
+<li><p>局部变量表没有赋初始值不能使用。</p>
+</li>
+</ol>
+<h2 id="操作数栈"><a href="#操作数栈" class="headerlink" title="操作数栈"></a>操作数栈</h2><ol>
+<li>操作数栈常被称为操作栈，一个方法刚开始执行的时候是空的，在方法执行的过程中，会有各种字节码指令往操作数栈中写入和提取内容，例如，在做算术运算的时候是通过操作数栈来 进行的，又或者是在调用方法的时候通过操作数栈来进行参数传递的。</li>
+<li><p>在概念模型中，两个栈帧是完全独立的，但在大多虚拟机的实现里会做一些优化处理，令两个栈帧的部分操作数出现一部分重叠，避免方法调用时额外的参数复制，如下图：</p>
+<p><img src="http://img.blog.csdn.net/20160605151831616" alt="data share"></p>
+</li>
+<li><p>Java虚拟机的解释执行引擎称为“基于栈的执行引擎”，其中的栈就是操作数栈。</p>
+</li>
+</ol>
+<h2 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h2><ol>
+<li>每个栈帧都包含一个执行运行时常量池中该栈帧所属方法的引用，持有这个引用就是为了支持方法调用过程中的动态链接。</li>
+<li>Class文件的常量池存有大量的符号引用，一部分是在类加载中的解析阶段完成的，称为静态解析，另一部分是在每一次运行期间转化为直接引用，称为动态链接。</li>
+</ol>
+<h2 id="方法返回地址"><a href="#方法返回地址" class="headerlink" title="方法返回地址"></a>方法返回地址</h2><p>当一个方法开始执行后，只有两种方式退出这个方法。</p>
+<ol>
+<li>正常完成出口：执行引擎遇到一个方法返回的字节码指令，调用者的PC计数器的值可以作为返回地址</li>
+<li>异常完成出口：在方法执行过程中遇到异常，并且这个异常没有在方法体得到处理，它不会给调用者产生任何返回值，它的返回值是要通过异常处理器表来确定的。</li>
+</ol>
+<h1 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h1><p>方法调用不等同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本。Class文件的编译过程不包含传统编译找那个的链接步骤，所以Java方法调用过程需要在类加载期间，甚至到运行期间才能确定目标方法的直接引用。</p>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>解析： 方法在程序真正运行之前就有一个可确定的调用版本，并且这个方法的调用在运行期是不可变的，这类方法的调用成为解析。</p>
+<p>所有方法可以分为两类虚方法和非虚方法，其中非虚方法都可以在类加载的时候就会把符号引用解析为该方法的直接引用。</p>
+<ol>
+<li>非虚方法：静态方法、私有方法、实例构造器、父类方法和final方法</li>
+<li>虚方法：与非虚方法相反</li>
+</ol>
+<p>解析调用一定是个静态的过程，在编译器就完全确定，在类装载的解析阶段就会把涉及的符号引用全部转变为可确定的直接引用，不会延迟到运行期再去完成。而分派调用则可能是静态也可能是动态的，根据分派的宗数量（方法的接收者与方法的参数统称为方法的总量）可分为单分派和多分派，这两种分派方式地组合可分为静态单分派、静态多分派、动态单分派、动态多分派。</p>
+<h2 id="分派"><a href="#分派" class="headerlink" title="分派"></a>分派</h2><h3 id="静态分派"><a href="#静态分派" class="headerlink" title="静态分派"></a>静态分派</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Human man = <span class="keyword">new</span> Man();</div></pre></td></tr></table></figure>
+<p>上面代码中Human称为变量的静态类型，或者叫做外观类型，后面的Man称为实际类型，静态类型是编译器可知，实际类型是运行期才能确定的。虚拟机在重载时是通过参数的静态类型而不是实际类型来作为判断依据的。</p>
+<p>所有依赖静态类型来定位方法执行版本的分派动作称为静态分派，静态分派的典型应用是方法重载。静态分派发生在编译阶段，因此确定静态分派的动作实际上不是由虚拟机来执行的，另外，编译器虽然能确定出方法的重载版本，当在很多情况下这个重载版本不是“唯一的”，往往只能确定一个“更加合适的”版本，具体例子可以看看《深入理解Java虚拟机》。</p>
+<h3 id="动态分派"><a href="#动态分派" class="headerlink" title="动态分派"></a>动态分派</h3><p>在运行期根据实际类型确定方法执行版本的分派过程称为动态分派，典型应用是方法重写。它主要是通过invokevirturl指令来实现的。invokevirtual指令的运行时解析过程大致分为如下几个步骤：</p>
+<ol>
+<li>找到操作数栈顶的第一个元素所指向的对象的实际类型，记作C。</li>
+<li>如果在类型C中找到与常量中的描述符合简单名称都相符的方法，则进行访问权限校验，如果通过则返回这个方法的直接引用，查找过程结束；如果不通过，则返回java.lang.IllegalAccessError异常。</li>
+<li>否则，按照继承关系从下往上依次对C的各个父类进行第2步的搜索和验证过程。</li>
+<li>如果始终没有找到合适的方法，则抛出java.lang.AbstractMethodError异常。</li>
+</ol>
+<h3 id="单分派和多分派"><a href="#单分派和多分派" class="headerlink" title="单分派和多分派"></a>单分派和多分派</h3><p>单分派是根据一个宗量对目标方法进行选择，多分派则是根据一个宗量对目标方法进行选择。我们结合下面的代码来理解：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dispatch</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">QQ</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">_360</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Father</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"father choose qq"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"father choose _360"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"son choose qq"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"son choose _360"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Father father = <span class="keyword">new</span> Father();</div><div class="line">        Father son = <span class="keyword">new</span> Son();</div><div class="line">        father.hardChoice(<span class="keyword">new</span> _360());</div><div class="line">        son.hardChoice(<span class="keyword">new</span> QQ());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">father choose _360</div><div class="line">son choose qq</div></pre></td></tr></table></figure></p>
+<ol>
+<li>编译阶段编译器的选择过程（静态分派过程）：这时选择目标方法的依据有两点：一是静态类型是Father还是Son，二是方法参数是QQ还是360。因为是根据两个宗量进行选择，所有Java语言的静态分派属于多分派类型。</li>
+<li>运行阶段虚拟机的选择过程（动态分派过程）：由于编译器已经已经决定目标方法的签名必须为hardChoice(QQ)，所以这时参数的静态类型，实际类型都对方法的选择不会构成影响，唯一可以影响虚拟机选择的因素只有此方法的接受者的实际类型是Father还是Son,因为只有一个宗量作为选择依据，所以Java语言的动态分派属于单分派类型。</li>
+<li>jdk1.8之前的Java语言是一门静态多分派，动态单分派的语言。</li>
+</ol>
+<h3 id="虚拟机动态分派的实现"><a href="#虚拟机动态分派的实现" class="headerlink" title="虚拟机动态分派的实现"></a>虚拟机动态分派的实现</h3><p>由于动态分派是非常频繁的操作，而且动态分派的方法版本选择过程需要运行时在类的方法元数据中搜索合适的目标方法，因此虚拟机会进行优化。常用的方法就是为类在方法区中建立一个虚方法表（Virtual Method Table，在invokeinterface执行时也会用到接口方法表，Interface Method Table），使用虚方法表索引来替代元数据查找以提升性能。下图就是前面代码的虚方法表结构：</p>
+<p><img src="http://img.blog.csdn.net/20160606200822089" alt="virtual method table"></p>
+<p>虚方法表中存放着各个方法的实际入口地址。如果某个方法在子类中没有被重写，那子类的虚方法表里面的地址入口和父类相同方法的地址入口是一致的，都指向父类的实现入口。如果子类重写了父类的方法，子类方法表中的地址会替换为指向子类实现版本的入口地址。在上图中，Son重写了Father的全部方法，所以Son的方法表替换了父类的地址。但是Son和Father都没有重写Object的方法，所以方法表都指向了Object的数据类型。<br>为了程序实现上的方便，具有相同签名的方法，在父类和子类的虚方法表中都应该具有一样的索引号，这样当类型变换时，仅仅需要变更查找的方法表，就可以从不同的虚方法表中按索引转换出所需的入口地址。<br>方法表一般在类加载的连接阶段进行初始化，准备了类的变量初始值后，虚拟机会把该类的方法表也初始化完毕。</p>
+<h2 id="动态类型语言支持"><a href="#动态类型语言支持" class="headerlink" title="动态类型语言支持"></a>动态类型语言支持</h2><p>动态类型语言的关键特征是它的类型检查的主体过程是在运行期间而不是编译期间，可以理解为<strong>变量无类型而变量值才有类型</strong>，Javascript就是这样的语言，而目前Java属于静态类型语言。当然Java也有它实现动态性的方法，这块知识点蛮大，就不展开说了。</p>
+<h1 id="基于栈的字节码解释执行引擎"><a href="#基于栈的字节码解释执行引擎" class="headerlink" title="基于栈的字节码解释执行引擎"></a>基于栈的字节码解释执行引擎</h1><h2 id="解释执行"><a href="#解释执行" class="headerlink" title="解释执行"></a>解释执行</h2><p>先看看编译过程流图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/png/compilers.png" alt="compilers"></p>
+<ol>
+<li>上图最下面的那一条就是传统编译原理中程序代码到目标机器代码生成过程（C）</li>
+<li>上图中间那一条就是解释执行的过程（Java）</li>
+</ol>
+<h2 id="基于栈的指令集与基于寄存器的指令集"><a href="#基于栈的指令集与基于寄存器的指令集" class="headerlink" title="基于栈的指令集与基于寄存器的指令集"></a>基于栈的指令集与基于寄存器的指令集</h2><ol>
+<li>基于栈的指令集：指令流中的大部分都是零地址指令（无显示参数），他们依赖操作数栈进行工作。<ul>
+<li>优点：可移植性，代码紧凑，编译器实现简单</li>
+<li>缺点：执行速度稍慢（频繁访问内存）</li>
+</ul>
+</li>
+<li>基于寄存器的指令集：指令集依赖寄存器进行工作</li>
+</ol>
+<h2 id="基于栈的解释器执行流程"><a href="#基于栈的解释器执行流程" class="headerlink" title="基于栈的解释器执行流程"></a>基于栈的解释器执行流程</h2><p>其实就是按照指令解释执行，随便看了例子应该就能明白。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>其实这里谈的主要还是解释执行，其中有一点很重要就是分派的概念，明白invokevirtual指令的执行过程。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入理解Java虚拟机》</li>
+<li><a href="http://blog.csdn.net/u012877472/article/details/51585297" target="_blank" rel="external">虚拟机字节码执行引擎</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
+    
+  </entry>
+  
+  <entry>
     <title>深入理解JVM_9_类加载器</title>
     <link href="http://bestlixiang.site/2017/12/06/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-9-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/"/>
     <id>http://bestlixiang.site/2017/12/06/深入理解JVM-9-类加载器/</id>
     <published>2017-12-06T02:59:56.000Z</published>
-    <updated>2017-12-06T03:00:51.000Z</updated>
+    <updated>2017-12-09T12:04:08.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：之前一直在说类加载，类加载就需要类加载器，类加载最初是为了满足Java Applet，现在基本已经死掉了，但是类加载却在类层次划分、OSGi、热部署、代码加密等领域大放异彩，成为Java体系中一块重要的基石，可谓失之桑榆，收之东隅。<a id="more"></a></p>
 <h1 id="什么是类加载器？"><a href="#什么是类加载器？" class="headerlink" title="什么是类加载器？"></a>什么是类加载器？</h1><p>虚拟机设计团队把类加载阶段的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让应用程序自己去决定如何去获取所需要的类，实现这个动作的代码模块称为“类加载器”。</p>
@@ -81,9 +210,9 @@
       <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
     
     
-      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
-      <category term="jdk" scheme="http://bestlixiang.site/tags/jdk/"/>
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
     
   </entry>
   
@@ -92,7 +221,7 @@
     <link href="http://bestlixiang.site/2017/12/02/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-8-%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/"/>
     <id>http://bestlixiang.site/2017/12/02/深入理解JVM-8-虚拟机类加载机制/</id>
     <published>2017-12-02T07:22:11.000Z</published>
-    <updated>2017-12-02T08:04:54.000Z</updated>
+    <updated>2017-12-09T12:04:10.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：在Class文件中描述的各种信息最终都需要加载到虚拟机之中之后才能运行和使用。而虚拟机如何加载这些Class文件？Class文件中的信息进入到虚拟机后会发生什么变化？<a id="more"></a></p>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>虚拟机的类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。</p>
@@ -197,9 +326,9 @@
       <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
     
     
-      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
-      <category term="jdk" scheme="http://bestlixiang.site/tags/jdk/"/>
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
     
   </entry>
   
@@ -208,7 +337,7 @@
     <link href="http://bestlixiang.site/2017/12/01/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-7-%E6%8E%A2%E7%A7%98%E7%B1%BB%E6%96%87%E4%BB%B6/"/>
     <id>http://bestlixiang.site/2017/12/01/深入理解JVM-7-探秘类文件/</id>
     <published>2017-12-01T12:52:36.000Z</published>
-    <updated>2017-12-01T13:05:54.000Z</updated>
+    <updated>2017-12-09T12:04:12.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：java代码编译的结果从本地机器码转变为字节码，并且生成了类文件，那么这个类文件里面是什么东西呢？<a id="more"></a></p>
 <h1 id="JVM的无关性"><a href="#JVM的无关性" class="headerlink" title="JVM的无关性"></a>JVM的无关性</h1><p>一般提到Java的好处，其中必定有一条是平台无关性，但是这个太狭隘了，其实它有两点无关性。</p>
@@ -577,9 +706,9 @@
       <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
     
     
-      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
-      <category term="jdk" scheme="http://bestlixiang.site/tags/jdk/"/>
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
     
   </entry>
   
@@ -588,7 +717,7 @@
     <link href="http://bestlixiang.site/2017/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-6-JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/"/>
     <id>http://bestlixiang.site/2017/11/30/深入理解JVM-6-JVM调优实战/</id>
     <published>2017-11-30T13:46:19.000Z</published>
-    <updated>2017-11-30T13:48:58.000Z</updated>
+    <updated>2017-12-09T12:04:14.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：带着浅尝基本的Java诊断工具就这样把《深入理解Java虚拟机》的调优部分看完了，似懂非懂，我想待自己经历过一次性能调优，结合自身经历再来好好总结一番吧。<a id="more"></a></p>
 <h1 id="此处暂时省略一万字。。。"><a href="#此处暂时省略一万字。。。" class="headerlink" title="此处暂时省略一万字。。。"></a>此处暂时省略一万字。。。</h1>]]></content>
@@ -602,9 +731,9 @@
       <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
     
     
-      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
-      <category term="jdk" scheme="http://bestlixiang.site/tags/jdk/"/>
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
     
   </entry>
   
@@ -613,7 +742,7 @@
     <link href="http://bestlixiang.site/2017/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-5-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/"/>
     <id>http://bestlixiang.site/2017/11/30/深入理解JVM-5-内存分配策略/</id>
     <published>2017-11-30T06:31:15.000Z</published>
-    <updated>2017-11-30T06:33:33.000Z</updated>
+    <updated>2017-12-09T12:04:16.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：一直在说Java的垃圾回收，既然有回收，那么当然会有分配。<a id="more"></a></p>
 <p>Java技术体系中所提倡的自动内存管理可以归结为自动化地解决了两个问题：</p>
@@ -656,9 +785,9 @@
       <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
     
     
-      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
-      <category term="jdk" scheme="http://bestlixiang.site/tags/jdk/"/>
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
     
   </entry>
   
@@ -667,7 +796,7 @@
     <link href="http://bestlixiang.site/2017/11/29/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-4-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AD%96%E7%95%A5/"/>
     <id>http://bestlixiang.site/2017/11/29/深入理解JVM-4-垃圾收集策略/</id>
     <published>2017-11-29T11:33:14.000Z</published>
-    <updated>2017-11-29T11:35:07.000Z</updated>
+    <updated>2017-12-09T12:04:17.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：Java与C++之间有一堵内存动态分配与垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。那我们就先来看看JVM到底是怎么进行垃圾收集的？<a id="more"></a></p>
 <h1 id="垃圾回收，回收哪里？"><a href="#垃圾回收，回收哪里？" class="headerlink" title="垃圾回收，回收哪里？"></a>垃圾回收，回收哪里？</h1><p>之前介绍过Java内存运行时区域的各个部分，其中程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭，这几个区域的内存分配和回收都具有确定性，方法结束或者线程结束，内存自然就跟着回收了，但是Java堆和方法区（元空间）则不一样，我们只有在运行期间才知道会创建哪些对象，这部分内存的分配和回收都是动态的，所有垃圾回收就是回收这里。</p>
@@ -745,7 +874,7 @@
     
       <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
-      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
     
   </entry>
   
@@ -754,7 +883,7 @@
     <link href="http://bestlixiang.site/2017/11/29/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-3-OutOfMemoryError%E5%BC%82%E5%B8%B8%E7%8E%B0%E5%9C%BA/"/>
     <id>http://bestlixiang.site/2017/11/29/深入理解JVM-3-OutOfMemoryError异常现场/</id>
     <published>2017-11-29T07:24:08.000Z</published>
-    <updated>2017-11-29T07:26:31.000Z</updated>
+    <updated>2017-12-09T12:04:19.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：之前面对JVM运行内存的分析，总会提到出现OutMemoryError异常，接下来我们详细看下常出现这种异常的现场。<a id="more"></a></p>
 <h1 id="Java堆溢出"><a href="#Java堆溢出" class="headerlink" title="Java堆溢出"></a>Java堆溢出</h1><p>我们通过限制Java堆得大小为20MB,不可扩张（将堆得最小值-Xms参数与最大值-Xmx参数设置为一样即可避免堆自动扩展），通过参数-XX：+HeapDumpOnOutOfMemoryError可以让虚拟机在出现内存溢出异常时Dump（备份）出当前的内存堆转储快照以便时候分析处理。</p>
@@ -816,7 +945,7 @@
     
       <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
-      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
     
   </entry>
   
@@ -825,7 +954,7 @@
     <link href="http://bestlixiang.site/2017/11/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-2-HotSpot%E5%AF%B9%E8%B1%A1%E6%8F%AD%E7%A7%98/"/>
     <id>http://bestlixiang.site/2017/11/21/深入理解JVM-2-HotSpot对象揭秘/</id>
     <published>2017-11-21T03:11:05.000Z</published>
-    <updated>2017-11-21T03:25:43.000Z</updated>
+    <updated>2017-12-09T12:04:20.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：总有些人会思考对象是如果创建、如何布局、以及如何访问的？对于这些问题，我们必须把讨论范围限定在具体的虚拟机和集中在某一个内存区域才有意义。基于实用原则，我们以常用的虚拟机HotSpot和常用的内存区域Java堆为例。<a id="more"></a></p>
 <h2 id="对象的创建"><a href="#对象的创建" class="headerlink" title="对象的创建"></a>对象的创建</h2><p>Java程序创建对象不过是一个new关键字而已，而在虚拟机中，创建了一个对象却经历了一系列过程。</p>
@@ -885,7 +1014,7 @@
     
       <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
-      <category term="jvm" scheme="http://bestlixiang.site/tags/jvm/"/>
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
     
   </entry>
   
@@ -894,7 +1023,7 @@
     <link href="http://bestlixiang.site/2017/11/20/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-1-JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"/>
     <id>http://bestlixiang.site/2017/11/20/深入理解JVM-1-JVM内存模型/</id>
     <published>2017-11-20T10:41:36.000Z</published>
-    <updated>2017-11-20T10:55:18.000Z</updated>
+    <updated>2017-12-09T12:04:23.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。<a id="more"></a></p>
 <h1 id="Java内存模型组成"><a href="#Java内存模型组成" class="headerlink" title="Java内存模型组成"></a>Java内存模型组成</h1><p>这里讲的是Java虚拟机在执行Java程序的过程中会把它所管理的内存划分五大区域。</p>
@@ -1489,41 +1618,6 @@
       <category term="sping" scheme="http://bestlixiang.site/tags/sping/"/>
     
       <category term="jpa" scheme="http://bestlixiang.site/tags/jpa/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>springboot项目调试angular2</title>
-    <link href="http://bestlixiang.site/2017/06/01/springboot%E9%A1%B9%E7%9B%AE%E8%B0%83%E8%AF%95angular2/"/>
-    <id>http://bestlixiang.site/2017/06/01/springboot项目调试angular2/</id>
-    <published>2017-06-01T01:43:33.000Z</published>
-    <updated>2017-06-01T01:45:47.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：在接触 springboot和angular2的前后端项目的时候，我发现自己会先把angular2的项目编译好之后放在springboot的resource目录下的static文件夹下运行，虽然这样可以，但是对于前端来调试代码实在不方便。在百度网上的<a href="http://note.youdao.com/" target="_blank" rel="external">方法</a>之后可以采用如下代理的方式。<a id="more"></a></p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ol>
-<li>angular2启动的服务默认为<a href="http://localhost:4200" target="_blank" rel="external">http://localhost:4200</a></li>
-<li>springboot启动的服务默认为<a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a></li>
-</ol>
-<p>如果我们直接设置angular2访问的路径为<a href="http://localhost:8080就会出现跨域访问的问题。请求不到数据。" target="_blank" rel="external">http://localhost:8080就会出现跨域访问的问题。请求不到数据。</a></p>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>在angular2项目的根目录下面新建一个proxy.config.json<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;/api&quot;: &#123;</div><div class="line">&quot;target&quot;: &quot;http://localhost:8081&quot;,</div><div class="line">&quot;secure&quot;: false</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后在启动项目的时候采用下面的命令</p>
-<p>ng serve –proxy-config proxy.config.json</p>
-<p>通过这样的代理访问就能能够实现跨域访问请求数据。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过上面的方法方便了开发调试，不错，终于要开始写代码了！</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：在接触 springboot和angular2的前后端项目的时候，我发现自己会先把angular2的项目编译好之后放在springboot的resource目录下的static文件夹下运行，虽然这样可以，但是对于前端来调试代码实在不方便。在百度网上的&lt;a href=&quot;http://note.youdao.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;方法&lt;/a&gt;之后可以采用如下代理的方式。
-    
-    </summary>
-    
-      <category term="编程" scheme="http://bestlixiang.site/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-    
-      <category term="springboot" scheme="http://bestlixiang.site/tags/springboot/"/>
-    
-      <category term="angular2" scheme="http://bestlixiang.site/tags/angular2/"/>
     
   </entry>
   

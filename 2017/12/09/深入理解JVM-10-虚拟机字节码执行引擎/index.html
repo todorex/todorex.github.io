@@ -1,0 +1,1079 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,JVM," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？">
+<meta name="keywords" content="java,JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解JVM_10_虚拟机字节码执行引擎">
+<meta property="og:url" content="http://bestlixiang.site/2017/12/09/深入理解JVM-10-虚拟机字节码执行引擎/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？">
+<meta property="og:image" content="http://img.blog.csdn.net/20160605105355400">
+<meta property="og:image" content="http://img.blog.csdn.net/20160605151831616">
+<meta property="og:image" content="http://img.blog.csdn.net/20160606200822089">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/image/png/compilers.png">
+<meta property="og:updated_time" content="2017-12-09T12:04:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解JVM_10_虚拟机字节码执行引擎">
+<meta name="twitter:description" content="引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160605105355400">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2017/12/09/深入理解JVM-10-虚拟机字节码执行引擎/"/>
+
+
+
+
+
+  <title> 深入理解JVM_10_虚拟机字节码执行引擎 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/12/09/深入理解JVM-10-虚拟机字节码执行引擎/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                深入理解JVM_10_虚拟机字节码执行引擎
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-09T19:55:21+08:00">
+                2017-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
+                    <span itemprop="name">深入理解Java虚拟机</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？<a id="more"></a></p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="物理机与虚拟机"><a href="#物理机与虚拟机" class="headerlink" title="物理机与虚拟机"></a>物理机与虚拟机</h2><ol>
+<li>物理机的执行引擎：直接建立在处理器、硬件、指令集、和操作系统层面上。</li>
+<li>虚拟机的执行引擎：自己实现，可以自行制定指令集与执行引擎的结构体系，并且能够执行那些不被硬件直接支持的指令集格式。</li>
+</ol>
+<h2 id="虚拟机怎么执行代码"><a href="#虚拟机怎么执行代码" class="headerlink" title="虚拟机怎么执行代码"></a>虚拟机怎么执行代码</h2><ol>
+<li>解释执行：通过解释器执行</li>
+<li>编译执行：通过即时编译器产生本地代码执行</li>
+</ol>
+<h1 id="运行时栈帧结构"><a href="#运行时栈帧结构" class="headerlink" title="运行时栈帧结构"></a>运行时栈帧结构</h1><p>栈帧是用于支持虚拟机进行方法调用和方法执行的数据结构，他是虚拟机运行时数据区中的虚拟机栈的栈元素，栈帧存储了方法的局部变量表、操作数栈、动态链接和方法返回地址等信息。每一个方法从调用开始至执行完成的过程，都对应着一个栈帧在虚拟机栈里面从入栈到出栈的过程。</p>
+<p>一个线程的方法的调用链可能会很长，很多方法同时处于执行状态。对于执行引擎来说，在活动线程中，只有位于栈顶的栈帧才是有效的，称为当前栈帧，与这个栈帧相关联的方法称为当前方法，执行引擎运行的字节码指令都只针对当前栈帧进行操作，在概念模型上，典型的栈帧结构如下图：</p>
+<p><img src="http://img.blog.csdn.net/20160605105355400" alt="Stack Frame Model"></p>
+<p>接下来具体解释一下栈帧中的局部变量表、操作数栈、动态链接以及方法调用。</p>
+<h2 id="局部变量表"><a href="#局部变量表" class="headerlink" title="局部变量表"></a>局部变量表</h2><ol>
+<li>局部变量表示一组变量值存储空间，用于存放方法和方法内部定义的局部变量。</li>
+<li>局部变量表的容量以<strong>变量槽Slot</strong>为单位。虚拟机规范说每个Slot都应该存放一个boolean、byte、char、int、float、reference或returnAddress类型的数据。long和double使用两个Slot。</li>
+<li>reference类型在虚拟机中至少要实现能从该引用中直接或间接地查找到对象在Java堆中的数据存放的起始地址索引以及从该引用直接或者间接查找到对象所属数据类型在方法区中存储的类型信息。</li>
+<li>虚拟机通过索引定位的方式使用局部变量表，如果执行的实例方法，那局部变量表中第0位索引的Slot默认是用于传递方法所属对象实例的引用，可以使用“this”来访问，其余参数按照参数表顺序排列。</li>
+<li><p>局部变量表中的Slot是可以重用的，当某个变量除了它的作用域，那这个变量所对应的Slot就可以复用了，Slot的复用会直接影响到系统的垃圾收集行为，如下代码所示：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例1</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line"></div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 输出结果：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68209K-&gt;66072K(125952K), 0.0019584 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069900 secs]</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例2</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        &#123;</div><div class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        &#125;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 输出结果</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0010138 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069811 secs]</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 例3</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        &#123;</div><div class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        &#125;</div><div class="line">        int a = 0;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 输出结果</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016694 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0054452 secs]</div></pre></td></tr></table></figure>
+<p> placeholde能否被回收的根本原因是：局部变量的Slot是否还存有关于placeholder数组对象的引用。例1没有垃圾回收，例2代码虽然已经离开了placeholder的作用域，但是之后没有任何对局部变量表的读写操作，所有placeholder原来的Slot还没有被其他变量复用，所以GC Roots一部分的局部变量表仍然保持着对它的关联，当例3修改了局部变量表，那么就会进行垃圾回收了。</p>
+<p> 这里解释一个编码建议：<strong>不使用的对象应手动赋值null</strong></p>
+<p> 我们看看下面的代码：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例1</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        placeholder = null;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 输出结果：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016915 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0058140 secs]</div></pre></td></tr></table></figure>
+<p> 我们可以看到当placeholder赋值为null，会发生垃圾回收。</p>
+</li>
+<li><p>局部变量表没有赋初始值不能使用。</p>
+</li>
+</ol>
+<h2 id="操作数栈"><a href="#操作数栈" class="headerlink" title="操作数栈"></a>操作数栈</h2><ol>
+<li>操作数栈常被称为操作栈，一个方法刚开始执行的时候是空的，在方法执行的过程中，会有各种字节码指令往操作数栈中写入和提取内容，例如，在做算术运算的时候是通过操作数栈来 进行的，又或者是在调用方法的时候通过操作数栈来进行参数传递的。</li>
+<li><p>在概念模型中，两个栈帧是完全独立的，但在大多虚拟机的实现里会做一些优化处理，令两个栈帧的部分操作数出现一部分重叠，避免方法调用时额外的参数复制，如下图：</p>
+<p><img src="http://img.blog.csdn.net/20160605151831616" alt="data share"></p>
+</li>
+<li><p>Java虚拟机的解释执行引擎称为“基于栈的执行引擎”，其中的栈就是操作数栈。</p>
+</li>
+</ol>
+<h2 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h2><ol>
+<li>每个栈帧都包含一个执行运行时常量池中该栈帧所属方法的引用，持有这个引用就是为了支持方法调用过程中的动态链接。</li>
+<li>Class文件的常量池存有大量的符号引用，一部分是在类加载中的解析阶段完成的，称为静态解析，另一部分是在每一次运行期间转化为直接引用，称为动态链接。</li>
+</ol>
+<h2 id="方法返回地址"><a href="#方法返回地址" class="headerlink" title="方法返回地址"></a>方法返回地址</h2><p>当一个方法开始执行后，只有两种方式退出这个方法。</p>
+<ol>
+<li>正常完成出口：执行引擎遇到一个方法返回的字节码指令，调用者的PC计数器的值可以作为返回地址</li>
+<li>异常完成出口：在方法执行过程中遇到异常，并且这个异常没有在方法体得到处理，它不会给调用者产生任何返回值，它的返回值是要通过异常处理器表来确定的。</li>
+</ol>
+<h1 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h1><p>方法调用不等同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本。Class文件的编译过程不包含传统编译找那个的链接步骤，所以Java方法调用过程需要在类加载期间，甚至到运行期间才能确定目标方法的直接引用。</p>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>解析： 方法在程序真正运行之前就有一个可确定的调用版本，并且这个方法的调用在运行期是不可变的，这类方法的调用成为解析。</p>
+<p>所有方法可以分为两类虚方法和非虚方法，其中非虚方法都可以在类加载的时候就会把符号引用解析为该方法的直接引用。</p>
+<ol>
+<li>非虚方法：静态方法、私有方法、实例构造器、父类方法和final方法</li>
+<li>虚方法：与非虚方法相反</li>
+</ol>
+<p>解析调用一定是个静态的过程，在编译器就完全确定，在类装载的解析阶段就会把涉及的符号引用全部转变为可确定的直接引用，不会延迟到运行期再去完成。而分派调用则可能是静态也可能是动态的，根据分派的宗数量（方法的接收者与方法的参数统称为方法的总量）可分为单分派和多分派，这两种分派方式地组合可分为静态单分派、静态多分派、动态单分派、动态多分派。</p>
+<h2 id="分派"><a href="#分派" class="headerlink" title="分派"></a>分派</h2><h3 id="静态分派"><a href="#静态分派" class="headerlink" title="静态分派"></a>静态分派</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Human man = <span class="keyword">new</span> Man();</div></pre></td></tr></table></figure>
+<p>上面代码中Human称为变量的静态类型，或者叫做外观类型，后面的Man称为实际类型，静态类型是编译器可知，实际类型是运行期才能确定的。虚拟机在重载时是通过参数的静态类型而不是实际类型来作为判断依据的。</p>
+<p>所有依赖静态类型来定位方法执行版本的分派动作称为静态分派，静态分派的典型应用是方法重载。静态分派发生在编译阶段，因此确定静态分派的动作实际上不是由虚拟机来执行的，另外，编译器虽然能确定出方法的重载版本，当在很多情况下这个重载版本不是“唯一的”，往往只能确定一个“更加合适的”版本，具体例子可以看看《深入理解Java虚拟机》。</p>
+<h3 id="动态分派"><a href="#动态分派" class="headerlink" title="动态分派"></a>动态分派</h3><p>在运行期根据实际类型确定方法执行版本的分派过程称为动态分派，典型应用是方法重写。它主要是通过invokevirturl指令来实现的。invokevirtual指令的运行时解析过程大致分为如下几个步骤：</p>
+<ol>
+<li>找到操作数栈顶的第一个元素所指向的对象的实际类型，记作C。</li>
+<li>如果在类型C中找到与常量中的描述符合简单名称都相符的方法，则进行访问权限校验，如果通过则返回这个方法的直接引用，查找过程结束；如果不通过，则返回java.lang.IllegalAccessError异常。</li>
+<li>否则，按照继承关系从下往上依次对C的各个父类进行第2步的搜索和验证过程。</li>
+<li>如果始终没有找到合适的方法，则抛出java.lang.AbstractMethodError异常。</li>
+</ol>
+<h3 id="单分派和多分派"><a href="#单分派和多分派" class="headerlink" title="单分派和多分派"></a>单分派和多分派</h3><p>单分派是根据一个宗量对目标方法进行选择，多分派则是根据一个宗量对目标方法进行选择。我们结合下面的代码来理解：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dispatch</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">QQ</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">_360</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Father</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"father choose qq"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"father choose _360"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"son choose qq"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"son choose _360"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Father father = <span class="keyword">new</span> Father();</div><div class="line">        Father son = <span class="keyword">new</span> Son();</div><div class="line">        father.hardChoice(<span class="keyword">new</span> _360());</div><div class="line">        son.hardChoice(<span class="keyword">new</span> QQ());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">father choose _360</div><div class="line">son choose qq</div></pre></td></tr></table></figure></p>
+<ol>
+<li>编译阶段编译器的选择过程（静态分派过程）：这时选择目标方法的依据有两点：一是静态类型是Father还是Son，二是方法参数是QQ还是360。因为是根据两个宗量进行选择，所有Java语言的静态分派属于多分派类型。</li>
+<li>运行阶段虚拟机的选择过程（动态分派过程）：由于编译器已经已经决定目标方法的签名必须为hardChoice(QQ)，所以这时参数的静态类型，实际类型都对方法的选择不会构成影响，唯一可以影响虚拟机选择的因素只有此方法的接受者的实际类型是Father还是Son,因为只有一个宗量作为选择依据，所以Java语言的动态分派属于单分派类型。</li>
+<li>jdk1.8之前的Java语言是一门静态多分派，动态单分派的语言。</li>
+</ol>
+<h3 id="虚拟机动态分派的实现"><a href="#虚拟机动态分派的实现" class="headerlink" title="虚拟机动态分派的实现"></a>虚拟机动态分派的实现</h3><p>由于动态分派是非常频繁的操作，而且动态分派的方法版本选择过程需要运行时在类的方法元数据中搜索合适的目标方法，因此虚拟机会进行优化。常用的方法就是为类在方法区中建立一个虚方法表（Virtual Method Table，在invokeinterface执行时也会用到接口方法表，Interface Method Table），使用虚方法表索引来替代元数据查找以提升性能。下图就是前面代码的虚方法表结构：</p>
+<p><img src="http://img.blog.csdn.net/20160606200822089" alt="virtual method table"></p>
+<p>虚方法表中存放着各个方法的实际入口地址。如果某个方法在子类中没有被重写，那子类的虚方法表里面的地址入口和父类相同方法的地址入口是一致的，都指向父类的实现入口。如果子类重写了父类的方法，子类方法表中的地址会替换为指向子类实现版本的入口地址。在上图中，Son重写了Father的全部方法，所以Son的方法表替换了父类的地址。但是Son和Father都没有重写Object的方法，所以方法表都指向了Object的数据类型。<br>为了程序实现上的方便，具有相同签名的方法，在父类和子类的虚方法表中都应该具有一样的索引号，这样当类型变换时，仅仅需要变更查找的方法表，就可以从不同的虚方法表中按索引转换出所需的入口地址。<br>方法表一般在类加载的连接阶段进行初始化，准备了类的变量初始值后，虚拟机会把该类的方法表也初始化完毕。</p>
+<h2 id="动态类型语言支持"><a href="#动态类型语言支持" class="headerlink" title="动态类型语言支持"></a>动态类型语言支持</h2><p>动态类型语言的关键特征是它的类型检查的主体过程是在运行期间而不是编译期间，可以理解为<strong>变量无类型而变量值才有类型</strong>，Javascript就是这样的语言，而目前Java属于静态类型语言。当然Java也有它实现动态性的方法，这块知识点蛮大，就不展开说了。</p>
+<h1 id="基于栈的字节码解释执行引擎"><a href="#基于栈的字节码解释执行引擎" class="headerlink" title="基于栈的字节码解释执行引擎"></a>基于栈的字节码解释执行引擎</h1><h2 id="解释执行"><a href="#解释执行" class="headerlink" title="解释执行"></a>解释执行</h2><p>先看看编译过程流图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/png/compilers.png" alt="compilers"></p>
+<ol>
+<li>上图最下面的那一条就是传统编译原理中程序代码到目标机器代码生成过程（C）</li>
+<li>上图中间那一条就是解释执行的过程（Java）</li>
+</ol>
+<h2 id="基于栈的指令集与基于寄存器的指令集"><a href="#基于栈的指令集与基于寄存器的指令集" class="headerlink" title="基于栈的指令集与基于寄存器的指令集"></a>基于栈的指令集与基于寄存器的指令集</h2><ol>
+<li>基于栈的指令集：指令流中的大部分都是零地址指令（无显示参数），他们依赖操作数栈进行工作。<ul>
+<li>优点：可移植性，代码紧凑，编译器实现简单</li>
+<li>缺点：执行速度稍慢（频繁访问内存）</li>
+</ul>
+</li>
+<li>基于寄存器的指令集：指令集依赖寄存器进行工作</li>
+</ol>
+<h2 id="基于栈的解释器执行流程"><a href="#基于栈的解释器执行流程" class="headerlink" title="基于栈的解释器执行流程"></a>基于栈的解释器执行流程</h2><p>其实就是按照指令解释执行，随便看了例子应该就能明白。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>其实这里谈的主要还是解释执行，其中有一点很重要就是分派的概念，明白invokevirtual指令的执行过程。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入理解Java虚拟机》</li>
+<li><a href="http://blog.csdn.net/u012877472/article/details/51585297" target="_blank" rel="external">虚拟机字节码执行引擎</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/06/深入理解JVM-9-类加载器/" rel="next" title="深入理解JVM_9_类加载器">
+                <i class="fa fa-chevron-left"></i> 深入理解JVM_9_类加载器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#物理机与虚拟机"><span class="nav-number">1.1.</span> <span class="nav-text">物理机与虚拟机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟机怎么执行代码"><span class="nav-number">1.2.</span> <span class="nav-text">虚拟机怎么执行代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行时栈帧结构"><span class="nav-number">2.</span> <span class="nav-text">运行时栈帧结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#局部变量表"><span class="nav-number">2.1.</span> <span class="nav-text">局部变量表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作数栈"><span class="nav-number">2.2.</span> <span class="nav-text">操作数栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态链接"><span class="nav-number">2.3.</span> <span class="nav-text">动态链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法返回地址"><span class="nav-number">2.4.</span> <span class="nav-text">方法返回地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法调用"><span class="nav-number">3.</span> <span class="nav-text">方法调用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解析"><span class="nav-number">3.1.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分派"><span class="nav-number">3.2.</span> <span class="nav-text">分派</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#静态分派"><span class="nav-number">3.2.1.</span> <span class="nav-text">静态分派</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态分派"><span class="nav-number">3.2.2.</span> <span class="nav-text">动态分派</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单分派和多分派"><span class="nav-number">3.2.3.</span> <span class="nav-text">单分派和多分派</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机动态分派的实现"><span class="nav-number">3.2.4.</span> <span class="nav-text">虚拟机动态分派的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态类型语言支持"><span class="nav-number">3.3.</span> <span class="nav-text">动态类型语言支持</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于栈的字节码解释执行引擎"><span class="nav-number">4.</span> <span class="nav-text">基于栈的字节码解释执行引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解释执行"><span class="nav-number">4.1.</span> <span class="nav-text">解释执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于栈的指令集与基于寄存器的指令集"><span class="nav-number">4.2.</span> <span class="nav-text">基于栈的指令集与基于寄存器的指令集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于栈的解释器执行流程"><span class="nav-number">4.3.</span> <span class="nav-text">基于栈的解释器执行流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
