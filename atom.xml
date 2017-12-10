@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-12-09T12:04:06.000Z</updated>
+  <updated>2017-12-10T13:36:54.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,96 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入理解JVM_11_早期（编译期）优化</title>
+    <link href="http://bestlixiang.site/2017/12/10/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-11-%E6%97%A9%E6%9C%9F%EF%BC%88%E7%BC%96%E8%AF%91%E6%9C%9F%EF%BC%89%E4%BC%98%E5%8C%96/"/>
+    <id>http://bestlixiang.site/2017/12/10/深入理解JVM-11-早期（编译期）优化/</id>
+    <published>2017-12-10T13:36:22.000Z</published>
+    <updated>2017-12-10T13:36:54.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：之前简单的提到过java程序的使用首先要经过编译，然后再“解释”执行，这里我们就先看看它在编译期的过程。<a id="more"></a></p>
+<h1 id="编译概述"><a href="#编译概述" class="headerlink" title="编译概述"></a>编译概述</h1><p>java的编译期其实是一段“不确定”的操作过程，它有一下几种形式：</p>
+<ol>
+<li>前端编译器：把<em>.java文件转变为</em>.class文件的过程，如：Sun的javac、Eclipse JDT中的增量式编译器。</li>
+<li>虚拟机的后端运行期编译器（JIT编译器）：把字节码转变成机器码的过程，如HotSpotVM的C1、C2编译器。</li>
+<li>静态提前编译器（AOT编译器）：直接把*.java文本编译为本地机器代码的过程：GNU Compiler for the Java、Excelsior JET。</li>
+</ol>
+<p>我们平时所说的编译基本上都是指第一类，前端编译器。总的来说，Java中的JIT即时编译器在运行期的优化对于程序运行来说更重要，而前端编译器在编译器的优化过程对于程序编码来说关系更密切，相当多新生的Java语法特性，都是靠编译器的“语法糖”来实现的。</p>
+<h1 id="Javac编译器"><a href="#Javac编译器" class="headerlink" title="Javac编译器"></a>Javac编译器</h1><p>编译过程大致分为3个过程：</p>
+<ol>
+<li>解析与填充符号表过程</li>
+<li>插入式注解处理器的注解处理过程</li>
+<li>分析与字节码生成过程</li>
+</ol>
+<p>这3个过程之间的关系与交互顺序如下图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/png/javac_compiler.png" alt="javac_compiler"></p>
+<h2 id="解析与填充符号表过程"><a href="#解析与填充符号表过程" class="headerlink" title="解析与填充符号表过程"></a>解析与填充符号表过程</h2><p>其中解析步骤包括了经典程序编译原理找那个的词法分析和语法分析两个过程。</p>
+<h3 id="词法、语法分析"><a href="#词法、语法分析" class="headerlink" title="词法、语法分析"></a>词法、语法分析</h3><ol>
+<li>词法分析：将源代码的字符流转变为标记（Token）集合，单个字符是程序编写过程的最小元素，而标记是编译过程的最小元素，关键字、变量名、字面量、运算符都可以成为标记。</li>
+<li><p>语法分析：根据Token序列构造抽象语法树，抽象语法树是一种用来描述程序代码语法结构的树形表示方式，语法树的每一个节点都代表着程序代码中的一个语法结构，例如包、类型、修饰符、运算符、运算符、接口、返回值甚至代码注释都可以是一个语法结构。如下图：</p>
+<p> <img src="http://img.blog.csdn.net/20160726103442665" alt="abstract syntax tree"></p>
+</li>
+</ol>
+<p>经过上面两个步骤编译器就基本不会再对源文件进行操作了。</p>
+<h3 id="填充符号表"><a href="#填充符号表" class="headerlink" title="填充符号表"></a>填充符号表</h3><ol>
+<li>符号表是由一组符号地址和符号信息构成的表格，类似k-v形式。符号表中登记的信息在编译的不同阶段都要用到。在语义分析中，符号表所登记的内容将用于语义检查和产生中间代码。在目标代码生成阶段，当对符号名进行地址分配时，符号表是地址分配的依据。</li>
+<li>在Java源代码中，填空符号表过程的出口是一个待处理列表，包含了每一个编译单元的抽象语法数的顶级节点，以及package-info.java（如果存在）的顶级节点。</li>
+</ol>
+<h2 id="注解处理器"><a href="#注解处理器" class="headerlink" title="注解处理器"></a>注解处理器</h2><p>JDK1.6之中提供了一组插入式注解处理器的标准API在编译期间对注解进行处理，可以把它看做是一组编译器插件，在这些插件中，可以读取、修改、添加抽象语法树中的任意元素。若这些插件在处理注解期间对语法树进行了修改，编译器将回到解析及填充符号表的过程重新处理，直到所有插入式注解处理器都没有再对语法树进行修改为止，每一次循环称为一个Round。如编译过程图的回环过程。</p>
+<h2 id="语义分析与字节码生成"><a href="#语义分析与字节码生成" class="headerlink" title="语义分析与字节码生成"></a>语义分析与字节码生成</h2><p>语法分析之后，编译器获得程序代码的抽象语法树表示，语法树能表示一个结构正确的源程序的抽象，但无法保证源程序是符合逻辑的，而语义分析的主要任务是对结构上正确地源程序进行上下文有关性质的审查，如类型审查。语义分析过程分为标注检查以及数据及控制流分析两个步骤。</p>
+<h3 id="标注检查"><a href="#标注检查" class="headerlink" title="标注检查"></a>标注检查</h3><p>标注检查步骤检查的内容包括诸如变量使用前是否已被声明，变量与赋值之前的数据类型能否匹配，还有一个重要的动作是常量折叠，如果我们在代码写了如下定义：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> a = <span class="number">1</span> + <span class="number">2</span>;</div></pre></td></tr></table></figure></p>
+<p>在经过变量折叠之后，1 + 2会被折叠为字面量3。所以在代码里定义int a = 1 + 2比起直接定义int a = 3并不会增加程序运行期的运算量。</p>
+<h3 id="数据及控制流分析"><a href="#数据及控制流分析" class="headerlink" title="数据及控制流分析"></a>数据及控制流分析</h3><p>数据及控制流分析是对程序上下文逻辑更进一步的验证，它可以检查出诸如程序局部变量在使用前是否有赋值、方法的每条路径是否都有返回值、是否所有的受检异常都被正确处理了等问题，编译期的数据及控制流分析与类加载时的数据及控制流分析的目的基本上是一致的，但校验范围有所区别，有一些校验项只有在编译期或者运行期才能进行，如方法的参数以及局部变量的检查就只会在编译器检查。</p>
+<h3 id="解语法糖"><a href="#解语法糖" class="headerlink" title="解语法糖"></a>解语法糖</h3><ol>
+<li>语法糖：指在计算机语言中添加的某种语法，这种语法对语言的功能并没有影响，当时更方便使用，Java最常用的语法糖主要有泛型、变长参数、自动装箱、拆箱等</li>
+<li>解语法糖：虚拟机运行时不支持这些语法，他们会在编译阶段还原回简单的基础语法结构。</li>
+</ol>
+<h3 id="字节码生成"><a href="#字节码生成" class="headerlink" title="字节码生成"></a>字节码生成</h3><p>字节码生成是Javac编译过程的最后一个阶段，此阶段编译器还进行了少量的代码添加和转换工作。实例构造器()（不是默认构造函数）和类构造器()就是在这个阶段添加到语法树中的。完成了对语法树的遍历和调整之后，生成最终的Class文件。</p>
+<h1 id="Java语法糖的味道"><a href="#Java语法糖的味道" class="headerlink" title="Java语法糖的味道"></a>Java语法糖的味道</h1><h2 id="泛型与类型擦除"><a href="#泛型与类型擦除" class="headerlink" title="泛型与类型擦除"></a>泛型与类型擦除</h2><ol>
+<li>本质：参数化类型的应用，就是所操作的数据类型被指定为一个参数，这种参数类型可以用在类、接口和方法上，分别称为泛型类、泛型接口和泛型方法。</li>
+<li><p>提出原因：先看下面的代码</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Object object = <span class="keyword">new</span> Object();</div><div class="line">String str = (String)object;</div></pre></td></tr></table></figure>
+<p> 由于编译器无法检查这个Object强制转换能否成功，为了防止保障强制类型的转换成功，避免ClassCaseException的风险转嫁到程序运行期之中，所以提出了泛型。</p>
+</li>
+<li>真实泛型：参数化类型无论在源码中还是编译后的中间语言都是存在的。</li>
+<li><p>伪泛型：参数化类型只在源码中存在，而在中间语言不存在。可以看到下面的例子：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 泛型擦除的例子</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericTest</span> </span>&#123;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    Map&lt;String, String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    map.put(<span class="string">"hello"</span>, <span class="string">"您好"</span>);</div><div class="line">    map.put(<span class="string">"how are you?"</span>, <span class="string">"最近怎么样？"</span>);</div><div class="line">    System.out.println(map.get(<span class="string">"hello"</span>));</div><div class="line">    System.out.println(map.get(<span class="string">"how are you?"</span>));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 利用Beyond Compare反编译可以得到下面的代码:</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//  反编译后的代码</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericTest</span> </span>&#123;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    Map map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    map.put(<span class="string">"hello"</span>, <span class="string">"您好"</span>);</div><div class="line">    map.put(<span class="string">"how are you?"</span>, <span class="string">"最近怎么样？"</span>);</div><div class="line">    System.out.println(map.get(<span class="string">"hello"</span>));</div><div class="line">    System.out.println(map.get(<span class="string">"how are you?"</span>));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 有人可能像我一样，用jd反编译，发现泛型没有被擦除，我一开始很惊讶，后来找了参考，大家可以从参考部分看到该现象的解释，这里需要说明一点，就是由于Java泛型的引入，各种场景（虚拟机解析、反射等）下的方法调用都可能对原有的基础产生影响和新的需求，所以JCP（Java Community Process）组织对虚拟机规范做出了相应的修改，引入了诸如Signature、LocalVariabelTypeTable等新的属性用于解决伴随泛型而来的参数类型识别问题，从Signature属性的出现我们还可以得出结论：擦除泛型所谓的擦除，仅仅是对方法的Code属性中的字节码进行删除，实际上元数据中还是保留了泛型信息。</p>
+</li>
+</ol>
+<h2 id="自动装箱、拆箱与遍历循环"><a href="#自动装箱、拆箱与遍历循环" class="headerlink" title="自动装箱、拆箱与遍历循环"></a>自动装箱、拆箱与遍历循环</h2><p>我们可以看看这些语法糖，编译的过程中做了什么处理：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BoxProcessTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>);</div><div class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i : list) &#123;</div><div class="line">            sum += i;</div><div class="line">        &#125;</div><div class="line">        System.out.println(sum);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 反编译后的代码</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BoxProcessTest</span></span></div><div class="line">&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></div><div class="line">  &#123;</div><div class="line">    List list = Arrays.asList(<span class="keyword">new</span> Integer[] &#123; Integer.valueOf(<span class="number">1</span>), Integer.valueOf(<span class="number">2</span>), Integer.valueOf(<span class="number">3</span>), Integer.valueOf(<span class="number">4</span>) &#125;);</div><div class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (Iterator localIterator = list.iterator(); localIterator.hasNext();)</div><div class="line">    &#123;</div><div class="line">      <span class="keyword">int</span> i = ((Integer)localIterator.next()).intValue();</div><div class="line">      sum += i;</div><div class="line">    &#125;</div><div class="line">    System.out.println(sum);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们清楚的看到其实语法糖的最后还是用最基本的语法实现的，只是更利于我们写代码了。</p>
+<p>再来看看自动装箱的陷阱：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BoxTest</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Integer a = <span class="number">1</span>;</div><div class="line">        Integer b = <span class="number">2</span>;</div><div class="line">        Integer c = <span class="number">3</span>;</div><div class="line">        Integer d = <span class="number">3</span>;</div><div class="line">        Integer e = <span class="number">321</span>;</div><div class="line">        Integer f = <span class="number">321</span>;</div><div class="line">        Long g= <span class="number">3L</span>;</div><div class="line">        System.out.println(c == d); <span class="comment">//true</span></div><div class="line">        System.out.println(e == f); <span class="comment">//false，如果Integer在-128到127之间会保存到常量池，此时Integer直接等于数字</span></div><div class="line">        System.out.println(c == (a + b)); <span class="comment">//true</span></div><div class="line">        System.out.println(c.equals(a + b)); <span class="comment">//true</span></div><div class="line">        System.out.println(g == (a + b)); <span class="comment">//true</span></div><div class="line">        System.out.println(g.equals(a + b)); <span class="comment">//false</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果你对上面分不清楚的话，加上鉴于包装类的“==”运算在不遇到算术运算的情况下不会自动拆箱，以及它们的equals()方法不处理数据类型转型的关系，建议在实际编码找那个尽量避免这样使用自动装箱与拆箱。</p>
+<h2 id="条件编译"><a href="#条件编译" class="headerlink" title="条件编译"></a>条件编译</h2><p>Java语言实现条件编译的方法是使用条件为<strong>常量</strong>的if语句，案例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionCompilerTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            System.out.println(<span class="string">"block 1"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            System.out.println(<span class="string">"block 2"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 反编译代码</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionCompilerTest</span></span></div><div class="line">&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></div><div class="line">  &#123;</div><div class="line">    System.out.println(<span class="string">"block 1"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们很清楚的看到编译后的代码就只剩true里面的代码块了，从而实现了条件编译。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过上面的学习，我们可以从编译器的层次上了解Java源代码编译为字节码的过程，以及各种语法糖的前因后果。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入理解Java虚拟机》</li>
+<li><a href="http://blog.csdn.net/u013678930/article/details/52032328" target="_blank" rel="external">早期（编译期）优化</a></li>
+<li><a href="http://blog.csdn.net/liboyang71/article/details/72772583" target="_blank" rel="external"> 关于java泛型擦除反编译后泛型会出现问题</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：之前简单的提到过java程序的使用首先要经过编译，然后再“解释”执行，这里我们就先看看它在编译期的过程。
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
+    
+  </entry>
   
   <entry>
     <title>深入理解JVM_10_虚拟机字节码执行引擎</title>
@@ -1567,57 +1657,6 @@
       <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
       <category term="日志" scheme="http://bestlixiang.site/tags/%E6%97%A5%E5%BF%97/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>jpa实体映射关系</title>
-    <link href="http://bestlixiang.site/2017/06/15/jpa%E5%AE%9E%E4%BD%93%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB/"/>
-    <id>http://bestlixiang.site/2017/06/15/jpa实体映射关系/</id>
-    <published>2017-06-15T00:47:03.000Z</published>
-    <updated>2017-06-15T00:51:08.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：其实距离自己上次写数据库操作已经1个多月了，之前接触的就是Hibernate，这次接触jpa，就把几种对应关系理清。<a id="more"></a></p>
-<h1 id="映射策略"><a href="#映射策略" class="headerlink" title="映射策略"></a>映射策略</h1><p>注：这次举的例子都是User和Car的</p>
-<h2 id="外键关联"><a href="#外键关联" class="headerlink" title="外键关联"></a>外键关联</h2><p>简介：两个表的关系定义在其中一个表中</p>
-<h3 id="OneToOne"><a href="#OneToOne" class="headerlink" title="@OneToOne"></a>@OneToOne</h3><p>方法一：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line">@JoinColumn(name = &quot;user_id&quot;)</div><div class="line">private Car car;</div></pre></td></tr></table></figure></p>
-<p>通过在Car表中加入一个外键，实现两者关系。<br>方法二：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = &quot;Car&quot;)</div><div class="line">private User user;</div></pre></td></tr></table></figure></p>
-<p>通过在Car类中用MappedBy声明让User进行维护。</p>
-<h3 id="OneToMany"><a href="#OneToMany" class="headerlink" title="@OneToMany"></a>@OneToMany</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line">@JoinColumn(name = &quot;user_id&quot;)</div><div class="line">private Set&lt;Car&gt; cars;</div></pre></td></tr></table></figure>
-<p>通过在Car表中加入一个外键，实现一对多关系。</p>
-<h3 id="ManyToMany"><a href="#ManyToMany" class="headerlink" title="@ManyToMany"></a>@ManyToMany</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line">private Set&lt;Car&gt; cars;</div></pre></td></tr></table></figure>
-<p>这个是采用默认的表关联</p>
-<h2 id="表关联"><a href="#表关联" class="headerlink" title="表关联"></a>表关联</h2><p>简介：两个表的关系通过一张中间表来来关联</p>
-<h3 id="OneToMany-1"><a href="#OneToMany-1" class="headerlink" title="@OneToMany"></a>@OneToMany</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line">@JoinTable(name = &quot;user_car&quot;,</div><div class="line">joinColumns=&#123;@JoinColumn(name = &quot;user_id&quot;)&#125;,</div><div class="line">inverseJoinColumns = &#123;@JoinColumn(name = &quot;car_id&quot;)&#125;)</div><div class="line">private Set&lt;Car&gt; cars;</div></pre></td></tr></table></figure>
-<p>通过JoinTable来确定一张中间表，joinColumns里面放父表的属性，inverseJoinColumns放子表的属性</p>
-<h3 id="ManyToMany-1"><a href="#ManyToMany-1" class="headerlink" title="@ManyToMany"></a>@ManyToMany</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line">@JoinTable(name = &quot;user_car&quot;,</div><div class="line">joinColumns=&#123;@JoinColumn(name = &quot;user_id&quot;)&#125;,</div><div class="line">inverseJoinColumns = &#123;@JoinColumn(name = &quot;car_id&quot;)&#125;)</div><div class="line">private Set&lt;Car&gt; cars;</div></pre></td></tr></table></figure>
-<p>解释如@OneToMany</p>
-<h2 id="一些属性"><a href="#一些属性" class="headerlink" title="一些属性"></a>一些属性</h2><h3 id="cascade属性"><a href="#cascade属性" class="headerlink" title="cascade属性"></a>cascade属性</h3><ol>
-<li>CascadeType.PERSIST：级联新建</li>
-<li>CascadeType.REMOVE：级联删除</li>
-<li>CascadeType.REFRESH：级联刷新</li>
-<li>CascadeType.MERGE：级联更新</li>
-<li>CascadeType.ALL：包括上面四项</li>
-</ol>
-<h3 id="fetch属性"><a href="#fetch属性" class="headerlink" title="fetch属性"></a>fetch属性</h3><ol>
-<li>FetchType.EAGER：相当于禁用懒加载，推荐开发使用</li>
-<li>FetchType.LAZY：懒加载，默认值，推荐部署使用</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>父表是提供主键的，子表是利用父表的主键来设置外键的，维护方是Owner，被维护方是Owned。提示自己一个傻逼的问题，插入数据要先往两张表中插入数据，在往中间表插入数据，不然会报错~</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：其实距离自己上次写数据库操作已经1个多月了，之前接触的就是Hibernate，这次接触jpa，就把几种对应关系理清。
-    
-    </summary>
-    
-      <category term="编程" scheme="http://bestlixiang.site/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-    
-      <category term="sping" scheme="http://bestlixiang.site/tags/sping/"/>
-    
-      <category term="jpa" scheme="http://bestlixiang.site/tags/jpa/"/>
     
   </entry>
   
