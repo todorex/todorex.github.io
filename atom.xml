@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-12-10T13:36:54.000Z</updated>
+  <updated>2017-12-12T14:19:34.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,85 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入理解JVM_12_晚期（运行期）优化</title>
+    <link href="http://bestlixiang.site/2017/12/12/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-12-%E6%99%9A%E6%9C%9F%EF%BC%88%E8%BF%90%E8%A1%8C%E6%9C%9F%EF%BC%89%E4%BC%98%E5%8C%96/"/>
+    <id>http://bestlixiang.site/2017/12/12/深入理解JVM-12-晚期（运行期）优化/</id>
+    <published>2017-12-12T14:18:20.000Z</published>
+    <updated>2017-12-12T14:19:34.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：之前说过Java中的JIT即时编译器在运行期的优化对于程序运行来说更重要，那我们就来看看这个即时编译器。本文提及的编译器、即时编译器都是指HotSpot虚拟机内的即时编译器，虚拟机也特指HotSpot虚拟机。<a id="more"></a></p>
+<h1 id="什么是即时编译器"><a href="#什么是即时编译器" class="headerlink" title="什么是即时编译器"></a>什么是即时编译器</h1><p>在部分的商用虚拟机中，Java程序最初是通过解释器来解释执行的，当虚拟机发现某个方法或代码块的运行特别频繁时，就会把这些代码认定为“热点代码”（Hot Spot Code）,为了提高 热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与本地平台相关的机器码，并进行各种层次的优化，完成这个任务的编译器 称为即时编译器（Just In Time Compiler,简称JIT编译器）。</p>
+<h1 id="HotSpot虚拟机内的即时编译器"><a href="#HotSpot虚拟机内的即时编译器" class="headerlink" title="HotSpot虚拟机内的即时编译器"></a>HotSpot虚拟机内的即时编译器</h1><h2 id="为什么要使用解释器与编译器并存的架构"><a href="#为什么要使用解释器与编译器并存的架构" class="headerlink" title="为什么要使用解释器与编译器并存的架构"></a>为什么要使用解释器与编译器并存的架构</h2><ol>
+<li>解释器与编译器各有优势：当程序需要迅速启动和执行的时候，解释器可以首先发挥作用，省去编译的时间，立即执行。在程序运行后，随着时间的推移，编译器逐渐发挥作用，把越来越多的代码编译成本地代码之后，可以获得更高的执行效率，当程序运行环境中内存资源限制较大时，可以使用解释执行节约内存，反之可以使用编译执行来提高效率。</li>
+<li>解释器可以作为编译器激进优化时的一个“逃生门”，可以通过逆优化退回到解释器状态继续执行。</li>
+</ol>
+<h2 id="HotSpot虚拟机内置编译器"><a href="#HotSpot虚拟机内置编译器" class="headerlink" title="HotSpot虚拟机内置编译器"></a>HotSpot虚拟机内置编译器</h2><ol>
+<li>Client Compiler(C1编译器)：使用“-client” 参数去强制指定虚拟机运行在Client模式。</li>
+<li>Server Compiler(C2编译器)：使用“-server” 参数去强制指定虚拟机运行在Server模式。</li>
+</ol>
+<p>虚拟机默认采用解释器与编译器搭配使用的方式（混合模式）。为了在程序响应速度和运行效率之间达到最佳平衡，HotSpot虚拟机会逐渐启用分层编译策略：</p>
+<ol>
+<li>第0层：程序解释执行，解释器不开启性能监控功能，可触发第1层编译。</li>
+<li>第1层：也称为C1编译，将字节码编译为本地代码，进行简单，可靠的优化，如果必要将加入性能监控的逻辑。</li>
+<li>第2层（或2层以上）：也称为C2编译，也是将字节码编译为本地代码，但是会启用一些编译耗时较长的优化，甚至会根据性能监控信息进行一些不可靠的激进优化。</li>
+</ol>
+<h2 id="编译对象与触发条件"><a href="#编译对象与触发条件" class="headerlink" title="编译对象与触发条件"></a>编译对象与触发条件</h2><h3 id="编译对象（热点代码）"><a href="#编译对象（热点代码）" class="headerlink" title="编译对象（热点代码）"></a>编译对象（热点代码）</h3><ol>
+<li>被多次调用的方法（JIT编译方式）</li>
+<li>被多次执行的循环体（OSR编译方式）</li>
+</ol>
+<h3 id="热点探测"><a href="#热点探测" class="headerlink" title="热点探测"></a>热点探测</h3><ol>
+<li>基于采样的热点探测：虚拟机周期地检查各个线程的栈顶，如果发现某个（或某些）方法经常出现在栈顶，那这个方法就是“热点方法”。优点是实现简单、高效，还可以很容易获取方法的调用关系（将调用堆栈展开即可），缺点就是很难精确得确认一个方法的热度，容易因为受到线程阻塞或者别的外界因素的影响而扰乱热点探测。</li>
+<li>基于计数器的热点探测：虚拟机会每一个方法（甚至是代码块）建立计数器，统计方法的执行次数，如果执行次数超过一定的阈值就认定它是“热点方法”。缺点是实现麻烦，需要为每个方法建立并维护计数器，而且不能直接获取到方法的调用关系，优点是统计结果更加精确和严谨。</li>
+</ol>
+<p>在HotSpot虚拟机中使用的是基于计数器的热点探测方法。因此它为每个方法准备了两类计数器：方法调用计数器（用于探测方法）和回边计数器（用于探测循环体）。这两个计数器都有一个确定的阈值，当计数器超过了阈值，就会提交编译请求。</p>
+<h2 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h2><p>在默认设置下，无论是方法调用产生的即时编译请求，还是OSR编译请求，虚拟机代码编译器还未完成之前，都依然将按照解释方式继续执行，而编译动作则在后台的编译线程中进行。</p>
+<h3 id="Client-Compiler"><a href="#Client-Compiler" class="headerlink" title="Client Compiler"></a>Client Compiler</h3><p>它是个三段式编译器，主要关注点在<strong>局部性</strong>的优化，放弃了许多耗时较长的全局优化手段。下面是三个阶段</p>
+<ol>
+<li>字节码-&gt;高级中间代码（HIR）:使用静态单分配的形式来代表代码值，其中会完成方法内联、常量传播等优化。</li>
+<li>HIR-&gt;低级中间代码（LIR）：会在HIR上完成空值检查消除、范围检查消除等优化，以便让HIR达到更高效的代码的表示形式。</li>
+<li>LIR-&gt;机器代码：在平台相关的后端使用线性扫描算法在LIR上分配寄存器，并在LIR上做窥孔优化。</li>
+</ol>
+<h3 id="Server-Compiler"><a href="#Server-Compiler" class="headerlink" title="Server Compiler"></a>Server Compiler</h3><p>它是专门面向服务端的典型应用并为服务器端的性能配置特别调整过的编译器，也是一个充分优化过的高级编译器。它会执行所有经典的优化工作。它的寄存器分配器是一个全局图着色分配器，可以充分利用某些处理器架构上的大寄存器集合。</p>
+<h3 id="查看及分析即时编译结果"><a href="#查看及分析即时编译结果" class="headerlink" title="查看及分析即时编译结果"></a>查看及分析即时编译结果</h3><p>这一块我没有去实践，但是这里写一个结论：在Java中空循环不能用作程序延时的手段，因为空循环会被优化消除。</p>
+<h1 id="编译优化技术"><a href="#编译优化技术" class="headerlink" title="编译优化技术"></a>编译优化技术</h1><p>Java程序员有一个共识：以编译方式执行本地代码比解释方式更快。这主要是因为虚拟机设计团队几乎把对代码的所有优化措施都集中在编译器之中了。关于HotSpot的优化技术列表可以参考《深入理解Java虚拟机》一书，这里也根据书上举的几个例子来看看其中的优化技术。</p>
+<h2 id="公共子表达式消除"><a href="#公共子表达式消除" class="headerlink" title="公共子表达式消除"></a>公共子表达式消除</h2><p>含义是：如果一个表达式E已经计算过了，并且从先前的计算到现在E中所有的变量的值都没有发生变化，那么E的这次出现就成为了公共子表达式。对于这种表达式，没有必要花时间再对它进行计算，只需要直接用前面计算过的表达式结果代替E即可。可以看看下面的优化历程：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"><span class="keyword">int</span> d = (c * b) * <span class="number">12</span> + a + (a + b * c);</div><div class="line"></div><div class="line"><span class="comment">// 编译器检测到“c * b”和“b * c”是一样的表达式，这条表达式就变成下面这样了</span></div><div class="line"><span class="keyword">int</span> d = E * <span class="number">12</span> + a + (a + E);</div><div class="line"></div><div class="line"><span class="comment">// 编译器还可能进行代数简化，把表达式变为：</span></div><div class="line"><span class="keyword">int</span> d = E * <span class="number">13</span> + a * <span class="number">2</span>;</div></pre></td></tr></table></figure></p>
+<p>大家肯定能发现，最后的表达式计算起来就可以节省时间了。</p>
+<h2 id="数组边界检查消除"><a href="#数组边界检查消除" class="headerlink" title="数组边界检查消除"></a>数组边界检查消除</h2><p>含义：虚拟机执行子系统每次数组的读写都带有一次隐含的条件判断操作，这对于拥有大量 数组访问的程序代码，无疑是一种性能负担。解决思路除了将数组边界检查优化尽可能把运行期检查提到编译期完成之外，还有另一种思路——隐式异常处理（try - catch）。可以看看代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"><span class="keyword">if</span> (foo != <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> foo.value</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointException();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 编译器转换代码</span></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    <span class="keyword">return</span> foo.value;</div><div class="line">&#125; <span class="keyword">catch</span>(segment_fault) &#123;</div><div class="line">    uncommon_trap();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样可以避免每次去做非空检查。</p>
+<h2 id="方法内联"><a href="#方法内联" class="headerlink" title="方法内联"></a>方法内联</h2><p>它除了消除方法调用成本之外，它更重要的是位其他优化手段建立良好的基础，如果不做内联，就发现不了无用代码。。内联具有两种情况：</p>
+<ol>
+<li>对于非虚方法：直接内联</li>
+<li>对于虚方法：会使用“类型继承关系分析”（CHA）技术，虚拟机如果遇到虚方法就会向CHA查询此方法在当前程序下是否有多个目标版本可供选择，如果查询结果只有一个版本，就可以进行内联，不过这种内联属于激进优化，需要余留一个“逃生门”，称为守护内联；如果查出有多个版本的目标方法可供选择，则编译器还会使用内联缓存来完成方法内联。</li>
+</ol>
+<h2 id="逃逸分析"><a href="#逃逸分析" class="headerlink" title="逃逸分析"></a>逃逸分析</h2><p>它也是为其他优化手段提供依据的技术，它的基本行为就是分析对象动态作用域：当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他方法中，称为方法逃逸。甚至还有可能被外部线程访问到，例如复制给类变量或可以在其他线程中访问的实例变量，称为线程逃逸。</p>
+<p>如果能证明一个对象不会逃逸到方法或者线程之外，则可能为这个变量进行一些高效的优化：</p>
+<ol>
+<li>栈上分配：让对象直接在栈上分配内存，这样大量对象就会随着方法的结束而自动销毁了，垃圾收集系统的压力将会小很多。</li>
+<li>同步消除：对变量实施的同步措施可以消除掉</li>
+<li>标量替换：不能再分解的量称为标量（如：数值类型），可以继续分解的称为聚合量（如：对象），我们可以直接将对象拆分成标量存在栈上。</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过对于JIT编译的学习，我么可以知道哪些代码编译器是可以帮我们优化的，以及哪些代码是需要自己调节以便更合适编译器的优化。这样我们才可以写出更高效的代码。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入理解Java虚拟机》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：之前说过Java中的JIT即时编译器在运行期的优化对于程序运行来说更重要，那我们就来看看这个即时编译器。本文提及的编译器、即时编译器都是指HotSpot虚拟机内的即时编译器，虚拟机也特指HotSpot虚拟机。
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
+    
+  </entry>
   
   <entry>
     <title>深入理解JVM_11_早期（编译期）优化</title>
@@ -1603,60 +1682,6 @@
       <category term="javascript" scheme="http://bestlixiang.site/tags/javascript/"/>
     
       <category term="闭包" scheme="http://bestlixiang.site/tags/%E9%97%AD%E5%8C%85/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java日志那些事</title>
-    <link href="http://bestlixiang.site/2017/07/12/Java%E6%97%A5%E5%BF%97%E9%82%A3%E4%BA%9B%E4%BA%8B/"/>
-    <id>http://bestlixiang.site/2017/07/12/Java日志那些事/</id>
-    <published>2017-07-12T01:14:19.000Z</published>
-    <updated>2017-07-12T01:16:26.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：一直都知道日志文件很重要，可以记录一些相关信息，但是可能是程序需要调试的内容太少，也或者是项目太小，所以看看控制台的信息就够了，但是这次接触的项目越来越大，控制台额信息越来越多，经常会看不到自己想要看到的信息时，这个时候使用日志就发现十分得有必要了！<a id="more"></a></p>
-<h2 id="日志的好处"><a href="#日志的好处" class="headerlink" title="日志的好处"></a>日志的好处</h2><ol>
-<li>方便调试(如上)</li>
-<li>方便发现系统运行中的错误</li>
-<li>存储业务数据，便于日后分析</li>
-</ol>
-<h2 id="日志实现方式"><a href="#日志实现方式" class="headerlink" title="日志实现方式"></a>日志实现方式</h2><ol>
-<li>自己实现类通过io存储到文件中</li>
-<li>使用log4j将日志输入到控制台，文本文件，一集数据库中。</li>
-<li>使用jdk自带的logging.jar包中方法（同一作者还有lognback）</li>
-<li>使用slfj，它提供了上述两种方法的接口。</li>
-</ol>
-<h2 id="日志的输出-以log4j为例"><a href="#日志的输出-以log4j为例" class="headerlink" title="日志的输出(以log4j为例)"></a>日志的输出(以log4j为例)</h2><ol>
-<li>输入到控制台</li>
-</ol>
-<p>运行程序：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public class LoggerTest &#123;</div><div class="line">public static Logger logger1 = Logger.getLogger(LoggerTest.class);</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">logger1.trace(&quot;我是logger1，trace&quot;);</div><div class="line">logger1.debug(&quot;我是logger1，debug&quot;);</div><div class="line">logger1.info(&quot;我是logger1，info&quot;);</div><div class="line">logger1.warn(&quot;我是logger1，warn&quot;);</div><div class="line">logger1.error(&quot;我是logger1，error&quot;);</div><div class="line">logger1.fatal(&quot;我是logger1，fatal&quot;);</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>配置文件如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">### 设置级别和目的地(这里多个目的地) ###</div><div class="line">log4j.rootLogger = DEBUG,CONSOLE</div><div class="line">### 这里的com.todorex是包，也就是在这个包记录日志时，是只记录debug及以上级别的日志</div><div class="line">log4j.logger.com.todorex=DEBUG</div><div class="line">### 输出到控制台 ###</div><div class="line">log4j.appender.CONSOLE = org.apache.log4j.ConsoleAppender</div><div class="line">log4j.appender.CONSOLE.Target = System.out</div><div class="line">log4j.appender.CONSOLE.layout = org.apache.log4j.PatternLayout</div><div class="line">log4j.appender.CONSOLE.layout.ConversionPattern =  %d&#123;ABSOLUTE&#125; %5p %c&#123;1&#125;:%L - %m%n</div></pre></td></tr></table></figure></p>
-<p>控制台输出:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">11:35:09,969 DEBUG LoggerTest:12 [main:0]- 我是logger1，debug</div><div class="line">11:35:09,972  INFO LoggerTest:13 [main:3]- 我是logger1，info</div><div class="line">11:35:09,972  WARN LoggerTest:14 [main:3]- 我是logger1，warn</div><div class="line">11:35:09,972 ERROR LoggerTest:15 [main:3]- 我是logger1，error</div><div class="line">11:35:09,972 FATAL LoggerTest:16 [main:3]- 我是logger1，fatal</div></pre></td></tr></table></figure></p>
-<ol>
-<li>输入到日志文件<br>运行程序同上；<br>配置文件如下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">### 设置级别和目的地(这里可以多个目的地) ###</div><div class="line">log4j.rootLogger = trace,demoLog</div><div class="line">log4j.logger.com.todorex=DEBUG</div><div class="line"></div><div class="line">### 输出到控制台 ###</div><div class="line">log4j.appender.CONSOLE = org.apache.log4j.ConsoleAppender</div><div class="line">log4j.appender.CONSOLE.Target = System.out</div><div class="line">log4j.appender.CONSOLE.layout = org.apache.log4j.PatternLayout</div><div class="line">log4j.appender.CONSOLE.layout.ConversionPattern =  %d&#123;ABSOLUTE&#125; %5p %c&#123;1&#125;:%L [%t:%r]- %m%n</div><div class="line"></div><div class="line">### 输出到日志文件（文件目录一定要是绝对路径且存在） ###</div><div class="line">log4j.appender.demoLog = org.apache.log4j.DailyRollingFileAppender</div><div class="line">log4j.appender.demoLog.File =/var/alldata/mylog.log</div><div class="line">log4j.appender.demoLog.Append = true</div><div class="line">## 只输出DEBUG级别以上的日志</div><div class="line">log4j.appender.demoLog.Threshold = DEBUG</div><div class="line">#&apos;.&apos;yyyy-MM-dd: 每天产生一个新的文件</div><div class="line">log4j.appender.demoLog.DatePattern = &apos;.&apos;yyyy-MM-dd</div><div class="line">log4j.appender.demoLog.layout = org.apache.log4j.PatternLayout</div><div class="line">log4j.appender.demoLog.layout.ConversionPattern = %-d&#123;yyyy-MM-dd HH:mm:ss&#125; [%t:%r] - [%p] [%c&#123;1&#125;:%L] [%M] %m%n</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>文件内容同控制台输出，但是却比控制台清楚得多，不会被乱七八糟的信息给遮盖。</p>
-<ol>
-<li>输入到数据库</li>
-</ol>
-<p>运行程序:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class LoggerTest &#123;</div><div class="line">public static void main(String[] args) &#123;</div><div class="line">Logger logger = Logger.getLogger(LoggerTest.class);</div><div class="line">logger.info(&quot;good&quot;);</div><div class="line">logger.debug(&quot;success&quot;);</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>配置文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">log4j.rootLogger=trace,CONSOLE,demoLog</div><div class="line"># com.todorex包下面所有的日志输出的级别设为DEBUG</div><div class="line">log4j.logger.com.todorex=DEBUG</div><div class="line"># 数据库输出</div><div class="line">log4j.appender.demoLog=org.apache.log4j.jdbc.JDBCAppender</div><div class="line">log4j.appender.demoLog.driver=com.mysql.jdbc.Driver</div><div class="line">log4j.appender.demoLog.URL=jdbc:mysql://127.0.0.1:3306/test</div><div class="line">log4j.appender.demoLog.user=root</div><div class="line">log4j.appender.demoLog.password=root</div><div class="line"># 在数据库对应的位置建一个对应的log表</div><div class="line">log4j.appender.demoLog.sql=insert into log(level,category,thread,time,location,note) values(&apos;%p&apos;,&apos;%c&apos;,&apos;%t&apos;,&apos;%d&#123;yyyy-MM-dd HH:mm:ss:SSS&#125;&apos;,&apos;%l&apos;,&apos;%m&apos;)</div></pre></td></tr></table></figure></p>
-<p>数据库的具体内容就不贴出来了，和普通看到的一样。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实日志用几次就知道它的好了，自己也是在慢慢学习！</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：一直都知道日志文件很重要，可以记录一些相关信息，但是可能是程序需要调试的内容太少，也或者是项目太小，所以看看控制台的信息就够了，但是这次接触的项目越来越大，控制台额信息越来越多，经常会看不到自己想要看到的信息时，这个时候使用日志就发现十分得有必要了！
-    
-    </summary>
-    
-      <category term="编程" scheme="http://bestlixiang.site/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="日志" scheme="http://bestlixiang.site/tags/%E6%97%A5%E5%BF%97/"/>
     
   </entry>
   
