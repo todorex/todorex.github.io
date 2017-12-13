@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-12-12T14:19:34.000Z</updated>
+  <updated>2017-12-13T15:28:56.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,105 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>深入理解JVM_13_Java内存模型与线程</title>
+    <link href="http://bestlixiang.site/2017/12/13/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-13-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/"/>
+    <id>http://bestlixiang.site/2017/12/13/深入理解JVM-13-Java内存模型与线程/</id>
+    <published>2017-12-13T15:27:12.000Z</published>
+    <updated>2017-12-13T15:28:56.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：并发处理的广泛应用是使得阿姆德尔定律替代摩尔定律成为计算机性能发展原动力的根本原因。由于计算机的运算速度和它的存储和通信子系统速度差距太大，所以才出现了并发，而并发绝对是Java运用很大的优势。我们绝对需要理解！<a id="more"></a></p>
+<h1 id="硬件的效率与一致性"><a href="#硬件的效率与一致性" class="headerlink" title="硬件的效率与一致性"></a>硬件的效率与一致性</h1><p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以现代计算机系统都不得不加入一层读写速度尽可能接近处理器运算速度的告诉缓存来作为内存与处理器之间的缓冲：将运算需要使用到的数据复制到缓存中，让运算能快速进行，当运算结束后再从缓存同步到内存之中，这样处理器就无须等待缓慢的内存读写了。</p>
+<p>基于高速缓存的存储交互很好地解决了处理器与内存的速度矛盾，但是也为计算机系统带来更高的复杂度，因为引入了一个新的问题：缓存一致性。为了解决一致性的问题，需要各个处理器访问缓存时都遵循一些协议，在读写时要根据协议来进行操作。下面是常用的内存模型图：</p>
+<p><img src="http://images.cnitblog.com/i/475287/201403/091102484251967.jpg" alt="内存模型图"></p>
+<p>除了增加高速缓存之外，为了使得处理器的内部的运算单元能尽量被充分利用，处理器可能会对输入代码进行乱序执行优化。</p>
+<h1 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h1><p>目的：让Java程序在各种平台下都能达到一致的内存访问效果。</p>
+<h2 id="主内存与工作内存"><a href="#主内存与工作内存" class="headerlink" title="主内存与工作内存"></a>主内存与工作内存</h2><p>Java内存模型的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。此处的变量与Java编程中所说的变量有所区别，它包括实例字段、静态字段和构成数组对象的元素，但不包括局部变量与方法参数，因为后者是线程私有的，不会被共享。</p>
+<p>Java内存模型规定了所有的变量都存储在主内存中（此处的主内存与介绍物理硬件时的主内存可以类比，但是此处仅仅是虚拟机内存的一部分）。每条线程都有自己的工作内存（可以与处理器高速缓存类比），线程的工作内存中保存了被该线程使用到的变量的主内存副本拷贝，线程对变量的所有操作都必须在工作内存中进行，而不能直接读写主内存中的变量。不同的线程之间也无法直接访问对方工作内存中的变量，线程间变量值的传递均需要通过主内存来完成，线程、主内存、工作内存三者的交互关系如下图：</p>
+<p><img src="http://images.cnitblog.com/i/475287/201403/091134177063947.jpg" alt="Java内存模型"></p>
+<p>这里的Java内存模型如果和Java运行时内存勉强对应，可以这样理解：主内存主要对应Java堆中的对象实例数据部分，而工作内存则对应于虚拟机栈中的部分区域。从更低层次上说，主内存直接对应于物理硬件内存，而工作内存优先存储于寄存器和高速缓存中。</p>
+<h2 id="内存间的交互操作"><a href="#内存间的交互操作" class="headerlink" title="内存间的交互操作"></a>内存间的交互操作</h2><p>Java内存模型中定义了以下8种操作来完成，虚拟机实现时必须保证下面提及的每一种操作都是原子的、不可再分的。</p>
+<ol>
+<li>lock（锁定）：作用于主内存的变量，它把一个变量标识为一条线程独占的状态。</li>
+<li>unlock（解锁）：作用于主内存的变量，它把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定。</li>
+<li>read（读取）：作用于主内存变量，把一个变量值从主内存传输到线程的工作内存中，以便随后的load动作使用。</li>
+<li>load（载入）：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中。</li>
+<li>use（使用）：作用于工作内存的变量，把工作内存中的一个变量值传递给执行引擎，每当虚拟机遇到一个需要使用变量的值的字节码指令时将会执行这个操作。</li>
+<li>assign（赋值）：作用于工作内存的变量，它把一个从执行引擎接收到的值赋值给工作内存的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作。</li>
+<li>store（存储）：作用于工作内存的变量，把工作内存中的一个变量的值传送到主内存中，以便随后的write的操作。</li>
+<li>write（写入）：作用于主内存的变量，它把store操作从工作内存中一个变量的值传送到主内存的变量中。</li>
+</ol>
+<p>如果要把一个变量从主内存复制到工作内存，那就要按顺序执行read和load操作，如果要把变量从工作内存同步回主内存，就要按照顺序地执行store和write操作。注意，Java内存模型只要求上述两个操作必须按顺序执行，而没有保证必须是连续执行。Java内存模型规定了在执行上述八种基本操作时必须满足时必须满足如下规则：</p>
+<ol>
+<li>不允许read和load、store和write操作之一单独出现。</li>
+<li>不允许一个线程丢弃它的最近的assign操作。</li>
+<li>不允许一个线程无原因的（没有发生过任何assign操作）把数据从线程的工作内存同步到主内存中</li>
+<li>一个新的变量只能在主内存中诞生，不允许在工作内存中直接使用一个未被初始化（load或assign）的变量。</li>
+<li>一个变量在同一时刻只允许一条线程对其进行lock操作，但lock操作可以被同一条线程重复执行多次，多次执行lock后，只有执行相同次数的unlock操作，变量才会被解锁。</li>
+<li>如果对一个变量执行lock操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量前，需要重新执行load或assign操作初始化变量的值。</li>
+<li>如果一个变量事先没有被lock锁定，则不允许对它执行unlock操作；也不允许去unlock一个被其他线程锁定住的变量。</li>
+<li>对一个变量执行unlock操作之前，必须先把此变量同步回主内存中（执行store和write）。</li>
+</ol>
+<p>这8种内存访问操作以及上述规则限定，再加上volatile的一些特殊规定，就已经完全确定了Java程序中哪些内存访问操作是并发是安全的。</p>
+<h2 id="对于volatile修饰的变量的特殊规则"><a href="#对于volatile修饰的变量的特殊规则" class="headerlink" title="对于volatile修饰的变量的特殊规则"></a>对于volatile修饰的变量的特殊规则</h2><p>关键字volatile是Java虚拟机提供的最轻量级的同步机制。Java内存模型堆volatile专门定义了一些特殊的访问规则。当一个变量定义为volatile之后，它将具备以下两种特性：</p>
+<ol>
+<li>保证此变量对所有线程的<strong>可见性</strong>：当一条线程修改了这个变量的值，新值对于其他线程来说是可以立即得知的。由于volatile变量只能保证可见性，在不符合以下两条规则的运算场景中，我们仍然要通过加锁来保证原子性。<ul>
+<li>运算结果不依赖变量的当前值，或者只能保证只有单一的线程来保证原子性。</li>
+<li>变量不需要与其他状态变量共同参与不变约束。（目前不理解）</li>
+</ul>
+</li>
+<li>禁止指令重排序优化：如果有两个或者更多CPU访问同一块内存，且其中有一个在观测另一个，那么它会通过设置<strong>内存屏障</strong>来使重排序时不能把后面的指令重排序到内存屏障之前访问。</li>
+</ol>
+<p>volatile的意义：volatile变量读操作的消耗与普通变量几乎没有什么差别，但是写操作则可能慢一点，因为它需要在本地代码中插入许多内存屏障指令来保证处理器不发生乱序执行，不过即便如此，大多数场景下volatile得总开销仍然比锁低。</p>
+<p>volatile的特殊规则就是：use/assign、load/store、read/write操作必须连续一起出现，即volatile修饰的变量不会被指令重排序优化。</p>
+<h2 id="对于long和double类型的变量的特殊规则"><a href="#对于long和double类型的变量的特殊规则" class="headerlink" title="对于long和double类型的变量的特殊规则"></a>对于long和double类型的变量的特殊规则</h2><p>Java内存模型要求对于lock、unlock、read、load、assign、use、store和write这八个操作都具有原子性，但是对于64位的数据类型（long和double），允许虚拟机将没有被volatile修饰的64位数据的读写操作划分为两次32位的操作来进行，即允许虚拟机实现选择可以不保证64位数据类型的load、store、read和write这四个操作的原子性，但是强烈建议虚拟机实现为具有原子性的操作。</p>
+<h2 id="原子性、可见性与有序性"><a href="#原子性、可见性与有序性" class="headerlink" title="原子性、可见性与有序性"></a>原子性、可见性与有序性</h2><h3 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h3><p>由Java内存模型来直接保证的原子性变量操作包括read、load、assign、use、store和write这六个，我们大致可以认为基本数据类型的访问读写是具备原子性的。synchronized关键字可以实现原子性。</p>
+<h3 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h3><p>可见性就是指当一个线程修改了共享变量的值，其他线程能够立即得知这个修改。volatile、synchronized以及final关键字都能实现可见性。</p>
+<h3 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h3><p>Java程序中天然的有序性可以总结为一句话：如果在本线程内观察，所有的操作都是有序的；如果在一个线程中观察另一个线程，所有的操作都是无序的。前半句是指“线程内表现为串行的语义”，后半句是指“指令重排序”现象和“工作内存与主内存同步延迟”现象。volatile和synchronized关键字都能实现有序性。</p>
+<h2 id="先行发生原则"><a href="#先行发生原则" class="headerlink" title="先行发生原则"></a>先行发生原则</h2><p>先行发生是Java内存模型中定义的两项操作之间的偏序关系，如果说操作A先行发生于操作B，其实就是说在发生操作B之前，操作A产生的影响能被操作B观察到，“影响”包括修改了内存中共享变量的值、发送了小写、调用了方法等。</p>
+<p>下面是Java内存模型下一些“天然的”先行发生关系，这些先行发送关系无须任何同步器协助就已经存在，可以在编码中直接使用。如果两个操作之间的关系不在此列，并且无法从下列规则推导出来的话，他们就没有顺序性保障，虚拟机可以对它们进行随意重新排序：</p>
+<ol>
+<li>程序次序规则（Program Order Rule）：在一个线程内，按照程序代码顺序，书写在前的操作先于书写在后面的操作。准确地说应该是控制流顺序而不是程序代码顺序，因为要考虑分支、循环等结构。</li>
+<li>管程锁定规则（Monitor Lock Rule）：一个unlock操作先行发生于后面对同一个锁的lock操作。这里必须强调的是同一个锁，而“后面”是指时间上的先后顺序。</li>
+<li>volatile变量规则（Volatile Variable Rule）：对一个volatile变量的写操作先行发生于后面对这个变量的读操作。“后面”是指时间上的先后顺序。</li>
+<li>线程启动规则（Thread Start Rule）：Thread对象的start()方法先行发生于此线程的每一个动作。</li>
+<li>线程终止规则（Thread Termination Rule）：线程中所有操作都先行发生于此线程的终止检测。</li>
+<li>线程中断规则（Thread Interruption Rule）：对线程interrupt()方法的调用先行发生于被中断线程的代码检测到中断事件的发生。</li>
+<li>对象终结规则（Finalizer Rule）：一个对象的初始化完成（构造函数执行结束）先行发生于它的finalize()方法的开始。</li>
+<li>传递性（Transitivity）：如果操作A先行发生于操作B，操作B先行发生于操作C，那就可以得到操作A先行发生于操作C。</li>
+</ol>
+<h1 id="Java与线程"><a href="#Java与线程" class="headerlink" title="Java与线程"></a>Java与线程</h1><p>在Java里面谈论并发，大多数都与线程脱不开关系。我们需要知道在Java线程在虚拟机的实现。</p>
+<h2 id="线程的实现"><a href="#线程的实现" class="headerlink" title="线程的实现"></a>线程的实现</h2><p>线程是比进程更轻量级的调度执行单位，线程的引入，可以把一个进程的资源分配和执行调度分开，各个线程既可以共享进程资源，又可以独立调度（线程是CPU调度的基本单位）。</p>
+<p>实现线程主要有3种方式：使用内核线程实现、使用用户线程实现和使用用户线程加轻量级线程混合实现。</p>
+<h2 id="Java线程调度"><a href="#Java线程调度" class="headerlink" title="Java线程调度"></a>Java线程调度</h2><p>线程调度是指系统为线程分配处理器使用权的过程，主要调度方式有两种，分别是协同式线程调度和抢占式线程调度。</p>
+<ol>
+<li>协同式线程调度：线程的执行时间由线程本身来控制，线程把自己的工作执行完毕后，要主动通知系统切换到另一个线程上去。好处是实现简单，没有线程同步问题；缺点是：线程执行时间不可控制，容易导致整个系统崩溃。</li>
+<li>抢占式线程调度：每个线程将由系统来分配执行时间，线程的切换不由线程本身来决定。好处是线程执行之间可控，不会有一个线程导致整个进程阻塞的问题，Java使用的线程调度方式就是抢占式调度。这里说一下就是java线程优先级不太靠谱，原因是Java的线程是通过映射到系统的原生线程上来实现的，所以线程调度最终还是取决于操作系统。</li>
+</ol>
+<h2 id="线程状态转换"><a href="#线程状态转换" class="headerlink" title="线程状态转换"></a>线程状态转换</h2><p>Java语言定义了5种线程状态，在任意一个时间点，一个线程只能有且只有其中的一种状态，这5种状态分别是：新建，运行，无限期等待，限期等待，阻塞，结束。上述5种状态在遇到特定时间发生的时候回互相转换，他们的转换关系如下图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/jpg/threadStateThansform.jpg" alt="线程状态转换关系"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>虚拟机本身具有一套和线程相关内存模型，我们需要利用好它，特别是要理解线性发生原则以及volatil的一些特殊规则。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入理解Java虚拟机》</li>
+<li><a href="https://www.cnblogs.com/nexiyi/p/java_memory_model_and_thread.html" target="_blank" rel="external">Java内存模型</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：并发处理的广泛应用是使得阿姆德尔定律替代摩尔定律成为计算机性能发展原动力的根本原因。由于计算机的运算速度和它的存储和通信子系统速度差距太大，所以才出现了并发，而并发绝对是Java运用很大的优势。我们绝对需要理解！
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
+    
+  </entry>
   
   <entry>
     <title>深入理解JVM_12_晚期（运行期）优化</title>
@@ -1633,55 +1732,6 @@
       <category term="javascript" scheme="http://bestlixiang.site/tags/javascript/"/>
     
       <category term="原型" scheme="http://bestlixiang.site/tags/%E5%8E%9F%E5%9E%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>浅谈js闭包</title>
-    <link href="http://bestlixiang.site/2017/07/12/%E6%B5%85%E8%B0%88js%E9%97%AD%E5%8C%85/"/>
-    <id>http://bestlixiang.site/2017/07/12/浅谈js闭包/</id>
-    <published>2017-07-12T01:21:01.000Z</published>
-    <updated>2017-07-15T01:08:57.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：最近项目前端用了angular2，里面使用的TypeScript,其实很多和Java挺像的，学起来还是挺快的。但是里面的很多变量的原理都是根据闭包来实现的，那就好好了解一下闭包。<a id="more"></a></p>
-<h2 id="闭包定义"><a href="#闭包定义" class="headerlink" title="闭包定义"></a>闭包定义</h2><p>根据Mozilla开发者文档定义：</p>
-<p>闭包是指向独立变量的“函数”,用通俗的话说就是会“记住”它创建时的环境。</p>
-<h2 id="闭包涉及的主要概念"><a href="#闭包涉及的主要概念" class="headerlink" title="闭包涉及的主要概念"></a>闭包涉及的主要概念</h2><ol>
-<li>作用域链</li>
-</ol>
-<p>作用域链是函数在定义的时候创建的,用于寻找使用到的变量的值的一个索引。它内部的规则是,把函数自身的本地变量放在最前面,把自身的父级函数中的变量放在其次,把再高一级函数中的变量放在更后面,以此类推直至全局对象为止.当函数中需要查询一个变量的值的时候,js解释器会去作用域链去查找,从最前面的本地变量中先找,如果没有找到对应的变量,则到下一级的链上找,一旦找到了变量,则不再继续.如果找到最后也没找到需要的变量,则解释器返回undefined.</p>
-<ol>
-<li>内存回收机制</li>
-</ol>
-<p>一个函数在执行开始的时候,会给其中定义的变量划分内存空间保存,以备后面的语句所用,等到函数执行完毕返回了,这些变量就被认为是无用的了.对应的内存空间也就被回收了.下次再执行此函数的时候,所有的变量又回到最初的状态,重新赋值使用.但是如果这个函数内部又嵌套了另一个函数,而这个函数是有可能在外部被调用到的.并且这个内部函数又使用了外部函数的某些变量的话.这种内存回收机制就会出现问题.如果在外部函数返回后,又直接调用了内部函数,那么内部函数就无法读取到他所需要的外部函数中变量的值了.所以js解释器在遇到函数定义的时候,会自动把函数和他可能使用的变量(包括本地变量和父级和祖先级函数的变量(自由变量))一起保存起来.也就是构建一个闭包,这些变量将不会被内存回收器所回收,只有当内部的函数不可能被调用以后(例如被删除了,或者没有了指针),才会销毁这个闭包,而没有任何一个闭包引用的变量才会被下一次内存回收启动时所回收.</p>
-<h2 id="闭包现象"><a href="#闭包现象" class="headerlink" title="闭包现象"></a>闭包现象</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var results = [];</div><div class="line">for (var i = 0; i &lt;3; i++) &#123;</div><div class="line">results[i] = function() &#123;</div><div class="line">console.log(i);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">results[0](); //3</div><div class="line">results[1](); //3</div><div class="line">results[2](); //3</div></pre></td></tr></table></figure>
-<p>解析：其实这里return出来的是一个function（我们可以理解为他是一个字符串，还没有执行），等到我们去执行他的时候，只保存了他上一级的作用域链里面的i的索引,那个时候i已经是3了。</p>
-<h2 id="闭包解决"><a href="#闭包解决" class="headerlink" title="闭包解决"></a>闭包解决</h2><p>让内部函数在循环创建的时候立即执行,并且捕捉当前的索引值,然后记录在自己的一个本地变量里.然后利用返回函数的方法,重写内部函数,让下一次调用的时候,返回本地变量的值,改进后的代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">var results = [];</div><div class="line">for (var i = 0; i &lt;3; i++) &#123;</div><div class="line">results[i] = (function(j) &#123;</div><div class="line">return function()&#123;</div><div class="line">console.log(j);</div><div class="line">&#125;</div><div class="line">&#125;)(i);</div><div class="line">&#125;</div><div class="line">results[0](); //0</div><div class="line">results[1](); //1</div><div class="line">results[2](); //2</div></pre></td></tr></table></figure></p>
-<p>我们发现通过立即执行表达式就可以解决闭包的现象得到我们想要得到的现象。</p>
-<h2 id="闭包应用"><a href="#闭包应用" class="headerlink" title="闭包应用"></a>闭包应用</h2><h3 id="闭包与静态变量"><a href="#闭包与静态变量" class="headerlink" title="闭包与静态变量"></a>闭包与静态变量</h3><p>前面就说TypeScript与Java很像，所以类中的静态变量也是有的。</p>
-<p>TypeScript代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">class Counter &#123;</div><div class="line">private static COUNTER = 0;</div><div class="line">constructor() &#123;&#125;</div><div class="line">private changeBy(val) &#123;</div><div class="line">Counter.COUNTER +=val;</div><div class="line">&#125;</div><div class="line">public increment() &#123;</div><div class="line">this.changeBy(1);</div><div class="line">&#125;</div><div class="line">public decrement() &#123;</div><div class="line">this.changeBy(-1);</div><div class="line">&#125;</div><div class="line">public value() &#123;</div><div class="line">return Counter.COUNTER;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>编译之后的js代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">var Counter = (function () &#123;</div><div class="line">function Counter() &#123;</div><div class="line">&#125;</div><div class="line">Counter.prototype.changeBy = function (val) &#123;</div><div class="line">Counter.COUNTER += val;</div><div class="line">&#125;;</div><div class="line">Counter.prototype.increment = function () &#123;</div><div class="line">this.changeBy(1);</div><div class="line">&#125;;</div><div class="line">Counter.prototype.decrement = function () &#123;</div><div class="line">this.changeBy(-1);</div><div class="line">&#125;;</div><div class="line">Counter.prototype.value = function () &#123;</div><div class="line">return Counter.COUNTER;</div><div class="line">&#125;;</div><div class="line">Counter.COUNTER = 0;</div><div class="line">return Counter;</div><div class="line">&#125;());</div></pre></td></tr></table></figure></p>
-<p>从js代码可以看书静态变量COUNTER是属于Counter类的，并不属于对象原型。所有Counter实例都共享Counter的同一个闭包上下文环境（COUNTER）。所以COUNTER会表现像单例一样。</p>
-<h3 id="闭包和私有成员"><a href="#闭包和私有成员" class="headerlink" title="闭包和私有成员"></a>闭包和私有成员</h3><p>TypeScript由于性能原因并没有使用闭包来模拟私有变量，他使用过编译检查机制来形成私有变量的特性。但是我们可以使用闭包来实现私有变量。</p>
-<p>js代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">function makeCounter() &#123;</div><div class="line">var COUNTERR = 0;</div><div class="line">function Counter() &#123;</div><div class="line">&#125;</div><div class="line">function changeBy(val) &#123;</div><div class="line">COUNTER += val;</div><div class="line">&#125;;</div><div class="line">Counter.prototype.increment = function () &#123;</div><div class="line">this.changeBy(1);</div><div class="line">&#125;;</div><div class="line">Counter.prototype.decrement = function () &#123;</div><div class="line">this.changeBy(-1);</div><div class="line">&#125;;</div><div class="line">Counter.prototype.value = function () &#123;</div><div class="line">return COUNTER;</div><div class="line">&#125;;</div><div class="line">return new Counter();</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<p>从上面的代码可以看出，每一个新的makeCounter实例都拥有自己的上下文环境，其他实例访问不了。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>学习这么久的js发现，其实闭包真的无处不在，需要好好学习，好好总结，如有不对，也希望大家能够指出。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>链接：<a href="http://blog.csdn.net/u011411356/article/details/50208433" target="_blank" rel="external">js中闭包原理谈和原型及例子</a></p>
-<p>书籍：Learning TypeScript中文版</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：最近项目前端用了angular2，里面使用的TypeScript,其实很多和Java挺像的，学起来还是挺快的。但是里面的很多变量的原理都是根据闭包来实现的，那就好好了解一下闭包。
-    
-    </summary>
-    
-      <category term="编程" scheme="http://bestlixiang.site/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-    
-      <category term="javascript" scheme="http://bestlixiang.site/tags/javascript/"/>
-    
-      <category term="闭包" scheme="http://bestlixiang.site/tags/%E9%97%AD%E5%8C%85/"/>
     
   </entry>
   
