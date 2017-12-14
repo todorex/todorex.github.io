@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2017-12-13T15:28:56.000Z</updated>
+  <updated>2017-12-14T10:14:29.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -16,21 +16,167 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>深入理解JVM_14_线程安全与锁优化</title>
+    <link href="http://bestlixiang.site/2017/12/14/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-14-%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E4%B8%8E%E9%94%81%E4%BC%98%E5%8C%96/"/>
+    <id>http://bestlixiang.site/2017/12/14/深入理解JVM-14-线程安全与锁优化/</id>
+    <published>2017-12-14T09:57:38.000Z</published>
+    <updated>2017-12-14T10:14:29.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：面向对象的编程思想极大的提升了现在软件开发的生产效率和软件可以达到的规模，但是现实中对象在一项工作进行期间，会被不停地中断和切换，对象的属性可能会在中断期间被修改和变“脏”，所以我们在谈“高效并发”之前必须先保证并发的正确性和如何实现线程安全。<a id="more"></a></p>
+<h1 id="线程的安全"><a href="#线程的安全" class="headerlink" title="线程的安全"></a>线程的安全</h1><p>在《Java Concurrency In Practice》一书中这样定义线程安全：当多个线程访问一个对象时，如果不用考虑这些线程在运行时环境下得调度和交替执行，也不需要进行额外的同步，或者在调用方进行任何其他的协调操作，调用这个对象的行为都可以获得正确地结果，那这个对象是线程安全的。</p>
+<p>它要求线程安全的代码都必须具备一个特征：代码本身封装了所有必要的正确性保障手段（如互斥同步等），令调用者无需关心多线程的问题，更无需自己采用任何措施来保障多线程的正确调用。</p>
+<h2 id="Java语言中的线程安全"><a href="#Java语言中的线程安全" class="headerlink" title="Java语言中的线程安全"></a>Java语言中的线程安全</h2><p>在讨论线程安全的时候，都会限定于多个线程之间存在共享数据访问这个前提，我们按照线程安全的“安全程度”由强至弱来排序，可以将Java语言中各种操作共享的数据分为以下5类：不可变、绝对线程安全、相对线程安全、线程兼容和线程对立。</p>
+<h3 id="不可变"><a href="#不可变" class="headerlink" title="不可变"></a>不可变</h3><p>在Java语言中，不可变对象一定是线程安全的，无论是对象的方法实现还是方法调用者都不需要在采取任何的线程安全保障措施。</p>
+<p>Java语言中，如果共享数据是一个基本类型数据，那么只要在定义时使用final关键字修饰它就可以保证它是不可变的。如果共享数据是一个对象，那就需要保证对象的行为不会对其状态产生任何影响才行。如String类、枚举类等（有需要继续探究的可以去看看这些类的源码），保证对象行为不影响自己状态最简单的途径就是讲对象带有状态的变量都声明为final。</p>
+<h3 id="绝对线程安全"><a href="#绝对线程安全" class="headerlink" title="绝对线程安全"></a>绝对线程安全</h3><p>绝对线程安全需要完全满足《Java Concurrency In Practice》一书对线程安全的定义。<br>这个定义其实是很严格的，一个类要达到“不管运行时环境如何，调用者都不要任何额外的同步措施”通常需要付出很大的代价，在Java API中标注自己是线程安全的类，大多数都不是绝对的线程安全。</p>
+<h3 id="相对线程安全"><a href="#相对线程安全" class="headerlink" title="相对线程安全"></a>相对线程安全</h3><p>相对线程安全就是我们通常意义上的线程安全，它需要保证这个对象单独操作是线程安全的，我们在调用的时候不需要做额外的保障措施，但是对于一些特定顺序的联系调用，就可能需要在调用端使用额外的同步手段来保障调用的正确性。下面就展示java.util.Vector（Vector只是加了个方法锁，保证一个时间只能调用方法一次）这个线程安全的容器的不安全可能，。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 错误代码</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VectorTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span>  <span class="keyword">static</span> Vector&lt;Integer&gt; vector = <span class="keyword">new</span> Vector&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">                vector.add(i);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            Thread removeThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">                <span class="meta">@Override</span></div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; vector.size(); i++) &#123;</div><div class="line">                        vector.remove(i);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line"></div><div class="line">            Thread printThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">                <span class="meta">@Override</span></div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; vector.size(); i++) &#123;</div><div class="line">                        System.out.println(vector.get(i));</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line"></div><div class="line">            removeThread.start();</div><div class="line">            printThread.start();</div><div class="line"></div><div class="line">            <span class="keyword">while</span> (Thread.activeCount() &gt; <span class="number">20</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行分析：我在自己机器上没有发生异常，但是按照作者所说的是应该会出现数组越界异常的，这是因为如果另一个线程恰好在错误的时间删除了一个元素，导致序号为i已经不再可用的话，再用i访问数组就会抛出一个ArrayIndexOutOfBoundsException，如果要保证这段代码能正确执行下去，需要改成如下代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 对vector操作加上锁</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VectorTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span>  <span class="keyword">static</span> Vector&lt;Integer&gt; vector = <span class="keyword">new</span> Vector&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">                vector.add(i);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            Thread removeThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">                <span class="meta">@Override</span></div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">synchronized</span> (vector) &#123;</div><div class="line">                        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; vector.size(); i++) &#123;</div><div class="line">                            vector.remove(i);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line"></div><div class="line">            Thread printThread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">                <span class="meta">@Override</span></div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">synchronized</span> (vector) &#123;</div><div class="line">                        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; vector.size(); i++) &#123;</div><div class="line">                            System.out.println(vector.get(i));</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line"></div><div class="line">            removeThread.start();</div><div class="line">            printThread.start();</div><div class="line"></div><div class="line">            <span class="keyword">while</span> (Thread.activeCount() &gt; <span class="number">20</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在Java语言中，大部分线程安全类都属于这种类型，例如Vector、HashTable等。</p>
+<h3 id="线程兼容"><a href="#线程兼容" class="headerlink" title="线程兼容"></a>线程兼容</h3><p>线程兼容是指对象本身并不是线程安全的，但是可以通过在调用端正确地使用同步手段来保证对象在并发环境中可以安全使用，我们平常说的一个类不是线程安全的，绝大多数时候是指这一种情况。Java API中大部分的类都是属于线程兼容的，如与前面Vector和HashTable相对应的集合类ArrayList和HashTable等。</p>
+<h3 id="线程对立"><a href="#线程对立" class="headerlink" title="线程对立"></a>线程对立</h3><p>线程对立是指无论调用端是否采取了同步措施，都无法再多线程环境中并发使用代码，大部分原因是会产生死锁。</p>
+<h2 id="线程安全的实现方法"><a href="#线程安全的实现方法" class="headerlink" title="线程安全的实现方法"></a>线程安全的实现方法</h2><p>线程安全的实现是通过代码编写以及利用虚拟机提供的同步和锁机制，而我们这主要是说一下虚拟机线程安全手段的运作过程。</p>
+<h3 id="互斥同步（阻塞同步）"><a href="#互斥同步（阻塞同步）" class="headerlink" title="互斥同步（阻塞同步）"></a>互斥同步（阻塞同步）</h3><p>同步是指在多个线程并发访问共享数据时，保证共享数据在同一个时刻只被一个（或者是一些，使用信号量的时候）线程使用。而互斥是实现同步的一种手段，临界区、信号量（都没用过）、互斥量都是主要的互斥实现方式。互斥是因，同步是果；互斥是方法，同步是目的。主要的互斥同步手段有下面两种：</p>
+<ol>
+<li>使用synchronizd关键字，synchronized关键字经过编译之后，会在同步块的前后分别形成 monitorenter 和 monitorexit 这个两个字节码指令，这两个字节码都需要一个 reference类型的参数来指明要锁定和解锁的对象；如果java程序中的synchronized明确指定了对象参数，那就是这个对象的reference；如果没有明确指定，那就根据synchronized修饰的实例方法还是类方法，去取对应的对象实例或Class对象来作为锁对象。在执行monitorenter指令时，如果这个对象没有锁定或当前线程已经拥有了那个对象的锁，锁的计数器加1，相应的，在执行monitorexit指令时会将锁计数器减1；当计数器为0时，锁就被释放了。对于monitorenter 和 monitorexit的行为描述中，有两点需要注意：<ul>
+<li>synchronized同步块对同一条线程来说是可重入的，不会出现自己把自己锁死的问题。</li>
+<li>同步块在已进入的线程执行完之前，会阻塞后面其他线程的进入。</li>
+</ul>
+</li>
+<li>使用java.util.concurrent（J.U.C）包中的重入锁（ReentrantLock）。synchronized 和 ReentrantLock 的区别： 一个表现为 API 层面的互斥锁（lock() 和 unlock() 方法配合 try/finally语句块来完成），另一个表现为原生语法层面的互斥锁；ReentrantLock增加了一些高级功能主要有以下3项：<ul>
+<li>等待可中断：指当持有锁的线程长期不释放锁的时候，正在等待的线程可以选择放弃等待，改为处理其他事情，可中断特性对处理执行时间非常长的同步块很有帮 助 。</li>
+<li>公平锁：指多个线程在等待同一个锁时，必须按照申请锁的时间顺序来依次获得锁。</li>
+<li>锁绑定多个条件：指一个 ReentrantLock对象可以同时绑定多个 Condition对象，而在 synchronized中，锁对象的wait() 和 notify() 或 notifyAll() 方法可以实现一个隐含的条件，如果要和多于一个的条件关联的时候，就不得不额外地添加一个锁，而ReentrantLock 则无需这样做，只需要多次调用 newCondition() 方法即可。</li>
+</ul>
+</li>
+<li>关于两者的性能在JDK1.6以后，两者基本持平了，所以提倡在synchronized能实现需求的情况下，优先考虑使用sychronized来进行同步锁。</li>
+</ol>
+<h3 id="非阻塞同步"><a href="#非阻塞同步" class="headerlink" title="非阻塞同步"></a>非阻塞同步</h3><ol>
+<li>阻塞同步与非阻塞同步的对比：阻塞同步是一种悲观的并发策略，总是认为只要不去做正确的同步措施（例如加锁）就会出现问题，所以会带来进行线程阻塞和唤醒的性能问题；非阻塞同步是一种基于<strong>冲突检测</strong>的乐观的并发策略，它是先进行操作，如果没有其他线程争用共享数据，那操作就是成功的，如果共享数据有争用，产生了冲突，那就再采取其他的补偿措施（最常见的补偿措施就是不断地重试，直到成功为止）。</li>
+<li><p>非阻塞同步需要硬件指令集的发展：因为需要保证操作和冲突检测这两个步骤具备原子性，而这里原子性的实现是通过一条处理器指令完成的。这类指令常用的有：</p>
+<ul>
+<li>测试并设置</li>
+<li>获取并增加</li>
+<li>交换</li>
+<li>比较并交换（Compare-and-set,CAS）</li>
+<li><p>加载链接/条件存储</p>
+<p>我们可以从J.U.C下得原子类的操作来证明这一点。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="无同步方案"><a href="#无同步方案" class="headerlink" title="无同步方案"></a>无同步方案</h3><p>如果一个方法本来就不涉及共享数据，那它自然就无须任何同步措施去保证正确性，因此会有一些代码天生就是线程安全的。下面介绍两类线程安全代码：</p>
+<ol>
+<li>可重入代码（纯代码）：，可以在代码执行的任何时刻中断它，转而去执行另外一段代码，而在控制权返回后，原来的程序不会出现任何错误。如何判断代码是否具备可重入性：如果一个方法，它的返回结果是可以预测的，只要输入了相同的数据，就都能返回相同的结果，那它就满足可重入性的要求，当然也就是线程安全的。</li>
+<li>线程本地存储：如果一段代码中所需要的数据必须与其他代码共享，那就看看这些共享数据的代码是否能够保证在同一线程中执行？如果能保证，我们就可以把共享数据的可见范围限制在同一个线程内，这样，无需同步也可以保证线程间不出现数据争用问题。</li>
+</ol>
+<h1 id="锁优化"><a href="#锁优化" class="headerlink" title="锁优化"></a>锁优化</h1><p>各种锁优化技术都是为了在线程之间更加高效地共享数据，以及解决竞争问题。</p>
+<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><ol>
+<li>为什么需要自旋锁：互斥同步对性能最大的影响是阻塞的实现，挂起线程和恢复线程的操作都需要转入内核态中完成，共享数据的锁定状态只会持续很短的一段时间，为了这段时间去挂起和恢复线程很不值得。</li>
+<li>什么是自旋锁：为了让线程等待，我们只需让线程执行一个忙循环（自旋）而不放弃处理器时间，这项技术就是所谓的自旋锁。</li>
+<li>自旋时间有一定限度：如果自旋超过了限定的次数仍然没有成功获得锁，就应当使用传统的方式去挂起线程了。自旋次数的默认值是10，用户可以用参数 -XX:PreBlockSpin 来更改。</li>
+<li>自适应自旋锁：jdk1.6中引入了自适应的自旋锁。自适应意味着自旋的时间不再固定了，而是由前一次在同一个锁上的自旋时间及锁的拥有者的状态来决定；</li>
+</ol>
+<h2 id="锁消除"><a href="#锁消除" class="headerlink" title="锁消除"></a>锁消除</h2><p>锁消除是指虚拟机即时编译器在运行时，对一些代码上要求同步，但是被检查到不可能存在共享数据竞争的锁进行消除。锁消除的主要判定依据：来源于逃逸分析的数据支持，如果判定在一段代码中，堆上的所有数据都不会逃逸出去从而被其他线程访问到，那就可以把它们当做栈上数据对待，认为它们是线程私有的，同步加锁自然就无须进行了。其中很多无用的同步措施都是Java API自带的。</p>
+<h2 id="锁粗化"><a href="#锁粗化" class="headerlink" title="锁粗化"></a>锁粗化</h2><p>如果一系列的连续操作都对同一个对象反复加锁和解锁，甚至加锁操作是出现在循环体中的，那即使没有线程竞争，频繁地进行互斥同步操作也会导致不必要的性能损耗。如果虚拟机探测到有这样一串零碎的操作都对同一个对象加锁，将会把加锁同步的范围扩展（粗化）到整个操作序列的外部。</p>
+<h2 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h2><ol>
+<li>轻量级锁：使用操作系统互斥量来实现的传统锁通常被称为重量级锁，而这个轻量级锁的出现就是是在没有多线程竞争的前提下，减少传统的重量级锁使用操作系统互斥量产生的性能消耗。</li>
+<li>HotSpot虚拟机头Mark Word：它是实现轻量级锁和偏向锁的关键，它的内容如下表：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>存储内容</th>
+<th>标志位</th>
+<th>转态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对象哈希码、对象年龄分代</td>
+<td>01</td>
+<td>未锁定</td>
+</tr>
+<tr>
+<td>指向所记录的指针</td>
+<td>00</td>
+<td>轻量级锁定</td>
+</tr>
+<tr>
+<td>指向重量级锁的指针</td>
+<td>10</td>
+<td>膨胀（重量级锁定）</td>
+</tr>
+<tr>
+<td>空，不需要记录信息</td>
+<td>11</td>
+<td>GC标记</td>
+</tr>
+<tr>
+<td>偏向线程ID、偏向时间戳、对象分代年龄</td>
+<td>01</td>
+<td>可偏向</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>在进入同步代码块时，轻量级锁加锁过程：<ul>
+<li>如果此同步对象没有被锁定（锁标志位为01状态）：虚拟机首先将在当前线程的栈帧中建立一个名为锁记录的空间，用于存储对象目前的Mark Word的拷贝（Displace Mark Word）。</li>
+<li>然后，虚拟机将使用CAS 操作尝试将对象的 Mark Word 更新为指向Lock Record的指针。</li>
+<li>如果这个更新工作成功了，那么这个线程就拥有了该对象的锁，并且对象Mark Word的锁标志位将转变为 00，即表示此对象处于轻量级锁定状态；</li>
+<li>如果这个更新失败了，虚拟机首先会检查对象的Mark Word是否指向当前线程的栈帧，如果只说明当前线程已经拥有了这个对象的锁，那就可以直接进入同步块继续执行，否则说明这个锁对象以及被其他线程抢占了。如果有两条以上的线程争用同一个锁，那轻量级锁就不再有效，要膨胀为重量级锁，锁标志的状态值变为 10，Mark Word中存储的就是指向重量级（互斥量）的指针，后面等待锁的线程也要进入阻塞 状态。</li>
+</ul>
+</li>
+<li>轻量级锁解锁过程：<ul>
+<li>如果对象的Mark Word仍然指向着线程的锁记录，那就用CAS 操作把对象当前的Mark Word和线程中复制的 Displaced Mark Word替换回来。</li>
+<li>如果替换成功，整个同步过程就完成了。</li>
+<li>如果替换失败，说明有其他线程尝试过获取该锁，那就要在释放锁的同时，唤醒被挂起的线程。</li>
+</ul>
+</li>
+<li>轻量级锁能提升程序同步性能的依据是：对于绝大部分的锁，在整个同步周期内都是不存在竞争的。</li>
+</ol>
+<h2 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h2><ol>
+<li>偏向锁的目的：消除数据在无竞争情况下的同步原语，进一步提高程序的运行性能。如果说轻量级锁是在无竞争的情况使用CAS操作去消除同步使用的互斥量，那偏向锁就是在无竞争的情况下把整个同步都消除掉，连CAS 操作都不做了。</li>
+<li>偏向锁的偏：它的意思是这个锁会偏向于第一个获得它的线程，如果在接下来的执行过程中，该锁没有被其他的线程获取，则持有偏向锁的线程将永远不需要再进行同步。</li>
+<li>偏向锁过程：若当前虚拟机启用了偏向锁，那么，当锁对象第一次被线程获取的时候，虚拟机将会把对象头中的标志位设为01，即偏向模式；同时使用CAS操作把获取到这个锁的线程的ID 记录在对象的 Mark Word之中，如果CAS操作成功，持有偏向锁的线程以后每次进入这个锁相关的同步块时，虚拟机都可以不再进行任何同步操作。当有另一个线程去尝试获取这个锁时，偏向模式就结束了，根据锁对象目前是否处于被锁定的状态，撤销偏向后恢复到未锁定（标志位为01）或轻量级锁定（标志位为00）的状态，后续的同步操作就如上面介绍的轻量级锁那样执行。</li>
+<li>偏向锁是一个带有效益权衡性质的优化：偏向锁可以提高带有同步但无竞争的程序性能，但是如果程序中大多数的锁总是被多个不同的线程访问，那偏向模式是多余的。</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>关于线程安全我们可以有明确的定义，然后我们也知道了线程安全的实现方式，以及虚拟机为我们提供的各种锁优化。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入理解Java虚拟机》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：面向对象的编程思想极大的提升了现在软件开发的生产效率和软件可以达到的规模，但是现实中对象在一项工作进行期间，会被不停地中断和切换，对象的属性可能会在中断期间被修改和变“脏”，所以我们在谈“高效并发”之前必须先保证并发的正确性和如何实现线程安全。
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
+    
+  </entry>
+  
+  <entry>
     <title>深入理解JVM_13_Java内存模型与线程</title>
     <link href="http://bestlixiang.site/2017/12/13/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-13-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/"/>
     <id>http://bestlixiang.site/2017/12/13/深入理解JVM-13-Java内存模型与线程/</id>
     <published>2017-12-13T15:27:12.000Z</published>
-    <updated>2017-12-13T15:28:56.000Z</updated>
+    <updated>2017-12-14T10:29:11.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：并发处理的广泛应用是使得阿姆德尔定律替代摩尔定律成为计算机性能发展原动力的根本原因。由于计算机的运算速度和它的存储和通信子系统速度差距太大，所以才出现了并发，而并发绝对是Java运用很大的优势。我们绝对需要理解！<a id="more"></a></p>
 <h1 id="硬件的效率与一致性"><a href="#硬件的效率与一致性" class="headerlink" title="硬件的效率与一致性"></a>硬件的效率与一致性</h1><p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以现代计算机系统都不得不加入一层读写速度尽可能接近处理器运算速度的告诉缓存来作为内存与处理器之间的缓冲：将运算需要使用到的数据复制到缓存中，让运算能快速进行，当运算结束后再从缓存同步到内存之中，这样处理器就无须等待缓慢的内存读写了。</p>
 <p>基于高速缓存的存储交互很好地解决了处理器与内存的速度矛盾，但是也为计算机系统带来更高的复杂度，因为引入了一个新的问题：缓存一致性。为了解决一致性的问题，需要各个处理器访问缓存时都遵循一些协议，在读写时要根据协议来进行操作。下面是常用的内存模型图：</p>
-<p><img src="http://images.cnitblog.com/i/475287/201403/091102484251967.jpg" alt="内存模型图"></p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/jpg/AcheModel.jpg" alt="内存模型图"></p>
 <p>除了增加高速缓存之外，为了使得处理器的内部的运算单元能尽量被充分利用，处理器可能会对输入代码进行乱序执行优化。</p>
 <h1 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h1><p>目的：让Java程序在各种平台下都能达到一致的内存访问效果。</p>
 <h2 id="主内存与工作内存"><a href="#主内存与工作内存" class="headerlink" title="主内存与工作内存"></a>主内存与工作内存</h2><p>Java内存模型的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。此处的变量与Java编程中所说的变量有所区别，它包括实例字段、静态字段和构成数组对象的元素，但不包括局部变量与方法参数，因为后者是线程私有的，不会被共享。</p>
 <p>Java内存模型规定了所有的变量都存储在主内存中（此处的主内存与介绍物理硬件时的主内存可以类比，但是此处仅仅是虚拟机内存的一部分）。每条线程都有自己的工作内存（可以与处理器高速缓存类比），线程的工作内存中保存了被该线程使用到的变量的主内存副本拷贝，线程对变量的所有操作都必须在工作内存中进行，而不能直接读写主内存中的变量。不同的线程之间也无法直接访问对方工作内存中的变量，线程间变量值的传递均需要通过主内存来完成，线程、主内存、工作内存三者的交互关系如下图：</p>
-<p><img src="http://images.cnitblog.com/i/475287/201403/091134177063947.jpg" alt="Java内存模型"></p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/jpg/JavaAcheModel.jpg" alt="Java内存模型"></p>
 <p>这里的Java内存模型如果和Java运行时内存勉强对应，可以这样理解：主内存主要对应Java堆中的对象实例数据部分，而工作内存则对应于虚拟机栈中的部分区域。从更低层次上说，主内存直接对应于物理硬件内存，而工作内存优先存储于寄存器和高速缓存中。</p>
 <h2 id="内存间的交互操作"><a href="#内存间的交互操作" class="headerlink" title="内存间的交互操作"></a>内存间的交互操作</h2><p>Java内存模型中定义了以下8种操作来完成，虚拟机实现时必须保证下面提及的每一种操作都是原子的、不可再分的。</p>
 <ol>
@@ -1700,38 +1846,6 @@
       <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
       <category term="ftp" scheme="http://bestlixiang.site/tags/ftp/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>js原型和原型链</title>
-    <link href="http://bestlixiang.site/2017/07/13/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E5%8E%9F%E5%9E%8B%E9%93%BE/"/>
-    <id>http://bestlixiang.site/2017/07/13/js原型和原型链/</id>
-    <published>2017-07-13T00:26:14.000Z</published>
-    <updated>2017-07-13T00:27:05.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：刚刚说了闭包，那就不放过js的另一大难点了——js原型以及原型链。<a id="more"></a></p>
-<h2 id="谈谈"><a href="#谈谈" class="headerlink" title="谈谈"></a>谈谈</h2><p>神图镇楼：<br><img src="http://o6plzvjf2.bkt.clouddn.com/prototype.jpg" alt="原型链图"><br>自己写了好几遍内容，但是自己发现还是不能系统的理解，自己也写不了多好，看来要到自己安心写前端的时候，再来补上了。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="http://www.jianshu.com/p/dee9f8b14771" target="_blank" rel="external">最详尽的 JS 原型与原型链终极详解（一）</a></li>
-<li><a href="http://www.jianshu.com/p/652991a67186" target="_blank" rel="external">最详尽的 JS 原型与原型链终极详解（二）</a></li>
-<li><a href="http://www.jianshu.com/p/a4e1e7b6f4f8" target="_blank" rel="external">最详尽的 JS 原型与原型链终极详解（三）</a></li>
-</ol>
-<p>个人感觉上面的文章还不错，可能还缺了继承那块的讲解，等自己再来的时候一起补上吧！！！！</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：刚刚说了闭包，那就不放过js的另一大难点了——js原型以及原型链。
-    
-    </summary>
-    
-      <category term="编程" scheme="http://bestlixiang.site/categories/%E7%BC%96%E7%A8%8B/"/>
-    
-    
-      <category term="javascript" scheme="http://bestlixiang.site/tags/javascript/"/>
-    
-      <category term="原型" scheme="http://bestlixiang.site/tags/%E5%8E%9F%E5%9E%8B/"/>
     
   </entry>
   

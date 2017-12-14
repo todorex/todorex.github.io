@@ -96,14 +96,14 @@
 <meta property="og:url" content="http://bestlixiang.site/2017/12/13/深入理解JVM-13-Java内存模型与线程/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：并发处理的广泛应用是使得阿姆德尔定律替代摩尔定律成为计算机性能发展原动力的根本原因。由于计算机的运算速度和它的存储和通信子系统速度差距太大，所以才出现了并发，而并发绝对是Java运用很大的优势。我们绝对需要理解！">
-<meta property="og:image" content="http://images.cnitblog.com/i/475287/201403/091102484251967.jpg">
-<meta property="og:image" content="http://images.cnitblog.com/i/475287/201403/091134177063947.jpg">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/image/jpg/AcheModel.jpg">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/image/jpg/JavaAcheModel.jpg">
 <meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/image/jpg/threadStateThansform.jpg">
-<meta property="og:updated_time" content="2017-12-13T15:28:56.000Z">
+<meta property="og:updated_time" content="2017-12-14T10:29:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解JVM_13_Java内存模型与线程">
 <meta name="twitter:description" content="引：并发处理的广泛应用是使得阿姆德尔定律替代摩尔定律成为计算机性能发展原动力的根本原因。由于计算机的运算速度和它的存储和通信子系统速度差距太大，所以才出现了并发，而并发绝对是Java运用很大的优势。我们绝对需要理解！">
-<meta name="twitter:image" content="http://images.cnitblog.com/i/475287/201403/091102484251967.jpg">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/image/jpg/AcheModel.jpg">
 
 
 
@@ -392,12 +392,12 @@
         <p>引：并发处理的广泛应用是使得阿姆德尔定律替代摩尔定律成为计算机性能发展原动力的根本原因。由于计算机的运算速度和它的存储和通信子系统速度差距太大，所以才出现了并发，而并发绝对是Java运用很大的优势。我们绝对需要理解！<a id="more"></a></p>
 <h1 id="硬件的效率与一致性"><a href="#硬件的效率与一致性" class="headerlink" title="硬件的效率与一致性"></a>硬件的效率与一致性</h1><p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，所以现代计算机系统都不得不加入一层读写速度尽可能接近处理器运算速度的告诉缓存来作为内存与处理器之间的缓冲：将运算需要使用到的数据复制到缓存中，让运算能快速进行，当运算结束后再从缓存同步到内存之中，这样处理器就无须等待缓慢的内存读写了。</p>
 <p>基于高速缓存的存储交互很好地解决了处理器与内存的速度矛盾，但是也为计算机系统带来更高的复杂度，因为引入了一个新的问题：缓存一致性。为了解决一致性的问题，需要各个处理器访问缓存时都遵循一些协议，在读写时要根据协议来进行操作。下面是常用的内存模型图：</p>
-<p><img src="http://images.cnitblog.com/i/475287/201403/091102484251967.jpg" alt="内存模型图"></p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/jpg/AcheModel.jpg" alt="内存模型图"></p>
 <p>除了增加高速缓存之外，为了使得处理器的内部的运算单元能尽量被充分利用，处理器可能会对输入代码进行乱序执行优化。</p>
 <h1 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h1><p>目的：让Java程序在各种平台下都能达到一致的内存访问效果。</p>
 <h2 id="主内存与工作内存"><a href="#主内存与工作内存" class="headerlink" title="主内存与工作内存"></a>主内存与工作内存</h2><p>Java内存模型的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。此处的变量与Java编程中所说的变量有所区别，它包括实例字段、静态字段和构成数组对象的元素，但不包括局部变量与方法参数，因为后者是线程私有的，不会被共享。</p>
 <p>Java内存模型规定了所有的变量都存储在主内存中（此处的主内存与介绍物理硬件时的主内存可以类比，但是此处仅仅是虚拟机内存的一部分）。每条线程都有自己的工作内存（可以与处理器高速缓存类比），线程的工作内存中保存了被该线程使用到的变量的主内存副本拷贝，线程对变量的所有操作都必须在工作内存中进行，而不能直接读写主内存中的变量。不同的线程之间也无法直接访问对方工作内存中的变量，线程间变量值的传递均需要通过主内存来完成，线程、主内存、工作内存三者的交互关系如下图：</p>
-<p><img src="http://images.cnitblog.com/i/475287/201403/091134177063947.jpg" alt="Java内存模型"></p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/jpg/JavaAcheModel.jpg" alt="Java内存模型"></p>
 <p>这里的Java内存模型如果和Java运行时内存勉强对应，可以这样理解：主内存主要对应Java堆中的对象实例数据部分，而工作内存则对应于虚拟机栈中的部分区域。从更低层次上说，主内存直接对应于物理硬件内存，而工作内存优先存储于寄存器和高速缓存中。</p>
 <h2 id="内存间的交互操作"><a href="#内存间的交互操作" class="headerlink" title="内存间的交互操作"></a>内存间的交互操作</h2><p>Java内存模型中定义了以下8种操作来完成，虚拟机实现时必须保证下面提及的每一种操作都是原子的、不可再分的。</p>
 <ol>
@@ -518,6 +518,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/12/14/深入理解JVM-14-线程安全与锁优化/" rel="prev" title="深入理解JVM_14_线程安全与锁优化">
+                深入理解JVM_14_线程安全与锁优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -613,7 +617,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
