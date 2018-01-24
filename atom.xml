@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-01-22T13:06:26.000Z</updated>
+  <updated>2018-01-24T06:23:18.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -16,13 +16,160 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Java并发_10_显示锁</title>
+    <link href="http://bestlixiang.site/2018/01/24/Java%E5%B9%B6%E5%8F%91-10-%E6%98%BE%E7%A4%BA%E9%94%81/"/>
+    <id>http://bestlixiang.site/2018/01/24/Java并发-10-显示锁/</id>
+    <published>2018-01-24T06:21:40.000Z</published>
+    <updated>2018-01-24T06:23:18.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：Java5.0以后提供了一种新的协调对共享对象的访问机制——ReentrantLock。它并不是用来替代内置锁的方法，而是当内置加锁不适用时，作为一种可选择的高级功能。<a id="more"></a></p>
+<h1 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h1><p>ReentrantLock实现了Lock接口，并提供了与synchronized相同的互斥性和内存可见性，但是通常能提供更好的活跃性或性能。下面是Lock接口代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Lock</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lockInterruptibly</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span></span>;</div><div class="line">    <span class="function">Condition <span class="title">newCondition</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>为什么要创建一种与内置锁如此相似的新加锁价值？是由于内置锁具有以下的局限性：</p>
+<ul>
+<li>无法中断一个正在等待获取锁的线程。</li>
+<li>内置锁必须在获取锁的代码块中释放，这就简化了编码工作，并且与异常处理操作实现了很好的互动，但却无法实现非阻塞结构的加锁规则。   </li>
+</ul>
+<p>下面是Lock接口的标准使用形式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line">...</div><div class="line">lock.lock();</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    <span class="comment">//更新对象状态</span></div><div class="line">    <span class="comment">//捕获异常，并在必要时恢复不变性条件</span></div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">    lock.unlock(); <span class="comment">//“定时炸弹”，一定要记得释放Lock</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="轮询锁与定时锁"><a href="#轮询锁与定时锁" class="headerlink" title="轮询锁与定时锁"></a>轮询锁与定时锁</h2><p>可定时的与可轮询的锁获取模式是由tryLock方法实现的，与无条件的锁获取模式相比，它具有更完善的错误恢复机制。在内置锁中，死锁是一个严重的问题，恢复程序的唯一办法是重新启动程序，而防止死锁的唯一方法就是在构造程序时避免出现不一致的锁顺序。可定时的与可轮询的的锁提供了另一种选择，避免死锁的发生。通过重新获取及释放锁来避免死锁。</p>
+<h2 id="可中断的锁操作获取操作"><a href="#可中断的锁操作获取操作" class="headerlink" title="可中断的锁操作获取操作"></a>可中断的锁操作获取操作</h2><p>可中断的锁操作获取操作是有lockInterruptibly或者tryLock方法实现的，如果在可中断的锁获取操作中抛出了InterruptedException，那么可以使用标准的try-finally加锁模式。</p>
+<h2 id="非块结构的加锁"><a href="#非块结构的加锁" class="headerlink" title="非块结构的加锁"></a>非块结构的加锁</h2><p>我们通过Lock的使用结构可以知道，我们通过ReentrantLock可以灵活的实现锁的粒度。</p>
+<h1 id="公平性"><a href="#公平性" class="headerlink" title="公平性"></a>公平性</h1><p>大多数情况下，非公平锁的性能要高于公平锁的性能，原因是后者为了实现公平，会有更多的线程上下文切换成本。</p>
+<p>当持有锁的时间较长，或者请求锁的平均时间间隔较长，那么应该使用公平锁。在这些情况下，允许“插队”带来的吞吐量提升（当锁处于可用的状态时，线程却还处于被唤醒的过程中）则可能不会出现。</p>
+<h1 id="在synchronized和ReentrantLock之间进行选择"><a href="#在synchronized和ReentrantLock之间进行选择" class="headerlink" title="在synchronized和ReentrantLock之间进行选择"></a>在synchronized和ReentrantLock之间进行选择</h1><p><strong>在一些内置锁无法满足需求的情况下，ReentrantLock可以作为一种高级工具。当需要一些高级功能时才应该使用ReentrantLock，这些功能包括：可定时的、可轮询的与可中断的锁获取操作，公平队列（默认非公平），以及非块结构的锁。否则，还是应该优先使用synchronized。</strong></p>
+<h1 id="读-写锁"><a href="#读-写锁" class="headerlink" title="读-写锁"></a>读-写锁</h1><p>在读-写锁的加锁策略中，允许多个读操作同时进行，但每次只允许一个写操作。</p>
+<p>ReentrantReadWriteLock为读锁和写锁都提供了可重入的加锁语义。ReentrantReadWriteLock在构造时可以选择是一个非公平的锁（默认）还是一个公平的锁。在公平的锁中，等待时间最长的线程将优先获得锁。在非公平的锁中，线程获得访问许可的顺序是不确定的。写线程可以降级为读线程，但是读线程不可以升级为写线程（因为多个读线程都不会放弃自己的读取锁而导致死锁）。</p>
+<p><strong>适用场景：</strong> 当锁的持有时间较长并且大部分操作都不会修改被守护的资源时，那么读-写锁能提高并发性。如果写操作也很频繁，那可能独占锁更合适一些，因为写操作太多，竞争会很激烈，再加上协调读写锁，性能反而不如独占锁了。</p>
+<p>下面展示用读-写锁来包装Map：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadWriteMap</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;K, V&gt; map;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReadWriteLock lock = <span class="keyword">new</span> ReentrantReadWriteLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock r = lock.readLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock w = lock.writeLock();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ReadWriteMap</span><span class="params">(Map&lt;K, V&gt; map)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.map = map;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">put</span> <span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">        w.lock();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">return</span> map. put(key, value);</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            w.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 对remove(),putAll(),clear()等方法执行同样的操作</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">        r.lock();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">return</span> map.get(key);</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            r.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 对其他只读的Map方法执行相同的操作</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>与内置锁相比，显示的Lock提供了一些扩展功能，在处理锁的不可用性方法有着更高的灵活性。但ReentrantLock不能完全替代synchronized，只有在synchronized无法满足需求时，才应该使用它。</li>
+<li>读-写锁运行多个读线程并发地访问被保护的对象，当访问以读取操作为主的数据结构时，它能提高程序的可伸缩性。</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《Java并发编程实战》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：Java5.0以后提供了一种新的协调对共享对象的访问机制——ReentrantLock。它并不是用来替代内置锁的方法，而是当内置加锁不适用时，作为一种可选择的高级功能。
+    
+    </summary>
+    
+      <category term="Java并发编程实战" scheme="http://bestlixiang.site/categories/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/"/>
+    
+    
+      <category term="并发" scheme="http://bestlixiang.site/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java并发_9_性能和可伸缩性</title>
+    <link href="http://bestlixiang.site/2018/01/24/Java%E5%B9%B6%E5%8F%91-9-%E6%80%A7%E8%83%BD%E5%92%8C%E5%8F%AF%E4%BC%B8%E7%BC%A9%E6%80%A7/"/>
+    <id>http://bestlixiang.site/2018/01/24/Java并发-9-性能和可伸缩性/</id>
+    <published>2018-01-24T02:12:31.000Z</published>
+    <updated>2018-01-24T02:13:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：线程最主要的目的是提高程序的运行性能，虽然我们希望获得更好的性能，但始终要把安全性放在第一位。首先要保证程序的正常运行，然后仅当程序的性能需求和测试结果要求程序执行得更快时，才应该设法提高它的运行速度<a id="more"></a></p>
+<h1 id="性能和可伸缩性"><a href="#性能和可伸缩性" class="headerlink" title="性能和可伸缩性"></a>性能和可伸缩性</h1><p><strong>提升性能</strong>意味着用更少的资源做更多的事。这些资源包括CPU时钟周期、内存、网络带宽、I/O带宽、数据库请求、磁盘空间以及其他资源。</p>
+<p>尽管就是用多个线程的目标是提升整体性能，但与单线程相比，使用多个线程会引入一些额外的开销。造成这些开销的操作包括：线程之间的协调（例如加锁、触发信号以及内存同步等），增加上下文切换，线程的创建和销毁、以及线程的调度等。</p>
+<p>为了通过并发获得更好的性能，需要：</p>
+<ul>
+<li>更有效地利用现有处理资源</li>
+<li>在出现新的处理资源时使程序尽可能地利用这些新资源</li>
+<li>从性能监视角度来看，CPU需要尽可能保持忙绿状态</li>
+</ul>
+<h2 id="应用程序性能的衡量指标"><a href="#应用程序性能的衡量指标" class="headerlink" title="应用程序性能的衡量指标"></a>应用程序性能的衡量指标</h2><ul>
+<li>服务时间、等待时间用于衡量程序的“运行速度”，即某个指定的任务单元需要“多快”才能处理完成。</li>
+<li>生产量、吞吐量用于衡量程序的“处理能力”，即在给定计算机资源的情况下，能完成“多少”工作。</li>
+</ul>
+<p>性能的提高就是使应用程序，1）对任务单元的处理速度更快，2）资源一定的情况下，完成更多的工作</p>
+<h2 id="可伸缩性定义"><a href="#可伸缩性定义" class="headerlink" title="可伸缩性定义"></a>可伸缩性定义</h2><p>当增加计算资源时（例如CPU、内存、存储容量或I/O带宽），程序的吞吐量或者处理能力能相应地增加。</p>
+<h2 id="评估各种性能权衡因素"><a href="#评估各种性能权衡因素" class="headerlink" title="评估各种性能权衡因素"></a>评估各种性能权衡因素</h2><p>服务器应用程序的指标是可伸缩性、吞吐量和生成量；交互式应用程序指标是多快。</p>
+<p><strong>避免不成熟的优化（由于需求不明确），首先使程序正确，然后再提高运行速度——如果它还运行得不够快。</strong></p>
+<h1 id="Amdahl定律"><a href="#Amdahl定律" class="headerlink" title="Amdahl定律"></a>Amdahl定律</h1><p><strong>Amdahl定律：</strong> 在增加计算资源的情况下，程序在理论上能够实现最高加速比，这个值取决于可并行组件与串行组件所占的比重。假定F是必须被串行执行的部分，那么根据Amdahl定律，在包含N个处理器的机器中，最高的加速比为：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Speedup &lt;= <span class="number">1</span> / ( F + (<span class="number">1</span>-F) / N )</div></pre></td></tr></table></figure></p>
+<p>当N趋近于无穷大时，最大的加速比趋近于1/F。因此，如果程序有50%的计算需要串行执行，那么最高的加速比只能是2（而不管有多少个线程可用）</p>
+<p><strong>注意：在所有并发程序中都包含一些串行部分。</strong></p>
+<p>我们评估一个算法时，要考虑算法在<strong>数百个或数千个处理器</strong>的情况下的性能表现，从而对可能出现的可伸缩性局限有一定程度的认识。</p>
+<h1 id="线程引入的开销"><a href="#线程引入的开销" class="headerlink" title="线程引入的开销"></a>线程引入的开销</h1><p>在多个线程的调度和协调过程中都需要一定的性能开销：对于为了提升性能而引入的线程来说，并行带来的性能提升必须超过并发导致的开销。</p>
+<h2 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h2><p>如果可运行的线程数大于CPU数量，那么操作系统最终会将某个运行的线程调度出来，从而使其他线程能够使用CPU，这将导致一次上下文切换，在这个过程中将保存当前运行线程的执行上下文，并将新调度进来的线程的执行上下文设置为当前上下文。</p>
+<p>当线程由于等待某个发生竞争的锁而被阻塞时，JVM通常会将这个线程挂起，并允许它被交换出去。如果线程频繁地发生阻塞，那么他们将无法使用完整的调度<strong>时间片</strong>。在程序中发生越多的阻塞，CPU密集型的程序就会发生越多的上下文切换，从而增加调度开销，并因此而降低吞吐量。</p>
+<h2 id="内存同步"><a href="#内存同步" class="headerlink" title="内存同步"></a>内存同步</h2><p>同步操作的性能开销包括多个方面。在synchronized和volatile提供的可见性保证中可能会使用一些特殊的指令，即内存栅栏。内存栅栏可以刷新缓存，使缓存无效，刷新硬件的写缓冲，以及停止执行管道。内存栅栏可能同样会对性能带来间接地影响，应为它会抑制一些编译器的优化。在内存栅栏中，大多数操作是不能被重排序的。</p>
+<p><strong>不要过度担心非竞争同步带来的开销。这个基本的机制已经非常快了，并且JVM还能进行额外的优化以进一步降低或开销。因此，我们应该将优化的重点放在那些发生锁竞争的地方。</strong></p>
+<h2 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h2><p>当在锁上发生竞争时，竞争失败的线程肯定会阻塞，JVM在实现阻塞行为时，可以采用自旋等待（指通过循环不断尝试获取锁，直到成功）或者通过操作系统挂起被阻塞的线程。这两种方式的效率高低，要取决于上下文切换的开销以及在成功获取锁之前需要等待的时间。</p>
+<ul>
+<li>等待时间较短：适合采用自旋等待方式</li>
+<li>等待时间较长：适合采用线程挂起方式</li>
+</ul>
+<h1 id="减小锁的竞争"><a href="#减小锁的竞争" class="headerlink" title="减小锁的竞争"></a>减小锁的竞争</h1><p>串行操作会降低可伸缩性，并且上下文切换也会降低性能。在锁上发生竞争时将同时导致这两种问题，因此减少锁竞争会提高性能和可伸缩性。</p>
+<p><strong>在并发程序中，对可伸缩性的最主要威胁就是独占方式的资源锁。</strong></p>
+<p>有两个因素将影响在锁上发生竞争的可能性：</p>
+<ul>
+<li><strong>锁的请求频率</strong></li>
+<li><strong>每次持有锁的时间</strong></li>
+</ul>
+<p>如果两者的乘积很小，那么大多数获取锁的操作都不会发生竞争。</p>
+<p>有三种方式可以降低锁的竞争程度：</p>
+<ul>
+<li>减少锁的持有时间</li>
+<li>降低锁的请求频率</li>
+<li>使用带有协调机制的独占锁，这些机制允许更高的并发性</li>
+</ul>
+<h2 id="缩小锁的范围（“快进快出”）"><a href="#缩小锁的范围（“快进快出”）" class="headerlink" title="缩小锁的范围（“快进快出”）"></a>缩小锁的范围（“快进快出”）</h2><p>其实质是减少锁的持有时间。，同时根据Amdahl定律，这样消除了限制可伸缩性的一个因素，因为串行代码的总量减少了。</p>
+<p><strong>注意：</strong> 在实际情况中，仅当可以将一些“大量”的计算或阻塞操作从同步代码块移出时，才应该考虑同步代码块的大小。</p>
+<h2 id="减小锁的粒度"><a href="#减小锁的粒度" class="headerlink" title="减小锁的粒度"></a>减小锁的粒度</h2><p>另一种减小锁的持有时间的方式是降低线程请求的频率（从而减小发生竞争的可能性）。这可以通过锁分解和锁分段等技术来实现。</p>
+<h3 id="锁分解"><a href="#锁分解" class="headerlink" title="锁分解"></a>锁分解</h3><p>如果一个需要保护多个相互独立的状态变量，那么可以将这个锁分解为多个锁，并且每个锁只保护一个变量，从而提高可伸缩性，并最终降低每个锁的请求频率。看到下面的代码变化：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 原代码：通过内置锁保护了users和queries两个状态变量</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerStatus</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> Set&lt;String&gt; users;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> Set&lt;String&gt; queries;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addUser</span><span class="params">(String u)</span> </span>&#123; users.add(u); &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addQuery</span><span class="params">(String q)</span> </span>&#123; queries.add(q); &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 修改代码：通过锁分解分开保护了users和queries两个状态变量</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerStatus</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> Set&lt;String&gt; users;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> Set&lt;String&gt; queries;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addUser</span><span class="params">(String u)</span> </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (users) &#123;</div><div class="line">            users.add(u);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addQuery</span><span class="params">(String q)</span> </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (queries) &#123;</div><div class="line">            queries.add(q);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对<strong>竞争适中</strong>的锁进行分解时，实际上是把这些转变为非竞争的锁，从而有效地提高性能和可伸缩性。</p>
+<h3 id="锁分段"><a href="#锁分段" class="headerlink" title="锁分段"></a>锁分段</h3><p>由于在一个拥有多个处理器的系统中，锁分解仍然无法给可伸缩性带来极大的提高，这个时候就出来锁分段技术。</p>
+<p><strong>锁分段：</strong> 将锁分解技术进一步扩展为对一组对象上的锁进行分解。</p>
+<p>例子：在ConcurentHashMap的实现中使用了一个包含16个锁的数组，每个锁保护所有散列桶的1/16，其中第N个散列桶有第（N mod 16）个锁来保护。正是这项技术使得CouncurentHashMap能够支持多达16个并发的写入器。</p>
+<p>锁分段的劣势：与采用单个锁来实现独占访问相比，要获得多个锁来实现独占访问将更困难整个容器，例如当ConcurrentHashMap需要扩展映射范围等。</p>
+<h2 id="避免热点域"><a href="#避免热点域" class="headerlink" title="避免热点域"></a>避免热点域</h2><p>如果将一些反复计算的结果缓存起来，那么将会引入一些“热点域”。而这些热点域往往会限制可伸缩性。</p>
+<p>例子：参考ConcurrentHashMap里边将热点域size分成多个值，当我们需要获取全局size的时候，就临时把这些值加起来就是，虽然可能得不到一个准确的值，但大大提高了并发性，是划算的。</p>
+<h2 id="一些代替独占锁的方法"><a href="#一些代替独占锁的方法" class="headerlink" title="一些代替独占锁的方法"></a>一些代替独占锁的方法</h2><p>放弃使用独占锁，从而有助于使用一种友好并发的方式来管理共享状态。例如，使用并发容器、<strong>读-写锁</strong>、不可变对象以及原子变量。                                </p>
+<h2 id="监测CPU的利用率"><a href="#监测CPU的利用率" class="headerlink" title="监测CPU的利用率"></a>监测CPU的利用率</h2><p>当测试可伸缩性时，通常要确保处理器得到充分利用。</p>
+<p>如果CPU没有得到充分利用，那么需要找出其中的原因（vmstat,mpstat查询CPU使用情况）。可能的原因如下：</p>
+<ul>
+<li>负载不充足。可以在测试时增加负载，并检查利用率，响应时间和服务时间等指标的变化。如果产生足够多的负载使应用程序达到饱和，那么可能需要大量的计算机能耗，并且问题可能在于客户端系统是否具有足够的能力，而不是被测试系统。</li>
+<li>IO密集。可以通过iostat或者perfmon来判断某个应用程序是否是磁盘I/O密集型的，或者通过监测应用的通信流量来判断它是否需要高带宽。</li>
+<li>外部限制。如果应用程序依赖于外部服务，比如数据库或web服务，那么性能瓶颈可能并不在你自己的代码中。</li>
+<li>锁竞争。使用分析工具可以知道在程序中存在何种程度的锁竞争。比如进行线程栈帧转储，来观察是不是有“waiting to lock monitor”之类的关键字。</li>
+</ul>
+<p>在CPU保持忙碌状态之后，我们试试增加CPU的数量，比如从4核换到8核，看是否能增加处理能力，如此就可以得出结论：增加CPU可以提高程序的处理能力，类似的其它资源验证过程也是类似的。</p>
+<h2 id="向对象池说“不”"><a href="#向对象池说“不”" class="headerlink" title="向对象池说“不”"></a>向对象池说“不”</h2><p>早期垃圾回收机制很慢，效率很低，很多程序通过对象池来降低垃圾回收的压力。但现在的垃圾回收机制已经很快了。在并发程序中，对象池的表现更加糟糕。</p>
+<h1 id="减小上下文切换的开销"><a href="#减小上下文切换的开销" class="headerlink" title="减小上下文切换的开销"></a>减小上下文切换的开销</h1><p>传统网络模式下，同步阻塞IO将导致上下文切换，同时，一个连接一个线程将导致更多的上下文切换，改进方法如下：</p>
+<ul>
+<li>将阻塞IO操作从处理请求的线程分离出来，放到专门的线程中去处理。</li>
+<li>使用nio，多路复用机制，实现可以由有限线程池来处理所有的连接请求。</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>由于使用线程通常是为了充分利用多个处理器的计算能力，因此在并发程序性能的套路那种，通常更多地将重点放在吞吐量和可伸缩性上，而不是服务时间。Amdahl定律告诉我们，程序的可伸缩性取决于在所有代码中必须被串行化执行的代码比例。因为Java程序中串行操作的主要来源是独占方式的资源锁，因此通常可以通过以下方式来提高可伸缩性：减少锁的持有时间，降低锁的粒度，以及采用非独占的锁或非阻塞锁来代替独占锁。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《Java并发编程实战》</li>
+<li><a href="http://blog.csdn.net/chaozhi_guo/article/details/66476710" target="_blank" rel="external">并发编程实战学习笔记（八）——性能与可伸缩性</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：线程最主要的目的是提高程序的运行性能，虽然我们希望获得更好的性能，但始终要把安全性放在第一位。首先要保证程序的正常运行，然后仅当程序的性能需求和测试结果要求程序执行得更快时，才应该设法提高它的运行速度
+    
+    </summary>
+    
+      <category term="Java并发编程实战" scheme="http://bestlixiang.site/categories/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/"/>
+    
+    
+      <category term="并发" scheme="http://bestlixiang.site/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Java并发_8_避免活跃性危险</title>
     <link href="http://bestlixiang.site/2018/01/22/Java%E5%B9%B6%E5%8F%91-8-%E9%81%BF%E5%85%8D%E6%B4%BB%E8%B7%83%E6%80%A7%E5%8D%B1%E9%99%A9/"/>
     <id>http://bestlixiang.site/2018/01/22/Java并发-8-避免活跃性危险/</id>
     <published>2018-01-22T13:05:56.000Z</published>
-    <updated>2018-01-22T13:06:26.000Z</updated>
+    <updated>2018-01-22T13:07:19.000Z</updated>
     
-    <content type="html"><![CDATA[<p>引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定哟啊排除那些可能导致死锁出现的条件。<a id="more"></a></p>
+    <content type="html"><![CDATA[<p>引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定要排除那些可能导致死锁出现的条件。<a id="more"></a></p>
 <h1 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h1><p>最简单的死锁：当线程A持有锁L并想获得锁M的同时，线程B持有锁M并尝试获得锁L，那么这两个线程将永远等待下去。</p>
 <p><strong>数据库解决死锁问题：</strong> 当它检测到一组事务发生了死锁时（通过在表示等待关系的有向图中搜索循环），将选择一个牺牲者并放弃这个事务。作为牺牲者的事务会释放它所持有的资源，从而使其他事务继续进行。应用程序可以重新执行被强制终止的事务，而这个事务现在可以成功完成，因为所有跟它竞争资源的事务都已经完成了。</p>
 <p><strong>JVM解决死锁问题：</strong><br>当一组Java线程发生死锁时，“游戏”将到此结束——这些线程永远不能使用了。</p>
@@ -60,7 +207,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定哟啊排除那些可能导致死锁出现的条件。
+      &lt;p&gt;引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定要排除那些可能导致死锁出现的条件。
     
     </summary>
     
@@ -1736,147 +1883,6 @@
     <summary type="html">
     
       &lt;p&gt;引：带着浅尝基本的Java诊断工具就这样把《深入理解Java虚拟机》的调优部分看完了，似懂非懂，我想待自己经历过一次性能调优，结合自身经历再来好好总结一番吧。
-    
-    </summary>
-    
-      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入理解JVM_5_内存分配策略</title>
-    <link href="http://bestlixiang.site/2017/11/30/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-5-%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5/"/>
-    <id>http://bestlixiang.site/2017/11/30/深入理解JVM-5-内存分配策略/</id>
-    <published>2017-11-30T06:31:15.000Z</published>
-    <updated>2017-12-09T12:04:16.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：一直在说Java的垃圾回收，既然有回收，那么当然会有分配。<a id="more"></a></p>
-<p>Java技术体系中所提倡的自动内存管理可以归结为自动化地解决了两个问题：</p>
-<ol>
-<li>给对象分配内存</li>
-<li>回收分配给对象的内存</li>
-</ol>
-<p>之前垃圾回收已经讲了很多，接下来我们详细地来看看内存分配</p>
-<h1 id="内存分配总说"><a href="#内存分配总说" class="headerlink" title="内存分配总说"></a>内存分配总说</h1><p>对象的内存分配，主要是在堆上分配，对象主要分配在新生代的Eden区上，如果启动了本地线程的分配缓冲，将按线程优先在TLAB上分配，少数情况下（大对象）也可能直接分配在老年代中，分配的规则不是百分百固定的，其细节取决于当前使用的是哪一种垃圾收集器组合，还有虚拟机中与内存相关的参数的设置。</p>
-<h1 id="对象优先在Eden分配"><a href="#对象优先在Eden分配" class="headerlink" title="对象优先在Eden分配"></a>对象优先在Eden分配</h1><ol>
-<li>大多数情况，对象在新生代Eden区分配。当Eden区没有足够空间进行分配时，虚拟机会发起一次MinorGC。</li>
-<li>当MinorGC发现复制的对象大于Survivor区时，会通过分配担保机制提前转移到老年代中。</li>
-</ol>
-<h1 id="大对象直接进入老年代"><a href="#大对象直接进入老年代" class="headerlink" title="大对象直接进入老年代"></a>大对象直接进入老年代</h1><p>所谓大对象是指需要大量连续内存空间的Java对象，如数组。</p>
-<p>虚拟机提供了一个-XX:PretenureSizeThreshold参数，令大于这个设置值的对象直接在老年代分配，避免了在Eden区及Survivor区之间发生大量的内存复制。（新生代采用复制算法收集内存）</p>
-<h1 id="长期存活的对象将进入老年代"><a href="#长期存活的对象将进入老年代" class="headerlink" title="长期存活的对象将进入老年代"></a>长期存活的对象将进入老年代</h1><p>虚拟机给每个对象定义了一个对象年龄计数器。如果对象在Eden出生并经过第一次MinorGC后仍然存活，并且能被Survivor容纳的话，将被移动到Survivor空间中，并且对象年龄设置为1.对象在Survivor中每度过一次MinorGC，年龄就增加一岁，当他的年龄达到一定程度（默认15岁），就将被晋升到老年代中。对象的年龄阈值，可以通过参数-XX：MaxTenuringThreshold设置。</p>
-<h1 id="动态对象年龄判定"><a href="#动态对象年龄判定" class="headerlink" title="动态对象年龄判定"></a>动态对象年龄判定</h1><p>虚拟机不是永远要求对象的年龄必须达到MaxTenuringThreshold才晋升到老年代，如果Survivor空间中相同年龄所有对象大小总和大于Survivor空间的一半，年龄大于或等于改年龄的对象就可以直接进入老年代。</p>
-<h1 id="空间分配担保策略"><a href="#空间分配担保策略" class="headerlink" title="空间分配担保策略"></a>空间分配担保策略</h1><p>虽然有空间分配担保，但是也需要考虑老年代能否装下由于担保转存的内存大小，所以这个空间分配担保也需要一定的策略。</p>
-<ol>
-<li>在发生MinorGC之前，虚拟机会先检查老年代最大可用的连续空间是否大于新生代所有对象总空间</li>
-<li>如果上面条件成立，那么MinorGC就是安全的，可以进行</li>
-<li>如果上面条件不成立，虚拟机会查看HandlePromotionFailure设置值是否允许担保失败。</li>
-<li>如果允许担保失败，就会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小</li>
-<li>如果大于，将尝试进行一次MinorGC</li>
-<li>如果小于，或者HandlePromotionFailure设置为不允许冒险，那这时需要进行一次FullGC</li>
-</ol>
-<p>在jdk 6 update 24之后的规则是只要老年代的连续空间大于新生代对象的总大小或者历次晋升平均大小就会进行MinorGC，否则进行FullGC。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过上面我们可以知道JAVA虚拟机是怎么自动进行内存分配的，然后在进行GC之后，内存是怎么转换的。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《深入理解JAVA虚拟机》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：一直在说Java的垃圾回收，既然有回收，那么当然会有分配。
-    
-    </summary>
-    
-      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入理解JVM_4_垃圾收集策略</title>
-    <link href="http://bestlixiang.site/2017/11/29/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-4-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AD%96%E7%95%A5/"/>
-    <id>http://bestlixiang.site/2017/11/29/深入理解JVM-4-垃圾收集策略/</id>
-    <published>2017-11-29T11:33:14.000Z</published>
-    <updated>2017-12-09T12:04:17.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：Java与C++之间有一堵内存动态分配与垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。那我们就先来看看JVM到底是怎么进行垃圾收集的？<a id="more"></a></p>
-<h1 id="垃圾回收，回收哪里？"><a href="#垃圾回收，回收哪里？" class="headerlink" title="垃圾回收，回收哪里？"></a>垃圾回收，回收哪里？</h1><p>之前介绍过Java内存运行时区域的各个部分，其中程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭，这几个区域的内存分配和回收都具有确定性，方法结束或者线程结束，内存自然就跟着回收了，但是Java堆和方法区（元空间）则不一样，我们只有在运行期间才知道会创建哪些对象，这部分内存的分配和回收都是动态的，所有垃圾回收就是回收这里。</p>
-<h1 id="对象已死么？"><a href="#对象已死么？" class="headerlink" title="对象已死么？"></a>对象已死么？</h1><p>垃圾收集器在对堆进行回收前，第一件事就是要确定这些对象之中还有那些还“存活”者，哪些已经“死去”（即不可能再被任何途径使用的对象）。</p>
-<ol>
-<li><p>引用计数算法</p>
-<p> 给每个对象添加一个引用计数器，每当有一个地方引用它时，计数器就加一；当引用失效时，计数器值就减一；任何时刻计数器为0的对象就是不可能再被使用的。</p>
-</li>
-<li><p>可达性分析算法（Java使用）</p>
-<p> 通过一系列称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径被称为引用链，当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。</p>
-<p> 在Java语言中，可作为GC Roots的对象包括下面几种：</p>
-<ul>
-<li>虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
-<li>方法区中类静态属性应用的对象</li>
-<li>方法区中常量引用的对象</li>
-<li>本地方法栈中JNI（即一般说的Native方法）引用的对象</li>
-</ul>
-</li>
-</ol>
-<h1 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h1><ol>
-<li>强引用：类似”Object obj = new Object()”这类的引用，只要强引用还存在，垃圾收集器永远不会回收掉被引用的对象。</li>
-<li>软引用：用来描述还有用但非必须的对象，对于软引用关联着的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常。它是通过SoftReference类来实现软引用的。</li>
-<li>弱引用：用来描述非必需对象的，被弱引用关联的对象只能生存到下一次垃圾收集发生之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象，它是通过WeakReference类来实现弱引用的。</li>
-<li>虚引用：只要发生垃圾回收，它就会被收集，它唯一的目的就是能在这个对象被收集器回收时收到一个系统通知，它是用过PhantomReference类来实现虚引用。</li>
-</ol>
-<h1 id="方法区（元空间）的回收"><a href="#方法区（元空间）的回收" class="headerlink" title="方法区（元空间）的回收"></a>方法区（元空间）的回收</h1><p>类和其元数据的生命周期和其对应的类加载器是相同的。话句话说，只要类加载器存活，其加载的类的元数据也是存活的，因而不会被回收掉。准确的来说，每一个类加载器的存储区域都称作一个元空间，所有的元空间合在一起就是我们一直说的元空间。当一个类加载器被垃圾回收器标记为不再存活，其对应的元空间会被回收。在元空间的回收过程中没有重定位和压缩等操作。但是元空间内的元数据会进行扫描来确定Java引用。</p>
-<h1 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h1><h2 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h2><p>流程：</p>
-<ol>
-<li>标记出所有需要回收的对象</li>
-<li>在标记完成后统一回收所有被标记的对象</li>
-</ol>
-<p>不足：</p>
-<ol>
-<li><p>效率问题</p>
-<p> 标记和清除两个过程效率都不高</p>
-</li>
-<li><p>空间问题</p>
-<p> 标记清除以后会产生大量不连续的空间碎片，无法存储大对象</p>
-</li>
-</ol>
-<h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>流程：</p>
-<ol>
-<li>将可用内存按容量分为大小相同的两块</li>
-<li>在第一块分配内存，并标记出所有需要回收的对象</li>
-<li>当第一块内存用完了，将所有活着的对象复制到另外一块上</li>
-<li>将第一块所使用过的内存空间一次性清除</li>
-</ol>
-<p>好处：解决了空间碎片问题</p>
-<p>不足：降低了空间利用率</p>
-<p>现在的商业虚拟机都用这种收集算法来回收新生代，因为新生代中的对象98%是“朝生夕死”的，所以不需要1:1划分空间,而是将内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还活着的对象那个一次性复制到另一块Survivor空间上，最后清理掉前两块空间。HotSpot虚拟机默认Eden和Survivor的大小比例为8:1，所以只有10%的内存会被“浪费”，当Survivor空间不够用时，需要依赖其他内存（这里指老年代）进行分配担保。</p>
-<p>内存的分配担保是指如果放着存活对象的Survivor空间没有足够空间放上一次新生代收集下来的存活对象时，这些对象将直接通过分配担保机制进入老年代。</p>
-<h2 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h2><p>适合老年代</p>
-<p>流程：</p>
-<ol>
-<li>标记出所有需要回收的对象</li>
-<li>让所有存活的对象都向一端移动</li>
-<li>直接清理掉端边界以外的内存</li>
-</ol>
-<h2 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h2><p>将内存划分为老年代和新生代。老年代中存放寿命较长的对象，新生代中存放“朝生夕死”的对象。然后在不同的区域使用不同的垃圾收集算法。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从上面我们了解了对象存活判定算法和垃圾回收算法，但是不同虚拟机的具体实现还是不同的，而且不同的垃圾收集器的内存回收的具体实现也是不同的，我们要因机而议。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《深入理解Java虚拟机》</li>
-<li><a href="http://blog.csdn.net/qq_16681169/article/details/70471010" target="_blank" rel="external">JDK8 从永久代到元空间</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：Java与C++之间有一堵内存动态分配与垃圾收集技术所围成的“高墙”，墙外面的人想进去，墙里面的人却想出来。那我们就先来看看JVM到底是怎么进行垃圾收集的？
     
     </summary>
     

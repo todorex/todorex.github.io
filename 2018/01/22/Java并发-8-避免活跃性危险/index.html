@@ -89,17 +89,17 @@
 
 
 
-<meta name="description" content="引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定哟啊排除那些可能导致死锁出现的条件。">
+<meta name="description" content="引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定要排除那些可能导致死锁出现的条件。">
 <meta name="keywords" content="并发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java并发_8_避免活跃性危险">
 <meta property="og:url" content="http://bestlixiang.site/2018/01/22/Java并发-8-避免活跃性危险/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定哟啊排除那些可能导致死锁出现的条件。">
-<meta property="og:updated_time" content="2018-01-22T13:06:26.000Z">
+<meta property="og:description" content="引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定要排除那些可能导致死锁出现的条件。">
+<meta property="og:updated_time" content="2018-01-22T13:07:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java并发_8_避免活跃性危险">
-<meta name="twitter:description" content="引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定哟啊排除那些可能导致死锁出现的条件。">
+<meta name="twitter:description" content="引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定要排除那些可能导致死锁出现的条件。">
 
 
 
@@ -385,7 +385,7 @@
       
 
       
-        <p>引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定哟啊排除那些可能导致死锁出现的条件。<a id="more"></a></p>
+        <p>引：在安全性和活跃性之间通常存在着某些制衡。我们使用加锁机制来确保线程安全，但如果过度地使用加锁，则可能导致顺序死锁。同样，我们使用线程池和信号量来限制对资源的使用，但这些被限制的行为可能会导致资源死锁。Java应用程序无法从死锁中恢复过来，因此在设计时一定要排除那些可能导致死锁出现的条件。<a id="more"></a></p>
 <h1 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h1><p>最简单的死锁：当线程A持有锁L并想获得锁M的同时，线程B持有锁M并尝试获得锁L，那么这两个线程将永远等待下去。</p>
 <p><strong>数据库解决死锁问题：</strong> 当它检测到一组事务发生了死锁时（通过在表示等待关系的有向图中搜索循环），将选择一个牺牲者并放弃这个事务。作为牺牲者的事务会释放它所持有的资源，从而使其他事务继续进行。应用程序可以重新执行被强制终止的事务，而这个事务现在可以成功完成，因为所有跟它竞争资源的事务都已经完成了。</p>
 <p><strong>JVM解决死锁问题：</strong><br>当一组Java线程发生死锁时，“游戏”将到此结束——这些线程永远不能使用了。</p>
@@ -470,6 +470,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/24/Java并发-9-性能和可伸缩性/" rel="prev" title="Java并发_9_性能和可伸缩性">
+                Java并发_9_性能和可伸缩性 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -566,7 +570,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">54</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
