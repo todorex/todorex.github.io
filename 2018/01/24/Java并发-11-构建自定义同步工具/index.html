@@ -1,0 +1,1009 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="并发," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：创建状态依赖的类的最简单的方法通常是在类库中现有状态依赖类的基础上进行构造。但如果类库没有提供你需要的功能，我们还可以使用Java语言和类库提供的底层机制来构造自己的同步机制，包括内置的条件队列、显式的Condition对象以及AbstractQueuedSynchronizer框架。">
+<meta name="keywords" content="并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发_11_构建自定义同步工具">
+<meta property="og:url" content="http://bestlixiang.site/2018/01/24/Java并发-11-构建自定义同步工具/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：创建状态依赖的类的最简单的方法通常是在类库中现有状态依赖类的基础上进行构造。但如果类库没有提供你需要的功能，我们还可以使用Java语言和类库提供的底层机制来构造自己的同步机制，包括内置的条件队列、显式的Condition对象以及AbstractQueuedSynchronizer框架。">
+<meta property="og:updated_time" content="2018-01-24T09:28:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发_11_构建自定义同步工具">
+<meta name="twitter:description" content="引：创建状态依赖的类的最简单的方法通常是在类库中现有状态依赖类的基础上进行构造。但如果类库没有提供你需要的功能，我们还可以使用Java语言和类库提供的底层机制来构造自己的同步机制，包括内置的条件队列、显式的Condition对象以及AbstractQueuedSynchronizer框架。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/01/24/Java并发-11-构建自定义同步工具/"/>
+
+
+
+
+
+  <title> Java并发_11_构建自定义同步工具 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/01/24/Java并发-11-构建自定义同步工具/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java并发_11_构建自定义同步工具
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-24T17:27:52+08:00">
+                2018-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java并发编程实战/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程实战</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：创建状态依赖的类的最简单的方法通常是在类库中现有状态依赖类的基础上进行构造。但如果类库没有提供你需要的功能，我们还可以使用Java语言和类库提供的底层机制来构造自己的同步机制，包括内置的条件队列、显式的Condition对象以及AbstractQueuedSynchronizer框架。<a id="more"></a></p>
+<h1 id="状态依赖性管理"><a href="#状态依赖性管理" class="headerlink" title="状态依赖性管理"></a>状态依赖性管理</h1><p>程序在做某一个操作之前，需要依赖另一个操作的完成或者状态的就绪，这样的一种关系就叫做“状态依赖”。</p>
+<p>状态依赖的实现类,例如FutureTask、Semaphore和BlockingQueue等。在这些类的一些操作中有着基于状态的前提条件，例如，不能从一个空队列删除元素，或者获取一个尚未结束的任务的计算结果，在这些操作可以执行之前，必须等待队列进入“非空”状态，或者任务进入“已完成”状态。</p>
+<p>依赖状态的操作可以一直阻塞直到可以继续执行，这比使他们先失败再实现起来要更为方便且更不容易出错。而内置的条件队列就可以是线程一直阻塞，直到对象进入某个线程可以继续执行的状态，并且当被阻塞的线程可以执行时再唤醒他们。</p>
+<h1 id="使用条件队列"><a href="#使用条件队列" class="headerlink" title="使用条件队列"></a>使用条件队列</h1><p>条件队列：它使得一组线程（称之为等待线程集合）能够通过某种方式来等待特定的条件变为真。传统的队列是一个个数据，而与之不同的是，条件队列中的元素是一个个正在等待相关条件的线程。</p>
+<ul>
+<li>Object中的wait、notify和notifyAll方法构成了内部条件队列的API。</li>
+<li>对象的内置锁与内部条件是相互关联的，要调用对象X中的条件队列的任何一个方法，必须持有对象X上的锁。</li>
+<li>Object.wait会自动释放锁，并请求操作系统挂起当前线程，从而使其它线程能够获得这个锁并修改对象的状态。当被挂起的线路醒来时，它将在返回之前重新获取锁。（需要重新竞争，并没有优先获取权）</li>
+</ul>
+<p>使用条件队列构造有界缓存示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//未加任何约束的缓冲队列</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseBoundedBuffer</span>&lt;<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> V[] buf;<span class="comment">//缓存</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> tail;<span class="comment">//队尾</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> head;<span class="comment">//队首</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;<span class="comment">//元素个数</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">BaseBoundedBuffer</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.buf = (V[]) <span class="keyword">new</span> Object[capacity];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">doPut</span><span class="params">(V v)</span> </span>&#123;<span class="comment">//入队</span></div><div class="line">        buf[tail] = v;<span class="comment">//在队尾添加</span></div><div class="line">        <span class="keyword">if</span> (++tail == buf.length)<span class="comment">//如果满了，从头开始</span></div><div class="line">            tail = <span class="number">0</span>;</div><div class="line">        ++count;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> V <span class="title">doTake</span><span class="params">()</span> </span>&#123;<span class="comment">//出队</span></div><div class="line">        V v = buf[head];<span class="comment">//从队首取出</span></div><div class="line">        buf[head] = <span class="keyword">null</span>;<span class="comment">//GC</span></div><div class="line">        <span class="keyword">if</span> (++head == buf.length)<span class="comment">//如果到尾了，则从头开始</span></div><div class="line">            head = <span class="number">0</span>;</div><div class="line">        --count;</div><div class="line">        <span class="keyword">return</span> v;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isFull</span><span class="params">()</span> </span>&#123;<span class="comment">//队列是否满</span></div><div class="line">        <span class="keyword">return</span> count == buf.length;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;<span class="comment">//队列是否空</span></div><div class="line">        <span class="keyword">return</span> count == <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@ThreadSafe</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BoundedBuffer</span>&lt;<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">BaseBoundedBuffer</span>&lt;<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="comment">// 条件谓词：not-full(!isFull())</span></div><div class="line">    <span class="comment">// 条件谓词：not-empty(!isEmpty())</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BoundedBuffer</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123; <span class="keyword">super</span>(size); &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 阻塞并直到: not-full</span></div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">synchronized</span>  <span class="keyword">void</span> <span class="title">put</span><span class="params">(V v)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">while</span> (isFull())<span class="comment">//如果满，则等待</span></div><div class="line">            wait();</div><div class="line">        doPut(v);</div><div class="line">        notifyAll();<span class="comment">//并在放入后马上通知其他线程</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 阻塞并直到: not-empty</span></div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">synchronized</span>  V <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">while</span> (isEmpty())<span class="comment">//如果为空，则等待</span></div><div class="line">            wait();</div><div class="line">        V v = doTake();</div><div class="line">        notifyAll();</div><div class="line">        <span class="keyword">return</span> v;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="条件谓词"><a href="#条件谓词" class="headerlink" title="条件谓词"></a>条件谓词</h2><p><strong>条件谓词</strong>是使某个操作成为状态依赖操作的前提条件。在有界缓存中，只有当缓存不为空时，take方法才能执行，否则必须等待。对take方法来说，它的条件谓词就是“缓存不为空”，take方法在执行之前必须首先测试该条件谓词。</p>
+<p><strong>条件等待存在的三元关系：</strong> 包括加锁、wait方法和一个条件谓词。在条件谓词中包含多个包含多个状态变量，而状态变量由一个锁来保护，因此在测试条件谓词之前必须先持有这个锁，锁对象与条件队列对象（即调用wait和notify等方法所在的对象）必须是同一个对象。</p>
+<p><strong>每一次wait调用都会隐式地与特定的条件谓词关联起来。当调用某个特定条件谓词的wait时，调用者必须已经持有与条件队列相关的锁，并且这个锁必须保护着构成条件谓词的状态变量。</strong></p>
+<h2 id="过早唤醒"><a href="#过早唤醒" class="headerlink" title="过早唤醒"></a>过早唤醒</h2><p>wait方法的返回并不一定意味着线程正在等待的条件谓词已经变真了，因为也许是因为与同一条件队列相关的另一个条件谓词变成了真。</p>
+<p>当使用条件等待时要满足的条件（Object.wait或Condition.wait）</p>
+<ul>
+<li>通常都有一个条件谓词——包括一些对象状态的测试，线程在执行前必须首先通过这些测试。</li>
+<li>在调用wait之前测试条件谓词，并且从wait中返回时再次进行测试。</li>
+<li>在一个循环中调用wait。</li>
+<li>确保使用与条件队列相关的锁来保护构成条件谓词的各个状态变量。</li>
+<li>当调用wait/notify/notifyAll等方法时，一定要持有与条件队列相关的锁。</li>
+<li>在检查条件谓词之后以及开始执行相应的操作之前，不要释放锁。</li>
+</ul>
+<h2 id="丢失的信号"><a href="#丢失的信号" class="headerlink" title="丢失的信号"></a>丢失的信号</h2><p><strong>丢失的信号：</strong> notify或者notifyAll操作发生在wait之前，就会造成通知信号的丢失，最终wait永远都得不到恢复或者不得不等待下一次重新通知而延迟了恢复时间。</p>
+<h2 id="通知"><a href="#通知" class="headerlink" title="通知"></a>通知</h2><p><strong>每当在等待一个条件时，一定要确保在条件谓词变为真时通过某种方式发出通知</strong></p>
+<p>发出通知的线程应该尽快地释放锁，从而确保正在等待的线程尽可能快地解除阻塞。如果这些等待中线程此时不能重新获得锁，那么无法从wait返回。</p>
+<p>只有同时满足以下两个条件时，才能用单一的notify而不是notifyAll：</p>
+<ul>
+<li>所有等待线程的类型都相同。只有一个条件谓词与条件队列相关，并且每个线程在wait返回后将执行相同的操作。</li>
+<li>单进单出。在条件变量上的每次通知，最多只能唤醒一个线程来执行。</li>
+</ul>
+<h1 id="显式的Condition对象"><a href="#显式的Condition对象" class="headerlink" title="显式的Condition对象"></a>显式的Condition对象</h1><p>内置条件队列的局限性：每个内置锁都只能有一个相关联的条件队列，因而在像BoundBuffer这种类中，多个线程可能在同一个条件队列上等待不同的条件谓词，并且在最常见的加锁模式下公开条件队列对象。</p>
+<p>显示条件队列的优势：可以编写一个带有多个条件谓词的并发对象，或者获得除了条件队列可见性之外的更多控制权，这是一种灵活的选择；对于每个Lock，可以有任意数量的Condition对象。Condition对象继承了相关的Lock对象的公平性，对于公平的锁，线程会依照FIFO顺序从Condition await中释放。</p>
+<p><strong>特别注意：Condition对象中，三个与条件队列相关的API是：await,signal,signalAll。</strong></p>
+<p>下面是使用显示的Condition对象实现的有界缓存:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionBoundedBuffer</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">protected</span> <span class="keyword">final</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition notFull    = lock.newCondition();<span class="comment">//条件：count &lt; items.length</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty  = lock.newCondition();<span class="comment">//条件：count &gt; 0</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> T[] items = (T[]) <span class="keyword">new</span> Object[<span class="number">100</span>];</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> tail, head, count;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(T x)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">while</span> (count == items.length)</div><div class="line">                notFull.await();<span class="comment">//等到条件count &lt; items.length满足</span></div><div class="line">            items[tail] = x;</div><div class="line">            <span class="keyword">if</span> (++tail == items.length)</div><div class="line">                tail = <span class="number">0</span>;</div><div class="line">            ++count;</div><div class="line">            notEmpty.signal();<span class="comment">//通知读取等待线程</span></div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">while</span> (count == <span class="number">0</span>)</div><div class="line">                notEmpty.await();<span class="comment">//等到条件count &gt; 0满足</span></div><div class="line">            T x = items[head];</div><div class="line">            items[head] = <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">if</span> (++head == items.length)</div><div class="line">                head = <span class="number">0</span>;</div><div class="line">            --count;</div><div class="line">            notFull.signal();<span class="comment">//通知写入等待线程</span></div><div class="line">            <span class="keyword">return</span> x;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="AbstractQueuedSynchronizer"><a href="#AbstractQueuedSynchronizer" class="headerlink" title="AbstractQueuedSynchronizer"></a>AbstractQueuedSynchronizer</h1><p>AbstractQueuedSynchronizer是一个用于构建锁和同步器的框架，许多同步器都可以通过AQS很容易并且高效地构造出来。例如：ReentrantLock、Semaphore、CountDownLatch、ReentrantReadWriteLock、SynchronousQueue和FutureTask。</p>
+<p>下面是AQS中获取操作和释放操作的标准形式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">acquire</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">while</span> (当前状态不允许获取操作)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (需要阻塞获取请求)</div><div class="line">        &#123;</div><div class="line">            如果当前线程不在队列中，则将其插入队列</div><div class="line">            阻塞当前线程</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            返回失败</div><div class="line">    &#125;</div><div class="line">    可能更新同步器的状态</div><div class="line">    如果线程位于队列中，则将其移出队列</div><div class="line">    返回成功</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">release</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    更新同步器的状态</div><div class="line">    <span class="keyword">if</span> (新的状态允许某个被阻塞的线程获取成功)</div><div class="line">        解除队列中一个或多个线程的阻塞状态</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>要实现一个依赖状态的类——如果没有满足依赖状态的前提条件，那么这个类的方法必须阻塞，那么最好的方式是基于现有类库来构建，例如Semaphore.BlockingQueue或CountDownLatch。然而，有时候现有的类库不能提供足够的功能，在这种情况下，可以使用内置的条件队列、显式的Condition对象或者AbstractQueuedSynchronizer来构建自己的同步器。内置条件队列与内置锁是紧密绑定在一起的，这是因为管理状态依赖性的机制必须与确保状态一致性的机制关联起来。同样，显式的Condition与显式地Lock也是紧密地绑定在一起的，并且与内置条件队列相比，还提供了一个扩展的功能集，包括每个锁对应于多个等待线程集，可中断或不可中断的条件等待，公平或非公平的队列操作，以及基于时限的等待。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《Java并发编程实战》</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/24/Java并发-10-显示锁/" rel="next" title="Java并发_10_显示锁">
+                <i class="fa fa-chevron-left"></i> Java并发_10_显示锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#状态依赖性管理"><span class="nav-number">1.</span> <span class="nav-text">状态依赖性管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用条件队列"><span class="nav-number">2.</span> <span class="nav-text">使用条件队列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#条件谓词"><span class="nav-number">2.1.</span> <span class="nav-text">条件谓词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#过早唤醒"><span class="nav-number">2.2.</span> <span class="nav-text">过早唤醒</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#丢失的信号"><span class="nav-number">2.3.</span> <span class="nav-text">丢失的信号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通知"><span class="nav-number">2.4.</span> <span class="nav-text">通知</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#显式的Condition对象"><span class="nav-number">3.</span> <span class="nav-text">显式的Condition对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AbstractQueuedSynchronizer"><span class="nav-number">4.</span> <span class="nav-text">AbstractQueuedSynchronizer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
