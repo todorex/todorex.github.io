@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-01-24T09:28:32.000Z</updated>
+  <updated>2018-01-25T03:15:08.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java并发_12_原子变量与非阻塞同步机制</title>
+    <link href="http://bestlixiang.site/2018/01/25/Java%E5%B9%B6%E5%8F%91-12-%E5%8E%9F%E5%AD%90%E5%8F%98%E9%87%8F%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6/"/>
+    <id>http://bestlixiang.site/2018/01/25/Java并发-12-原子变量与非阻塞同步机制/</id>
+    <published>2018-01-25T03:14:44.000Z</published>
+    <updated>2018-01-25T03:15:08.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：原子变量与非阻塞同步机制相比于基于锁的方案可以拥有更高的性能和可伸缩性。<a id="more"></a></p>
+<h1 id="锁的劣势"><a href="#锁的劣势" class="headerlink" title="锁的劣势"></a>锁的劣势</h1><ul>
+<li>通过使用一致的锁定协议来协调对共享状态的访问，可以确保无论哪个线程持有守护变量的锁，都能采用独占方式来访问这些变量，并且对变量的任何修改对随后获得这个锁的其他线程都是可见的。但是当在锁上存在激烈的竞争时，调度开销与工作开销的比值会非常高。</li>
+<li>volatile变量是一种更轻量级的同步机制，但是虽然他们提供了相似的可见性保证，但不能用于构建原子的复合操作。因此，当一个变量依赖其他的变量时，或者当变量的新值依赖旧值时，就不能使用volatile。</li>
+</ul>
+<h1 id="硬件对并发的支持"><a href="#硬件对并发的支持" class="headerlink" title="硬件对并发的支持"></a>硬件对并发的支持</h1><ul>
+<li>独占锁是一种悲观技术——它假设最坏的情况，并且只有在确保其他线程不会找出干扰的情况下才能执行下去。</li>
+<li>比较并交换（CAS，硬件指令）是一种乐观的技术——通过这种方法可以在不发生干扰的情况下完成更新操作，不过这种方法需要借助检查机制来判断在更新过程中是否存在其他线程的干扰，如果存在，这个操作将失败，并且可以重试（也可以不重试）。</li>
+</ul>
+<p>下面是模拟CAS操作代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// CAS含义：我认为V的值应该是A，如果是，那么把值更新为B，否则不修改并告诉V的值实际是多少</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimulatedCAS</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> value; &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">compareAndSwap</span><span class="params">(<span class="keyword">int</span> expectedValue, <span class="keyword">int</span> newValue)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> oldValue = value;</div><div class="line">        <span class="keyword">if</span> (oldValue == expectedValue) &#123;</div><div class="line">            value = <span class="keyword">new</span> Value;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> oldValue;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(<span class="keyword">int</span> expectedValue, <span class="keyword">int</span> newValue)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> (expectedValue == compareAndSwap(expectedValue, newValue));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>CAS的优点：当竞争程序不高时，性能远远高于基于锁的方案。</p>
+<p>CAS的缺点：它将使调用者处理竞争问题（通过重试、回退、放弃），而在锁中能自动处理竞争问题（线程在获得锁之前将一直阻塞）。</p>
+<h1 id="原子变量类"><a href="#原子变量类" class="headerlink" title="原子变量类"></a>原子变量类</h1><p>原子变量类在发生竞争的情况下能提供更高的可伸缩性，因为它直接利用了硬件对并发的支持（比较并交换指令）。</p>
+<p>共有12个原子变量类：可分为四组：标量类、更新器类、数组类以及复合变量类。最常用的原子变量类就是标量类：AtomicInteger、AtomicLong、AtomicBoolean以及AtomicReference。</p>
+<p><strong>原子变量与锁适用的不同并发场景：</strong></p>
+<ul>
+<li>在中低程序的竞争、锁占用时间不长的情况下，原子变量能提供更高的可伸缩性。</li>
+<li>而在高强度的竞争下，锁能够更有效的地避免竞争。</li>
+</ul>
+<h1 id="非阻塞算法"><a href="#非阻塞算法" class="headerlink" title="非阻塞算法"></a>非阻塞算法</h1><p><strong>无阻塞算法：</strong> 如果在某种算法中，一个线程的失败或者挂起不会导致其他线程也失败或挂起，那么这种算法就被称为无阻塞算法。</p>
+<p><strong>无锁算法：</strong> 如果在算法的每个步骤中都存在某个线程能够执行下去，那么这种算法被称为无锁算法。</p>
+<p>如果在算法中仅将CAS用于协调线程之间的操作，并且能正确地实现，那么它既是无阻塞算法，又是无锁算法。</p>
+<p>利用CAS并发指令可以实现非阻塞的同步容器，例如实现非阻塞的栈、非阻塞的链表以及原子的域更新器等。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>非阻塞算法通过底层的并发原语（例如比较并交换）来维持线程的安全性。这些底层的原语通过原子变量类向外公开，从而为整数和对象引用提供原子的更新操作。</li>
+<li>在JVM从一个版本升级到下一个版本的过程中，并发性能主要提升都来自于对非阻塞算法的使用。</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《Java并发编程实战》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：原子变量与非阻塞同步机制相比于基于锁的方案可以拥有更高的性能和可伸缩性。
+    
+    </summary>
+    
+      <category term="Java并发编程实战" scheme="http://bestlixiang.site/categories/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/"/>
+    
+    
+      <category term="并发" scheme="http://bestlixiang.site/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+  </entry>
   
   <entry>
     <title>Java并发_11_构建自定义同步工具</title>
@@ -1542,386 +1594,6 @@
     <summary type="html">
     
       &lt;p&gt;引：在Class文件中描述的各种信息最终都需要加载到虚拟机之中之后才能运行和使用。而虚拟机如何加载这些Class文件？Class文件中的信息进入到虚拟机后会发生什么变化？
-    
-    </summary>
-    
-      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入理解JVM_7_探秘类文件</title>
-    <link href="http://bestlixiang.site/2017/12/01/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-7-%E6%8E%A2%E7%A7%98%E7%B1%BB%E6%96%87%E4%BB%B6/"/>
-    <id>http://bestlixiang.site/2017/12/01/深入理解JVM-7-探秘类文件/</id>
-    <published>2017-12-01T12:52:36.000Z</published>
-    <updated>2017-12-09T12:04:12.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：java代码编译的结果从本地机器码转变为字节码，并且生成了类文件，那么这个类文件里面是什么东西呢？<a id="more"></a></p>
-<h1 id="JVM的无关性"><a href="#JVM的无关性" class="headerlink" title="JVM的无关性"></a>JVM的无关性</h1><p>一般提到Java的好处，其中必定有一条是平台无关性，但是这个太狭隘了，其实它有两点无关性。</p>
-<h2 id="平台无关性"><a href="#平台无关性" class="headerlink" title="平台无关性"></a>平台无关性</h2><p>Java在刚刚诞生之时就有一个著名的宣传口号：“一次编写，到处运行（Write Once, Run Anywhere）”。“与平台无关”的理想最终实现在操作系统的应用层上：其实就是Java虚拟机了，他可以载入和执行同一种平台无关的字节码，从而实现了程序的“一次编写，到处运行”。</p>
-<h2 id="语言无关性"><a href="#语言无关性" class="headerlink" title="语言无关性"></a>语言无关性</h2><p>目前已经一大批能够在JVM运行语言了，就我自己知道并且使用过就有Groovy、Jython、Scala等。实现语言无关性的基础仍然是虚拟机和字节码存储格式。其他语言通过自己的编译把程序代码编程成符合Java虚拟机规范的Class文件即可。</p>
-<h1 id="类文件的结构"><a href="#类文件的结构" class="headerlink" title="类文件的结构"></a>类文件的结构</h1><p>Class文件是一组以8位字节为基础单位的二进制流，各个数据项目严格按照顺序紧凑排列在Class文件之中，中间没有任何分隔符。Class文件只有两种数据类型：无符号数和表</p>
-<ul>
-<li>无符号数：以u1，u2，u4，u8来分别代表1个字节，2个字节，4个字节和8个字节的无符号数，无符号数可以用来描述数字、索引引用、数值量或者按照UTF-8编码构成字符串值。</li>
-<li>表：它是由多个无符号数或者其他表作为数据项构成的复合数据类型，所有表习惯地以“_info”结尾。</li>
-</ul>
-<p>整个Class文件本质上就是一张表，它由下表所示的数据项构成。</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>名称</th>
-<th>数量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>u4</td>
-<td>魔数</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>次版本号</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>主版本号</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>常量数量</td>
-<td>1</td>
-</tr>
-<tr>
-<td>cp_info</td>
-<td>常量池</td>
-<td>常量数量-1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>访问标志</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>类索引</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>父类索引</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>接口数量</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>接口索引集合</td>
-<td>接口数量</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>字段数量</td>
-<td>1</td>
-</tr>
-<tr>
-<td>field_info</td>
-<td>字段表</td>
-<td>字段数量</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>方法数量</td>
-<td>1</td>
-</tr>
-<tr>
-<td>method_info</td>
-<td>方法表</td>
-<td>方法数量</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>属性数量</td>
-<td>1</td>
-</tr>
-<tr>
-<td>attribute_info</td>
-<td>属性表</td>
-<td>属性数量</td>
-</tr>
-</tbody>
-</table>
-<p>接下里稍微详细看看上面的数据：</p>
-<p>不过按例子来吧，下面是一个简单的Java类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.todorex.demo;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClass</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> m;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">inc</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> m+<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>先编译这个类得到TestClass.class文件，打开它可以下面的16进制数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">cafe babe 0000 0034 0013 0a00 0400 0f09</div><div class="line">0003 0010 0700 1107 0012 0100 016d 0100</div><div class="line">0149 0100 063c 696e 6974 3e01 0003 2829</div><div class="line">5601 0004 436f 6465 0100 0f4c 696e 654e</div><div class="line">756d 6265 7254 6162 6c65 0100 0369 6e63</div><div class="line">0100 0328 2949 0100 0a53 6f75 7263 6546</div><div class="line">696c 6501 000e 5465 7374 436c 6173 732e</div><div class="line">6a61 7661 0c00 0700 080c 0005 0006 0100</div><div class="line">1a63 6f6d 2f74 6f64 6f72 6578 2f64 656d</div><div class="line">6f2f 5465 7374 436c 6173 7301 0010 6a61</div><div class="line">7661 2f6c 616e 672f 4f62 6a65 6374 0021</div><div class="line">0003 0004 0000 0001 0002 0005 0006 0000</div><div class="line">0002 0001 0007 0008 0001 0009 0000 001d</div><div class="line">0001 0001 0000 0005 2ab7 0001 b100 0000</div><div class="line">0100 0a00 0000 0600 0100 0000 0600 0100</div><div class="line">0b00 0c00 0100 0900 0000 1f00 0200 0100</div><div class="line">0000 072a b400 0204 60ac 0000 0001 000a</div><div class="line">0000 0006 0001 0000 0009 0001 000d 0000</div><div class="line">0002 000e</div></pre></td></tr></table></figure></p>
-<p>然后用javap 解析TestClass.class文件，得到：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">Classfile /Users/rex/IdeaProjects/JVMTest/src/com/todorex/demo/TestClass.class</div><div class="line">  Last modified 2017-12-1; size 292 bytes</div><div class="line">  MD5 checksum 337a51d3bebe0e9a82142a352eb0977e</div><div class="line">  Compiled from "TestClass.java"</div><div class="line">public class com.todorex.demo.TestClass</div><div class="line">  minor version: 0</div><div class="line">  major version: 52</div><div class="line">  flags: ACC_PUBLIC, ACC_SUPER</div><div class="line">Constant pool:</div><div class="line">   #1 = Methodref          #4.#15         // java/lang/Object."&lt;init&gt;":()V</div><div class="line">   #2 = Fieldref           #3.#16         // com/todorex/demo/TestClass.m:I</div><div class="line">   #3 = Class              #17            // com/todorex/demo/TestClass</div><div class="line">   #4 = Class              #18            // java/lang/Object</div><div class="line">   #5 = Utf8               m</div><div class="line">   #6 = Utf8               I</div><div class="line">   #7 = Utf8               &lt;init&gt;</div><div class="line">   #8 = Utf8               ()V</div><div class="line">   #9 = Utf8               Code</div><div class="line">  #10 = Utf8               LineNumberTable</div><div class="line">  #11 = Utf8               inc</div><div class="line">  #12 = Utf8               ()I</div><div class="line">  #13 = Utf8               SourceFile</div><div class="line">  #14 = Utf8               TestClass.java</div><div class="line">  #15 = NameAndType        #7:#8          // "&lt;init&gt;":()V</div><div class="line">  #16 = NameAndType        #5:#6          // m:I</div><div class="line">  #17 = Utf8               com/todorex/demo/TestClass</div><div class="line">  #18 = Utf8               java/lang/Object</div><div class="line">&#123;</div><div class="line">  public com.todorex.demo.TestClass();</div><div class="line">    descriptor: ()V</div><div class="line">    flags: ACC_PUBLIC</div><div class="line">    Code:</div><div class="line">      stack=1, locals=1, args_size=1</div><div class="line">         0: aload_0</div><div class="line">         1: invokespecial #1                  // Method java/lang/Object."&lt;init&gt;":()V</div><div class="line">         4: return</div><div class="line">      LineNumberTable:</div><div class="line">        line 6: 0</div><div class="line"></div><div class="line">  public int inc();</div><div class="line">    descriptor: ()I</div><div class="line">    flags: ACC_PUBLIC</div><div class="line">    Code:</div><div class="line">      stack=2, locals=1, args_size=1</div><div class="line">         0: aload_0</div><div class="line">         1: getfield      #2                  // Field m:I</div><div class="line">         4: iconst_1</div><div class="line">         5: iadd</div><div class="line">         6: ireturn</div><div class="line">      LineNumberTable:</div><div class="line">        line 9: 0</div><div class="line">&#125;</div><div class="line">SourceFile: "TestClass.java"</div></pre></td></tr></table></figure></p>
-<h2 id="魔数"><a href="#魔数" class="headerlink" title="魔数"></a>魔数</h2><ol>
-<li>每个Class文件的头4个字节成为魔数</li>
-<li>使用魔数来进行身份识别（文件类别），因为如果使用文件名来识别，安全性太低，由于文件名可以随意改动。</li>
-<li>Class文件的魔数的获得就有“浪漫气息”，值为0xcafebabe,上面16进制文件也可以看到。这让自己想起了高中用的三星手机打开qq就是一杯咖啡的标志。</li>
-</ol>
-<h2 id="Class文件的版本"><a href="#Class文件的版本" class="headerlink" title="Class文件的版本"></a>Class文件的版本</h2><p>接下来第5，6个字节显示的是次版本号，7，8字节显示的是主版本号。</p>
-<p>高版本的JDK可以向下兼容以前版本的Class文件，但不能运行以后版本的Class文件。</p>
-<h2 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h2><p>在版本号之后的是常量池入口。</p>
-<ol>
-<li>常量池是Class文件结构中与其他项目关联最大的数据类型，也是占Class文件空间最大的数据项目之一。</li>
-<li>常量池常量的数据不是固定的，在最前面的Class文件组成可以看到有一个常量数量项，这个容量计数是从1而不是0开始的，比如上面的十六进制的值为0x0013(19)就代表有18个常量。</li>
-<li><p>常量池主要存放两大类变量</p>
-<ul>
-<li>字面量：文本字符串、声明为final的常量值等</li>
-<li>符号引用：（编译原理的概念）<ul>
-<li>类和接口的全限定名</li>
-<li>字段的名称和描述符</li>
-<li>方法的名称和描述符</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>常量池的每一项常量都是表，常量的顺序可以参照javap解析出来的常量顺序，在JDK1.7以后共有14种不同类型的表，他们共同点是表的第一位是一个u1类型的标志位（tag），具体的标志对应的类型参照书《深入理解Java虚拟机》。这里提一下CONSTANT_UTF8_info这个表：</p>
-</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>名称</th>
-<th>数量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>u1</td>
-<td>tag</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>length</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u1</td>
-<td>bytes</td>
-<td>length</td>
-</tr>
-</tbody>
-</table>
-<pre><code>length值说明了UTF-8编码的字符串长度是多少字节，他后面跟着的长度为length字节的连续数据是一个使用UTF-8缩略编码表示的字符串。而u2最大值是65535，所以说如果Java程序如果定义了超过64KB（大约）英文字符的变量或者方法名，将无法编译。
-</code></pre><ol>
-<li>UTF-8缩略编码和UTF-8编码的区别：UTF-8编码都是使用3个字节编码，而UTF-8缩略编码可以使用1或2或3个字节编码。</li>
-</ol>
-<h2 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h2><p>在常量池结束之后，紧接着的两个字节代表访问标志，这个标志用于识别一些类或者接口层次的访问信息，包括：这个Class是类还是接口；是否定义public类型；是否定义为abstract类型；如果是类的话，是否被声明为final等，访问标志一共有16个标志位可以使用，当前只定义了8个。</p>
-<h2 id="类索引、父类索引、接口索引集合"><a href="#类索引、父类索引、接口索引集合" class="headerlink" title="类索引、父类索引、接口索引集合"></a>类索引、父类索引、接口索引集合</h2><ol>
-<li>类索引、父类索引都是u2类型的数据，类索引、父类索引都是指向一个CONSTANT_Class_info的类描述符常量</li>
-<li>接口索引集合是一组u2类型的数据的集合，它入口的第一项是u2的接口计数器，后面就是具体接口索引</li>
-<li>Class文件有这三项数据来确定这个类的继承关系</li>
-</ol>
-<h2 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h2><p>接下来是字段表，字段表用于描述接口或者类中声明的变量，包括类级变量以及实例级变量，不包括方法内部声明的局部变量。我们看一下一个字段表的构成：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>名称</th>
-<th>数量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>u2</td>
-<td>访问标志</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>简单名称索引</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>描述符索引</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>属性数量</td>
-<td>1</td>
-</tr>
-<tr>
-<td>attribute_info</td>
-<td>属性表</td>
-<td>属性数量</td>
-</tr>
-</tbody>
-</table>
-<p>根据上表我们解析一下其中的含义：</p>
-<ol>
-<li>访问标志：它和之前的访问标志很类似。</li>
-<li>简单名称索引：它指向一个CONSTANT_UTF8_info类型的常量，这里面存储了本字段的名字信息，像javap解析后的第5个常量m。</li>
-<li>描述符索引：用来描述字段的数据类型，像javap解析后的第6个常量I,代表了基本类型int</li>
-<li>属性表（可能有ConstantValue表</li>
-</ol>
-<p>下面是字符表的注意点：</p>
-<ol>
-<li>字段表集合不会列出从超类或者父接口继承而来的字段。</li>
-<li>字段表有可能列出原本Java代码之中不存在的字段，譬如在内部类中为了保持对外部类的访问性，会自动添加执行外部类实例的字段。（不懂，大佬请指教）</li>
-<li>Java语言中字段是无法重载的，名称必须不一样，但是对于字节码来说，如果两个字段的描述符不一致，那么字段重名是合法的。</li>
-</ol>
-<h2 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h2><p>接下来是方法表，方法表的内容和字段表几乎完全一致。其中坑顶也看一下方法表的构成：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>名称</th>
-<th>数量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>u2</td>
-<td>访问标志</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>简单名称索引</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>描述符索引</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>属性数量</td>
-<td>1</td>
-</tr>
-<tr>
-<td>attribute_info</td>
-<td>属性表</td>
-<td>属性数量</td>
-</tr>
-</tbody>
-</table>
-<p>这里解释一下和字段表不一样的地方</p>
-<ol>
-<li>简单名称索引：它指向一个CONSTANT_UTF8_info类型的常量，这里面存储了本字段的名字信息，像javap解析后的第11个常量inc。</li>
-<li>描述符索引：它的作用是用来描方法的参数列表（包括数量、类型以及顺序）和返回值，像javap解析后的第12个常量()I,表示的就是一个返回值为int的方法。</li>
-<li>属性表：这里肯定存放了Code属性表（方法里的Java代码）</li>
-</ol>
-<p>下面是方法表的注意点：</p>
-<ol>
-<li>如果父类方法在子类没有被重写，方法表集合中就不会出现来自父类的方法信息。</li>
-<li>可能会出现由编译器自动添加的方法，最典型的有类构造器“<clinit>”方法和实例构造器“<init>”方法，就像javap解析后的第11个常量<init>。</init></init></clinit></li>
-<li>在Java语言中，要重载一个方法，需要相同的简单名称和与原方法不同的Java代码的方法特征签名，这里需要解释一下Java特征签名和JVM特征签名：<ul>
-<li>Java特征签名：方法名称、参数顺序</li>
-<li>JVM特征签名：Java特征签名、方法返回值以及受查异常表</li>
-</ul>
-</li>
-</ol>
-<h2 id="属性表集合"><a href="#属性表集合" class="headerlink" title="属性表集合"></a>属性表集合</h2><p>最后就是属性表集合了，在Class文件、字段表、方法表都可以携带自己的属性表集合，以及用于描述某些场景专有的信息。属性表集合不要求各个属性具有严格的顺序，并且只要不与已有属性名重复就好。</p>
-<p>上面程序的例子出现过几个属性表：Code、LineNumberTable、SourceFile、ConstantValue，接下来我们详细说一下：</p>
-<h3 id="Code属性"><a href="#Code属性" class="headerlink" title="Code属性"></a>Code属性</h3><p>Java程序方法体中的代码经过Javac编译器处理后，最终变为字节码指令存储在Code属性内，Code属性出现在方法表属性集合之中，我们先看看Code属性表的结构：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>名称</th>
-<th>数量</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>u2</td>
-<td>属性名索引</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u4</td>
-<td>属性长度</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>操作数栈深度的最大值</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>局部变量表所需的存储空间</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u4</td>
-<td>Java方法代码字节码指令长度</td>
-<td>1</td>
-</tr>
-<tr>
-<td>u1</td>
-<td>Java方法代码字节码</td>
-<td>Java方法代码字节码指令长度</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>显式异常表长度</td>
-<td>1</td>
-</tr>
-<tr>
-<td>exception_info</td>
-<td>显式异常表</td>
-<td>显式异常表长度</td>
-</tr>
-<tr>
-<td>u2</td>
-<td>属性个数</td>
-<td>1</td>
-</tr>
-<tr>
-<td>attribute_info</td>
-<td>属性表</td>
-<td>属性个数</td>
-</tr>
-</tbody>
-</table>
-<p>接下来我们说明一下几个关键项：</p>
-<ol>
-<li>属性名索引：它是一项指向CONSTANT_UTF8_info型的索引，常量值固定为“Code”，就像上面javap解析出来的常量池的第9个。</li>
-<li>属性长度：固定为整个属性表长度减去6个字节。</li>
-<li>操作数栈深度的最大值：在方法执行的任意时刻，操作数栈都不会超过这个深度，虚拟机运行的时候需要根据这个值来分配栈栈中的操作数栈深度。</li>
-<li>局部变量表所需的存储空间：它的单位是Slot，局部变量表存储了方法参数（包括<strong>实例方法</strong>中的隐藏参数this）、显示异常处理器的参数（try-catch检查的异常）、方法体中定义的局部变量，Javac编译器会根据变量的作用域来分配Slot，然后计算出需要的存储空间大小。</li>
-<li><p>Java方法代码字节码指令长度和Java方法代码字节码：存储了Java源程序编译后生成的字节码指令，目前Java虚拟机规范已经定义了约200条编码值对应的指令含义。</p>
-<p> PS：如果把一个Java程序中的信息分为代码（Code，方法体里面的Java代码）和元数据（Metadata，包括类、字段、方法定义以及其他信息）两部分，那么在整个Class文件，Code属性用来描述代码，所有其他数据项目都用于描述元数据。</p>
-</li>
-<li>显式异常表：用于显示try-catch代码块要检查的异常</li>
-</ol>
-<h3 id="LineNumberTable"><a href="#LineNumberTable" class="headerlink" title="LineNumberTable"></a>LineNumberTable</h3><p>它的使用位置是在Code属性，用于描述Java源码行号与字节码行号之间的对应关系，当抛出异常的时候堆栈会显示出错的行号。</p>
-<h3 id="SourceFile"><a href="#SourceFile" class="headerlink" title="SourceFile"></a>SourceFile</h3><p>它的使用位置是类文件，用于记录生成这个Class文件的源码文件名称，当抛出异常的时候会显示出错代码所属的文件名。</p>
-<h3 id="ConstantValue"><a href="#ConstantValue" class="headerlink" title="ConstantValue"></a>ConstantValue</h3><p>它的使用位置是字段表，作用是通知虚拟机自动为静态变量赋值，只有static关键字修饰的变量（类变量）才可以使用这项属性，虚拟机对于类变量和实例变量赋值的方式有所不用。</p>
-<ol>
-<li>实例变量：在实例构造器<init>方法中进行</init></li>
-<li>类变量：在类构造器<clinit>方法中或者使用ConstantValue属性</clinit></li>
-</ol>
-<p>目前Sun Javac编译器的选择是：如果同时使用final和static来修饰一个变量，并且这个常量的数据类型是基本类型或者String类型，就生成ConstantValue属性来进行初始化，如果这个变量没有被final修饰，或者并非基本类型或者字符串，则将会选择在<clinit>方法中进行初始化。</clinit></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过上面的分析，我们一定能清楚的知道Class文件是什么以及Class文件包含什么东西，再也不怕了！！</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《深入理解Java虚拟机》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：java代码编译的结果从本地机器码转变为字节码，并且生成了类文件，那么这个类文件里面是什么东西呢？
     
     </summary>
     

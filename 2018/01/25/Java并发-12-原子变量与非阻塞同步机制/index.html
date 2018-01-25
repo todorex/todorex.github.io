@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="并发," />
 
 
 
@@ -89,12 +89,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="rex note">
-<meta property="og:url" content="http://bestlixiang.site/tags/JVM/page/2/index.html">
+<meta name="description" content="引：原子变量与非阻塞同步机制相比于基于锁的方案可以拥有更高的性能和可伸缩性。">
+<meta name="keywords" content="并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发_12_原子变量与非阻塞同步机制">
+<meta property="og:url" content="http://bestlixiang.site/2018/01/25/Java并发-12-原子变量与非阻塞同步机制/index.html">
 <meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：原子变量与非阻塞同步机制相比于基于锁的方案可以拥有更高的性能和可伸缩性。">
+<meta property="og:updated_time" content="2018-01-25T03:15:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="rex note">
+<meta name="twitter:title" content="Java并发_12_原子变量与非阻塞同步机制">
+<meta name="twitter:description" content="引：原子变量与非阻塞同步机制相比于基于锁的方案可以拥有更高的性能和可伸缩性。">
 
 
 
@@ -122,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/tags/JVM/page/2/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/01/25/Java并发-12-原子变量与非阻塞同步机制/"/>
 
 
 
 
 
-  <title> 标签: JVM | rex note </title>
+  <title> Java并发_12_原子变量与非阻塞同步机制 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -153,7 +158,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -271,134 +276,235 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        JVM
-        <small>标签</small>
-      </h2>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/29/深入理解JVM-4-垃圾收集策略/" itemprop="url">
-              
-                <span itemprop="name">深入理解JVM_4_垃圾收集策略</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-29T19:33:14+08:00"
-              content="2017-11-29" >
-          11-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/29/深入理解JVM-3-OutOfMemoryError异常现场/" itemprop="url">
-              
-                <span itemprop="name">深入理解JVM_3_OutOfMemoryError异常现场</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-29T15:24:08+08:00"
-              content="2017-11-29" >
-          11-29
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/21/深入理解JVM-2-HotSpot对象揭秘/" itemprop="url">
-              
-                <span itemprop="name">深入理解JVM_2_HotSpot对象揭秘</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-21T11:11:05+08:00"
-              content="2017-11-21" >
-          11-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/20/深入理解JVM-1-JVM内存模型/" itemprop="url">
-              
-                <span itemprop="name">深入理解JVM_1_JVM内存模型</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-20T18:41:36+08:00"
-              content="2017-11-20" >
-          11-20
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </div>
 
   
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/tags/JVM/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/tags/JVM/">1</a><span class="page-number current">2</span>
-  </nav>
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/01/25/Java并发-12-原子变量与非阻塞同步机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java并发_12_原子变量与非阻塞同步机制
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-25T11:14:44+08:00">
+                2018-01-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java并发编程实战/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程实战</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：原子变量与非阻塞同步机制相比于基于锁的方案可以拥有更高的性能和可伸缩性。<a id="more"></a></p>
+<h1 id="锁的劣势"><a href="#锁的劣势" class="headerlink" title="锁的劣势"></a>锁的劣势</h1><ul>
+<li>通过使用一致的锁定协议来协调对共享状态的访问，可以确保无论哪个线程持有守护变量的锁，都能采用独占方式来访问这些变量，并且对变量的任何修改对随后获得这个锁的其他线程都是可见的。但是当在锁上存在激烈的竞争时，调度开销与工作开销的比值会非常高。</li>
+<li>volatile变量是一种更轻量级的同步机制，但是虽然他们提供了相似的可见性保证，但不能用于构建原子的复合操作。因此，当一个变量依赖其他的变量时，或者当变量的新值依赖旧值时，就不能使用volatile。</li>
+</ul>
+<h1 id="硬件对并发的支持"><a href="#硬件对并发的支持" class="headerlink" title="硬件对并发的支持"></a>硬件对并发的支持</h1><ul>
+<li>独占锁是一种悲观技术——它假设最坏的情况，并且只有在确保其他线程不会找出干扰的情况下才能执行下去。</li>
+<li>比较并交换（CAS，硬件指令）是一种乐观的技术——通过这种方法可以在不发生干扰的情况下完成更新操作，不过这种方法需要借助检查机制来判断在更新过程中是否存在其他线程的干扰，如果存在，这个操作将失败，并且可以重试（也可以不重试）。</li>
+</ul>
+<p>下面是模拟CAS操作代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// CAS含义：我认为V的值应该是A，如果是，那么把值更新为B，否则不修改并告诉V的值实际是多少</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimulatedCAS</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> value; &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">compareAndSwap</span><span class="params">(<span class="keyword">int</span> expectedValue, <span class="keyword">int</span> newValue)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> oldValue = value;</div><div class="line">        <span class="keyword">if</span> (oldValue == expectedValue) &#123;</div><div class="line">            value = <span class="keyword">new</span> Value;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> oldValue;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(<span class="keyword">int</span> expectedValue, <span class="keyword">int</span> newValue)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> (expectedValue == compareAndSwap(expectedValue, newValue));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>CAS的优点：当竞争程序不高时，性能远远高于基于锁的方案。</p>
+<p>CAS的缺点：它将使调用者处理竞争问题（通过重试、回退、放弃），而在锁中能自动处理竞争问题（线程在获得锁之前将一直阻塞）。</p>
+<h1 id="原子变量类"><a href="#原子变量类" class="headerlink" title="原子变量类"></a>原子变量类</h1><p>原子变量类在发生竞争的情况下能提供更高的可伸缩性，因为它直接利用了硬件对并发的支持（比较并交换指令）。</p>
+<p>共有12个原子变量类：可分为四组：标量类、更新器类、数组类以及复合变量类。最常用的原子变量类就是标量类：AtomicInteger、AtomicLong、AtomicBoolean以及AtomicReference。</p>
+<p><strong>原子变量与锁适用的不同并发场景：</strong></p>
+<ul>
+<li>在中低程序的竞争、锁占用时间不长的情况下，原子变量能提供更高的可伸缩性。</li>
+<li>而在高强度的竞争下，锁能够更有效的地避免竞争。</li>
+</ul>
+<h1 id="非阻塞算法"><a href="#非阻塞算法" class="headerlink" title="非阻塞算法"></a>非阻塞算法</h1><p><strong>无阻塞算法：</strong> 如果在某种算法中，一个线程的失败或者挂起不会导致其他线程也失败或挂起，那么这种算法就被称为无阻塞算法。</p>
+<p><strong>无锁算法：</strong> 如果在算法的每个步骤中都存在某个线程能够执行下去，那么这种算法被称为无锁算法。</p>
+<p>如果在算法中仅将CAS用于协调线程之间的操作，并且能正确地实现，那么它既是无阻塞算法，又是无锁算法。</p>
+<p>利用CAS并发指令可以实现非阻塞的同步容器，例如实现非阻塞的栈、非阻塞的链表以及原子的域更新器等。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>非阻塞算法通过底层的并发原语（例如比较并交换）来维持线程的安全性。这些底层的原语通过原子变量类向外公开，从而为整数和对象引用提供原子的更新操作。</li>
+<li>在JVM从一个版本升级到下一个版本的过程中，并发性能主要提升都来自于对非阻塞算法的使用。</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《Java并发编程实战》</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/24/Java并发-11-构建自定义同步工具/" rel="next" title="Java并发_11_构建自定义同步工具">
+                <i class="fa fa-chevron-left"></i> Java并发_11_构建自定义同步工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
 
 
           </div>
@@ -406,6 +512,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
 
         </div>
         
@@ -425,8 +537,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/me.jpeg"
@@ -533,6 +654,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#锁的劣势"><span class="nav-number">1.</span> <span class="nav-text">锁的劣势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#硬件对并发的支持"><span class="nav-number">2.</span> <span class="nav-text">硬件对并发的支持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原子变量类"><span class="nav-number">3.</span> <span class="nav-text">原子变量类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非阻塞算法"><span class="nav-number">4.</span> <span class="nav-text">非阻塞算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -660,6 +797,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
