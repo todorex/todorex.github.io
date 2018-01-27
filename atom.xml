@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-01-25T03:15:08.000Z</updated>
+  <updated>2018-01-27T13:40:39.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,92 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>UML_Java类图</title>
+    <link href="http://bestlixiang.site/2018/01/27/UML-Java%E7%B1%BB%E5%9B%BE/"/>
+    <id>http://bestlixiang.site/2018/01/27/UML-Java类图/</id>
+    <published>2018-01-27T13:38:28.000Z</published>
+    <updated>2018-01-27T13:40:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：在看源码或者很多技术书籍的时候都避免不了看到类图，时间长了总会忘了含义，在这里就总结一下，方便以后回顾。这里使用的工具是startUML。<a id="more"></a></p>
+<h1 id="UML"><a href="#UML" class="headerlink" title="UML"></a>UML</h1><p><strong>UML：</strong> 统一建模语言（Unified Modeling Language）。在 UML 系统开发中有三个主要的模型：</p>
+<ul>
+<li>功能模型：从用户的角度展示系统的功能，包括用例图。</li>
+<li>对象模型：采用对象，属性，操作，关联等概念展示系统的结构和基础，包括类图、对象图、包图。</li>
+<li>动态模型：展现系统的内部行为。包括时序图，活动图，状态图。</li>
+</ul>
+<h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><p>类图使用类来描述系统的静态结构，类图包含类和它们之间的关系，它描述系统内所声明的类，但它没有描述系统运行时类的行为。</p>
+<p>在UML类图中，类一般由三部分组成：类名、属性以及操作。</p>
+<h2 id="类名"><a href="#类名" class="headerlink" title="类名"></a>类名</h2><p>每个类都必须有一个名字，类名是一个字符串。</p>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><p>属性是指类的性质，即类的成员变量。类可以有任意多个属性，也可以没有属性。</p>
+<p>格式为： 【可见性】 属性名 【：类型】 【=初始值】 【{属性字符串}】</p>
+<p>可见性：在UML中public类型用符号“+”表示，private类型用“-”表示，protected类型用“#”表示。</p>
+<p>属性字符串：用来指定关于属性的其他信息，任何希望添加属性定义字符串但又没有合适地方可以加入的规则都可以放在属性字符串里，例如类变量。</p>
+<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><p>操作是类的任意一个实例对象都可以使用的行为，操作是类的成员方法。</p>
+<p>格式为：【可见性】 操作名 【{参数列表}】 【：返回类型】 【{属性字符串}】</p>
+<h1 id="类之间的关系"><a href="#类之间的关系" class="headerlink" title="类之间的关系"></a>类之间的关系</h1><h2 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h2><p>关联关系(Association)是类与类之间最常用的一种关系，它是一种结构化关系，用于表示一个类与另一个类之间有联系。</p>
+<p>在 UML 类图中，用实线连接有关联的的类。在实现关联关系时，通常将一个类的对象作为另一个类的属性。</p>
+<h3 id="单向关联"><a href="#单向关联" class="headerlink" title="单向关联"></a>单向关联</h3><p>类的关联关系可以是单向的，单向关联用带箭头的实线表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/derectAssociation.png" alt="derectAssociation"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Address address;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Address</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="双向关联"><a href="#双向关联" class="headerlink" title="双向关联"></a>双向关联</h3><p>默认情况下，关联是双向的。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/association.png" alt="association"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Product product;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Order order;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="自关联"><a href="#自关联" class="headerlink" title="自关联"></a>自关联</h3><p>在系统中可能会存在一些类的属性对象类型为该类本身，这种特殊的关联关系称为自关联。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/1slfeAssociation.png" alt="slfeAssociation"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Node node;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="重数性关联"><a href="#重数性关联" class="headerlink" title="重数性关联"></a>重数性关联</h3><p>重数性关联关系又称为多重性关联关系，表示一个类的对象与另一个类的对象连接的个数。在 UML 中多重性关系可以直接在关联直线上增加一个数字表示与之对应的另一个类的对象的个数。<br>如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/multiplicityAssociation.png" alt="multiplicityAssociation"></p>
+<p>其中数字的种类及含义如下表：</p>
+<table>
+<thead>
+<tr>
+<th>表示方式</th>
+<th>表示含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1..1</td>
+<td>表示另一个类的一个对象只与一个该类对象有关系</td>
+</tr>
+<tr>
+<td>0..*</td>
+<td>表示另一个类的一个对象与零个或多个该类对象有关系</td>
+</tr>
+<tr>
+<td>1..*</td>
+<td>表示另一个类的一个对象与一个或多个该类对象有关系</td>
+</tr>
+<tr>
+<td>0..1</td>
+<td>表示另一个类的一个对象没有或只与一个该类对象有关系</td>
+</tr>
+<tr>
+<td>m..n</td>
+<td>表示另一个类的一个对象与最少m、最多n个该类对象有关系 (m&lt;=n)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="聚合关系"><a href="#聚合关系" class="headerlink" title="聚合关系"></a>聚合关系</h2><p>聚合关系表示一个整体与部分的关系。通常在定义一个整体类后，再去找出这个整体类的一些成员类，该整体类和成员类之间就形成了聚合关系。</p>
+<p>在聚合关系中，成员类是整体类的一部分，即成员对象是整体对象的一部分，但是成员对象可以脱离整体对象独立存在。在UML中，聚合关系用带空心菱形的直线表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/aggregation.png" alt="aggregation"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Engine engine;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Car</span><span class="params">(Engine engine)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.engine = engine;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">setEngine</span><span class="params">(Engine engine)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.engine = engine;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Engine</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="组合关系"><a href="#组合关系" class="headerlink" title="组合关系"></a>组合关系</h2><p>组合关系也表示类之间整体和部分的关系，但是<strong>组合关系中部分和整体具有统一的生存期</strong>。一旦整体对象不存在，部分对象也将不存在，部分对象与整体对象之间具有同生共死的关系。</p>
+<p>在组合关系中，成员类是整体类的一部分，而且整体类可以控制成员类的生命周期，即成员类的存在依赖于整体类。在UML中，组合关系用带实心菱形的直线表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/composition.png" alt="composition"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Head</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Eye eye;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Head</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.eye = <span class="keyword">new</span> Eye();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Eye</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h2><p>依赖关系是一种使用关系，特定事物的改变有可能会影响到使用该事物的其他事物，在需要表示一个事物使用另一个事物时使用依赖关系。大多数情况下，依赖关系体现在某个类的方法使用另一个类的对象作为参数。在UML中，依赖关系用带箭头的虚线表示，由依赖的一方指向被依赖的一方。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/dependency.png" alt="dependency"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">drive</span><span class="params">(Car car)</span> </span>&#123;</div><div class="line">        car.move();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</div><div class="line">        ...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="泛化关系"><a href="#泛化关系" class="headerlink" title="泛化关系"></a>泛化关系</h2><p>泛化关系也就是继承关系，也称为“is-a-kind-of”关系，泛化关系用于描述父类与子类之间的关系。在UML中，泛化关系用带空心三角形的直线来表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/generalization.png" alt="generalization"></p>
+<h2 id="实现关系"><a href="#实现关系" class="headerlink" title="实现关系"></a>实现关系</h2><p>实现关系是类实现了接口，类中的操作实现了接口中所声明的操作。在UML中，类与接口之间的实现关系用<strong>带空心三角形的虚线</strong>(mac中的startUML画不出来，大家将就着看)来表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/realization.png" alt="realization"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>理解类图有助于我们更好的去看技术书籍，以及源码，这是必备技能，get it！</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://segmentfault.com/a/1190000011556007" target="_blank" rel="external">UML 及 StarUml</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：在看源码或者很多技术书籍的时候都避免不了看到类图，时间长了总会忘了含义，在这里就总结一下，方便以后回顾。这里使用的工具是startUML。
+    
+    </summary>
+    
+      <category term="工具" scheme="http://bestlixiang.site/categories/%E5%B7%A5%E5%85%B7/"/>
+    
+    
+      <category term="UML" scheme="http://bestlixiang.site/tags/UML/"/>
+    
+  </entry>
   
   <entry>
     <title>Java并发_12_原子变量与非阻塞同步机制</title>
@@ -1478,122 +1564,6 @@
     <summary type="html">
     
       &lt;p&gt;引：之前一直在说类加载，类加载就需要类加载器，类加载最初是为了满足Java Applet，现在基本已经死掉了，但是类加载却在类层次划分、OSGi、热部署、代码加密等领域大放异彩，成为Java体系中一块重要的基石，可谓失之桑榆，收之东隅。
-    
-    </summary>
-    
-      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入理解JVM_8_虚拟机类加载机制</title>
-    <link href="http://bestlixiang.site/2017/12/02/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-8-%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/"/>
-    <id>http://bestlixiang.site/2017/12/02/深入理解JVM-8-虚拟机类加载机制/</id>
-    <published>2017-12-02T07:22:11.000Z</published>
-    <updated>2017-12-09T12:04:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：在Class文件中描述的各种信息最终都需要加载到虚拟机之中之后才能运行和使用。而虚拟机如何加载这些Class文件？Class文件中的信息进入到虚拟机后会发生什么变化？<a id="more"></a></p>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>虚拟机的类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型。</p>
-<p>C/C++和Java链接的不同：</p>
-<ol>
-<li>C/C++：在编译时完成链接工作；降低了运行时的性能开销，但是也降低了运行时的灵活性。</li>
-<li>Java：类型的加载、链接和初始化过程都是在程序运行期间完成的；增加了运行时的性能开销，但是增强了运行时的灵活性，使Java变成了可以动态扩展的语言。这里的动态扩展可以分为两点：<ul>
-<li>动态加载：用户可以通过Java预定义的或者自定义的类加载，让一个本地的应用程序可以在运行时在从网络或其他地方加载一个二进制流作为程序代码的一部分。</li>
-<li>动态链接：如果编写一个面向接口的应用程序，可以等到运行时再指定其实际的实现类。</li>
-</ul>
-</li>
-</ol>
-<h1 id="类加载的时机"><a href="#类加载的时机" class="headerlink" title="类加载的时机"></a>类加载的时机</h1><h2 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h2><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/classloading1.jpg" alt="classloading1"></p>
-<p>其中链接包括下面三个部分：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/classloading2.jpg" alt="classloading2"></p>
-<p>生命周期中加载、验证、准备、初始化和卸载这5个阶段顺序是确定的，但是又是可以互相交叉混合式进行的。</p>
-<h2 id="类的初始化时机"><a href="#类的初始化时机" class="headerlink" title="类的初始化时机"></a>类的初始化时机</h2><p>什么情况下需要开始类加载过程的第一阶段：加载？Java虚拟机规范没有进行强制约束，但是对初始化阶段，虚拟机规范则是严格规定了<strong>有且只有</strong>5种情况必须立即对类“初始化”。</p>
-<ol>
-<li>遇到new、getstatic、putstatic或者invokestatic这4条字节码指令时，如果类没有进行过初始化，则需要触发其初始化，生成这4条指令的最常见的Java代码场景是：使用new关键字实例化对象的时候，读取或设置一个类的静态字段（被final修饰并且已在编译器把结果放在常量池的静态字段除外）的时候，以及调用一个类的静态方法的时候。</li>
-<li>使用java.lang.reflect包的时候对类进行反射调用的时候，如果类没有进行过初始化，则需要触发其初始化。</li>
-<li>当初始化一个类的时候，如果发现其父类还没有进行初始化，则需要先触发其父类的初始化。</li>
-<li>当虚拟机启动时，用户需要制定一个要执行的主类（包含main方法的那个类），虚拟机会先初始化这个类。</li>
-<li>如果一个java.lang.invoke.MethodHandle实例解析结果是REF_getStaic,REF_putStatic,REF_invokeStatic的方法句柄，并且这个句柄所对应的类没有进行过初始化，则需要先触发其初始化。（还没用过）</li>
-</ol>
-<p>上面5种场景中的行为成为对一个类的<strong>主动引用</strong>，除此之外，所有应用类的方式都不会触发初始化，成为<strong>被动引用</strong>。下面是几个被动引用的场景：</p>
-<ol>
-<li>通过子类引用父类的静态字段，不会导致子类初始化。</li>
-<li>通过数组来定义引用类，不会触发此类的初始化。</li>
-<li>常量在编译阶段会存入调用类的常量池中，本质上没有直接引用到定义常量的类，不会触发该类的初始化，因为在编译阶段通过常量传播优化，已经将其他类的常量存入到调用类的常量池了。</li>
-</ol>
-<p>说一点接口与类初始化世时机的不同：在有且只有的5条中的第3条,当一个类在初始化时，要求其父类全部都已经初始化过了，但是接口在初始化时，不要求其父接口全部都完成了初始化，只有真正使用到父接口的时候（如引用接口中定义的常量）才会初始化。</p>
-<h1 id="类加载的过程"><a href="#类加载的过程" class="headerlink" title="类加载的过程"></a>类加载的过程</h1><p>Java虚拟机中类加载的全过程为：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/classloading3.jpg" alt="classloading3"></p>
-<h2 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h2><h3 id="虚拟机在加载阶段要干什么"><a href="#虚拟机在加载阶段要干什么" class="headerlink" title="虚拟机在加载阶段要干什么"></a>虚拟机在加载阶段要干什么</h3><ol>
-<li>通过一个类的全限定名来获取定义此类的二进制字节流。</li>
-<li>将这个类的字节流所代表的静态存储结构转化为方法区的运行时数据结构</li>
-<li>在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口。</li>
-</ol>
-<h3 id="二进制字节流的来源"><a href="#二进制字节流的来源" class="headerlink" title="二进制字节流的来源"></a>二进制字节流的来源</h3><ol>
-<li>从ZIP包中读取，最终成为了日后JAR、EAR、WAR格式的基础。</li>
-<li>从网络中获取，这个场景最典型的应用就是Applet（没用过）。</li>
-<li>运行时计算生成，这个场景使用的最多的就是动态代理技术，生成代理类的二进制字节流。</li>
-<li>由其他文件生成，典型场景是JSP应用，即由JSP文件生成对应的Class类。</li>
-</ol>
-<h3 id="加载阶段的注意点"><a href="#加载阶段的注意点" class="headerlink" title="加载阶段的注意点"></a>加载阶段的注意点</h3><ol>
-<li>非数组类的加载阶段是开发人员可控性最强的，加载阶段既可以使用系统提供的引导类加载器，也可以使用用户自定义的类加载器。</li>
-<li>数组类本身不通过类加载器创建，它是由Java虚拟机直接创建的，但是最终还是要靠类加载器是创建数组类里面的元素类型，每个数组都会在加载数组元素的类加载器的类名称空间上被标识。</li>
-<li>Java虚拟机规范没有规定类在方法区的具体数据结构，也没有规定生成的Class对象存储在哪里，对于HotSpot虚拟机而言，它被存放在方法区里面，jdk1.8以后应该在直接内存中吧。</li>
-<li>加载阶段与连接阶段的部分内容（一部分字节码文件格式验证工作）是交叉进行的。</li>
-</ol>
-<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><h3 id="验证目的"><a href="#验证目的" class="headerlink" title="验证目的"></a>验证目的</h3><p>由于Class文件并不一定要求用Java源码编译而来，可以使用任何途径产生，所以安全性得不到保证，而验证的目的就是为了确保Class文件的字节流包含的信息符合虚拟机的要求，并且不会危害虚拟机自身的安全。</p>
-<h3 id="验证过程"><a href="#验证过程" class="headerlink" title="验证过程"></a>验证过程</h3><ol>
-<li><p>文件格式验证</p>
-<p> 主要目的是保证输入的字节流能正确地解析并存储于方法区之内，格式上负荷一个Java类型信息的要求，这个阶段的验证是基于二进制字节流进行的，只有通过这个阶段的验证后，字节流才会进入内存的方法区中进行存储，所以后面的3个验证阶段全部是基于方法区的存储结构进行的，不会再直接操作字符流。</p>
-</li>
-<li><p>元数据验证</p>
-<p> 主要目的是对类的元数据信息进行语义校验，保证不存在不符合Java语言规范的元数据信息。</p>
-</li>
-<li><p>字节码验证</p>
-<p> 主要目的是通过数据流和控制流分析，确定程序语义是合法的，符合逻辑的，保证被校验类的方法在运行时不会做出危害虚拟机安全的事件。</p>
-</li>
-<li><p>符号引用验证</p>
-<p> 发生在解析阶段（将符号引用转化为直接引用），主要目的是确保解析动作能正常执行。</p>
-</li>
-</ol>
-<h3 id="调优的地方"><a href="#调优的地方" class="headerlink" title="调优的地方"></a>调优的地方</h3><p>如果所运行的代码都已经被反复使用和验证过，那么在实施阶段就可以考虑使用-Xverify:none参数来关闭大部分的类验证措施，以缩短虚拟机类加载的时间。</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>准备阶段是正式为<strong>类变量</strong>分配内存并设置<strong>类变量</strong>初始值的阶段，但是这里的初始值需要注意一下：</p>
-<ol>
-<li>通常情况：初始值是数据类型的零值</li>
-<li>类变量有fianl关键字修饰：初始值是ConstantValue属性所指定的值</li>
-</ol>
-<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程。这里解释一下直接引用和符号引用：</p>
-<ol>
-<li>符号引用：符号引用以一组符号来描述所引用的目标，符号可以是任何形式的字面量。它的字面量形式明确定义在Java虚拟机规范的Class文件格式中。符号引用于虚拟机实现的内存布局无关，引用的目标并不一定已经加载到内存中。</li>
-<li>直接引用：它可以是直接指向目标的指针、相对偏移量或者是一个能间接定位到目标的句柄。直接引用和虚拟机实现的内存布局相关，有了直接引用，那么引用的目标必定已经在内存中存在。</li>
-</ol>
-<p>虚拟机规范中并未规定解析阶段发生的具体时间。所以虚拟机可以根据需要来判断到底是在类被加载器加载时就对常量池的符号引用进行解析，还是等到一个符号引用被使用前再去解析它。</p>
-<p>解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行。</p>
-<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>类初始化时类加载过程的最后一步，到了初始化阶段，才真正开始执行类中定义的Java程序代码。在准备阶段，变量已经赋过一次系统要求的初始值，而在初始化阶段，则根据程序员通过程序制定的主观计划去初始化变量和其他资源，从另一个角度来表达：初始化阶段是执行类构造器clinit()方法的过程。下面是clinit()方法的注意点：</p>
-<ol>
-<li><p>clinit()方法是由编译器自动收集类中的所有<strong>类变量</strong>的赋值动作和静态语句块中语句合并产生的，收集的顺序是有语句在源文件出现的顺序决定的，这里有很特别的一点：<strong>静态语句块中只能访问到定义在静态语句块之前的变量，定义在之后的变量，在前面的静态语句块可以赋值，但是不能访问</strong>，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        i =<span class="number">0</span>; <span class="comment">//正常编译</span></div><div class="line">        System.out.println(i);  <span class="comment">//提示“非法向前引用”</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> i =<span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>clinit()方法不需要显式地调用父类构造器，虚拟机会保证在子类的clinit()方法执行前，父类的clinit()方法已经执行完毕。</p>
-</li>
-<li>由于父类的clinit()方法先执行，所以父类定义的静态语句块要优先于子类的变量赋值操作。</li>
-<li>虚拟机会保证一个类的clinit()方法在多线程中被正确地加锁、同步，如果多个线程同时去初始化一个类，那么只会有一个线程去执行这个类的clinit()方法，其他线程都要阻塞等待，直到活动线程执行clinit()方法完毕。</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>类加载的5个阶段都很重要，对理解对象的创建过程有了更好的理解。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《深入理解Java虚拟机》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：在Class文件中描述的各种信息最终都需要加载到虚拟机之中之后才能运行和使用。而虚拟机如何加载这些Class文件？Class文件中的信息进入到虚拟机后会发生什么变化？
     
     </summary>
     
