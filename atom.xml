@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-01-27T13:40:39.000Z</updated>
+  <updated>2018-02-01T04:06:16.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,137 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>先吹响口号_6大设计原则</title>
+    <link href="http://bestlixiang.site/2018/02/01/%E5%85%88%E5%90%B9%E5%93%8D%E5%8F%A3%E5%8F%B7-6%E5%A4%A7%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"/>
+    <id>http://bestlixiang.site/2018/02/01/先吹响口号-6大设计原则/</id>
+    <published>2018-02-01T04:01:04.000Z</published>
+    <updated>2018-02-01T04:06:16.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：先有6大设计原则，后有23种设计模式。让我们先吹响这先行的口号。<a id="more"></a></p>
+<h1 id="单一职责原则-SRP"><a href="#单一职责原则-SRP" class="headerlink" title="单一职责原则 SRP"></a>单一职责原则 SRP</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><strong>就一个类或接口而言，应该有且只有一个原因引起类的变更。</strong></p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>关于电话通话的接口，有三个过程：拨号、通话、挂机。代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IPhone</span> </span>&#123;</div><div class="line">    <span class="comment">//拨通电话</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dial</span><span class="params">(String phoneNumber)</span></span>;</div><div class="line">    <span class="comment">//通话</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">chat</span><span class="params">(Onbject o)</span></span>;</div><div class="line">    <span class="comment">//挂机</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hangup</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但是IPhone这个接口不是只有一个职责，它包含了两个职责：一个是协议管理，一个是数据传送。所以我们改为下面设计的类图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/srp.png" alt="srp"></p>
+<h2 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h2><ul>
+<li>类的复杂性降低，实现什么职责都有清晰明确的定义</li>
+<li>可读性提高，复杂度降低，那当然可读性提高了</li>
+<li>可维护性提高，可读性提高了，那当然更容易维护了</li>
+<li>变更引起的风险降低</li>
+</ul>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>接口一定要做到单一职责，类的设计尽量做到只有一个原因引起变化。</p>
+<h1 id="里氏替换原则-LSP"><a href="#里氏替换原则-LSP" class="headerlink" title="里氏替换原则 LSP"></a>里氏替换原则 LSP</h1><h2 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h2><ol>
+<li>正宗定义：如果对每一个类型为S的对象o1，都有类型为T的对象o2，使得以T定义的所有程序P在所有的对象o2都代换成o1时，程序P的行为没有发生变化，那么类型S是类型T的子类型。（感觉《Java设计模式之禅》的翻译错误）</li>
+<li>通俗定义：所有引用基类的地方必须能透明地使用其子类的对象（<strong>只要父类能出现得地方子类就可以出现</strong>；有子类出现的地方，父类未必能适应）。</li>
+</ol>
+<h2 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h2><ol>
+<li>子类必须完全实现父类的方法。（如果子类不能完整地实现子类的方法，或者父类的某些方法在子类中已经发生“畸变”，则建议断开父子继承关系，采用依赖、聚合、组合灯关系来代替继承。）</li>
+<li>子类可以有自己的个性。</li>
+<li>覆盖或实现父类的方法时输入参数可以被放大。（子类中方法的前置条件（方法中输入参数）必须与超类中被覆写的方法的前置条件相同或者更宽松。）</li>
+<li>覆写或实现父类的方法时输出结果可以被缩小。</li>
+</ol>
+<h2 id="疑问（多态是否违背LSP？）"><a href="#疑问（多态是否违背LSP？）" class="headerlink" title="疑问（多态是否违背LSP？）"></a>疑问（多态是否违背LSP？）</h2><p>如果继承的目的是为了多态，而多态的前提就是子类覆盖并重新定义父类的方法，为了符合LSP，我们应该将父类定义为抽象类，并定义抽象方法，让子类重新定义这些方法，当父类是抽象类时，父类就是不能实例化，所以也不存在可实例化的父类对象在程序里。也就不存在子类替换父类实例时逻辑不一致的可能。</p>
+<h2 id="最佳实践-1"><a href="#最佳实践-1" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>在项目中，采用里氏替换原则时，尽量避免子类的“个性”，一旦子类有了“个性”，这个子类和父类之间的关系就难调和，把子类当做父类使用，子类的“个性”被抺杀了，把子类单独作为一个业务来使用，则会让代码间的耦合关系变得扑朔迷离–缺乏类替换的标准。</p>
+<h1 id="依赖倒置原则-DIP"><a href="#依赖倒置原则-DIP" class="headerlink" title="依赖倒置原则 DIP"></a>依赖倒置原则 DIP</h1><h2 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h2><p>高层模块不应该依赖底层模块，两者都应该依赖其抽象。抽象不应该依赖细节。细节应该依赖抽象。（不可以分割的原子逻辑就是底层模块，原子逻辑的再组装就是高层模块。抽象就是指接口或抽象类。细节就是实现类。）</p>
+<p>Java语言表现：模块间的依赖通过抽象产生，实现类之间不发生直接的依赖关系，其依赖关系是通过接口或抽象类产生的。接口或抽象类不依赖实现类。实现类依赖接口或抽象类。——<strong>面向接口编程(OOD)</strong>。</p>
+<h2 id="依赖的三种写法"><a href="#依赖的三种写法" class="headerlink" title="依赖的三种写法"></a>依赖的三种写法</h2><ol>
+<li><p>构造函数传递依赖对象(构造函数注入)</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span> <span class="keyword">implements</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> ICar car;</div><div class="line">    <span class="comment">//构造函数注入</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Drive</span><span class="params">(ICar _car)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.car = _car;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.car.run();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Setter方法传递依赖对象（Setter依赖注入）</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCar</span><span class="params">(ICar car)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span> <span class="keyword">implements</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> ICar car;</div><div class="line">    <span class="comment">//setter注入</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCar</span><span class="params">(ICar car)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.car = car;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.car.run();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>接口声明依赖对象(接口注入)</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">(ICar car)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span> <span class="keyword">implements</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="comment">//接口注入</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">(ICar car)</span> </span>&#123;</div><div class="line">        car.run();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="最佳实践-2"><a href="#最佳实践-2" class="headerlink" title="最佳实践"></a>最佳实践</h2><ol>
+<li>每个类尽量都有接口或抽象类，或者抽象类和接口两者都具备。</li>
+<li>变量的表面类型（定义的类型）尽量是接口或者是抽象类。</li>
+<li>任何类都不应该从具体类派生。</li>
+<li>尽量不要覆写基类的方法。</li>
+<li>结合里氏替换原则使用（多态）</li>
+</ol>
+<p>我们在实际的项目中使用依赖倒置原则需要审时度势，不哟啊抓住一个原则不放，每一个原则的优点都是有限度的，并不是放之四海而皆准的真理，所以别为了遵循一个原则而放弃了一个项目的终极目标：投产上线和盈利。</p>
+<h1 id="接口隔离原则-ISP"><a href="#接口隔离原则-ISP" class="headerlink" title="接口隔离原则 ISP"></a>接口隔离原则 ISP</h1><h2 id="定义-3"><a href="#定义-3" class="headerlink" title="定义"></a>定义</h2><p>客户端不应该依赖他不需要的接口。类间的依赖关系应该建立在最小的接口上。<br>（实例接口：class；类接口：interface）</p>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><ol>
+<li>接口要尽量小。（根据接口隔离原则拆分接口时，首先必须要满足单一职责原则。）</li>
+<li>接口要高内聚。（在接口中尽量少公布public方法。）</li>
+<li>定制服务。（设计时需要为各个访问者定制服务（接口）。）</li>
+<li>接口设计时有限度的。（接口的设计粒度要协调开发难度和可维护性。）</li>
+</ol>
+<h2 id="最佳实践-3"><a href="#最佳实践-3" class="headerlink" title="最佳实践"></a>最佳实践</h2><ol>
+<li>一个接口只服务于一个子模块或业务逻辑。</li>
+<li>通过业务逻辑压缩接口中的public方法，经常回顾接口。</li>
+<li>已经被污染的接口，尽量去修改，如果变更风险较大，则采用<strong>适配器模式</strong>进行转化处理。</li>
+<li>了解环境，拒绝盲从。</li>
+</ol>
+<h1 id="迪米特法则-LoD-LKP"><a href="#迪米特法则-LoD-LKP" class="headerlink" title="迪米特法则 LoD LKP"></a>迪米特法则 LoD LKP</h1><h2 id="定义-4"><a href="#定义-4" class="headerlink" title="定义"></a>定义</h2><p>一个对象应该对其他对象有最少的了解。（类解耦）</p>
+<h2 id="含义"><a href="#含义" class="headerlink" title="含义"></a>含义</h2><ol>
+<li><p>只与朋友交流</p>
+<p> 朋友类的定义：出现在成员变量、方法的输入输出参数的类称为成员朋友类。</p>
+<p> 所以在原类的方法中不能出现非朋友的类，JDK API提供的类除外。</p>
+</li>
+<li><p>朋友间也是有距离的</p>
+<p> 尽量不要对外公布太多的public方法和非静态的public变量。</p>
+</li>
+<li><p>是自己的就是自己的</p>
+<p> 如果过一个方法放在本类中，既不增加类间关系，也对本类不产生负面影响，那就放置在本类中。</p>
+</li>
+<li><p>谨慎使用Serializable</p>
+<p> 防止客户端和服务器端类不同步。</p>
+</li>
+</ol>
+<h2 id="最佳实践-4"><a href="#最佳实践-4" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>迪米特法则的核心是类间解耦，弱耦合，只有弱耦合了以后，类的复用率才可以提高。其要求的结果就是产生大量的中转或跳转类，导致系统的复杂性提高，同时也为维护带来了难度，在采用迪米特法则时需要反复权衡，既做到让结构清晰，又要做到高内聚低耦合。当一个类跳转两次以上才能访问到另一个类，就需要重构了。</p>
+<h1 id="开闭原则-OCP"><a href="#开闭原则-OCP" class="headerlink" title="开闭原则 OCP"></a>开闭原则 OCP</h1><h2 id="定义-5"><a href="#定义-5" class="headerlink" title="定义"></a>定义</h2><p>一个软件实体如类、模块和函数应该对扩展开放，对修改关闭。</p>
+<p>PS: 3W原则（what：是什么；why：为什么；How：怎么做）</p>
+<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p>开闭原则告诉我们应该尽量通过<strong>扩展软件实体</strong>来实现变化，而不是通过修改已有的代码来完成变化，它是为软件实体的未来事件而制定的对现行开发设计进行的约束规则。</p>
+<p>开闭原则对扩展开放，对修改关闭，并不以为着不做任何修改，低层模块的变更，必然要有高层模块的进行耦合，否则就是一个孤立无意义的代码片段。</p>
+<p>一个项目的基本路径：项目开发、重构、测试、投产、运维，其中的重构可以对原有的设计和代码进行修改，<strong>运维尽量减少对原有代码的修改，保持历史代码的纯洁性</strong>，提高系统的稳定性。</p>
+<h2 id="为什么"><a href="#为什么" class="headerlink" title="为什么"></a>为什么</h2><ol>
+<li>简化测试：如果改变软件内容, 需要将所有的测试流程都执行一遍, 如 单元测试, 功能测试, 集成测试等, 如果只是扩展, 只单独测试扩展部分即可。</li>
+<li>提高复用性：所有逻辑都从原子逻辑组合, 原子逻辑粒度越小, 复用性越大; 这样避免相同逻辑存在, 修改时需要修改多个此相同逻辑。</li>
+<li>提高可维护性：维护一个类最好的方式是扩展一个类, 而不是修改一个类, 如果需要修改需要读懂源码才能修改, 扩展的话只需要了解即可, 直接继承扩展。</li>
+</ol>
+<h2 id="怎么做"><a href="#怎么做" class="headerlink" title="怎么做"></a>怎么做</h2><ol>
+<li><p>抽象约束</p>
+<p> 通过接口或抽象类可以约束一组可能变化的行为，并且实现对扩展开放。其中包括三层含义：第一，通过接口或抽象类约束扩展，对扩展进行边界设定，不允许出现在接口或抽象类不存在的public方法；第二，参数类型，引用对象尽量使用接口或者抽象类，而不是实现类；第三，抽象层尽量保持稳定。</p>
+</li>
+<li><p>元数据控制模块行为</p>
+<p> 通过配置参数（从文件或者数据库中来）来控制行为，例如spring配置文件的构造函数注入配置。</p>
+</li>
+<li><p>制定项目章程</p>
+<p> 约定优于配置。</p>
+</li>
+<li><p>封装变化</p>
+<p> 对变化的封装包含两层含义：第一，将相同的变化封装到一个接口或抽象类中；第二，将不同的变化封装到不同的接口或抽象类中。23个设计模式都是从各个不同的角度对变化进行封装的。</p>
+</li>
+</ol>
+<h2 id="最佳实践-5"><a href="#最佳实践-5" class="headerlink" title="最佳实践"></a>最佳实践</h2><ol>
+<li>开闭原则只是一个原则，适当时候也可以进行补充。</li>
+<li>项目规章非常重要。</li>
+<li>预知变化，项目需要具有可扩展性。</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>把上面6大原则的首字母（里氏替换原则和迪米特法则的首字母重复，只取一个）联合起来就是SOLID（稳定的），其代码的含义就是把这6个原则结合使用的好处：建立稳定灵活，健壮的设计，而开闭原则又是重中之中，是最基础的原则，是其他5大原则的精神领袖。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：先有6大设计原则，后有23种设计模式。让我们先吹响这先行的口号。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>UML_Java类图</title>
@@ -1492,78 +1623,6 @@
     <summary type="html">
     
       &lt;p&gt;引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？
-    
-    </summary>
-    
-      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入理解JVM_9_类加载器</title>
-    <link href="http://bestlixiang.site/2017/12/06/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-9-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/"/>
-    <id>http://bestlixiang.site/2017/12/06/深入理解JVM-9-类加载器/</id>
-    <published>2017-12-06T02:59:56.000Z</published>
-    <updated>2017-12-09T12:04:08.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：之前一直在说类加载，类加载就需要类加载器，类加载最初是为了满足Java Applet，现在基本已经死掉了，但是类加载却在类层次划分、OSGi、热部署、代码加密等领域大放异彩，成为Java体系中一块重要的基石，可谓失之桑榆，收之东隅。<a id="more"></a></p>
-<h1 id="什么是类加载器？"><a href="#什么是类加载器？" class="headerlink" title="什么是类加载器？"></a>什么是类加载器？</h1><p>虚拟机设计团队把类加载阶段的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让应用程序自己去决定如何去获取所需要的类，实现这个动作的代码模块称为“类加载器”。</p>
-<h1 id="同一个Class文件，不同的类"><a href="#同一个Class文件，不同的类" class="headerlink" title="同一个Class文件，不同的类"></a>同一个Class文件，不同的类</h1><p>对于任意一个类，都需要由加载它的类加载器和这个类本身一同确立其在Java虚拟机中的唯一性，每一个类加载器，都拥有一个独立的类名称空间。换个说法：比较两个类是否“相等”，只是在这两个类是由同一个类加载器加载的前提下才有意义，如果这两个类源于同一个Class文件，被同一个虚拟机加载，只要加载他们的类加载器不同，那这两个类就必定不相等。</p>
-<p>这里的相等包括：代表类的Class对象的equals()方法、isAssignableFrom()方法、isInstance()方法返回结果，下面的代码展示了不同的类加载器对instanceof关键字运算的结果的影响。(下面的代码属于破坏双亲委派模型，只是为了验证类的命名空间)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoaderTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line"></div><div class="line">        ClassLoader myLoader = <span class="keyword">new</span> ClassLoader() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    String fileName = name.substring(name.lastIndexOf(<span class="string">"."</span>) + <span class="number">1</span>) + <span class="string">".class"</span>;</div><div class="line"></div><div class="line">                    InputStream is = getClass().getResourceAsStream(fileName);</div><div class="line">                    <span class="keyword">if</span> (is == <span class="keyword">null</span>) &#123;</div><div class="line">                        <span class="keyword">return</span> <span class="keyword">super</span>.loadClass(name);</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[is.available()];</div><div class="line">                    is.read(b);</div><div class="line">                    <span class="keyword">return</span> defineClass(name,b,<span class="number">0</span>,b.length);</div><div class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        Object obj = myLoader.loadClass(<span class="string">"com.todorex.demo.ClassLoaderTest"</span>).newInstance();</div><div class="line"></div><div class="line">        System.out.println(obj.getClass());</div><div class="line"></div><div class="line">        System.out.println(obj <span class="keyword">instanceof</span> com.todorex.demo.ClassLoaderTest );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">class com.todorex.demo.ClassLoaderTest</div><div class="line">false</div></pre></td></tr></table></figure></p>
-<p>这里的false就证明了两个类虽然来自于同一个Class文件，但是由于使用的类加载器不同，就依然是两个独立的类。</p>
-<h1 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h1><h2 id="类加载器的类型"><a href="#类加载器的类型" class="headerlink" title="类加载器的类型"></a>类加载器的类型</h2><h3 id="Java虚拟机角度"><a href="#Java虚拟机角度" class="headerlink" title="Java虚拟机角度"></a>Java虚拟机角度</h3><ol>
-<li>启动类加载器，它本身是由C++语言实现，或者底层的关键方法是用C实现的。</li>
-<li>所有其他类加载器，这些类加载器都由Java语言实现。</li>
-</ol>
-<h3 id="Java开发人员角度"><a href="#Java开发人员角度" class="headerlink" title="Java开发人员角度"></a>Java开发人员角度</h3><ol>
-<li>启动类加载器：这个类加载器负责将存放在<java_home>\lib目录中的，或者被-Xbootclasspath参数所指定的路径找那个的，并且是虚拟机识别的（按照文件名识别的）类库加载到虚拟机内存中。启动类加载器无法被Java程序直接使用，用户在编写自定义类加载器时，如果需要把加载请求委派给引导类加载器，直接使用null即可。（不知道怎么用，知道的大佬请告知！！！！）</java_home></li>
-<li>扩展类加载器：这个加载器由sun.misc.Launcher$ExtClassLoader实现，它负责加载<java_home>\lib\ext目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以使用扩展类加载器。</java_home></li>
-<li>应用程序类加载器：这个类加载器由sun.misc.Launcher$AppClassLoader实现，也称系统类加载器。它负责加载用户所指定的类路径java -classpath或-Djava.class.path的所有类，开发者可以直接使用这个类加载器，如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</li>
-</ol>
-<h2 id="类加载器的双亲委派模型"><a href="#类加载器的双亲委派模型" class="headerlink" title="类加载器的双亲委派模型"></a>类加载器的双亲委派模型</h2><h3 id="模型图"><a href="#模型图" class="headerlink" title="模型图"></a>模型图</h3><p><img src="http://o6plzvjf2.bkt.clouddn.com/image/parentsDelegationModel.jpg" alt="Parents Delegation Model"></p>
-<p>双亲委派模型要求除了顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器。这里的类加载器之间的父子关系一般不会以继承的关系来实现，而是都使用组合关系来复用父加载器的代码。（组合就是在一个类中调用另一个类的代码）</p>
-<h3 id="工作过程"><a href="#工作过程" class="headerlink" title="工作过程"></a>工作过程</h3><p>我相信这张图最清楚了：</p>
-<p><img src="http://static.zybuluo.com/Rico123/8ty4pk8xgubfhq123dhxg68m/%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8A%A0%E8%BD%BD%E7%B1%BB%E7%9A%84%E8%BF%87%E7%A8%8B" alt="双亲委派模型工作流程"></p>
-<p>我们可以由图看到以下过程：</p>
-<ol>
-<li>自底向上检查类是否已经加载，若已加载，直接返回。</li>
-<li>若所有父类都没有加载该类，则自顶向下尝试加载该类。</li>
-<li>如果加载不成功，则抛出ClassNotFoundException异常。</li>
-</ol>
-<p>我们可以从代码看看他是怎么实现的？</p>
-<ol>
-<li>先看ClassLoader函数的loadClass函数<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</div><div class="line">      <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">  &#123;</div><div class="line">      <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</div><div class="line">          <span class="comment">// 先从缓存查找该class对象，找到就不用重新加载</span></div><div class="line">          Class&lt;?&gt; c = findLoadedClass(name);</div><div class="line">          <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">              <span class="keyword">long</span> t0 = System.nanoTime();</div><div class="line">              <span class="keyword">try</span> &#123;</div><div class="line">                  <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</div><div class="line">                      <span class="comment">//如果找不到，则委托给父类加载器去加载</span></div><div class="line">                      c = parent.loadClass(name, <span class="keyword">false</span>);</div><div class="line">                  &#125; <span class="keyword">else</span> &#123;</div><div class="line">                  <span class="comment">//如果没有父类，则委托给启动加载器去加载</span></div><div class="line">                      c = findBootstrapClassOrNull(name);</div><div class="line">                  &#125;</div><div class="line">              &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">                  <span class="comment">// ClassNotFoundException thrown if class not found</span></div><div class="line">                  <span class="comment">// from the non-null parent class loader</span></div><div class="line">              &#125;</div><div class="line"></div><div class="line">              <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">                  <span class="comment">// If still not found, then invoke findClass in order</span></div><div class="line">                  <span class="comment">// 如果都没有找到，则通过自定义实现的findClass去查找并加载</span></div><div class="line">                  c = findClass(name);</div><div class="line"></div><div class="line">                  <span class="comment">// this is the defining class loader; record the stats</span></div><div class="line">                  sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</div><div class="line">                  sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</div><div class="line">                  sun.misc.PerfCounter.getFindClasses().increment();</div><div class="line">              &#125;</div><div class="line">          &#125;</div><div class="line">          <span class="keyword">if</span> (resolve) &#123;<span class="comment">//是否需要在加载时进行解析</span></div><div class="line">              resolveClass(c);</div><div class="line">          &#125;</div><div class="line">          <span class="keyword">return</span> c;</div><div class="line">      &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>从该函数我们可以得知双亲委派模型会先递归去查找父加载器是否已经加载过该类了。如果父加载器都没有加载过该类，则开始调用fandClass<br>()尝试去加载该类。由于启动类加载器不可知，我们可以去看看扩展类加载器的findClass()。我们可以看到下面的类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/jpg/ExtClassLoader.jpg" alt="ExtClassLoader"></p>
-<p>我接着我想去看看ExtClassLoader类里面的findClass()方法，结果发现没有，只要去他的父类URLClassLoader去找找，还好找到了，可以看看下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(<span class="keyword">final</span> String name)</div><div class="line">    <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">&#123;</div><div class="line">    <span class="keyword">final</span> Class&lt;?&gt; result;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        result = AccessController.doPrivileged(</div><div class="line">            <span class="keyword">new</span> PrivilegedExceptionAction&lt;Class&lt;?&gt;&gt;() &#123;</div><div class="line">                <span class="keyword">public</span> Class&lt;?&gt; run() <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">                    String path = name.replace(<span class="string">'.'</span>, <span class="string">'/'</span>).concat(<span class="string">".class"</span>);</div><div class="line">                    Resource res = ucp.getResource(path, <span class="keyword">false</span>);</div><div class="line">                    <span class="keyword">if</span> (res != <span class="keyword">null</span>) &#123;</div><div class="line">                        <span class="keyword">try</span> &#123;</div><div class="line">                             <span class="comment">//defineClass()方法是用来将byte字节流解析成JVM能够识别的Class对象</span></div><div class="line">                            <span class="keyword">return</span> defineClass(name, res);</div><div class="line">                        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name, e);</div><div class="line">                        &#125;</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;, acc);</div><div class="line">    &#125; <span class="keyword">catch</span> (java.security.PrivilegedActionException pae) &#123;</div><div class="line">        <span class="keyword">throw</span> (ClassNotFoundException) pae.getException();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>其实AppClassLoader的findClass()也是继承自URLCLassLoader，所以都是一样的，我们再结合最开始的loadClass()就可以很好的理解了上面双亲委派模型的工作流程了。</p>
-<h3 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h3><p>java随着它的类加载一起具备了一种带有优先级的层次关系，它能保证一个类在程序中各种类加载器环境中都是同一个类。</p>
-<h3 id="双亲委派模型的“双亲”"><a href="#双亲委派模型的“双亲”" class="headerlink" title="双亲委派模型的“双亲”"></a>双亲委派模型的“双亲”</h3><p>在Java虚拟机英文文章里双亲委派模型的英文是Parent-Delegation Model，不知道为什么中文翻译会称他为双亲委派模型，可能是他一般都会找到一个爸爸去委托去处理吧。</p>
-<h1 id="破坏双亲委派模型"><a href="#破坏双亲委派模型" class="headerlink" title="破坏双亲委派模型"></a>破坏双亲委派模型</h1><p>目前为止，双亲委派模型主要出现过3次较大的“被破坏”的情况。</p>
-<ol>
-<li>在JDK1.2之前，新建加载器都是通过重写loadClass()方法来区分不同的加载器,以及修改加载逻辑，这样就破坏了双亲委派模型的向上寻找父加载器去加载的规范，在JDK1.2之后为了向前兼容，ClassLoader添加了新的protect方法findCLass()方法，从而实现了在双亲委派模型上实现加载逻辑的修改。</li>
-<li>线程上下文类加载器，如JNDI服务(没用过)</li>
-<li>实现动态性，如OSGi(没用过)</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>有时候分析东西查看源码是必要的，还要利用一些工具去分析他们的继承关系。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《深入理解Java虚拟机》</li>
-<li><a href="http://blog.csdn.net/javazejian/article/details/73413292" target="_blank" rel="external">深入理解Java类加载器(ClassLoader)</a></li>
-<li><a href="http://blog.csdn.net/justloveyou_/article/details/72217806" target="_blank" rel="external">深入理解Java类加载器(一)：Java类加载原理解析</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：之前一直在说类加载，类加载就需要类加载器，类加载最初是为了满足Java Applet，现在基本已经死掉了，但是类加载却在类层次划分、OSGi、热部署、代码加密等领域大放异彩，成为Java体系中一块重要的基石，可谓失之桑榆，收之东隅。
     
     </summary>
     

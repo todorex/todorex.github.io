@@ -1,0 +1,1078 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,设计模式," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：先有6大设计原则，后有23种设计模式。让我们先吹响这先行的口号。">
+<meta name="keywords" content="java,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="先吹响口号_6大设计原则">
+<meta property="og:url" content="http://bestlixiang.site/2018/02/01/先吹响口号-6大设计原则/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：先有6大设计原则，后有23种设计模式。让我们先吹响这先行的口号。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/srp.png">
+<meta property="og:updated_time" content="2018-02-01T04:06:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="先吹响口号_6大设计原则">
+<meta name="twitter:description" content="引：先有6大设计原则，后有23种设计模式。让我们先吹响这先行的口号。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/srp.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/02/01/先吹响口号-6大设计原则/"/>
+
+
+
+
+
+  <title> 先吹响口号_6大设计原则 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/02/01/先吹响口号-6大设计原则/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                先吹响口号_6大设计原则
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-01T12:01:04+08:00">
+                2018-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：先有6大设计原则，后有23种设计模式。让我们先吹响这先行的口号。<a id="more"></a></p>
+<h1 id="单一职责原则-SRP"><a href="#单一职责原则-SRP" class="headerlink" title="单一职责原则 SRP"></a>单一职责原则 SRP</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><strong>就一个类或接口而言，应该有且只有一个原因引起类的变更。</strong></p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>关于电话通话的接口，有三个过程：拨号、通话、挂机。代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IPhone</span> </span>&#123;</div><div class="line">    <span class="comment">//拨通电话</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dial</span><span class="params">(String phoneNumber)</span></span>;</div><div class="line">    <span class="comment">//通话</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">chat</span><span class="params">(Onbject o)</span></span>;</div><div class="line">    <span class="comment">//挂机</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hangup</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但是IPhone这个接口不是只有一个职责，它包含了两个职责：一个是协议管理，一个是数据传送。所以我们改为下面设计的类图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/srp.png" alt="srp"></p>
+<h2 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h2><ul>
+<li>类的复杂性降低，实现什么职责都有清晰明确的定义</li>
+<li>可读性提高，复杂度降低，那当然可读性提高了</li>
+<li>可维护性提高，可读性提高了，那当然更容易维护了</li>
+<li>变更引起的风险降低</li>
+</ul>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>接口一定要做到单一职责，类的设计尽量做到只有一个原因引起变化。</p>
+<h1 id="里氏替换原则-LSP"><a href="#里氏替换原则-LSP" class="headerlink" title="里氏替换原则 LSP"></a>里氏替换原则 LSP</h1><h2 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h2><ol>
+<li>正宗定义：如果对每一个类型为S的对象o1，都有类型为T的对象o2，使得以T定义的所有程序P在所有的对象o2都代换成o1时，程序P的行为没有发生变化，那么类型S是类型T的子类型。（感觉《Java设计模式之禅》的翻译错误）</li>
+<li>通俗定义：所有引用基类的地方必须能透明地使用其子类的对象（<strong>只要父类能出现得地方子类就可以出现</strong>；有子类出现的地方，父类未必能适应）。</li>
+</ol>
+<h2 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h2><ol>
+<li>子类必须完全实现父类的方法。（如果子类不能完整地实现子类的方法，或者父类的某些方法在子类中已经发生“畸变”，则建议断开父子继承关系，采用依赖、聚合、组合灯关系来代替继承。）</li>
+<li>子类可以有自己的个性。</li>
+<li>覆盖或实现父类的方法时输入参数可以被放大。（子类中方法的前置条件（方法中输入参数）必须与超类中被覆写的方法的前置条件相同或者更宽松。）</li>
+<li>覆写或实现父类的方法时输出结果可以被缩小。</li>
+</ol>
+<h2 id="疑问（多态是否违背LSP？）"><a href="#疑问（多态是否违背LSP？）" class="headerlink" title="疑问（多态是否违背LSP？）"></a>疑问（多态是否违背LSP？）</h2><p>如果继承的目的是为了多态，而多态的前提就是子类覆盖并重新定义父类的方法，为了符合LSP，我们应该将父类定义为抽象类，并定义抽象方法，让子类重新定义这些方法，当父类是抽象类时，父类就是不能实例化，所以也不存在可实例化的父类对象在程序里。也就不存在子类替换父类实例时逻辑不一致的可能。</p>
+<h2 id="最佳实践-1"><a href="#最佳实践-1" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>在项目中，采用里氏替换原则时，尽量避免子类的“个性”，一旦子类有了“个性”，这个子类和父类之间的关系就难调和，把子类当做父类使用，子类的“个性”被抺杀了，把子类单独作为一个业务来使用，则会让代码间的耦合关系变得扑朔迷离–缺乏类替换的标准。</p>
+<h1 id="依赖倒置原则-DIP"><a href="#依赖倒置原则-DIP" class="headerlink" title="依赖倒置原则 DIP"></a>依赖倒置原则 DIP</h1><h2 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h2><p>高层模块不应该依赖底层模块，两者都应该依赖其抽象。抽象不应该依赖细节。细节应该依赖抽象。（不可以分割的原子逻辑就是底层模块，原子逻辑的再组装就是高层模块。抽象就是指接口或抽象类。细节就是实现类。）</p>
+<p>Java语言表现：模块间的依赖通过抽象产生，实现类之间不发生直接的依赖关系，其依赖关系是通过接口或抽象类产生的。接口或抽象类不依赖实现类。实现类依赖接口或抽象类。——<strong>面向接口编程(OOD)</strong>。</p>
+<h2 id="依赖的三种写法"><a href="#依赖的三种写法" class="headerlink" title="依赖的三种写法"></a>依赖的三种写法</h2><ol>
+<li><p>构造函数传递依赖对象(构造函数注入)</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span> <span class="keyword">implements</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> ICar car;</div><div class="line">    <span class="comment">//构造函数注入</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Drive</span><span class="params">(ICar _car)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.car = _car;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.car.run();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Setter方法传递依赖对象（Setter依赖注入）</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCar</span><span class="params">(ICar car)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span> <span class="keyword">implements</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> ICar car;</div><div class="line">    <span class="comment">//setter注入</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCar</span><span class="params">(ICar car)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.car = car;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.car.run();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>接口声明依赖对象(接口注入)</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">(ICar car)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span> <span class="keyword">implements</span> <span class="title">IDriver</span> </span>&#123;</div><div class="line">    <span class="comment">//接口注入</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drive</span><span class="params">(ICar car)</span> </span>&#123;</div><div class="line">        car.run();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="最佳实践-2"><a href="#最佳实践-2" class="headerlink" title="最佳实践"></a>最佳实践</h2><ol>
+<li>每个类尽量都有接口或抽象类，或者抽象类和接口两者都具备。</li>
+<li>变量的表面类型（定义的类型）尽量是接口或者是抽象类。</li>
+<li>任何类都不应该从具体类派生。</li>
+<li>尽量不要覆写基类的方法。</li>
+<li>结合里氏替换原则使用（多态）</li>
+</ol>
+<p>我们在实际的项目中使用依赖倒置原则需要审时度势，不哟啊抓住一个原则不放，每一个原则的优点都是有限度的，并不是放之四海而皆准的真理，所以别为了遵循一个原则而放弃了一个项目的终极目标：投产上线和盈利。</p>
+<h1 id="接口隔离原则-ISP"><a href="#接口隔离原则-ISP" class="headerlink" title="接口隔离原则 ISP"></a>接口隔离原则 ISP</h1><h2 id="定义-3"><a href="#定义-3" class="headerlink" title="定义"></a>定义</h2><p>客户端不应该依赖他不需要的接口。类间的依赖关系应该建立在最小的接口上。<br>（实例接口：class；类接口：interface）</p>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><ol>
+<li>接口要尽量小。（根据接口隔离原则拆分接口时，首先必须要满足单一职责原则。）</li>
+<li>接口要高内聚。（在接口中尽量少公布public方法。）</li>
+<li>定制服务。（设计时需要为各个访问者定制服务（接口）。）</li>
+<li>接口设计时有限度的。（接口的设计粒度要协调开发难度和可维护性。）</li>
+</ol>
+<h2 id="最佳实践-3"><a href="#最佳实践-3" class="headerlink" title="最佳实践"></a>最佳实践</h2><ol>
+<li>一个接口只服务于一个子模块或业务逻辑。</li>
+<li>通过业务逻辑压缩接口中的public方法，经常回顾接口。</li>
+<li>已经被污染的接口，尽量去修改，如果变更风险较大，则采用<strong>适配器模式</strong>进行转化处理。</li>
+<li>了解环境，拒绝盲从。</li>
+</ol>
+<h1 id="迪米特法则-LoD-LKP"><a href="#迪米特法则-LoD-LKP" class="headerlink" title="迪米特法则 LoD LKP"></a>迪米特法则 LoD LKP</h1><h2 id="定义-4"><a href="#定义-4" class="headerlink" title="定义"></a>定义</h2><p>一个对象应该对其他对象有最少的了解。（类解耦）</p>
+<h2 id="含义"><a href="#含义" class="headerlink" title="含义"></a>含义</h2><ol>
+<li><p>只与朋友交流</p>
+<p> 朋友类的定义：出现在成员变量、方法的输入输出参数的类称为成员朋友类。</p>
+<p> 所以在原类的方法中不能出现非朋友的类，JDK API提供的类除外。</p>
+</li>
+<li><p>朋友间也是有距离的</p>
+<p> 尽量不要对外公布太多的public方法和非静态的public变量。</p>
+</li>
+<li><p>是自己的就是自己的</p>
+<p> 如果过一个方法放在本类中，既不增加类间关系，也对本类不产生负面影响，那就放置在本类中。</p>
+</li>
+<li><p>谨慎使用Serializable</p>
+<p> 防止客户端和服务器端类不同步。</p>
+</li>
+</ol>
+<h2 id="最佳实践-4"><a href="#最佳实践-4" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>迪米特法则的核心是类间解耦，弱耦合，只有弱耦合了以后，类的复用率才可以提高。其要求的结果就是产生大量的中转或跳转类，导致系统的复杂性提高，同时也为维护带来了难度，在采用迪米特法则时需要反复权衡，既做到让结构清晰，又要做到高内聚低耦合。当一个类跳转两次以上才能访问到另一个类，就需要重构了。</p>
+<h1 id="开闭原则-OCP"><a href="#开闭原则-OCP" class="headerlink" title="开闭原则 OCP"></a>开闭原则 OCP</h1><h2 id="定义-5"><a href="#定义-5" class="headerlink" title="定义"></a>定义</h2><p>一个软件实体如类、模块和函数应该对扩展开放，对修改关闭。</p>
+<p>PS: 3W原则（what：是什么；why：为什么；How：怎么做）</p>
+<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p>开闭原则告诉我们应该尽量通过<strong>扩展软件实体</strong>来实现变化，而不是通过修改已有的代码来完成变化，它是为软件实体的未来事件而制定的对现行开发设计进行的约束规则。</p>
+<p>开闭原则对扩展开放，对修改关闭，并不以为着不做任何修改，低层模块的变更，必然要有高层模块的进行耦合，否则就是一个孤立无意义的代码片段。</p>
+<p>一个项目的基本路径：项目开发、重构、测试、投产、运维，其中的重构可以对原有的设计和代码进行修改，<strong>运维尽量减少对原有代码的修改，保持历史代码的纯洁性</strong>，提高系统的稳定性。</p>
+<h2 id="为什么"><a href="#为什么" class="headerlink" title="为什么"></a>为什么</h2><ol>
+<li>简化测试：如果改变软件内容, 需要将所有的测试流程都执行一遍, 如 单元测试, 功能测试, 集成测试等, 如果只是扩展, 只单独测试扩展部分即可。</li>
+<li>提高复用性：所有逻辑都从原子逻辑组合, 原子逻辑粒度越小, 复用性越大; 这样避免相同逻辑存在, 修改时需要修改多个此相同逻辑。</li>
+<li>提高可维护性：维护一个类最好的方式是扩展一个类, 而不是修改一个类, 如果需要修改需要读懂源码才能修改, 扩展的话只需要了解即可, 直接继承扩展。</li>
+</ol>
+<h2 id="怎么做"><a href="#怎么做" class="headerlink" title="怎么做"></a>怎么做</h2><ol>
+<li><p>抽象约束</p>
+<p> 通过接口或抽象类可以约束一组可能变化的行为，并且实现对扩展开放。其中包括三层含义：第一，通过接口或抽象类约束扩展，对扩展进行边界设定，不允许出现在接口或抽象类不存在的public方法；第二，参数类型，引用对象尽量使用接口或者抽象类，而不是实现类；第三，抽象层尽量保持稳定。</p>
+</li>
+<li><p>元数据控制模块行为</p>
+<p> 通过配置参数（从文件或者数据库中来）来控制行为，例如spring配置文件的构造函数注入配置。</p>
+</li>
+<li><p>制定项目章程</p>
+<p> 约定优于配置。</p>
+</li>
+<li><p>封装变化</p>
+<p> 对变化的封装包含两层含义：第一，将相同的变化封装到一个接口或抽象类中；第二，将不同的变化封装到不同的接口或抽象类中。23个设计模式都是从各个不同的角度对变化进行封装的。</p>
+</li>
+</ol>
+<h2 id="最佳实践-5"><a href="#最佳实践-5" class="headerlink" title="最佳实践"></a>最佳实践</h2><ol>
+<li>开闭原则只是一个原则，适当时候也可以进行补充。</li>
+<li>项目规章非常重要。</li>
+<li>预知变化，项目需要具有可扩展性。</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>把上面6大原则的首字母（里氏替换原则和迪米特法则的首字母重复，只取一个）联合起来就是SOLID（稳定的），其代码的含义就是把这6个原则结合使用的好处：建立稳定灵活，健壮的设计，而开闭原则又是重中之中，是最基础的原则，是其他5大原则的精神领袖。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/27/UML-Java类图/" rel="next" title="UML_Java类图">
+                <i class="fa fa-chevron-left"></i> UML_Java类图
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单一职责原则-SRP"><span class="nav-number">1.</span> <span class="nav-text">单一职责原则 SRP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#例子"><span class="nav-number">1.2.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#好处"><span class="nav-number">1.3.</span> <span class="nav-text">好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践"><span class="nav-number">1.4.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#里氏替换原则-LSP"><span class="nav-number">2.</span> <span class="nav-text">里氏替换原则 LSP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-1"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#规则"><span class="nav-number">2.2.</span> <span class="nav-text">规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#疑问（多态是否违背LSP？）"><span class="nav-number">2.3.</span> <span class="nav-text">疑问（多态是否违背LSP？）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践-1"><span class="nav-number">2.4.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#依赖倒置原则-DIP"><span class="nav-number">3.</span> <span class="nav-text">依赖倒置原则 DIP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-2"><span class="nav-number">3.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖的三种写法"><span class="nav-number">3.2.</span> <span class="nav-text">依赖的三种写法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践-2"><span class="nav-number">3.3.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口隔离原则-ISP"><span class="nav-number">4.</span> <span class="nav-text">接口隔离原则 ISP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-3"><span class="nav-number">4.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#约束"><span class="nav-number">4.2.</span> <span class="nav-text">约束</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践-3"><span class="nav-number">4.3.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#迪米特法则-LoD-LKP"><span class="nav-number">5.</span> <span class="nav-text">迪米特法则 LoD LKP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-4"><span class="nav-number">5.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#含义"><span class="nav-number">5.2.</span> <span class="nav-text">含义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践-4"><span class="nav-number">5.3.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开闭原则-OCP"><span class="nav-number">6.</span> <span class="nav-text">开闭原则 OCP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-5"><span class="nav-number">6.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#是什么"><span class="nav-number">6.2.</span> <span class="nav-text">是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么"><span class="nav-number">6.3.</span> <span class="nav-text">为什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么做"><span class="nav-number">6.4.</span> <span class="nav-text">怎么做</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践-5"><span class="nav-number">6.5.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
