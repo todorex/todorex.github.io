@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-02-01T04:06:16.000Z</updated>
+  <updated>2018-02-06T13:38:08.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,115 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式之禅——工厂方法模式</title>
+    <link href="http://bestlixiang.site/2018/02/06/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/02/06/设计模式之禅——工厂方法模式/</id>
+    <published>2018-02-06T13:37:09.000Z</published>
+    <updated>2018-02-06T13:38:08.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：在面向对象的思维中，万物皆对象，就像有女蜗造人，我们也可以用工厂方法模式造对象。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>定义一个用于创建对象的接口，让子类决定实例化哪一个类。工厂方法使一个类的实例化延迟到子类。——创造类</strong></p>
+<p>工厂方法模式的通用类图如下：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/factoryMethod.png" alt="FactoryMethod"></p>
+<p>下面是一个比较实用的通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象产品类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="comment">// 产品类的公共方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">//抽象方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体产品类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteProduct1</span> <span class="keyword">extends</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteProduct2</span> <span class="keyword">extends</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Creator</span> </span>&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 创建一个产品对象，其输入参数类型可以自行设置</div><div class="line">     * 通常为String, Enum, Class等，当然也可以为空</div><div class="line">     */</div><div class="line"></div><div class="line">     <span class="keyword">public</span> <span class="keyword">abstract</span> &lt;T extends Product&gt; <span class="function">T <span class="title">createProduct</span><span class="params">(Class&lt;T&gt; c)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteCreator</span> <span class="keyword">extends</span> <span class="title">Creator</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> &lt;T extends Product&gt; <span class="function">T <span class="title">createProduct</span><span class="params">(Class&lt;T&gt; c)</span> </span>&#123;</div><div class="line">        Product product = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            product = (Product) Class.forName(c.getName()).newInstance();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            <span class="comment">// 异常处理</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> （T）product;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Creator creator = <span class="keyword">new</span> ContreteCreate();</div><div class="line">        Product product = creator.createProduct(ContreteProduct1.class);</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * 继续业务处理</div><div class="line">         */</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>良好的封装性，代码结构清晰。</li>
+<li>扩展性非常优秀，要增加一个新的产品，只要实现Product接口。</li>
+<li>屏闭产品类。只要关心产品的接口即可，例如换数据库只要换驱动即可。</li>
+<li>符合迪米特法则（只要知道产品的接口即可）；符合依赖倒置原则（值依赖产品的抽象类即可）；符合里氏替换原则（使用产品子类可以替换产品父类）。</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>只要使用new的地方都可以使用工厂方法模式，但是要考虑代码的复杂度。</li>
+<li>需要灵活的，可扩展的框架时（有多个产品可选且可以随时增加时），可以考虑工厂方法模式。</li>
+<li>工厂方法模式可以用在异构项目中。</li>
+<li>可以使用在测试驱动开发的框架下。</li>
+</ol>
+<h1 id="工厂方法模式的扩展"><a href="#工厂方法模式的扩展" class="headerlink" title="工厂方法模式的扩展"></a>工厂方法模式的扩展</h1><ol>
+<li><p>缩小为简单工厂模式</p>
+<p> 实质是去掉了创造者接口，使具体创造者直接依赖产品接口。缺点是扩展比较困难，不符合开闭原则。</p>
+</li>
+<li><p>升级为多个工厂类</p>
+<p> 实质是为了结构清晰，我们为每个产品定义一个创造者，然后由调用者自己去选择与那个工厂方法关联。</p>
+</li>
+<li><p>替代单例模式</p>
+<p> 代码如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span> </span>&#123;</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</div><div class="line"><span class="keyword">static</span> &#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Class c1 = Class.forName(Singleton.class.getName());</div><div class="line">        <span class="comment">// 获得无参构造</span></div><div class="line">        Constructor constructor = c1.getDeclaredConstructor();</div><div class="line">        <span class="comment">//设置无参构造是可访问的</span></div><div class="line">        constructor.setAccessible(<span class="keyword">true</span>);</div><div class="line">        <span class="comment">// 产生一个实例对象</span></div><div class="line">        singleton = (Singleton) constructor.newInstance();</div><div class="line"></div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">        e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> singleton;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>延迟初始化</p>
+<p> 所谓延迟初始化即一个对象被消费完毕后，并不立刻释放，工厂类保持其初始状态，等待再次被使用。其实质，是利用一个Map保存创造过的对象，如果在Map容器已经有的对象，则直接取出返回；如果没有，则根据需要的类型产生一个对象并放入到Map容器中，以方便下次调用。</p>
+</li>
+</ol>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>孰能生巧，熟练掌握该设计模式，多思考工厂方法如和应用，而且工厂方法模式可以与其他模式混合使用，变化出无穷的优秀设计。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：在面向对象的思维中，万物皆对象，就像有女蜗造人，我们也可以用工厂方法模式造对象。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>设计模式之禅——单例模式</title>
+    <link href="http://bestlixiang.site/2018/02/06/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/02/06/设计模式之禅——单例模式/</id>
+    <published>2018-02-06T13:36:57.000Z</published>
+    <updated>2018-02-06T13:37:55.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：如果每个人可以走的路只有一条，如果每个人想要的东西都是一个(单例模式)，那么人应该都不会迷茫了吧。虽然解决了迷茫，但是也抹杀了多样性，有好有坏，各有所见。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例。——创造类</strong></p>
+<p>下面是它的通用类图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/singleton.png" alt="singleton"></p>
+<p>代码实现有两种，如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 饿汉式单例 线程安全</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton = <span class="keyword">new</span> Singleton();</div><div class="line">    <span class="comment">// 限制产生多个对象</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// 通过该方法获得实例对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> singleton;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 类中其他方法尽量是static</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> doSomething &#123; ... &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 懒汉式单例 线程不安全</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 限制产生多个对象</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// 通过该方法获得实例对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (singleton = <span class="keyword">null</span>) &#123;</div><div class="line">            singleton = <span class="keyword">new</span> Singleton();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> singleton;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 类中其他方法尽量是static</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> doSomething &#123; ... &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>减少内存开支</li>
+<li>减少系统的性能开销</li>
+<li>避免对资源的多重占用</li>
+</ol>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
+<li>扩展困难，由于它需要自行实例化</li>
+<li>不利于测试，由于单例没完成，不能测试</li>
+<li>与<strong>单一职责</strong>有冲突</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>要求生成唯一序列号的环境</li>
+<li>在整个项目中需要一个共享访问带你或共享数据</li>
+<li>创建一个对象需要消耗的资源过多，如访问IO和数据库</li>
+<li>需要定义大量的静态常量和静态方法（如工具类）的环境</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li>在高并发的情况下，请注意单例模式的线程同步问题，选择合适的实现模式。</li>
+<li>不可以复制，即不实现Cloneable接口。</li>
+</ol>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>在Spring中，每个Bean默认就是单例的，这样的优点是Spring容器可以管理这些Bean的生命周期，决定什么时候销魂，销毁的时候要如何处理，等等。如果采用非单例模式，则Bean初始化后的管理交由J2EE容器，Spring容器不在跟踪管理Bean的生命周期。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：如果每个人可以走的路只有一条，如果每个人想要的东西都是一个(单例模式)，那么人应该都不会迷茫了吧。虽然解决了迷茫，但是也抹杀了多样性，有好有坏，各有所见。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>先吹响口号_6大设计原则</title>
@@ -1404,225 +1513,6 @@
     <summary type="html">
     
       &lt;p&gt;引：之前说过Java中的JIT即时编译器在运行期的优化对于程序运行来说更重要，那我们就来看看这个即时编译器。本文提及的编译器、即时编译器都是指HotSpot虚拟机内的即时编译器，虚拟机也特指HotSpot虚拟机。
-    
-    </summary>
-    
-      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入理解JVM_11_早期（编译期）优化</title>
-    <link href="http://bestlixiang.site/2017/12/10/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-11-%E6%97%A9%E6%9C%9F%EF%BC%88%E7%BC%96%E8%AF%91%E6%9C%9F%EF%BC%89%E4%BC%98%E5%8C%96/"/>
-    <id>http://bestlixiang.site/2017/12/10/深入理解JVM-11-早期（编译期）优化/</id>
-    <published>2017-12-10T13:36:22.000Z</published>
-    <updated>2017-12-10T13:36:54.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：之前简单的提到过java程序的使用首先要经过编译，然后再“解释”执行，这里我们就先看看它在编译期的过程。<a id="more"></a></p>
-<h1 id="编译概述"><a href="#编译概述" class="headerlink" title="编译概述"></a>编译概述</h1><p>java的编译期其实是一段“不确定”的操作过程，它有一下几种形式：</p>
-<ol>
-<li>前端编译器：把<em>.java文件转变为</em>.class文件的过程，如：Sun的javac、Eclipse JDT中的增量式编译器。</li>
-<li>虚拟机的后端运行期编译器（JIT编译器）：把字节码转变成机器码的过程，如HotSpotVM的C1、C2编译器。</li>
-<li>静态提前编译器（AOT编译器）：直接把*.java文本编译为本地机器代码的过程：GNU Compiler for the Java、Excelsior JET。</li>
-</ol>
-<p>我们平时所说的编译基本上都是指第一类，前端编译器。总的来说，Java中的JIT即时编译器在运行期的优化对于程序运行来说更重要，而前端编译器在编译器的优化过程对于程序编码来说关系更密切，相当多新生的Java语法特性，都是靠编译器的“语法糖”来实现的。</p>
-<h1 id="Javac编译器"><a href="#Javac编译器" class="headerlink" title="Javac编译器"></a>Javac编译器</h1><p>编译过程大致分为3个过程：</p>
-<ol>
-<li>解析与填充符号表过程</li>
-<li>插入式注解处理器的注解处理过程</li>
-<li>分析与字节码生成过程</li>
-</ol>
-<p>这3个过程之间的关系与交互顺序如下图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/png/javac_compiler.png" alt="javac_compiler"></p>
-<h2 id="解析与填充符号表过程"><a href="#解析与填充符号表过程" class="headerlink" title="解析与填充符号表过程"></a>解析与填充符号表过程</h2><p>其中解析步骤包括了经典程序编译原理找那个的词法分析和语法分析两个过程。</p>
-<h3 id="词法、语法分析"><a href="#词法、语法分析" class="headerlink" title="词法、语法分析"></a>词法、语法分析</h3><ol>
-<li>词法分析：将源代码的字符流转变为标记（Token）集合，单个字符是程序编写过程的最小元素，而标记是编译过程的最小元素，关键字、变量名、字面量、运算符都可以成为标记。</li>
-<li><p>语法分析：根据Token序列构造抽象语法树，抽象语法树是一种用来描述程序代码语法结构的树形表示方式，语法树的每一个节点都代表着程序代码中的一个语法结构，例如包、类型、修饰符、运算符、运算符、接口、返回值甚至代码注释都可以是一个语法结构。如下图：</p>
-<p> <img src="http://img.blog.csdn.net/20160726103442665" alt="abstract syntax tree"></p>
-</li>
-</ol>
-<p>经过上面两个步骤编译器就基本不会再对源文件进行操作了。</p>
-<h3 id="填充符号表"><a href="#填充符号表" class="headerlink" title="填充符号表"></a>填充符号表</h3><ol>
-<li>符号表是由一组符号地址和符号信息构成的表格，类似k-v形式。符号表中登记的信息在编译的不同阶段都要用到。在语义分析中，符号表所登记的内容将用于语义检查和产生中间代码。在目标代码生成阶段，当对符号名进行地址分配时，符号表是地址分配的依据。</li>
-<li>在Java源代码中，填空符号表过程的出口是一个待处理列表，包含了每一个编译单元的抽象语法数的顶级节点，以及package-info.java（如果存在）的顶级节点。</li>
-</ol>
-<h2 id="注解处理器"><a href="#注解处理器" class="headerlink" title="注解处理器"></a>注解处理器</h2><p>JDK1.6之中提供了一组插入式注解处理器的标准API在编译期间对注解进行处理，可以把它看做是一组编译器插件，在这些插件中，可以读取、修改、添加抽象语法树中的任意元素。若这些插件在处理注解期间对语法树进行了修改，编译器将回到解析及填充符号表的过程重新处理，直到所有插入式注解处理器都没有再对语法树进行修改为止，每一次循环称为一个Round。如编译过程图的回环过程。</p>
-<h2 id="语义分析与字节码生成"><a href="#语义分析与字节码生成" class="headerlink" title="语义分析与字节码生成"></a>语义分析与字节码生成</h2><p>语法分析之后，编译器获得程序代码的抽象语法树表示，语法树能表示一个结构正确的源程序的抽象，但无法保证源程序是符合逻辑的，而语义分析的主要任务是对结构上正确地源程序进行上下文有关性质的审查，如类型审查。语义分析过程分为标注检查以及数据及控制流分析两个步骤。</p>
-<h3 id="标注检查"><a href="#标注检查" class="headerlink" title="标注检查"></a>标注检查</h3><p>标注检查步骤检查的内容包括诸如变量使用前是否已被声明，变量与赋值之前的数据类型能否匹配，还有一个重要的动作是常量折叠，如果我们在代码写了如下定义：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> a = <span class="number">1</span> + <span class="number">2</span>;</div></pre></td></tr></table></figure></p>
-<p>在经过变量折叠之后，1 + 2会被折叠为字面量3。所以在代码里定义int a = 1 + 2比起直接定义int a = 3并不会增加程序运行期的运算量。</p>
-<h3 id="数据及控制流分析"><a href="#数据及控制流分析" class="headerlink" title="数据及控制流分析"></a>数据及控制流分析</h3><p>数据及控制流分析是对程序上下文逻辑更进一步的验证，它可以检查出诸如程序局部变量在使用前是否有赋值、方法的每条路径是否都有返回值、是否所有的受检异常都被正确处理了等问题，编译期的数据及控制流分析与类加载时的数据及控制流分析的目的基本上是一致的，但校验范围有所区别，有一些校验项只有在编译期或者运行期才能进行，如方法的参数以及局部变量的检查就只会在编译器检查。</p>
-<h3 id="解语法糖"><a href="#解语法糖" class="headerlink" title="解语法糖"></a>解语法糖</h3><ol>
-<li>语法糖：指在计算机语言中添加的某种语法，这种语法对语言的功能并没有影响，当时更方便使用，Java最常用的语法糖主要有泛型、变长参数、自动装箱、拆箱等</li>
-<li>解语法糖：虚拟机运行时不支持这些语法，他们会在编译阶段还原回简单的基础语法结构。</li>
-</ol>
-<h3 id="字节码生成"><a href="#字节码生成" class="headerlink" title="字节码生成"></a>字节码生成</h3><p>字节码生成是Javac编译过程的最后一个阶段，此阶段编译器还进行了少量的代码添加和转换工作。实例构造器()（不是默认构造函数）和类构造器()就是在这个阶段添加到语法树中的。完成了对语法树的遍历和调整之后，生成最终的Class文件。</p>
-<h1 id="Java语法糖的味道"><a href="#Java语法糖的味道" class="headerlink" title="Java语法糖的味道"></a>Java语法糖的味道</h1><h2 id="泛型与类型擦除"><a href="#泛型与类型擦除" class="headerlink" title="泛型与类型擦除"></a>泛型与类型擦除</h2><ol>
-<li>本质：参数化类型的应用，就是所操作的数据类型被指定为一个参数，这种参数类型可以用在类、接口和方法上，分别称为泛型类、泛型接口和泛型方法。</li>
-<li><p>提出原因：先看下面的代码</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Object object = <span class="keyword">new</span> Object();</div><div class="line">String str = (String)object;</div></pre></td></tr></table></figure>
-<p> 由于编译器无法检查这个Object强制转换能否成功，为了防止保障强制类型的转换成功，避免ClassCaseException的风险转嫁到程序运行期之中，所以提出了泛型。</p>
-</li>
-<li>真实泛型：参数化类型无论在源码中还是编译后的中间语言都是存在的。</li>
-<li><p>伪泛型：参数化类型只在源码中存在，而在中间语言不存在。可以看到下面的例子：</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 泛型擦除的例子</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericTest</span> </span>&#123;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    Map&lt;String, String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    map.put(<span class="string">"hello"</span>, <span class="string">"您好"</span>);</div><div class="line">    map.put(<span class="string">"how are you?"</span>, <span class="string">"最近怎么样？"</span>);</div><div class="line">    System.out.println(map.get(<span class="string">"hello"</span>));</div><div class="line">    System.out.println(map.get(<span class="string">"how are you?"</span>));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 利用Beyond Compare反编译可以得到下面的代码:</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//  反编译后的代码</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericTest</span> </span>&#123;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    Map map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    map.put(<span class="string">"hello"</span>, <span class="string">"您好"</span>);</div><div class="line">    map.put(<span class="string">"how are you?"</span>, <span class="string">"最近怎么样？"</span>);</div><div class="line">    System.out.println(map.get(<span class="string">"hello"</span>));</div><div class="line">    System.out.println(map.get(<span class="string">"how are you?"</span>));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 有人可能像我一样，用jd反编译，发现泛型没有被擦除，我一开始很惊讶，后来找了参考，大家可以从参考部分看到该现象的解释，这里需要说明一点，就是由于Java泛型的引入，各种场景（虚拟机解析、反射等）下的方法调用都可能对原有的基础产生影响和新的需求，所以JCP（Java Community Process）组织对虚拟机规范做出了相应的修改，引入了诸如Signature、LocalVariabelTypeTable等新的属性用于解决伴随泛型而来的参数类型识别问题，从Signature属性的出现我们还可以得出结论：擦除泛型所谓的擦除，仅仅是对方法的Code属性中的字节码进行删除，实际上元数据中还是保留了泛型信息。</p>
-</li>
-</ol>
-<h2 id="自动装箱、拆箱与遍历循环"><a href="#自动装箱、拆箱与遍历循环" class="headerlink" title="自动装箱、拆箱与遍历循环"></a>自动装箱、拆箱与遍历循环</h2><p>我们可以看看这些语法糖，编译的过程中做了什么处理：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BoxProcessTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>);</div><div class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i : list) &#123;</div><div class="line">            sum += i;</div><div class="line">        &#125;</div><div class="line">        System.out.println(sum);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 反编译后的代码</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BoxProcessTest</span></span></div><div class="line">&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></div><div class="line">  &#123;</div><div class="line">    List list = Arrays.asList(<span class="keyword">new</span> Integer[] &#123; Integer.valueOf(<span class="number">1</span>), Integer.valueOf(<span class="number">2</span>), Integer.valueOf(<span class="number">3</span>), Integer.valueOf(<span class="number">4</span>) &#125;);</div><div class="line">    <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (Iterator localIterator = list.iterator(); localIterator.hasNext();)</div><div class="line">    &#123;</div><div class="line">      <span class="keyword">int</span> i = ((Integer)localIterator.next()).intValue();</div><div class="line">      sum += i;</div><div class="line">    &#125;</div><div class="line">    System.out.println(sum);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我们清楚的看到其实语法糖的最后还是用最基本的语法实现的，只是更利于我们写代码了。</p>
-<p>再来看看自动装箱的陷阱：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BoxTest</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Integer a = <span class="number">1</span>;</div><div class="line">        Integer b = <span class="number">2</span>;</div><div class="line">        Integer c = <span class="number">3</span>;</div><div class="line">        Integer d = <span class="number">3</span>;</div><div class="line">        Integer e = <span class="number">321</span>;</div><div class="line">        Integer f = <span class="number">321</span>;</div><div class="line">        Long g= <span class="number">3L</span>;</div><div class="line">        System.out.println(c == d); <span class="comment">//true</span></div><div class="line">        System.out.println(e == f); <span class="comment">//false，如果Integer在-128到127之间会保存到常量池，此时Integer直接等于数字</span></div><div class="line">        System.out.println(c == (a + b)); <span class="comment">//true</span></div><div class="line">        System.out.println(c.equals(a + b)); <span class="comment">//true</span></div><div class="line">        System.out.println(g == (a + b)); <span class="comment">//true</span></div><div class="line">        System.out.println(g.equals(a + b)); <span class="comment">//false</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>如果你对上面分不清楚的话，加上鉴于包装类的“==”运算在不遇到算术运算的情况下不会自动拆箱，以及它们的equals()方法不处理数据类型转型的关系，建议在实际编码找那个尽量避免这样使用自动装箱与拆箱。</p>
-<h2 id="条件编译"><a href="#条件编译" class="headerlink" title="条件编译"></a>条件编译</h2><p>Java语言实现条件编译的方法是使用条件为<strong>常量</strong>的if语句，案例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionCompilerTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            System.out.println(<span class="string">"block 1"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            System.out.println(<span class="string">"block 2"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 反编译代码</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionCompilerTest</span></span></div><div class="line">&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></div><div class="line">  &#123;</div><div class="line">    System.out.println(<span class="string">"block 1"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我们很清楚的看到编译后的代码就只剩true里面的代码块了，从而实现了条件编译。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过上面的学习，我们可以从编译器的层次上了解Java源代码编译为字节码的过程，以及各种语法糖的前因后果。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《深入理解Java虚拟机》</li>
-<li><a href="http://blog.csdn.net/u013678930/article/details/52032328" target="_blank" rel="external">早期（编译期）优化</a></li>
-<li><a href="http://blog.csdn.net/liboyang71/article/details/72772583" target="_blank" rel="external"> 关于java泛型擦除反编译后泛型会出现问题</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：之前简单的提到过java程序的使用首先要经过编译，然后再“解释”执行，这里我们就先看看它在编译期的过程。
-    
-    </summary>
-    
-      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入理解JVM_10_虚拟机字节码执行引擎</title>
-    <link href="http://bestlixiang.site/2017/12/09/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-10-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/"/>
-    <id>http://bestlixiang.site/2017/12/09/深入理解JVM-10-虚拟机字节码执行引擎/</id>
-    <published>2017-12-09T11:55:21.000Z</published>
-    <updated>2017-12-09T12:04:06.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？<a id="more"></a></p>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="物理机与虚拟机"><a href="#物理机与虚拟机" class="headerlink" title="物理机与虚拟机"></a>物理机与虚拟机</h2><ol>
-<li>物理机的执行引擎：直接建立在处理器、硬件、指令集、和操作系统层面上。</li>
-<li>虚拟机的执行引擎：自己实现，可以自行制定指令集与执行引擎的结构体系，并且能够执行那些不被硬件直接支持的指令集格式。</li>
-</ol>
-<h2 id="虚拟机怎么执行代码"><a href="#虚拟机怎么执行代码" class="headerlink" title="虚拟机怎么执行代码"></a>虚拟机怎么执行代码</h2><ol>
-<li>解释执行：通过解释器执行</li>
-<li>编译执行：通过即时编译器产生本地代码执行</li>
-</ol>
-<h1 id="运行时栈帧结构"><a href="#运行时栈帧结构" class="headerlink" title="运行时栈帧结构"></a>运行时栈帧结构</h1><p>栈帧是用于支持虚拟机进行方法调用和方法执行的数据结构，他是虚拟机运行时数据区中的虚拟机栈的栈元素，栈帧存储了方法的局部变量表、操作数栈、动态链接和方法返回地址等信息。每一个方法从调用开始至执行完成的过程，都对应着一个栈帧在虚拟机栈里面从入栈到出栈的过程。</p>
-<p>一个线程的方法的调用链可能会很长，很多方法同时处于执行状态。对于执行引擎来说，在活动线程中，只有位于栈顶的栈帧才是有效的，称为当前栈帧，与这个栈帧相关联的方法称为当前方法，执行引擎运行的字节码指令都只针对当前栈帧进行操作，在概念模型上，典型的栈帧结构如下图：</p>
-<p><img src="http://img.blog.csdn.net/20160605105355400" alt="Stack Frame Model"></p>
-<p>接下来具体解释一下栈帧中的局部变量表、操作数栈、动态链接以及方法调用。</p>
-<h2 id="局部变量表"><a href="#局部变量表" class="headerlink" title="局部变量表"></a>局部变量表</h2><ol>
-<li>局部变量表示一组变量值存储空间，用于存放方法和方法内部定义的局部变量。</li>
-<li>局部变量表的容量以<strong>变量槽Slot</strong>为单位。虚拟机规范说每个Slot都应该存放一个boolean、byte、char、int、float、reference或returnAddress类型的数据。long和double使用两个Slot。</li>
-<li>reference类型在虚拟机中至少要实现能从该引用中直接或间接地查找到对象在Java堆中的数据存放的起始地址索引以及从该引用直接或者间接查找到对象所属数据类型在方法区中存储的类型信息。</li>
-<li>虚拟机通过索引定位的方式使用局部变量表，如果执行的实例方法，那局部变量表中第0位索引的Slot默认是用于传递方法所属对象实例的引用，可以使用“this”来访问，其余参数按照参数表顺序排列。</li>
-<li><p>局部变量表中的Slot是可以重用的，当某个变量除了它的作用域，那这个变量所对应的Slot就可以复用了，Slot的复用会直接影响到系统的垃圾收集行为，如下代码所示：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例1</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line"></div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 输出结果：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68209K-&gt;66072K(125952K), 0.0019584 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069900 secs]</div></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例2</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        &#123;</div><div class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        &#125;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 输出结果</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0010138 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069811 secs]</div></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 例3</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        &#123;</div><div class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        &#125;</div><div class="line">        int a = 0;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 输出结果</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016694 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0054452 secs]</div></pre></td></tr></table></figure>
-<p> placeholde能否被回收的根本原因是：局部变量的Slot是否还存有关于placeholder数组对象的引用。例1没有垃圾回收，例2代码虽然已经离开了placeholder的作用域，但是之后没有任何对局部变量表的读写操作，所有placeholder原来的Slot还没有被其他变量复用，所以GC Roots一部分的局部变量表仍然保持着对它的关联，当例3修改了局部变量表，那么就会进行垃圾回收了。</p>
-<p> 这里解释一个编码建议：<strong>不使用的对象应手动赋值null</strong></p>
-<p> 我们看看下面的代码：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例1</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        placeholder = null;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 输出结果：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016915 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0058140 secs]</div></pre></td></tr></table></figure>
-<p> 我们可以看到当placeholder赋值为null，会发生垃圾回收。</p>
-</li>
-<li><p>局部变量表没有赋初始值不能使用。</p>
-</li>
-</ol>
-<h2 id="操作数栈"><a href="#操作数栈" class="headerlink" title="操作数栈"></a>操作数栈</h2><ol>
-<li>操作数栈常被称为操作栈，一个方法刚开始执行的时候是空的，在方法执行的过程中，会有各种字节码指令往操作数栈中写入和提取内容，例如，在做算术运算的时候是通过操作数栈来 进行的，又或者是在调用方法的时候通过操作数栈来进行参数传递的。</li>
-<li><p>在概念模型中，两个栈帧是完全独立的，但在大多虚拟机的实现里会做一些优化处理，令两个栈帧的部分操作数出现一部分重叠，避免方法调用时额外的参数复制，如下图：</p>
-<p><img src="http://img.blog.csdn.net/20160605151831616" alt="data share"></p>
-</li>
-<li><p>Java虚拟机的解释执行引擎称为“基于栈的执行引擎”，其中的栈就是操作数栈。</p>
-</li>
-</ol>
-<h2 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h2><ol>
-<li>每个栈帧都包含一个执行运行时常量池中该栈帧所属方法的引用，持有这个引用就是为了支持方法调用过程中的动态链接。</li>
-<li>Class文件的常量池存有大量的符号引用，一部分是在类加载中的解析阶段完成的，称为静态解析，另一部分是在每一次运行期间转化为直接引用，称为动态链接。</li>
-</ol>
-<h2 id="方法返回地址"><a href="#方法返回地址" class="headerlink" title="方法返回地址"></a>方法返回地址</h2><p>当一个方法开始执行后，只有两种方式退出这个方法。</p>
-<ol>
-<li>正常完成出口：执行引擎遇到一个方法返回的字节码指令，调用者的PC计数器的值可以作为返回地址</li>
-<li>异常完成出口：在方法执行过程中遇到异常，并且这个异常没有在方法体得到处理，它不会给调用者产生任何返回值，它的返回值是要通过异常处理器表来确定的。</li>
-</ol>
-<h1 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h1><p>方法调用不等同于方法执行，方法调用阶段唯一的任务就是确定被调用方法的版本。Class文件的编译过程不包含传统编译找那个的链接步骤，所以Java方法调用过程需要在类加载期间，甚至到运行期间才能确定目标方法的直接引用。</p>
-<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>解析： 方法在程序真正运行之前就有一个可确定的调用版本，并且这个方法的调用在运行期是不可变的，这类方法的调用成为解析。</p>
-<p>所有方法可以分为两类虚方法和非虚方法，其中非虚方法都可以在类加载的时候就会把符号引用解析为该方法的直接引用。</p>
-<ol>
-<li>非虚方法：静态方法、私有方法、实例构造器、父类方法和final方法</li>
-<li>虚方法：与非虚方法相反</li>
-</ol>
-<p>解析调用一定是个静态的过程，在编译器就完全确定，在类装载的解析阶段就会把涉及的符号引用全部转变为可确定的直接引用，不会延迟到运行期再去完成。而分派调用则可能是静态也可能是动态的，根据分派的宗数量（方法的接收者与方法的参数统称为方法的总量）可分为单分派和多分派，这两种分派方式地组合可分为静态单分派、静态多分派、动态单分派、动态多分派。</p>
-<h2 id="分派"><a href="#分派" class="headerlink" title="分派"></a>分派</h2><h3 id="静态分派"><a href="#静态分派" class="headerlink" title="静态分派"></a>静态分派</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Human man = <span class="keyword">new</span> Man();</div></pre></td></tr></table></figure>
-<p>上面代码中Human称为变量的静态类型，或者叫做外观类型，后面的Man称为实际类型，静态类型是编译器可知，实际类型是运行期才能确定的。虚拟机在重载时是通过参数的静态类型而不是实际类型来作为判断依据的。</p>
-<p>所有依赖静态类型来定位方法执行版本的分派动作称为静态分派，静态分派的典型应用是方法重载。静态分派发生在编译阶段，因此确定静态分派的动作实际上不是由虚拟机来执行的，另外，编译器虽然能确定出方法的重载版本，当在很多情况下这个重载版本不是“唯一的”，往往只能确定一个“更加合适的”版本，具体例子可以看看《深入理解Java虚拟机》。</p>
-<h3 id="动态分派"><a href="#动态分派" class="headerlink" title="动态分派"></a>动态分派</h3><p>在运行期根据实际类型确定方法执行版本的分派过程称为动态分派，典型应用是方法重写。它主要是通过invokevirturl指令来实现的。invokevirtual指令的运行时解析过程大致分为如下几个步骤：</p>
-<ol>
-<li>找到操作数栈顶的第一个元素所指向的对象的实际类型，记作C。</li>
-<li>如果在类型C中找到与常量中的描述符合简单名称都相符的方法，则进行访问权限校验，如果通过则返回这个方法的直接引用，查找过程结束；如果不通过，则返回java.lang.IllegalAccessError异常。</li>
-<li>否则，按照继承关系从下往上依次对C的各个父类进行第2步的搜索和验证过程。</li>
-<li>如果始终没有找到合适的方法，则抛出java.lang.AbstractMethodError异常。</li>
-</ol>
-<h3 id="单分派和多分派"><a href="#单分派和多分派" class="headerlink" title="单分派和多分派"></a>单分派和多分派</h3><p>单分派是根据一个宗量对目标方法进行选择，多分派则是根据一个宗量对目标方法进行选择。我们结合下面的代码来理解：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dispatch</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">QQ</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">_360</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Father</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"father choose qq"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"father choose _360"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"son choose qq"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"son choose _360"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Father father = <span class="keyword">new</span> Father();</div><div class="line">        Father son = <span class="keyword">new</span> Son();</div><div class="line">        father.hardChoice(<span class="keyword">new</span> _360());</div><div class="line">        son.hardChoice(<span class="keyword">new</span> QQ());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">father choose _360</div><div class="line">son choose qq</div></pre></td></tr></table></figure></p>
-<ol>
-<li>编译阶段编译器的选择过程（静态分派过程）：这时选择目标方法的依据有两点：一是静态类型是Father还是Son，二是方法参数是QQ还是360。因为是根据两个宗量进行选择，所有Java语言的静态分派属于多分派类型。</li>
-<li>运行阶段虚拟机的选择过程（动态分派过程）：由于编译器已经已经决定目标方法的签名必须为hardChoice(QQ)，所以这时参数的静态类型，实际类型都对方法的选择不会构成影响，唯一可以影响虚拟机选择的因素只有此方法的接受者的实际类型是Father还是Son,因为只有一个宗量作为选择依据，所以Java语言的动态分派属于单分派类型。</li>
-<li>jdk1.8之前的Java语言是一门静态多分派，动态单分派的语言。</li>
-</ol>
-<h3 id="虚拟机动态分派的实现"><a href="#虚拟机动态分派的实现" class="headerlink" title="虚拟机动态分派的实现"></a>虚拟机动态分派的实现</h3><p>由于动态分派是非常频繁的操作，而且动态分派的方法版本选择过程需要运行时在类的方法元数据中搜索合适的目标方法，因此虚拟机会进行优化。常用的方法就是为类在方法区中建立一个虚方法表（Virtual Method Table，在invokeinterface执行时也会用到接口方法表，Interface Method Table），使用虚方法表索引来替代元数据查找以提升性能。下图就是前面代码的虚方法表结构：</p>
-<p><img src="http://img.blog.csdn.net/20160606200822089" alt="virtual method table"></p>
-<p>虚方法表中存放着各个方法的实际入口地址。如果某个方法在子类中没有被重写，那子类的虚方法表里面的地址入口和父类相同方法的地址入口是一致的，都指向父类的实现入口。如果子类重写了父类的方法，子类方法表中的地址会替换为指向子类实现版本的入口地址。在上图中，Son重写了Father的全部方法，所以Son的方法表替换了父类的地址。但是Son和Father都没有重写Object的方法，所以方法表都指向了Object的数据类型。<br>为了程序实现上的方便，具有相同签名的方法，在父类和子类的虚方法表中都应该具有一样的索引号，这样当类型变换时，仅仅需要变更查找的方法表，就可以从不同的虚方法表中按索引转换出所需的入口地址。<br>方法表一般在类加载的连接阶段进行初始化，准备了类的变量初始值后，虚拟机会把该类的方法表也初始化完毕。</p>
-<h2 id="动态类型语言支持"><a href="#动态类型语言支持" class="headerlink" title="动态类型语言支持"></a>动态类型语言支持</h2><p>动态类型语言的关键特征是它的类型检查的主体过程是在运行期间而不是编译期间，可以理解为<strong>变量无类型而变量值才有类型</strong>，Javascript就是这样的语言，而目前Java属于静态类型语言。当然Java也有它实现动态性的方法，这块知识点蛮大，就不展开说了。</p>
-<h1 id="基于栈的字节码解释执行引擎"><a href="#基于栈的字节码解释执行引擎" class="headerlink" title="基于栈的字节码解释执行引擎"></a>基于栈的字节码解释执行引擎</h1><h2 id="解释执行"><a href="#解释执行" class="headerlink" title="解释执行"></a>解释执行</h2><p>先看看编译过程流图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/png/compilers.png" alt="compilers"></p>
-<ol>
-<li>上图最下面的那一条就是传统编译原理中程序代码到目标机器代码生成过程（C）</li>
-<li>上图中间那一条就是解释执行的过程（Java）</li>
-</ol>
-<h2 id="基于栈的指令集与基于寄存器的指令集"><a href="#基于栈的指令集与基于寄存器的指令集" class="headerlink" title="基于栈的指令集与基于寄存器的指令集"></a>基于栈的指令集与基于寄存器的指令集</h2><ol>
-<li>基于栈的指令集：指令流中的大部分都是零地址指令（无显示参数），他们依赖操作数栈进行工作。<ul>
-<li>优点：可移植性，代码紧凑，编译器实现简单</li>
-<li>缺点：执行速度稍慢（频繁访问内存）</li>
-</ul>
-</li>
-<li>基于寄存器的指令集：指令集依赖寄存器进行工作</li>
-</ol>
-<h2 id="基于栈的解释器执行流程"><a href="#基于栈的解释器执行流程" class="headerlink" title="基于栈的解释器执行流程"></a>基于栈的解释器执行流程</h2><p>其实就是按照指令解释执行，随便看了例子应该就能明白。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>其实这里谈的主要还是解释执行，其中有一点很重要就是分派的概念，明白invokevirtual指令的执行过程。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《深入理解Java虚拟机》</li>
-<li><a href="http://blog.csdn.net/u012877472/article/details/51585297" target="_blank" rel="external">虚拟机字节码执行引擎</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？
     
     </summary>
     

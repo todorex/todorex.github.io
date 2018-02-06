@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="系统," />
+  <meta name="keywords" content="java,设计模式," />
 
 
 
@@ -89,17 +89,19 @@
 
 
 
-<meta name="description" content="引：总是不可避免的重装系统，人的脑子不可能那么好记住所有的操作，既然不想自己自己用博客记下所有操作，那么就把别人的博客（自己踩过）记录下来，以后备用。">
-<meta name="keywords" content="系统">
+<meta name="description" content="引：在面向对象的思维中，万物皆对象，就像有女蜗造人，我们也可以用工厂方法模式造对象。">
+<meta name="keywords" content="java,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="新系统开发环境的一系列配置">
-<meta property="og:url" content="http://bestlixiang.site/2017/07/15/新系统开发环境的一系列配置/index.html">
+<meta property="og:title" content="设计模式之禅——工厂方法模式">
+<meta property="og:url" content="http://bestlixiang.site/2018/02/06/设计模式之禅——工厂方法模式/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：总是不可避免的重装系统，人的脑子不可能那么好记住所有的操作，既然不想自己自己用博客记下所有操作，那么就把别人的博客（自己踩过）记录下来，以后备用。">
-<meta property="og:updated_time" content="2017-07-15T13:37:33.000Z">
+<meta property="og:description" content="引：在面向对象的思维中，万物皆对象，就像有女蜗造人，我们也可以用工厂方法模式造对象。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/factoryMethod.png">
+<meta property="og:updated_time" content="2018-02-06T13:38:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="新系统开发环境的一系列配置">
-<meta name="twitter:description" content="引：总是不可避免的重装系统，人的脑子不可能那么好记住所有的操作，既然不想自己自己用博客记下所有操作，那么就把别人的博客（自己踩过）记录下来，以后备用。">
+<meta name="twitter:title" content="设计模式之禅——工厂方法模式">
+<meta name="twitter:description" content="引：在面向对象的思维中，万物皆对象，就像有女蜗造人，我们也可以用工厂方法模式造对象。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/factoryMethod.png">
 
 
 
@@ -127,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/07/15/新系统开发环境的一系列配置/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/02/06/设计模式之禅——工厂方法模式/"/>
 
 
 
 
 
-  <title> 新系统开发环境的一系列配置 | rex note </title>
+  <title> 设计模式之禅——工厂方法模式 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -286,7 +288,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/07/15/新系统开发环境的一系列配置/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/02/06/设计模式之禅——工厂方法模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -307,7 +309,7 @@
             
             
               
-                新系统开发环境的一系列配置
+                设计模式之禅——工厂方法模式
               
             
           </h2>
@@ -322,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-15T21:35:54+08:00">
-                2017-07-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-06T21:37:09+08:00">
+                2018-02-06
               </time>
             
 
@@ -345,8 +347,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/生活/" itemprop="url" rel="index">
-                    <span itemprop="name">生活</span>
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
                   </a>
                 </span>
 
@@ -385,34 +387,41 @@
       
 
       
-        <p>引：总是不可避免的重装系统，人的脑子不可能那么好记住所有的操作，既然不想自己自己用博客记下所有操作，那么就把别人的博客（自己踩过）记录下来，以后备用。<a id="more"></a></p>
-<h2 id="window篇"><a href="#window篇" class="headerlink" title="window篇"></a>window篇</h2><ol>
-<li>JDK——java开发者起步</li>
+        <p>引：在面向对象的思维中，万物皆对象，就像有女蜗造人，我们也可以用工厂方法模式造对象。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>定义一个用于创建对象的接口，让子类决定实例化哪一个类。工厂方法使一个类的实例化延迟到子类。——创造类</strong></p>
+<p>工厂方法模式的通用类图如下：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/factoryMethod.png" alt="FactoryMethod"></p>
+<p>下面是一个比较实用的通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象产品类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="comment">// 产品类的公共方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">//抽象方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体产品类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteProduct1</span> <span class="keyword">extends</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteProduct2</span> <span class="keyword">extends</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Creator</span> </span>&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 创建一个产品对象，其输入参数类型可以自行设置</div><div class="line">     * 通常为String, Enum, Class等，当然也可以为空</div><div class="line">     */</div><div class="line"></div><div class="line">     <span class="keyword">public</span> <span class="keyword">abstract</span> &lt;T extends Product&gt; <span class="function">T <span class="title">createProduct</span><span class="params">(Class&lt;T&gt; c)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteCreator</span> <span class="keyword">extends</span> <span class="title">Creator</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> &lt;T extends Product&gt; <span class="function">T <span class="title">createProduct</span><span class="params">(Class&lt;T&gt; c)</span> </span>&#123;</div><div class="line">        Product product = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            product = (Product) Class.forName(c.getName()).newInstance();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            <span class="comment">// 异常处理</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> （T）product;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Creator creator = <span class="keyword">new</span> ContreteCreate();</div><div class="line">        Product product = creator.createProduct(ContreteProduct1.class);</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * 继续业务处理</div><div class="line">         */</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>良好的封装性，代码结构清晰。</li>
+<li>扩展性非常优秀，要增加一个新的产品，只要实现Product接口。</li>
+<li>屏闭产品类。只要关心产品的接口即可，例如换数据库只要换驱动即可。</li>
+<li>符合迪米特法则（只要知道产品的接口即可）；符合依赖倒置原则（值依赖产品的抽象类即可）；符合里氏替换原则（使用产品子类可以替换产品父类）。</li>
 </ol>
-<p><a href="http://www.jianshu.com/p/ac13e424e950" target="_blank" rel="external">JDK的安装与环境变量的配置</a></p>
-<ol>
-<li>Node——前端好基友</li>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>只要使用new的地方都可以使用工厂方法模式，但是要考虑代码的复杂度。</li>
+<li>需要灵活的，可扩展的框架时（有多个产品可选且可以随时增加时），可以考虑工厂方法模式。</li>
+<li>工厂方法模式可以用在异构项目中。</li>
+<li>可以使用在测试驱动开发的框架下。</li>
 </ol>
-<p><a href="http://www.jianshu.com/p/03a76b2e7e00" target="_blank" rel="external">Node.js安装及环境配置之Windows篇</a></p>
-<ol>
-<li>Sublime3——轻量级编辑器</li>
+<h1 id="工厂方法模式的扩展"><a href="#工厂方法模式的扩展" class="headerlink" title="工厂方法模式的扩展"></a>工厂方法模式的扩展</h1><ol>
+<li><p>缩小为简单工厂模式</p>
+<p> 实质是去掉了创造者接口，使具体创造者直接依赖产品接口。缺点是扩展比较困难，不符合开闭原则。</p>
+</li>
+<li><p>升级为多个工厂类</p>
+<p> 实质是为了结构清晰，我们为每个产品定义一个创造者，然后由调用者自己去选择与那个工厂方法关联。</p>
+</li>
+<li><p>替代单例模式</p>
+<p> 代码如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span> </span>&#123;</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</div><div class="line"><span class="keyword">static</span> &#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Class c1 = Class.forName(Singleton.class.getName());</div><div class="line">        <span class="comment">// 获得无参构造</span></div><div class="line">        Constructor constructor = c1.getDeclaredConstructor();</div><div class="line">        <span class="comment">//设置无参构造是可访问的</span></div><div class="line">        constructor.setAccessible(<span class="keyword">true</span>);</div><div class="line">        <span class="comment">// 产生一个实例对象</span></div><div class="line">        singleton = (Singleton) constructor.newInstance();</div><div class="line"></div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">        e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> singleton;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>延迟初始化</p>
+<p> 所谓延迟初始化即一个对象被消费完毕后，并不立刻释放，工厂类保持其初始状态，等待再次被使用。其实质，是利用一个Map保存创造过的对象，如果在Map容器已经有的对象，则直接取出返回；如果没有，则根据需要的类型产生一个对象并放入到Map容器中，以方便下次调用。</p>
+</li>
 </ol>
-<p><a href="http://www.jianshu.com/p/0e12a06c4578" target="_blank" rel="external">Sublime Text3安装与插件配置</a></p>
-<ol>
-<li>git——分布式版本控制工具</li>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>孰能生巧，熟练掌握该设计模式，多思考工厂方法如和应用，而且工厂方法模式可以与其他模式混合使用，变化出无穷的优秀设计。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
 </ol>
-<p><a href="http://www.jianshu.com/p/dc90b9aac18c" target="_blank" rel="external">Git安装教程</a></p>
-<ol>
-<li>Idea——java开发利器</li>
-</ol>
-<p><a href="http://idea.lanyus.com/" target="_blank" rel="external">IntelliJ IDEA注册码</a></p>
-<ol>
-<li>Maven——项目依赖管理利器</li>
-</ol>
-<p><a href="http://www.jianshu.com/p/26fa41427a55" target="_blank" rel="external">Maven Windows10安装</a></p>
-<h2 id="Mac篇"><a href="#Mac篇" class="headerlink" title="Mac篇"></a>Mac篇</h2><p>待写</p>
-<h2 id="Ubuntu篇"><a href="#Ubuntu篇" class="headerlink" title="Ubuntu篇"></a>Ubuntu篇</h2><p>待写</p>
-<h2 id="双系统"><a href="#双系统" class="headerlink" title="双系统"></a>双系统</h2><p><a href="http://www.jianshu.com/p/16b36b912b02" target="_blank" rel="external">Win10和Ubuntu16.04双系统安装详解</a></p>
 
       
     </div>
@@ -442,7 +451,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/系统/" rel="tag"># 系统</a>
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
           
         </div>
       
@@ -455,8 +466,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/15/浅尝Apache-Camel/" rel="next" title="浅尝Apache Camel">
-                <i class="fa fa-chevron-left"></i> 浅尝Apache Camel
+              <a href="/2018/02/06/设计模式之禅——单例模式/" rel="next" title="设计模式之禅——单例模式">
+                <i class="fa fa-chevron-left"></i> 设计模式之禅——单例模式
               </a>
             
           </div>
@@ -464,10 +475,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/16/Github-Pages-Hexo-SEO引擎优化/" rel="prev" title="Github Pages+Hexo SEO引擎优化">
-                Github Pages+Hexo SEO引擎优化 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -666,7 +673,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#window篇"><span class="nav-number">1.</span> <span class="nav-text">window篇</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mac篇"><span class="nav-number">2.</span> <span class="nav-text">Mac篇</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ubuntu篇"><span class="nav-number">3.</span> <span class="nav-text">Ubuntu篇</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双系统"><span class="nav-number">4.</span> <span class="nav-text">双系统</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">2.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点"><span class="nav-number">2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用场景"><span class="nav-number">2.2.</span> <span class="nav-text">使用场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工厂方法模式的扩展"><span class="nav-number">3.</span> <span class="nav-text">工厂方法模式的扩展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳实践"><span class="nav-number">4.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
