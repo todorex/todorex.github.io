@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-02-06T13:38:08.000Z</updated>
+  <updated>2018-02-07T06:26:55.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,48 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式之禅——抽象工厂模式</title>
+    <link href="http://bestlixiang.site/2018/02/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/02/07/设计模式之禅——抽象工厂模式/</id>
+    <published>2018-02-07T06:26:31.000Z</published>
+    <updated>2018-02-07T06:26:55.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：在开发应用的时候为了适应不同的操作系统以及不同数据库时，我们总会显得力不从心。而抽象工厂模式为了我们提供了优秀的解决方案。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>为创建一组相关或相互依赖的对象提供一个接口，而且无须指定他们的具体类。——创造类</strong></p>
+<p>它的通用类图如下：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/abstractFactory.png" alt="abstractFactory"></p>
+<p>为了展示通用的源代码，将原来的通用类图扩展为如下类图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/abstractFactoryDemo.png" alt="abstractFactoryDemo"></p>
+<p>下面是基于类图的代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象产品类 ProductA与ProductB类似;1,2代表产品等级</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractProductA</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个产品共有方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shareMethod</span><span class="params">()</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// 每个产品相同方法，不同实现</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 产品A1的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductA1</span> <span class="keyword">extends</span> <span class="title">AbstractProductA</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"产品A1的实现方法"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 产品A2的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductA2</span> <span class="keyword">extends</span> <span class="title">AbstractProductA</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"产品A2的实现方法"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象工厂类 有N个产品族，在抽象工厂类就有N个创建方法</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractCreator</span> </span>&#123;</div><div class="line">    <span class="comment">// 创建A产品家族</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> AbstractProductA <span class="title">createProductA</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 创建B产品家族</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> AbstractProductB <span class="title">createProductB</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 有M个产品等级就应该有M个实现工厂类，在每个实现工厂中，实现不同产品族的生产任务</span></div><div class="line"><span class="comment">// 产品等级1的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Creator1</span> <span class="keyword">extends</span> <span class="title">AbstractCreator</span> </span>&#123;</div><div class="line">    <span class="comment">// 只生产产品等级为1的A产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductA <span class="title">createProductA</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductA1</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 只生产产品等级为1的B产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductB <span class="title">createProductB</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductB1</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 产品等级2的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Creator2</span> <span class="keyword">extends</span> <span class="title">AbstractCreator</span> </span>&#123;</div><div class="line">    <span class="comment">// 只生产产品等级为2的A产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductA <span class="title">createProductA</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductA2</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 只生产产品等级为2的B产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductB <span class="title">createProductB</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductB2</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 定义两个工厂</span></div><div class="line">        AbstractCreator creator1 = <span class="keyword">new</span> Creator1();</div><div class="line">        AbstractCreator creator2 = <span class="keyword">new</span> Creator2();</div><div class="line">        <span class="comment">// 产生A1对象</span></div><div class="line">        AbstractProductA a1 = creator1.createProductA();</div><div class="line">        <span class="comment">// 产生A2对象</span></div><div class="line">        AbstractProductA a2 = creator2.createProductA();</div><div class="line">        <span class="comment">// 产生B1对象</span></div><div class="line">        AbstractProductB b1 = creator1.createProductB();</div><div class="line">        <span class="comment">// 产生B2对象</span></div><div class="line">        AbstractProductB b2 = creator2.createProductB();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>主要是要理解产品族以及产品等级的关系。</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>封装性，它只需要了解接口。</li>
+<li>产品族的约束为非公开状态。</li>
+</ol>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>扩展非常困难。如果要新增一个产品，需要修改AbstractCreator类以及它的实现类。这严重<strong>违反了开闭原则</strong>。</p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>如果一个对象族都有相同的约束，就可以使用抽象工厂模式。例如linux和windows下得编辑器和不同数据库的规范操作。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>上面的扩展困难是指产品族扩展困难，但是产品等级扩展还是容易的。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>在涉及不同操作系统，不同数据库的时候非常适合抽象工厂模式，因为它可以屏蔽掉操作系统或数据库对应用的影响。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：在开发应用的时候为了适应不同的操作系统以及不同数据库时，我们总会显得力不从心。而抽象工厂模式为了我们提供了优秀的解决方案。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>设计模式之禅——工厂方法模式</title>
@@ -1434,85 +1476,6 @@
     <summary type="html">
     
       &lt;p&gt;引：并发处理的广泛应用是使得阿姆德尔定律替代摩尔定律成为计算机性能发展原动力的根本原因。由于计算机的运算速度和它的存储和通信子系统速度差距太大，所以才出现了并发，而并发绝对是Java运用很大的优势。我们绝对需要理解！
-    
-    </summary>
-    
-      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入理解JVM_12_晚期（运行期）优化</title>
-    <link href="http://bestlixiang.site/2017/12/12/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-12-%E6%99%9A%E6%9C%9F%EF%BC%88%E8%BF%90%E8%A1%8C%E6%9C%9F%EF%BC%89%E4%BC%98%E5%8C%96/"/>
-    <id>http://bestlixiang.site/2017/12/12/深入理解JVM-12-晚期（运行期）优化/</id>
-    <published>2017-12-12T14:18:20.000Z</published>
-    <updated>2017-12-12T14:19:34.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：之前说过Java中的JIT即时编译器在运行期的优化对于程序运行来说更重要，那我们就来看看这个即时编译器。本文提及的编译器、即时编译器都是指HotSpot虚拟机内的即时编译器，虚拟机也特指HotSpot虚拟机。<a id="more"></a></p>
-<h1 id="什么是即时编译器"><a href="#什么是即时编译器" class="headerlink" title="什么是即时编译器"></a>什么是即时编译器</h1><p>在部分的商用虚拟机中，Java程序最初是通过解释器来解释执行的，当虚拟机发现某个方法或代码块的运行特别频繁时，就会把这些代码认定为“热点代码”（Hot Spot Code）,为了提高 热点代码的执行效率，在运行时，虚拟机将会把这些代码编译成与本地平台相关的机器码，并进行各种层次的优化，完成这个任务的编译器 称为即时编译器（Just In Time Compiler,简称JIT编译器）。</p>
-<h1 id="HotSpot虚拟机内的即时编译器"><a href="#HotSpot虚拟机内的即时编译器" class="headerlink" title="HotSpot虚拟机内的即时编译器"></a>HotSpot虚拟机内的即时编译器</h1><h2 id="为什么要使用解释器与编译器并存的架构"><a href="#为什么要使用解释器与编译器并存的架构" class="headerlink" title="为什么要使用解释器与编译器并存的架构"></a>为什么要使用解释器与编译器并存的架构</h2><ol>
-<li>解释器与编译器各有优势：当程序需要迅速启动和执行的时候，解释器可以首先发挥作用，省去编译的时间，立即执行。在程序运行后，随着时间的推移，编译器逐渐发挥作用，把越来越多的代码编译成本地代码之后，可以获得更高的执行效率，当程序运行环境中内存资源限制较大时，可以使用解释执行节约内存，反之可以使用编译执行来提高效率。</li>
-<li>解释器可以作为编译器激进优化时的一个“逃生门”，可以通过逆优化退回到解释器状态继续执行。</li>
-</ol>
-<h2 id="HotSpot虚拟机内置编译器"><a href="#HotSpot虚拟机内置编译器" class="headerlink" title="HotSpot虚拟机内置编译器"></a>HotSpot虚拟机内置编译器</h2><ol>
-<li>Client Compiler(C1编译器)：使用“-client” 参数去强制指定虚拟机运行在Client模式。</li>
-<li>Server Compiler(C2编译器)：使用“-server” 参数去强制指定虚拟机运行在Server模式。</li>
-</ol>
-<p>虚拟机默认采用解释器与编译器搭配使用的方式（混合模式）。为了在程序响应速度和运行效率之间达到最佳平衡，HotSpot虚拟机会逐渐启用分层编译策略：</p>
-<ol>
-<li>第0层：程序解释执行，解释器不开启性能监控功能，可触发第1层编译。</li>
-<li>第1层：也称为C1编译，将字节码编译为本地代码，进行简单，可靠的优化，如果必要将加入性能监控的逻辑。</li>
-<li>第2层（或2层以上）：也称为C2编译，也是将字节码编译为本地代码，但是会启用一些编译耗时较长的优化，甚至会根据性能监控信息进行一些不可靠的激进优化。</li>
-</ol>
-<h2 id="编译对象与触发条件"><a href="#编译对象与触发条件" class="headerlink" title="编译对象与触发条件"></a>编译对象与触发条件</h2><h3 id="编译对象（热点代码）"><a href="#编译对象（热点代码）" class="headerlink" title="编译对象（热点代码）"></a>编译对象（热点代码）</h3><ol>
-<li>被多次调用的方法（JIT编译方式）</li>
-<li>被多次执行的循环体（OSR编译方式）</li>
-</ol>
-<h3 id="热点探测"><a href="#热点探测" class="headerlink" title="热点探测"></a>热点探测</h3><ol>
-<li>基于采样的热点探测：虚拟机周期地检查各个线程的栈顶，如果发现某个（或某些）方法经常出现在栈顶，那这个方法就是“热点方法”。优点是实现简单、高效，还可以很容易获取方法的调用关系（将调用堆栈展开即可），缺点就是很难精确得确认一个方法的热度，容易因为受到线程阻塞或者别的外界因素的影响而扰乱热点探测。</li>
-<li>基于计数器的热点探测：虚拟机会每一个方法（甚至是代码块）建立计数器，统计方法的执行次数，如果执行次数超过一定的阈值就认定它是“热点方法”。缺点是实现麻烦，需要为每个方法建立并维护计数器，而且不能直接获取到方法的调用关系，优点是统计结果更加精确和严谨。</li>
-</ol>
-<p>在HotSpot虚拟机中使用的是基于计数器的热点探测方法。因此它为每个方法准备了两类计数器：方法调用计数器（用于探测方法）和回边计数器（用于探测循环体）。这两个计数器都有一个确定的阈值，当计数器超过了阈值，就会提交编译请求。</p>
-<h2 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h2><p>在默认设置下，无论是方法调用产生的即时编译请求，还是OSR编译请求，虚拟机代码编译器还未完成之前，都依然将按照解释方式继续执行，而编译动作则在后台的编译线程中进行。</p>
-<h3 id="Client-Compiler"><a href="#Client-Compiler" class="headerlink" title="Client Compiler"></a>Client Compiler</h3><p>它是个三段式编译器，主要关注点在<strong>局部性</strong>的优化，放弃了许多耗时较长的全局优化手段。下面是三个阶段</p>
-<ol>
-<li>字节码-&gt;高级中间代码（HIR）:使用静态单分配的形式来代表代码值，其中会完成方法内联、常量传播等优化。</li>
-<li>HIR-&gt;低级中间代码（LIR）：会在HIR上完成空值检查消除、范围检查消除等优化，以便让HIR达到更高效的代码的表示形式。</li>
-<li>LIR-&gt;机器代码：在平台相关的后端使用线性扫描算法在LIR上分配寄存器，并在LIR上做窥孔优化。</li>
-</ol>
-<h3 id="Server-Compiler"><a href="#Server-Compiler" class="headerlink" title="Server Compiler"></a>Server Compiler</h3><p>它是专门面向服务端的典型应用并为服务器端的性能配置特别调整过的编译器，也是一个充分优化过的高级编译器。它会执行所有经典的优化工作。它的寄存器分配器是一个全局图着色分配器，可以充分利用某些处理器架构上的大寄存器集合。</p>
-<h3 id="查看及分析即时编译结果"><a href="#查看及分析即时编译结果" class="headerlink" title="查看及分析即时编译结果"></a>查看及分析即时编译结果</h3><p>这一块我没有去实践，但是这里写一个结论：在Java中空循环不能用作程序延时的手段，因为空循环会被优化消除。</p>
-<h1 id="编译优化技术"><a href="#编译优化技术" class="headerlink" title="编译优化技术"></a>编译优化技术</h1><p>Java程序员有一个共识：以编译方式执行本地代码比解释方式更快。这主要是因为虚拟机设计团队几乎把对代码的所有优化措施都集中在编译器之中了。关于HotSpot的优化技术列表可以参考《深入理解Java虚拟机》一书，这里也根据书上举的几个例子来看看其中的优化技术。</p>
-<h2 id="公共子表达式消除"><a href="#公共子表达式消除" class="headerlink" title="公共子表达式消除"></a>公共子表达式消除</h2><p>含义是：如果一个表达式E已经计算过了，并且从先前的计算到现在E中所有的变量的值都没有发生变化，那么E的这次出现就成为了公共子表达式。对于这种表达式，没有必要花时间再对它进行计算，只需要直接用前面计算过的表达式结果代替E即可。可以看看下面的优化历程：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"><span class="keyword">int</span> d = (c * b) * <span class="number">12</span> + a + (a + b * c);</div><div class="line"></div><div class="line"><span class="comment">// 编译器检测到“c * b”和“b * c”是一样的表达式，这条表达式就变成下面这样了</span></div><div class="line"><span class="keyword">int</span> d = E * <span class="number">12</span> + a + (a + E);</div><div class="line"></div><div class="line"><span class="comment">// 编译器还可能进行代数简化，把表达式变为：</span></div><div class="line"><span class="keyword">int</span> d = E * <span class="number">13</span> + a * <span class="number">2</span>;</div></pre></td></tr></table></figure></p>
-<p>大家肯定能发现，最后的表达式计算起来就可以节省时间了。</p>
-<h2 id="数组边界检查消除"><a href="#数组边界检查消除" class="headerlink" title="数组边界检查消除"></a>数组边界检查消除</h2><p>含义：虚拟机执行子系统每次数组的读写都带有一次隐含的条件判断操作，这对于拥有大量 数组访问的程序代码，无疑是一种性能负担。解决思路除了将数组边界检查优化尽可能把运行期检查提到编译期完成之外，还有另一种思路——隐式异常处理（try - catch）。可以看看代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"><span class="keyword">if</span> (foo != <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> foo.value</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointException();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 编译器转换代码</span></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    <span class="keyword">return</span> foo.value;</div><div class="line">&#125; <span class="keyword">catch</span>(segment_fault) &#123;</div><div class="line">    uncommon_trap();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这样可以避免每次去做非空检查。</p>
-<h2 id="方法内联"><a href="#方法内联" class="headerlink" title="方法内联"></a>方法内联</h2><p>它除了消除方法调用成本之外，它更重要的是位其他优化手段建立良好的基础，如果不做内联，就发现不了无用代码。。内联具有两种情况：</p>
-<ol>
-<li>对于非虚方法：直接内联</li>
-<li>对于虚方法：会使用“类型继承关系分析”（CHA）技术，虚拟机如果遇到虚方法就会向CHA查询此方法在当前程序下是否有多个目标版本可供选择，如果查询结果只有一个版本，就可以进行内联，不过这种内联属于激进优化，需要余留一个“逃生门”，称为守护内联；如果查出有多个版本的目标方法可供选择，则编译器还会使用内联缓存来完成方法内联。</li>
-</ol>
-<h2 id="逃逸分析"><a href="#逃逸分析" class="headerlink" title="逃逸分析"></a>逃逸分析</h2><p>它也是为其他优化手段提供依据的技术，它的基本行为就是分析对象动态作用域：当一个对象在方法中被定义后，它可能被外部方法所引用，例如作为调用参数传递到其他方法中，称为方法逃逸。甚至还有可能被外部线程访问到，例如复制给类变量或可以在其他线程中访问的实例变量，称为线程逃逸。</p>
-<p>如果能证明一个对象不会逃逸到方法或者线程之外，则可能为这个变量进行一些高效的优化：</p>
-<ol>
-<li>栈上分配：让对象直接在栈上分配内存，这样大量对象就会随着方法的结束而自动销毁了，垃圾收集系统的压力将会小很多。</li>
-<li>同步消除：对变量实施的同步措施可以消除掉</li>
-<li>标量替换：不能再分解的量称为标量（如：数值类型），可以继续分解的称为聚合量（如：对象），我们可以直接将对象拆分成标量存在栈上。</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过对于JIT编译的学习，我么可以知道哪些代码编译器是可以帮我们优化的，以及哪些代码是需要自己调节以便更合适编译器的优化。这样我们才可以写出更高效的代码。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《深入理解Java虚拟机》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：之前说过Java中的JIT即时编译器在运行期的优化对于程序运行来说更重要，那我们就来看看这个即时编译器。本文提及的编译器、即时编译器都是指HotSpot虚拟机内的即时编译器，虚拟机也特指HotSpot虚拟机。
     
     </summary>
     
