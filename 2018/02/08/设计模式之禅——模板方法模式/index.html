@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="面试," />
+  <meta name="keywords" content="java,设计模式," />
 
 
 
@@ -89,17 +89,19 @@
 
 
 
-<meta name="description" content="简单，不为人知.">
-<meta name="keywords" content="面试">
+<meta name="description" content="引：少写代码，大家一定觉得很有吸引力。而且还是先确定一个框架，再写其中的部分，这么结构清晰地写代码，大家一定会觉得更有吸引力，那么我想模板方法模式可以达到你的需求。">
+<meta name="keywords" content="java,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="记一次失败的面试">
-<meta property="og:url" content="http://bestlixiang.site/2017/04/26/记一次失败的面试/index.html">
+<meta property="og:title" content="设计模式之禅——模板方法模式">
+<meta property="og:url" content="http://bestlixiang.site/2018/02/08/设计模式之禅——模板方法模式/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="简单，不为人知.">
-<meta property="og:updated_time" content="2017-04-29T01:25:38.000Z">
+<meta property="og:description" content="引：少写代码，大家一定觉得很有吸引力。而且还是先确定一个框架，再写其中的部分，这么结构清晰地写代码，大家一定会觉得更有吸引力，那么我想模板方法模式可以达到你的需求。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/templateMethod.png">
+<meta property="og:updated_time" content="2018-02-08T04:09:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="记一次失败的面试">
-<meta name="twitter:description" content="简单，不为人知.">
+<meta name="twitter:title" content="设计模式之禅——模板方法模式">
+<meta name="twitter:description" content="引：少写代码，大家一定觉得很有吸引力。而且还是先确定一个框架，再写其中的部分，这么结构清晰地写代码，大家一定会觉得更有吸引力，那么我想模板方法模式可以达到你的需求。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/templateMethod.png">
 
 
 
@@ -127,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/04/26/记一次失败的面试/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/02/08/设计模式之禅——模板方法模式/"/>
 
 
 
 
 
-  <title> 记一次失败的面试 | rex note </title>
+  <title> 设计模式之禅——模板方法模式 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -286,7 +288,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/04/26/记一次失败的面试/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/02/08/设计模式之禅——模板方法模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -307,7 +309,7 @@
             
             
               
-                记一次失败的面试
+                设计模式之禅——模板方法模式
               
             
           </h2>
@@ -322,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-26T20:41:48+08:00">
-                2017-04-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-08T12:06:26+08:00">
+                2018-02-08
               </time>
             
 
@@ -345,8 +347,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/生活/" itemprop="url" rel="index">
-                    <span itemprop="name">生活</span>
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
                   </a>
                 </span>
 
@@ -385,7 +387,44 @@
       
 
       
-        <script src="/crypto-js.js"></script><script src="/mcommon.js"></script><h3 id="encrypt-message">大喊一声密码.</h3><link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script> <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> <div id="security"> <div> <div class="input-group"> <input type="text" class="form-control" aria-label="Enter the password." id="pass"/> <div class="input-group-btn"> <button type="button" class="btn btn-default" onclick="decryptAES()">Decrypt</button> </div> </div> </div> </div> <div id="encrypt-blog" style="display:none"> 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 </div>
+        <p>引：少写代码，大家一定觉得很有吸引力。而且还是先确定一个框架，再写其中的部分，这么结构清晰地写代码，大家一定会觉得更有吸引力，那么我想<strong>模板方法模式</strong>可以达到你的需求。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>定义一个操作中的算法的框架，而将一些步骤延迟到子类中。使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。——行为类</strong></p>
+<p>下面是他的通用类图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/templateMethod.png" alt="templateMethod"></p>
+<p>其中AbstractClass叫做抽象模板，它的方法分为两类<br>：</p>
+<ul>
+<li>基本方法：由子类实现的方法，并且在模板方法被调用。</li>
+<li>模板方法：一般是一个具体方法，实现对基本方法的调度，完成固定的逻辑。</li>
+</ul>
+<p>为了防止恶意的操作，一般模板方法都加上final关键字，不允许被覆写。</p>
+<p>而ConcreteClass属于具体模板，实现父类所定义的抽象方法。</p>
+<p>下面再看看他的通用代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象模板类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstrctClass</span> </span>&#123;</div><div class="line">    <span class="comment">// 基本方法</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 基本方法</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doAngthing</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 模板方法</span></div><div class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">templateMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 调用基本方法，完成相关逻辑</span></div><div class="line">        <span class="keyword">this</span>.doAnything();</div><div class="line">        <span class="keyword">this</span>.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体模板类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteClass1</span> <span class="keyword">extends</span> <span class="title">AbstractClass</span> </span>&#123;</div><div class="line">    <span class="comment">// 实现基本方法</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doAngthing</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteClass2</span> <span class="keyword">extends</span> <span class="title">AbstractClass</span> </span>&#123;</div><div class="line">    <span class="comment">// 实现基本方法</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doAngthing</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String[] args)</span> </span>&#123;</div><div class="line">       AbstractClass class1 = <span class="keyword">new</span> ConcreteClass1();</div><div class="line">       AbstractClass class2 = <span class="keyword">new</span> ConcreteClass2();</div><div class="line">       <span class="comment">// 调用模板方法</span></div><div class="line">       class1.templateMethod();</div><div class="line">       class2.templateMethod();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>抽象模板中的基本方法尽量设计为protected类型，符合迪米特原则。实现类若非必要，尽量不要扩大父类中的访问权限。</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>封装不变部分，扩展可变部分。</li>
+<li>提取公共部分代码，便于维护。</li>
+<li>行为由父类控制，子类实现。符合开闭原则。</li>
+</ol>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>是优点也是缺点：子类对父类产生了影响。</p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>多个子类有公有的方法，并且逻辑基本相同。</li>
+<li>重要、复杂的算法，可以把核心算法设计为模板方法，周边的相关细节功能则由各个子类实现。</li>
+<li>重构时，模板方法模式一个常用的模式，把相同的代码抽取到父类中，然后通过<strong>钩子函数</strong>约束其行为。有了钩子方法的模板方法模式才是完美的。</li>
+</ol>
+<p>ps：钩子方法就是子类实现的一个方法，可以利用其返回值决定公共部分的执行结果。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><ol>
+<li><p>父类如何调用子类的方法（极度不建议这么做）</p>
+<ul>
+<li>把子类传递到父类的有参构造函数中，然后调用。</li>
+<li>使用反射的方式调用。</li>
+<li><p>父类调用子类的静态方法。</p>
+<p>但是通过模板方法模式就可以变相地实现父类调用子类的方法。</p>
+</li>
+</ul>
+</li>
+<li>在开源框架中，它提供了一个抽象类，然后开源框架写了一堆子类。如果你需要扩展，可以继承这个抽象类，然后覆写protected方法，再调用一个类似execute方法，就完成了扩展开发。相信大家一定深有感触。</li>
+</ol>
+
       
     </div>
 
@@ -414,7 +453,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/面试/" rel="tag"># 面试</a>
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
           
         </div>
       
@@ -427,8 +468,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/24/SSH项目初体验/" rel="next" title="SSH项目初体验">
-                <i class="fa fa-chevron-left"></i> SSH项目初体验
+              <a href="/2018/02/07/设计模式之禅——抽象工厂模式/" rel="next" title="设计模式之禅——抽象工厂模式">
+                <i class="fa fa-chevron-left"></i> 设计模式之禅——抽象工厂模式
               </a>
             
           </div>
@@ -436,10 +477,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/27/请不要无脑/" rel="prev" title="请不要无脑">
-                请不要无脑 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -638,7 +675,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#encrypt-message"><span class="nav-number">1.</span> <span class="nav-text">大喊一声密码.</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">2.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点"><span class="nav-number">2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缺点"><span class="nav-number">2.2.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用场景"><span class="nav-number">2.3.</span> <span class="nav-text">使用场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳实践"><span class="nav-number">3.</span> <span class="nav-text">最佳实践</span></a></li></ol></div>
             
 
           </div>
