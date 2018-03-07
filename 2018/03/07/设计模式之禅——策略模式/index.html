@@ -89,20 +89,19 @@
 
 
 
-<meta name="description" content="引：在开发应用的时候为了适应不同的操作系统以及不同数据库时，我们总会显得力不从心。而抽象工厂模式为了我们提供了优秀的解决方案。">
+<meta name="description" content="引：将所有方法封装起来，要用什么方法就打开什么方法，这就是策略模式。">
 <meta name="keywords" content="java,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式之禅——抽象工厂模式">
-<meta property="og:url" content="http://bestlixiang.site/2018/02/07/设计模式之禅——抽象工厂模式/index.html">
+<meta property="og:title" content="设计模式之禅——策略模式">
+<meta property="og:url" content="http://bestlixiang.site/2018/03/07/设计模式之禅——策略模式/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：在开发应用的时候为了适应不同的操作系统以及不同数据库时，我们总会显得力不从心。而抽象工厂模式为了我们提供了优秀的解决方案。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/abstractFactory.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/abstractFactoryDemo.png">
-<meta property="og:updated_time" content="2018-02-07T06:26:55.000Z">
+<meta property="og:description" content="引：将所有方法封装起来，要用什么方法就打开什么方法，这就是策略模式。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/strategy.png">
+<meta property="og:updated_time" content="2018-03-07T09:19:35.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式之禅——抽象工厂模式">
-<meta name="twitter:description" content="引：在开发应用的时候为了适应不同的操作系统以及不同数据库时，我们总会显得力不从心。而抽象工厂模式为了我们提供了优秀的解决方案。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/abstractFactory.png">
+<meta name="twitter:title" content="设计模式之禅——策略模式">
+<meta name="twitter:description" content="引：将所有方法封装起来，要用什么方法就打开什么方法，这就是策略模式。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/strategy.png">
 
 
 
@@ -130,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/02/07/设计模式之禅——抽象工厂模式/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/07/设计模式之禅——策略模式/"/>
 
 
 
 
 
-  <title> 设计模式之禅——抽象工厂模式 | rex note </title>
+  <title> 设计模式之禅——策略模式 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -289,7 +288,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/02/07/设计模式之禅——抽象工厂模式/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/07/设计模式之禅——策略模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -310,7 +309,7 @@
             
             
               
-                设计模式之禅——抽象工厂模式
+                设计模式之禅——策略模式
               
             
           </h2>
@@ -325,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-07T14:26:31+08:00">
-                2018-02-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-07T17:19:02+08:00">
+                2018-03-07
               </time>
             
 
@@ -388,21 +387,34 @@
       
 
       
-        <p>引：在开发应用的时候为了适应不同的操作系统以及不同数据库时，我们总会显得力不从心。而抽象工厂模式为了我们提供了优秀的解决方案。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>为创建一组相关或相互依赖的对象提供一个接口，而且无须指定他们的具体类。——创造类</strong></p>
-<p>它的通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/abstractFactory.png" alt="abstractFactory"></p>
-<p>为了展示通用的源代码，将原来的通用类图扩展为如下类图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/abstractFactoryDemo.png" alt="abstractFactoryDemo"></p>
-<p>下面是基于类图的代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象产品类 ProductA与ProductB类似;1,2代表产品等级</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractProductA</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个产品共有方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shareMethod</span><span class="params">()</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// 每个产品相同方法，不同实现</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 产品A1的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductA1</span> <span class="keyword">extends</span> <span class="title">AbstractProductA</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"产品A1的实现方法"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 产品A2的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductA2</span> <span class="keyword">extends</span> <span class="title">AbstractProductA</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"产品A2的实现方法"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象工厂类 有N个产品族，在抽象工厂类就有N个创建方法</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractCreator</span> </span>&#123;</div><div class="line">    <span class="comment">// 创建A产品家族</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> AbstractProductA <span class="title">createProductA</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 创建B产品家族</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> AbstractProductB <span class="title">createProductB</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 有M个产品等级就应该有M个实现工厂类，在每个实现工厂中，实现不同产品族的生产任务</span></div><div class="line"><span class="comment">// 产品等级1的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Creator1</span> <span class="keyword">extends</span> <span class="title">AbstractCreator</span> </span>&#123;</div><div class="line">    <span class="comment">// 只生产产品等级为1的A产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductA <span class="title">createProductA</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductA1</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 只生产产品等级为1的B产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductB <span class="title">createProductB</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductB1</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 产品等级2的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Creator2</span> <span class="keyword">extends</span> <span class="title">AbstractCreator</span> </span>&#123;</div><div class="line">    <span class="comment">// 只生产产品等级为2的A产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductA <span class="title">createProductA</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductA2</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 只生产产品等级为2的B产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductB <span class="title">createProductB</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductB2</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 定义两个工厂</span></div><div class="line">        AbstractCreator creator1 = <span class="keyword">new</span> Creator1();</div><div class="line">        AbstractCreator creator2 = <span class="keyword">new</span> Creator2();</div><div class="line">        <span class="comment">// 产生A1对象</span></div><div class="line">        AbstractProductA a1 = creator1.createProductA();</div><div class="line">        <span class="comment">// 产生A2对象</span></div><div class="line">        AbstractProductA a2 = creator2.createProductA();</div><div class="line">        <span class="comment">// 产生B1对象</span></div><div class="line">        AbstractProductB b1 = creator1.createProductB();</div><div class="line">        <span class="comment">// 产生B2对象</span></div><div class="line">        AbstractProductB b2 = creator2.createProductB();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>主要是要理解产品族以及产品等级的关系。</p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>封装性，它只需要了解接口。</li>
-<li>产品族的约束为非公开状态。</li>
+        <p>引：将所有方法封装起来，要用什么方法就打开什么方法，这就是<strong>策略模式</strong>。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>定义一组算法，将每个算法都封装起来，并且使他们之间可以互换。——行为类</strong></p>
+<p>我们先看它的类图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/strategy.png" alt="strategy"></p>
+<p>简单介绍类图中的几个类：</p>
+<ol>
+<li>Context封装角色，也叫上下文角色，起承上启下封装作用，屏蔽高层模块对策略、算法的直接访问。</li>
+<li>Strategy抽象策略角色，定义每个策略或算法必须具有的方法和属性。</li>
+<li>ConcreteStrategy具体策略角色，实现抽象策略的操作，该类含有具体的算法。</li>
 </ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>扩展非常困难。如果要新增一个产品，需要修改AbstractCreator类以及它的实现类。这严重<strong>违反了开闭原则</strong>。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>如果一个对象族都有相同的约束，就可以使用抽象工厂模式。例如linux和windows下得编辑器和不同数据库的规范操作。</p>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>上面的扩展困难是指产品族扩展困难，但是产品等级扩展还是容易的。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>在涉及不同操作系统，不同数据库的时候非常适合抽象工厂模式，因为它可以屏蔽掉操作系统或数据库对应用的影响。</p>
+<p>下面是它的通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象的策略角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Strategy</span> </span>&#123;</div><div class="line">    <span class="comment">// 策略模式的运算法则</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体角色类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStrategy1</span> <span class="keyword">implements</span> <span class="title">Strategy</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"具体策略1的运算法则"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStrategy2</span> <span class="keyword">implements</span> <span class="title">Strategy</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"具体策略2的运算法则"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 封装角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Context</span> </span>&#123;</div><div class="line">    <span class="comment">// 抽象策略</span></div><div class="line">    <span class="keyword">private</span> Strategy strategy = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 构造函数设置具体策略</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Context</span><span class="params">(Strategy _strategy)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.strategy = _strategy;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 封装后的策略方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doAngthing</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.strategy.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 声明一个具体的策略</span></div><div class="line">        Strategy strategy = <span class="keyword">new</span> ConcreteStrategy1();</div><div class="line">        <span class="comment">// 声明上下文对象</span></div><div class="line">        Context context = <span class="keyword">new</span> Context(strategy);</div><div class="line">        <span class="comment">// 执行封装后的方法</span></div><div class="line">        context.doAngthing();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>策略模式实质是采用了面向对象的继承和<strong>多态机制</strong>。但是一个类实现多个接口很正常，所以识别出抽象策略接口是系统分析师的价值所在。策略模式和代理模式的区别是策略模式的封装角色和被封装的策略类不用是同一个接口。</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>算法可以自由切换</li>
+<li>避免使用多重条件判断</li>
+<li>扩展性良好</li>
+</ol>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
+<li>策略类数量增多，复用可能性小</li>
+<li>所有策略类都需要对外暴露，上层模块需要知道有哪些策略，违背了迪米特法则</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>多个类只有在算法或行为上稍有不同的场景</li>
+<li>算法需要自由切换的场景</li>
+<li>需要屏蔽算法规则的场景</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>如果系统中的一个策略家族的具体策略数量超过4个，则需要考虑使用混合模式，解决策略类膨胀和对外暴露问题。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>策略模式在项目中会经常使用，但是它具有一个致命缺陷：所有的策略都需要暴露出去。在实际项目中，我们一般通过工厂方法模式来实现策略类的声明。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《设计模式之禅》</li>
 </ol>
@@ -450,8 +462,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/06/设计模式之禅——工厂方法模式/" rel="next" title="设计模式之禅——工厂方法模式">
-                <i class="fa fa-chevron-left"></i> 设计模式之禅——工厂方法模式
+              <a href="/2018/03/07/设计模式之禅——装饰模式/" rel="next" title="设计模式之禅——装饰模式">
+                <i class="fa fa-chevron-left"></i> 设计模式之禅——装饰模式
               </a>
             
           </div>
@@ -459,10 +471,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/02/08/设计模式之禅——模板方法模式/" rel="prev" title="设计模式之禅——模板方法模式">
-                设计模式之禅——模板方法模式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>

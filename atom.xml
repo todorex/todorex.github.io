@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-07T05:42:41.000Z</updated>
+  <updated>2018-03-07T09:19:35.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,61 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式之禅——策略模式</title>
+    <link href="http://bestlixiang.site/2018/03/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/03/07/设计模式之禅——策略模式/</id>
+    <published>2018-03-07T09:19:02.000Z</published>
+    <updated>2018-03-07T09:19:35.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：将所有方法封装起来，要用什么方法就打开什么方法，这就是<strong>策略模式</strong>。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>定义一组算法，将每个算法都封装起来，并且使他们之间可以互换。——行为类</strong></p>
+<p>我们先看它的类图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/strategy.png" alt="strategy"></p>
+<p>简单介绍类图中的几个类：</p>
+<ol>
+<li>Context封装角色，也叫上下文角色，起承上启下封装作用，屏蔽高层模块对策略、算法的直接访问。</li>
+<li>Strategy抽象策略角色，定义每个策略或算法必须具有的方法和属性。</li>
+<li>ConcreteStrategy具体策略角色，实现抽象策略的操作，该类含有具体的算法。</li>
+</ol>
+<p>下面是它的通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象的策略角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Strategy</span> </span>&#123;</div><div class="line">    <span class="comment">// 策略模式的运算法则</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体角色类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStrategy1</span> <span class="keyword">implements</span> <span class="title">Strategy</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"具体策略1的运算法则"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStrategy2</span> <span class="keyword">implements</span> <span class="title">Strategy</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"具体策略2的运算法则"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 封装角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Context</span> </span>&#123;</div><div class="line">    <span class="comment">// 抽象策略</span></div><div class="line">    <span class="keyword">private</span> Strategy strategy = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 构造函数设置具体策略</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Context</span><span class="params">(Strategy _strategy)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.strategy = _strategy;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 封装后的策略方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doAngthing</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.strategy.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 声明一个具体的策略</span></div><div class="line">        Strategy strategy = <span class="keyword">new</span> ConcreteStrategy1();</div><div class="line">        <span class="comment">// 声明上下文对象</span></div><div class="line">        Context context = <span class="keyword">new</span> Context(strategy);</div><div class="line">        <span class="comment">// 执行封装后的方法</span></div><div class="line">        context.doAngthing();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>策略模式实质是采用了面向对象的继承和<strong>多态机制</strong>。但是一个类实现多个接口很正常，所以识别出抽象策略接口是系统分析师的价值所在。策略模式和代理模式的区别是策略模式的封装角色和被封装的策略类不用是同一个接口。</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>算法可以自由切换</li>
+<li>避免使用多重条件判断</li>
+<li>扩展性良好</li>
+</ol>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
+<li>策略类数量增多，复用可能性小</li>
+<li>所有策略类都需要对外暴露，上层模块需要知道有哪些策略，违背了迪米特法则</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>多个类只有在算法或行为上稍有不同的场景</li>
+<li>算法需要自由切换的场景</li>
+<li>需要屏蔽算法规则的场景</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>如果系统中的一个策略家族的具体策略数量超过4个，则需要考虑使用混合模式，解决策略类膨胀和对外暴露问题。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>策略模式在项目中会经常使用，但是它具有一个致命缺陷：所有的策略都需要暴露出去。在实际项目中，我们一般通过工厂方法模式来实现策略类的声明。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：将所有方法封装起来，要用什么方法就打开什么方法，这就是&lt;strong&gt;策略模式&lt;/strong&gt;。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>设计模式之禅——装饰模式</title>
@@ -1164,95 +1219,6 @@
     <summary type="html">
     
       &lt;p&gt;引：之前介绍了Executor任务执行框架的使用，它不仅简化了任务与线程的生命周期管理，而且还提供了一种简单灵活的方式将任务的提交和任务的执行策略解耦开来。但是深入下去，我们需要对线程池进行配置和调优，并且分析再使用任务执行框架时需要注意的各种危险。
-    
-    </summary>
-    
-      <category term="Java并发编程实战" scheme="http://bestlixiang.site/categories/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/"/>
-    
-    
-      <category term="并发" scheme="http://bestlixiang.site/tags/%E5%B9%B6%E5%8F%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java并发_6_取消与关闭</title>
-    <link href="http://bestlixiang.site/2018/01/22/Java%E5%B9%B6%E5%8F%91-6-%E5%8F%96%E6%B6%88%E4%B8%8E%E5%85%B3%E9%97%AD/"/>
-    <id>http://bestlixiang.site/2018/01/22/Java并发-6-取消与关闭/</id>
-    <published>2018-01-22T06:13:10.000Z</published>
-    <updated>2018-01-22T06:13:49.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：任务和线程的启动很容易，在大多数时候，我们都会让他们运行直到结束，然而，有时候我们希望提前结束任务或线程，但是Java没有提供任何机制来安全地终止线程，只是提供了中断，这是一种<strong>协作机制</strong>，能够使一个线程终止另一个线程的工作。所以需要我们能很完善地处理失败、关闭和取消等过程。<a id="more"></a></p>
-<h1 id="任务取消"><a href="#任务取消" class="headerlink" title="任务取消"></a>任务取消</h1><p>如果外部代码能在某个操作正常完成之前将其置入“完成”状态，那么这个操作就可以称为可取消的。取消这个操作的原因有很多：</p>
-<ol>
-<li>用户请求取消。用户点击图形界面程序的“取消”按钮。</li>
-<li>有时间限制的操作。某个程序需要在有限时间内完成搜索任务，当超时时，需要取消搜索任务。</li>
-<li>错误。当一个爬虫程序发生错误时，那么搜索任务都会取消。</li>
-<li>关闭。在立即关闭的过程中，当前的任务则可能被取消。</li>
-</ol>
-<p>在Java中没有一种安全的抢占式方法来停止线程，因此也就没有安全的抢占式方法来停止任务，只有一些协作式的机制，使请求取消的任务和代码都遵循一种协商好的协议。</p>
-<p>其中一种协作机制能设置某个“已请求取消”标志，而任务将定期地查看该标志。如果设置了这个标志，那么任务将提前结束。代码如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="title">implement</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// 为了使这个过程能可靠得工作，标志cancelled必须为volatile类型</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> cancelled;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">while</span>(!cancelled) &#123;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        cancelled = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h2><p>如果在上面代码中while里面出现了一个阻塞的方法，那么在调用cancel方法来设置cancelled状态，当却检查不到标志，因为它无法从阻塞的方法恢复过来。如下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeProducer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;BigInteger&gt; queue;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> cancelled = <span class="keyword">false</span>;</div><div class="line"></div><div class="line">    BrokenPrimeProducer(BlockingQueue&lt;BigInteger&gt; queue) &#123;</div><div class="line">        <span class="keyword">this</span>.queue = queue;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            BigInteger p = BigInteger.ONE;</div><div class="line">            <span class="keyword">while</span> (!cancelled) &#123;</div><div class="line">                <span class="comment">// 如果生产者的速度超过消费者的处理速度，队列将被填满，put方法会被阻塞</span></div><div class="line">                queue.put(p = p.nextProbablePrime());</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        cancelled = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>所以我们会想到一些线程中断这种协作机制，它利用了特殊的<strong>阻塞库</strong>用来是实现任务取消，注意：如果在取消之外的其他操作中使用中断，都是<strong>不合适</strong>的，并且很难支撑起更大的应用。下面是Thread的中断方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 每个线程都有一个boolean类型的中断状态，当中断线程时，这个线程的中断状态将被设置为true</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="comment">// 中断目标线程</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">interrupt</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="comment">// 清除当前线程的中断状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">interrupted</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="comment">// 返回目标线程的中断状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isInterrupted</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>阻塞库的方法，如Thread.sleep和Object.wait等都会检查线程何时中断，并且在发生中断时返回。响应中断执行的操作包括：清除中断状态，抛出InterruptedException。JVM不保证阻塞方法检测到中断的速度，但通常响应速度还是非常快的。</p>
-<p>注意：调用interrupt并不意味着立即停止目标线程正在进行的工作，而只是传递了请求中断的消息。然后由线程在下一个合适的时刻中断自己（这些时刻也被称为取消点）。有些方法，例如wait、sleep和join等，将严格处理这种请求，当他们收到中断请求或者在开始执行时发现某个已被设置好的中断状态，将抛出一个异常。示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeProducer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;BigInteger&gt; queue;</div><div class="line"></div><div class="line">    BrokenPrimeProducer(BlockingQueue&lt;BigInteger&gt; queue) &#123;</div><div class="line">        <span class="keyword">this</span>.queue = queue;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            BigInteger p = BigInteger.ONE;</div><div class="line">            <span class="comment">// 在阻塞的put方法调用中以及在循环开始处查询中断状态时，都会检查中断标志</span></div><div class="line">            <span class="keyword">while</span> (!Thread.currentThread().isInterrupted()) &#123;</div><div class="line">                queue.put(p = p.nextProbablePrime());</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        interrupt();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="中断策略"><a href="#中断策略" class="headerlink" title="中断策略"></a>中断策略</h2><p>最合理的中断策略是某种形式的线程级取消操作或者服务级取消操作：尽快退出，在必要时清理，通知某个<strong>所有者</strong>该线程已经退出。此外还可以建立其他的中断策略，例如暂停服务或重新开始服务。</p>
-<p>任务不应该对执行该任务的线程的中断策略做出假设。无论任务把中断视为取消，还是其他某个中断响应操作，都应该小心的保存线程的中断状态，如果除了将InterruptException传递给调用者外还需要执行其他操作，那么应该在捕获InterruptException之后恢复中断状态。</p>
-<p><strong>线程只能由其所有者中断，所有者可以将线程的中断策略信息封装到某个合适的取消机制中，例如关闭方法中。</strong></p>
-<h2 id="响应中断"><a href="#响应中断" class="headerlink" title="响应中断"></a>响应中断</h2><p>在调用可中断的阻塞函数时，有两种实用策略可用于处理InterruptException：</p>
-<ul>
-<li>传递异常：从而使你的方法也称为了可中断的阻塞方法。</li>
-<li>恢复中断状态：从而使调用栈中的上层代码能够对其进行处理。</li>
-</ul>
-<p><strong>只有是实现了线程中断策略的代码才可以屏蔽中断请求。在常规的任务和库代码中都不应该屏蔽中断请求。</strong></p>
-<h2 id="通过Future来实现取消"><a href="#通过Future来实现取消" class="headerlink" title="通过Future来实现取消"></a>通过Future来实现取消</h2><p>使用ExecuorService.submit方法将返回一个Future来描述任务，Future有一个cancel方法。cancle方法有一个参数mayInterruptIfRunning,如果设置为true，那么就表示取消操作是否成功（这只是表示任务是否能够接受中断，而不是表示任务是否能够检测并处理中断）。如果为false，表示如果任务还没有运行，那么就不要运行它。代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TimedRun</span> </span>&#123;  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ExecutorService taskExec = Executors.newCachedThreadPool();  </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">timedRun</span><span class="params">(Runnable r,<span class="keyword">long</span> timeout, TimeUnit unit)</span>  </span></div><div class="line">            <span class="keyword">throws</span> InterruptedException &#123;  </div><div class="line">        Future&lt;?&gt; task = taskExec.submit(r);  </div><div class="line">        <span class="keyword">try</span> &#123;  </div><div class="line">            task.get(timeout, unit);  </div><div class="line">        &#125; <span class="keyword">catch</span> (TimeoutException e) &#123;  </div><div class="line">            <span class="comment">// 接下来任务将被取消  </span></div><div class="line">        &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;  </div><div class="line">            <span class="comment">// 如果在任务执行和中抛出了异常，那么重新抛出该异常  </span></div><div class="line">            <span class="keyword">throw</span> launderThrowable(e.getCause());  </div><div class="line">        &#125; <span class="keyword">finally</span> &#123;  </div><div class="line">            <span class="comment">//如果任务已经结束，那么执行取消操作也不会带来任何影响  </span></div><div class="line">            task.cancel(<span class="keyword">true</span>); <span class="comment">// 如果任务正在运行，那么将被中断  </span></div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="处理不可中断的阻塞"><a href="#处理不可中断的阻塞" class="headerlink" title="处理不可中断的阻塞"></a>处理不可中断的阻塞</h2><p>在java库中，很多阻塞的方法都是通过提前返回或者是抛出InterruptedException来响应中断请求的，然而并非所有的可阻塞方法或者阻塞机制都能响应中断。</p>
-<p>比如一个线程由于执行同步的Socket IO 或者等待获得内置锁而阻塞，那么中断请求只能设置线程的中断状态，除此之外没有其他任何作用，对于那些执行不可中断操作而被阻塞的线程，可以使用类似于中断的手段来停止这些线程，但这要求我们必须知道线程阻塞的原因，然后通过重写<strong>非标准的取消操作</strong>。</p>
-<h1 id="停止基础线程的服务"><a href="#停止基础线程的服务" class="headerlink" title="停止基础线程的服务"></a>停止基础线程的服务</h1><p>应用程序通常会创建多个线程的服务，例如线程池。正确地封装原则是：除非拥有某个线程，否则不能对该线程进行操控，线程池是其工作线程的所有者，如果要中断这些线程，那么应该使用线程池。线程的所有权是不可以传递的：应用程序可以拥有服务，服务可以拥有工作者线程，但应用程序并不能拥有工作者线程，因此应用程序不能直接停止工作者线程。相反，服务应用提供生命周期方法来关闭它自己以及它所拥有的线程，在ExecutorService中提供了shutdown和shutdownNow方法。</p>
-<ol>
-<li><p>例子：日志服务</p>
-<p> 方式：通过调用log方法将日志消息放入某个队列中，并由其他线程来处理；</p>
-<p> 停止该服务的方式：通过原子方式来检查关闭请求，并且有条件地递增一个计数器来保存提交信息的权利；</p>
-</li>
-<li><p>关闭ExecutorService</p>
-<p> Service封装在某个更高级别的服务中，并且该服务能提供其自己的生命周期方法。</p>
-</li>
-<li><p>毒丸对象</p>
-<p> 毒丸是指一个放在队列上的对象，其含义是：当得到这个对象时，立即停止；</p>
-<p> 限制：只有在生产者和消费者的数量都已知的情况下，才可以使用“毒丸”对象；</p>
-<p> 当生产者和消费者数目较大时，这种方法变得难以使用。</p>
-</li>
-<li><p>例子：只执行一次的服务</p>
-<p> 场景：某个方法需要处理一批任务，并且当所有任务都处理完后才返回，可以通过一个私有的Executor来简化服务的生命周期管理，其中该Executor的生命周期是由这个方法控制的</p>
-</li>
-<li><p>shutdownNow的局限性</p>
-<p> 当通过shutdownNow来强行关闭ExecutorService时，尝试取消正在执行的任务，并返回所有已经提交但未开始的任务。但无法在关闭过程中知道正在执行的任务的状态。除非任务本身会执行某种检查。</p>
-</li>
-</ol>
-<h1 id="处理非正常的线程终止"><a href="#处理非正常的线程终止" class="headerlink" title="处理非正常的线程终止"></a>处理非正常的线程终止</h1><p>在并发程序中,是无法做到一直观察控制台的, 例如:你的web应用部署到服务器上,难道你要派个人一直去观察控制台?</p>
-<p>任何代码都可能抛出一个RuntimeExecption,每当调用另一个方法时,都要对它的行为保持怀疑,不要盲目地认为它一定会抛出在方法原型中声明的某个已检查异常。对调用的代码越不熟悉,就越应该对其代码行为保持怀疑。</p>
-<h2 id="典型的线程池工作者线程结构"><a href="#典型的线程池工作者线程结构" class="headerlink" title="典型的线程池工作者线程结构"></a>典型的线程池工作者线程结构</h2><p>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">    Throwable <span class="keyword">throw</span> = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span>&#123;</div><div class="line">        <span class="keyword">while</span>(!isInterrupted)&#123;</div><div class="line">            runTask(getTaskFromWorkQueue());</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable e)&#123;</div><div class="line">        thrown = e;</div><div class="line">    &#125; <span class="keyword">finally</span>&#123;</div><div class="line">        threadExited(<span class="keyword">this</span>,thrown);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>如果任务抛出了一个未检查的异常,那么它将使线程终结,但会首先通知框架该线程已经终结.然后,框架可能会用新的线程来代替这个工作线程。</p>
-<h2 id="将异常写入日志的UncaughtExecptionHandler"><a href="#将异常写入日志的UncaughtExecptionHandler" class="headerlink" title="将异常写入日志的UncaughtExecptionHandler"></a>将异常写入日志的UncaughtExecptionHandler</h2><p>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span>.<span class="title">UncaughtExecptionHandler</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">uncaughtException</span><span class="params">(Thread t,Throwable e)</span></span>&#123;</div><div class="line">        Logger logger = Logger.getAnonymousLogger();</div><div class="line">        Logger.log(Level.SEVERE,<span class="string">"Thread terminated with exception: "</span>+ t.getName(),e);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在运行时间较长的应用程序中,通常会为所有线程的未捕获异常指定同一个异常处理器,并且该异常处理器至少会将异常信息记录到日志中。</p>
-<h1 id="JVM关闭"><a href="#JVM关闭" class="headerlink" title="JVM关闭"></a>JVM关闭</h1><p>JVM既可以正常关闭，也可以强行关闭。正常关闭的触发方式有多种，包括：当最后一个“正常（非守护）”线程结束时，或者调用了System.exit时，或者通过其他特定于平台的方法关闭时（例如发送了SIGINT信号或Ctrl-C）。虽然可以通过这些标准方法来正常关闭JVM，但也可以通过调用Runtime.halt或者在操作系统中“杀死”JVM进程来强行关闭JVM。</p>
-<h2 id="关闭钩子"><a href="#关闭钩子" class="headerlink" title="关闭钩子"></a>关闭钩子</h2><p>在正常关闭中，JVM首先调用所有已注册的关闭钩子，关闭钩子是指通过Runtime.addShutdownHook注册的但尚未开始的线程。JVM不能保证关闭钩子的调用顺序。在关闭应用程序线程时,如果有线程仍然在运行,那么这些线程接下来将与关闭进程并发执行.</p>
-<p><strong>关闭钩子应该是线程安全:它们在访问共享数据时,必须使用同步机制,小心避免死锁。</strong></p>
-<p>关闭钩子可以用于实现服务或应用程序的清理工作，例如删除临时文件，或者清除无法由操作系统自动清除的资源。</p>
-<h2 id="守护线程"><a href="#守护线程" class="headerlink" title="守护线程"></a>守护线程</h2><p>有时候，你希望创建一个线程来执行一些辅助工作，但又不希望这个线程阻碍了JVM的关闭，这种情况就需要使用守护线程。</p>
-<p>线程分为两种: 普通线程和守护线程,在JVM启动时启动创建的所有线程中,除了主线程以外，其他的线程都是守护线程。例如垃圾回收器，当创建一个新的线程时，它将继承创建它的线程的类型。</p>
-<p><strong>我们应该尽可能少地使用守护线程–很少有操作能够在不进行清理的情况下被安全地抛弃,特别是在执行I/O操作的任务,那么将是一种非常危险的行为; 并且守护线程不能用来替代应用程序管理程序中各个服务的生命周期</strong></p>
-<h2 id="终结器"><a href="#终结器" class="headerlink" title="终结器"></a>终结器</h2><p>当不再需要内存资源时，可以通过垃圾回收器来回收它们，但对于其他一些资源，例如文件句柄或套接字句柄，当不再需要它们时,必须显式交还给操作系统。为了实现这个功能，垃圾回收器对那些定义了finalize方法的对象会进行特殊处理: 在垃圾回收期释放它们后，调用它们的finalize方法，从而保证一些持久化的资源被释放。</p>
-<p>由于终结器可以在某个JVM管理的线程中运行，因此终结器访问任何状态都可能被多个线程访问，这样就必须对其访问操作进行同步。终结器并不能保证它们将在何时甚至是否会运行，并且复杂的终结器带来性能上的巨大开销。编写正确的终结器是非常困难的。在大多数情况下，通过使用finally代码块和显式的close方法能够比终结器更好的管理资源。</p>
-<p><strong>避免使用终结器</strong></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在任务、线程、服务以及应用程序等模块中的生命周期结束问题，可能会增加他们在设计和实现时的复杂性。Java并没有提供某种抢占式的机制来取消操作或者总结线程。相反，它提供了一种协作式的中断机制来实现取消操作，但这要依赖于如何构建取消操作的协议，以及能否始终遵循这些协议。通过使用<strong>FutureTask</strong>和<strong>Executor</strong>框架，可以帮助我们构建可取消的任务和服务。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《Java并发编程实战》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：任务和线程的启动很容易，在大多数时候，我们都会让他们运行直到结束，然而，有时候我们希望提前结束任务或线程，但是Java没有提供任何机制来安全地终止线程，只是提供了中断，这是一种&lt;strong&gt;协作机制&lt;/strong&gt;，能够使一个线程终止另一个线程的工作。所以需要我们能很完善地处理失败、关闭和取消等过程。
     
     </summary>
     
