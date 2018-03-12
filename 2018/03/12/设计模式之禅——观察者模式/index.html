@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="算法导论,排序," />
+  <meta name="keywords" content="java,设计模式," />
 
 
 
@@ -89,20 +89,19 @@
 
 
 
-<meta name="description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta name="keywords" content="算法导论,排序">
+<meta name="description" content="引：被观察者做出动作了，然后通知观察者做出反应。观察者模式就是这么简单！">
+<meta name="keywords" content="java,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="快速排序及随机化算法">
-<meta property="og:url" content="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/index.html">
+<meta property="og:title" content="设计模式之禅——观察者模式">
+<meta property="og:url" content="http://bestlixiang.site/2018/03/12/设计模式之禅——观察者模式/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-05%20%E4%B8%8B%E5%8D%8810.15.58.png">
-<meta property="og:updated_time" content="2017-05-05T23:42:16.000Z">
+<meta property="og:description" content="引：被观察者做出动作了，然后通知观察者做出反应。观察者模式就是这么简单！">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/observer.png">
+<meta property="og:updated_time" content="2018-03-12T12:34:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="快速排序及随机化算法">
-<meta name="twitter:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg">
+<meta name="twitter:title" content="设计模式之禅——观察者模式">
+<meta name="twitter:description" content="引：被观察者做出动作了，然后通知观察者做出反应。观察者模式就是这么简单！">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/observer.png">
 
 
 
@@ -130,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/12/设计模式之禅——观察者模式/"/>
 
 
 
 
 
-  <title> 快速排序及随机化算法 | rex note </title>
+  <title> 设计模式之禅——观察者模式 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -289,7 +288,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/12/设计模式之禅——观察者模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -310,7 +309,7 @@
             
             
               
-                快速排序及随机化算法
+                设计模式之禅——观察者模式
               
             
           </h2>
@@ -325,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-06T00:04:52+08:00">
-                2017-05-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-12T20:33:37+08:00">
+                2018-03-12
               </time>
             
 
@@ -348,8 +347,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
                   </a>
                 </span>
 
@@ -388,117 +387,55 @@
       
 
       
-        <p>引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。<a id="more"></a></p>
-<h2 id="快速排序算法"><a href="#快速排序算法" class="headerlink" title="快速排序算法"></a>快速排序算法</h2><ol>
-<li>核心思想<br>分治思想和原址运算：看一张图<br><img src="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg" alt="快速排序"></li>
-<li><p>算法具体实现 </p>
-<blockquote>
-</blockquote>
-<pre><code>public class QuickSort {
-    public int partition(int[] a,int p,int r){
-        int x = a[r];
-        int i = -1;
-        int temp = 0;
-        for (int j = 0; j &lt; a.length-1; j++) {
-            if(a[j]&lt;x){
-                i=i+1;
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
-        }
-        temp = a[i+1];
-        a[i+1] = x;
-        a[r] = temp;
-        return i+1;
-    }
-
-    public int[] quicksort(int[] b,int p,int r){
-        if(p&lt;r){
-            int q = partition(b,p,r);
-            quicksort(b, p, q-1);
-            quicksort(b, q+1, r);
-        }
-        return b;
-    }
-
-    public static void main(String[] args) {
-        QuickSort sort = new QuickSort();
-        int[] a = {2,8,7,1,3,5,6,4};
-        int[] b = sort.quicksort(a, 0, a.length-1);
-        for (int i : b) {
-            System.out.print(i+&quot; &quot;);
-        }
-    }
-}
-</code></pre></li>
-</ol>
-<p>3.时间复杂度</p>
-<p>通过分析我们最看重的平均复杂度是nlgn</p>
-<h2 id="随机化算法"><a href="#随机化算法" class="headerlink" title="随机化算法"></a>随机化算法</h2><ol>
-<li>核心思想</li>
-</ol>
-<p>在算法加入随机性，要么在使序列生成随机化，要么就是使主元随机化，这里我们使主元随机化。</p>
+        <p>引：被观察者做出动作了，然后通知观察者做出反应。<strong>观察者模式</strong>就是这么简单！<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>观察者模式又称发布订阅模式。</p>
+<p><strong>定义对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有它依赖的对象都会得到通知并被自动更新。行为类</strong></p>
+<p>下面是它的通用类图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/observer.png" alt="observer"></p>
+<p>下面简单介绍一下类图中的几个角色：</p>
 <ol>
-<li><p>算法具体实现</p>
-<blockquote>
-</blockquote>
-<pre><code>import java.util.Random;    
-public class RandomQuickSort {
-    public int partition(int[] a,int p,int r){
-        int x = a[r];
-        int i = -1;
-        int temp = 0;
-        for (int j = 0; j &lt; a.length-1; j++) {
-            if(a[j]&lt;x){
-                i=i+1;
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
-        }
-        temp = a[i+1];
-        a[i+1] = x;
-        a[r] = temp;
-        return i+1;
-    }
-
-    public int randompartition(int[] a,int p,int r){
-        int temp = 0;
-        Random random = new Random();
-        int i = random.nextInt(r);
-        temp = a[i];
-        a[i] = a[r];
-        a[r] = temp;
-        return partition(a, p, r);
-    }
-
-    public int[] randomquicksort(int[] b,int p,int r){
-        if(p&lt;r){
-            int q = randompartition(b, p, r);
-            randomquicksort(b, p, q-1);
-            randomquicksort(b, q+1, r);
-        }
-        return b;
-    }
-
-    public static void main(String[] args) {
-        RandomQuickSort sort = new RandomQuickSort();
-        int[] a = {2,8,7,1,3,5,6,4};
-        int[] b = sort.randomquicksort(a, 0, a.length-1);
-        for (int i : b) {
-            System.out.print(i+&quot; &quot;);
-        }
-    }
-}
-</code></pre></li>
-<li><p>时间复杂度</p>
+<li>Subject被观察者：定义观察者必须实现的职责，它必须能够动态地增加、取消观察者。管理观察者并通知观察者。</li>
+<li>Observer观察者：观察者接受到消息后，即进行update操作，对接收的信息进行处理。</li>
+</ol>
+<p>下面是它的通用源代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 被观察者</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Subject</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义一个观察者数组</span></div><div class="line">    <span class="keyword">private</span> Vector&lt;Observer&gt; observerVector = <span class="keyword">new</span> Vector&lt;Observer&gt;();</div><div class="line">    <span class="comment">// 增加一个观察者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addObserver</span><span class="params">(Observer o)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.observerVector.add(o);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 删除一个观察者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteObserver</span><span class="params">(Observer <span class="number">0</span>)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.observerVector.remove(o);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 通知所有观察者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyObservers</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (Observer o : <span class="keyword">this</span>.observerVector) &#123;</div><div class="line">            o.update();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体被观察者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteSubject</span> <span class="keyword">extends</span> <span class="title">Subject</span> </span>&#123;</div><div class="line">    <span class="comment">// 具体的业务</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// do somthing</span></div><div class="line">        <span class="keyword">super</span>.notifyObservers();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 观察者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Observer</span> </span>&#123;</div><div class="line">    <span class="comment">// 更新方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体观察者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteObserver</span> <span class="keyword">implements</span> <span class="title">Observer</span> </span>&#123;</div><div class="line">    <span class="comment">// 实现更新方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updatea</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"接到消息，并进行处理"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 场景一个被观察者</span></div><div class="line">        ConcreteSubject subject = <span class="keyword">new</span> ConcreteSubject();</div><div class="line">        <span class="comment">// 定义一个观察者</span></div><div class="line">        Observer obs = <span class="keyword">new</span> ConcreteObserver();</div><div class="line">        <span class="comment">// 观察者观察被观察者</span></div><div class="line">        subject.addObserver(obs);</div><div class="line">        <span class="comment">// 观察者开始活动了</span></div><div class="line">        subject.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>观察者和被观察者之间是<strong>抽象耦合</strong>的，不管是增加观察者都非常容易扩展。</li>
+<li>建立一套触发机制。容易在单一职责下构建一条触发链。</li>
+</ol>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>观察者模式需要考虑一下开发效率和运行效率问题，一个被观察者，多个观察者，开发和调试就会比较复杂，而且在Java中消息的通知默认是顺序执行的，一个观察者卡壳，会影响整体的执行效率。在这种情况下，一般考虑采用异步的方式。</p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>关联行为场景。这种关联行为时可以拆分的。</li>
+<li>事件多级触发场景。</li>
+<li>跨系统的消息交换场景，如消息队列的处理机制。</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li>广播链。在一个观察者模式中最多出现一个对象既是观察者又是被观察者，也就是说消息最多被转发一次。（和责任链的区别在于广播链在消息传播过程中消息是可变的）</li>
+<li>异步处理问题。如果观察者比较多，处理时间长，我们就需要用异步。异步处理需要考虑到线程安全和队列问题。</li>
+</ol>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="Java世界中的观察者模式"><a href="#Java世界中的观察者模式" class="headerlink" title="Java世界中的观察者模式"></a>Java世界中的观察者模式</h2><p>在JDK中已经提供了java.util.Observable实现类（被观察者）以及java.util.Observer接口（观察者）。大家要记住在java的世界里横行时，多看看API，有很大的帮助，很多东西Java已经帮我们设计了一个良好的框架。</p>
+<h2 id="项目中真实的观察者模式"><a href="#项目中真实的观察者模式" class="headerlink" title="项目中真实的观察者模式"></a>项目中真实的观察者模式</h2><p>在系统设计中会对观察者模式进行改造或改装，主要在以下3个方面：</p>
+<ol>
+<li><p>观察者和被观察者之间的消息沟通</p>
+<p> 被观察者状态改变会触发观察者的一个行为，同时会传递一个消息给观察者，这是正确地，但是在实际中一般的做法是：观察者中update方法会接受两个参数，一个是被观察者，一个是DTO（数据传输对象），DTO一般是一个纯洁的JavaBean，由被观察者生成，由观察者消费。</p>
+</li>
+<li><p>观察者响应方式</p>
+<p>为了解决观察者的快速响应有以下两个办法：</p>
+<ul>
+<li>采用多线程技术</li>
+<li>缓存技术（同步架构）</li>
+</ul>
+</li>
+<li><p>被观察者尽量自己做主</p>
+<p>被观察者的状态改变不一定要通知观察者，所以doSomething方法可以被重载，增加一个doSomething(boolean isNotifyObs)方法，决定是否通知观察者，而不是在消息到达观察和才判断是否要消费。</p>
 </li>
 </ol>
-<p>通过分析我们最看重的平均复杂度是nlgn</p>
-<h2 id="基本排序算法"><a href="#基本排序算法" class="headerlink" title="基本排序算法"></a>基本排序算法</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-05%20%E4%B8%8B%E5%8D%8810.15.58.png" alt="排序"></p>
-<p>小结：同等情况下快速排序&gt;随机化算法&gt;归并排序&gt;插入排序；<br>在有序的情况下随机化算法&gt;快速排序</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>慢慢走，不要急！</p>
+<h2 id="订阅发布模型"><a href="#订阅发布模型" class="headerlink" title="订阅发布模型"></a>订阅发布模型</h2><p>顾名思义就是消息的发布者发布一个消息，然后利用消息队列通知订阅者做出反应。这相当于观察者模式的升级版。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>观察者模式在实际项目中和生活中非常常见，如下面的例子：</p>
+<ol>
+<li>文件系统：在一个目录下新建立一个文件，这个动作会同时通知目录管理器增加该目录。文件是一个被观察者，目录管理器是一个被观察者。</li>
+<li>广播收音机：电台在广播，收音机在收听。电台是一个被观察者，收音机是一个被观察者。<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1></li>
+<li>《设计模式之禅》</li>
+</ol>
 
       
     </div>
@@ -528,9 +465,9 @@ public class RandomQuickSort {
       
         <div class="post-tags">
           
-            <a href="/tags/算法导论/" rel="tag"># 算法导论</a>
+            <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/排序/" rel="tag"># 排序</a>
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
           
         </div>
       
@@ -543,8 +480,8 @@ public class RandomQuickSort {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/04/git个人使用与多人协作/" rel="next" title="git个人使用与多人协作">
-                <i class="fa fa-chevron-left"></i> git个人使用与多人协作
+              <a href="/2018/03/10/设计模式之禅——组合模式/" rel="next" title="设计模式之禅——组合模式">
+                <i class="fa fa-chevron-left"></i> 设计模式之禅——组合模式
               </a>
             
           </div>
@@ -552,10 +489,6 @@ public class RandomQuickSort {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/06/nginx反向代理与负载均衡/" rel="prev" title="nginx反向代理与负载均衡">
-                nginx反向代理与负载均衡 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -754,7 +687,7 @@ public class RandomQuickSort {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速排序算法"><span class="nav-number">1.</span> <span class="nav-text">快速排序算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机化算法"><span class="nav-number">2.</span> <span class="nav-text">随机化算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本排序算法"><span class="nav-number">3.</span> <span class="nav-text">基本排序算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">2.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点"><span class="nav-number">2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缺点"><span class="nav-number">2.2.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用场景"><span class="nav-number">2.3.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">2.4.</span> <span class="nav-text">注意事项</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扩展"><span class="nav-number">3.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java世界中的观察者模式"><span class="nav-number">3.1.</span> <span class="nav-text">Java世界中的观察者模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目中真实的观察者模式"><span class="nav-number">3.2.</span> <span class="nav-text">项目中真实的观察者模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#订阅发布模型"><span class="nav-number">3.3.</span> <span class="nav-text">订阅发布模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳实践"><span class="nav-number">4.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
