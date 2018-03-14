@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-13T02:18:38.000Z</updated>
+  <updated>2018-03-14T05:11:27.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,63 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式之禅——备忘录模式</title>
+    <link href="http://bestlixiang.site/2018/03/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/03/14/设计模式之禅——备忘录模式/</id>
+    <published>2018-03-14T05:11:10.000Z</published>
+    <updated>2018-03-14T05:11:27.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引： <strong>备忘录模式</strong>是我们设计上的“月光宝盒”，可以让我们回到需要的年代；是程序数据的“后悔药”，吃了它就可以返回上一个状态；是设计人员的定心丸，确保即使在最坏的情况下也能获得最近的对象状态。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>备忘录模式提供了一种弥补真实世界缺陷的方法，让“后悔药”在程序的世界中真实可行，其定义如下：</p>
+<p><strong>在不破坏封装性的前提下，捕获一个对象的内部状态，并在改对象之外保存这个状态，这样以后就可将该对象的恢复到原先保存的状态。——行为类</strong></p>
+<p>备忘录模式就是一个对象的备份模式，提供了一种程序数据的备份方法，其通用类图如下：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/memento.png" alt="memento"></p>
+<p>下面简单介绍类图中的几个角色：</p>
+<ol>
+<li>Originator发起人角色：记录当前时刻的内部状态，负责定义哪些属于备份范围的状态，负责创建和恢复备忘录数据。</li>
+<li>Memento备忘录角色：负责存储Originator发起人对象的内部状态，在需要的时候提供发起人需要的内部状态。</li>
+<li>Caretaker备忘录管理员角色：对备忘录进行管理，保存和提供备忘录。</li>
+</ol>
+<p>下面是它的通用源代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 发起人角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Originate</span> </span>&#123;</div><div class="line">    <span class="comment">// 内部状态</span></div><div class="line">    <span class="keyword">private</span> String state = <span class="string">""</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String  <span class="title">getState</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> state;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.state = state;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 创建一个备忘录</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">createMemento</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Memento(<span class="keyword">this</span>.state);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 恢复一个备忘录</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">restoreMemento</span><span class="params">(Memento _memento)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.setState(_memento.getState());</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 备忘录角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Memento</span> </span>&#123;</div><div class="line">    <span class="comment">// 发起人内部状态</span></div><div class="line">    <span class="keyword">private</span> String state = <span class="string">""</span>;</div><div class="line">    <span class="comment">// 构造函数传递</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Memento</span><span class="params">(String _state)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.state = _state;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getState</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> state;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.state = state;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 备忘录管理者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CareTaker</span> </span>&#123;</div><div class="line">    <span class="comment">// 备忘录对象</span></div><div class="line">    <span class="keyword">private</span> Memento memento;</div><div class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">getMemento</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> memento;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMemento</span><span class="params">(Memento memento)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.memento = memento;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 定义发起人</span></div><div class="line">        Originator originator = <span class="keyword">new</span> Originator();</div><div class="line">        <span class="comment">// 定义出备忘录管理员</span></div><div class="line">        Caretaker caretaker = <span class="keyword">new</span> Caretaker();</div><div class="line">        <span class="comment">// 创建一个备忘录</span></div><div class="line">        caretaker.setMemento(originator.createMemento());</div><div class="line">        <span class="comment">// 恢复一个备忘录</span></div><div class="line">        originator.restoreMemento(caretaker.getMemento());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>需要保存和恢复数据的相关状态场景。</li>
+<li>提供一个可回滚的操作。</li>
+<li>需要监控的副本场景。</li>
+<li>数据库连接的事务管理就是用的备忘录模式。</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li><p>备忘录的生命周期</p>
+<p> 备忘录创建出来就要在“最近”的代码中使用，要主动管理它的生命周期，建立就要使用，不使用就要立刻删除其引用，等待垃圾回收器对它的回收处理。</p>
+</li>
+<li><p>备忘录性能</p>
+<p> 不要在频繁建立备份的场景中使用备忘录模式，原因有而：一是控制不了备忘录建立的对象数量；二是大对象的建立是要消耗资源的，系统的性能需要考虑。</p>
+</li>
+</ol>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="clone方式的备忘录"><a href="#clone方式的备忘录" class="headerlink" title="clone方式的备忘录"></a>clone方式的备忘录</h2><p>发起人角色融入了发起人角色和备份路角色，利用clone()方法克隆出来的对象充当备忘录对象。但是由于存在深拷贝和浅拷贝的问题，在复杂的场景下它会让你的程序逻辑异常混乱，因此Clone方式的备忘录模式适用于比较简单的场景。</p>
+<h2 id="多状态的备忘录模式"><a href="#多状态的备忘录模式" class="headerlink" title="多状态的备忘录模式"></a>多状态的备忘录模式</h2><p>将多个状态转换到HashMap中，方便备忘录角色存储。</p>
+<h2 id="多备份的备忘录"><a href="#多备份的备忘录" class="headerlink" title="多备份的备忘录"></a>多备份的备忘录</h2><p>将备份的数据存入到HashMap中，并给每个不同的备份一个不同的key。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>大家主要的还是记住数据库的事务用的是备忘录模式就好了。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引： &lt;strong&gt;备忘录模式&lt;/strong&gt;是我们设计上的“月光宝盒”，可以让我们回到需要的年代；是程序数据的“后悔药”，吃了它就可以返回上一个状态；是设计人员的定心丸，确保即使在最坏的情况下也能获得最近的对象状态。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>设计模式之禅——门面模式</title>
@@ -1120,58 +1177,6 @@
     
     
       <category term="UML" scheme="http://bestlixiang.site/tags/UML/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java并发_12_原子变量与非阻塞同步机制</title>
-    <link href="http://bestlixiang.site/2018/01/25/Java%E5%B9%B6%E5%8F%91-12-%E5%8E%9F%E5%AD%90%E5%8F%98%E9%87%8F%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6/"/>
-    <id>http://bestlixiang.site/2018/01/25/Java并发-12-原子变量与非阻塞同步机制/</id>
-    <published>2018-01-25T03:14:44.000Z</published>
-    <updated>2018-01-25T03:15:08.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：原子变量与非阻塞同步机制相比于基于锁的方案可以拥有更高的性能和可伸缩性。<a id="more"></a></p>
-<h1 id="锁的劣势"><a href="#锁的劣势" class="headerlink" title="锁的劣势"></a>锁的劣势</h1><ul>
-<li>通过使用一致的锁定协议来协调对共享状态的访问，可以确保无论哪个线程持有守护变量的锁，都能采用独占方式来访问这些变量，并且对变量的任何修改对随后获得这个锁的其他线程都是可见的。但是当在锁上存在激烈的竞争时，调度开销与工作开销的比值会非常高。</li>
-<li>volatile变量是一种更轻量级的同步机制，但是虽然他们提供了相似的可见性保证，但不能用于构建原子的复合操作。因此，当一个变量依赖其他的变量时，或者当变量的新值依赖旧值时，就不能使用volatile。</li>
-</ul>
-<h1 id="硬件对并发的支持"><a href="#硬件对并发的支持" class="headerlink" title="硬件对并发的支持"></a>硬件对并发的支持</h1><ul>
-<li>独占锁是一种悲观技术——它假设最坏的情况，并且只有在确保其他线程不会找出干扰的情况下才能执行下去。</li>
-<li>比较并交换（CAS，硬件指令）是一种乐观的技术——通过这种方法可以在不发生干扰的情况下完成更新操作，不过这种方法需要借助检查机制来判断在更新过程中是否存在其他线程的干扰，如果存在，这个操作将失败，并且可以重试（也可以不重试）。</li>
-</ul>
-<p>下面是模拟CAS操作代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// CAS含义：我认为V的值应该是A，如果是，那么把值更新为B，否则不修改并告诉V的值实际是多少</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimulatedCAS</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> value; &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">compareAndSwap</span><span class="params">(<span class="keyword">int</span> expectedValue, <span class="keyword">int</span> newValue)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> oldValue = value;</div><div class="line">        <span class="keyword">if</span> (oldValue == expectedValue) &#123;</div><div class="line">            value = <span class="keyword">new</span> Value;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> oldValue;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(<span class="keyword">int</span> expectedValue, <span class="keyword">int</span> newValue)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> (expectedValue == compareAndSwap(expectedValue, newValue));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>CAS的优点：当竞争程序不高时，性能远远高于基于锁的方案。</p>
-<p>CAS的缺点：它将使调用者处理竞争问题（通过重试、回退、放弃），而在锁中能自动处理竞争问题（线程在获得锁之前将一直阻塞）。</p>
-<h1 id="原子变量类"><a href="#原子变量类" class="headerlink" title="原子变量类"></a>原子变量类</h1><p>原子变量类在发生竞争的情况下能提供更高的可伸缩性，因为它直接利用了硬件对并发的支持（比较并交换指令）。</p>
-<p>共有12个原子变量类：可分为四组：标量类、更新器类、数组类以及复合变量类。最常用的原子变量类就是标量类：AtomicInteger、AtomicLong、AtomicBoolean以及AtomicReference。</p>
-<p><strong>原子变量与锁适用的不同并发场景：</strong></p>
-<ul>
-<li>在中低程序的竞争、锁占用时间不长的情况下，原子变量能提供更高的可伸缩性。</li>
-<li>而在高强度的竞争下，锁能够更有效的地避免竞争。</li>
-</ul>
-<h1 id="非阻塞算法"><a href="#非阻塞算法" class="headerlink" title="非阻塞算法"></a>非阻塞算法</h1><p><strong>无阻塞算法：</strong> 如果在某种算法中，一个线程的失败或者挂起不会导致其他线程也失败或挂起，那么这种算法就被称为无阻塞算法。</p>
-<p><strong>无锁算法：</strong> 如果在算法的每个步骤中都存在某个线程能够执行下去，那么这种算法被称为无锁算法。</p>
-<p>如果在算法中仅将CAS用于协调线程之间的操作，并且能正确地实现，那么它既是无阻塞算法，又是无锁算法。</p>
-<p>利用CAS并发指令可以实现非阻塞的同步容器，例如实现非阻塞的栈、非阻塞的链表以及原子的域更新器等。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
-<li>非阻塞算法通过底层的并发原语（例如比较并交换）来维持线程的安全性。这些底层的原语通过原子变量类向外公开，从而为整数和对象引用提供原子的更新操作。</li>
-<li>在JVM从一个版本升级到下一个版本的过程中，并发性能主要提升都来自于对非阻塞算法的使用。</li>
-</ol>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《Java并发编程实战》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：原子变量与非阻塞同步机制相比于基于锁的方案可以拥有更高的性能和可伸缩性。
-    
-    </summary>
-    
-      <category term="Java并发编程实战" scheme="http://bestlixiang.site/categories/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E6%88%98/"/>
-    
-    
-      <category term="并发" scheme="http://bestlixiang.site/tags/%E5%B9%B6%E5%8F%91/"/>
     
   </entry>
   

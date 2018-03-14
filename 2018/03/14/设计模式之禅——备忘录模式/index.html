@@ -89,19 +89,19 @@
 
 
 
-<meta name="description" content="引：作为领导人只要发布命令即可，而不用在发布命令的时候还要去找到实施的人，我相信领导人一定超级高兴，因为实施的人已经包含在命令里了。这就是命令模式。">
+<meta name="description" content="引： 备忘录模式是我们设计上的“月光宝盒”，可以让我们回到需要的年代；是程序数据的“后悔药”，吃了它就可以返回上一个状态；是设计人员的定心丸，确保即使在最坏的情况下也能获得最近的对象状态。">
 <meta name="keywords" content="java,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式之禅——命令模式">
-<meta property="og:url" content="http://bestlixiang.site/2018/03/06/设计模式之禅——命令模式/index.html">
+<meta property="og:title" content="设计模式之禅——备忘录模式">
+<meta property="og:url" content="http://bestlixiang.site/2018/03/14/设计模式之禅——备忘录模式/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：作为领导人只要发布命令即可，而不用在发布命令的时候还要去找到实施的人，我相信领导人一定超级高兴，因为实施的人已经包含在命令里了。这就是命令模式。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/command.png">
-<meta property="og:updated_time" content="2018-03-06T02:31:18.000Z">
+<meta property="og:description" content="引： 备忘录模式是我们设计上的“月光宝盒”，可以让我们回到需要的年代；是程序数据的“后悔药”，吃了它就可以返回上一个状态；是设计人员的定心丸，确保即使在最坏的情况下也能获得最近的对象状态。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/memento.png">
+<meta property="og:updated_time" content="2018-03-14T05:11:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式之禅——命令模式">
-<meta name="twitter:description" content="引：作为领导人只要发布命令即可，而不用在发布命令的时候还要去找到实施的人，我相信领导人一定超级高兴，因为实施的人已经包含在命令里了。这就是命令模式。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/command.png">
+<meta name="twitter:title" content="设计模式之禅——备忘录模式">
+<meta name="twitter:description" content="引： 备忘录模式是我们设计上的“月光宝盒”，可以让我们回到需要的年代；是程序数据的“后悔药”，吃了它就可以返回上一个状态；是设计人员的定心丸，确保即使在最坏的情况下也能获得最近的对象状态。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/memento.png">
 
 
 
@@ -129,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/03/06/设计模式之禅——命令模式/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/14/设计模式之禅——备忘录模式/"/>
 
 
 
 
 
-  <title> 设计模式之禅——命令模式 | rex note </title>
+  <title> 设计模式之禅——备忘录模式 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -288,7 +288,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/06/设计模式之禅——命令模式/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/14/设计模式之禅——备忘录模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -309,7 +309,7 @@
             
             
               
-                设计模式之禅——命令模式
+                设计模式之禅——备忘录模式
               
             
           </h2>
@@ -324,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-06T10:30:12+08:00">
-                2018-03-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-14T13:11:10+08:00">
+                2018-03-14
               </time>
             
 
@@ -387,20 +387,36 @@
       
 
       
-        <p>引：作为领导人只要发布命令即可，而不用在发布命令的时候还要去找到实施的人，我相信领导人一定超级高兴，因为实施的人已经包含在命令里了。这就是<strong>命令模式</strong>。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>将一个请求封装成一个对象，从而让你使用不同的请求把客户端参数化，对请求排队或者记录请求日志，可以提供命令的撤销和恢复功能。——行为类</strong></p>
-<p>命令模式是一个高内聚模式。它的封装性非常好，把请求方（Invoker）和执行方（Receiver）封开了。</p>
-<p>它的通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/command.png" alt="image"></p>
-<p>通用代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 通用Receiver类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Receiver</span> </span>&#123;</div><div class="line">    <span class="comment">// 抽象接收者，定义每个接收者都必须完成的业务</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体的Receiver类，可以是N个，和业务有关</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcereteReceiver1</span> <span class="keyword">extends</span> <span class="title">Receiver</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个接收者都必须处理一定的业务逻辑</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;&#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcereteReceiver2</span> <span class="keyword">extends</span> <span class="title">Receiver</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个接收者都必须处理一定的业务逻辑</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象的Command类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Command</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个命令类都必须有一个执行命令的方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体的Command类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteCommand1</span> <span class="keyword">extends</span> <span class="title">Command</span> </span>&#123;</div><div class="line">    <span class="comment">//关联，对哪个Receiver类进行命令处理</span></div><div class="line">    <span class="keyword">private</span> Receiver receiver;</div><div class="line">    <span class="comment">// 构造函数传递接收者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteCommand1</span><span class="params">(Receiver _receiver)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.receiver = _receiver;</div><div class="line">    &#125;;</div><div class="line">    <span class="comment">// 必须实现一个命令</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务处理</span></div><div class="line">        <span class="keyword">this</span>.receiver.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteCommand2</span> <span class="keyword">extends</span> <span class="title">Command</span> </span>&#123;</div><div class="line">    <span class="comment">//关联，对哪个Receiver类进行命令处理</span></div><div class="line">    <span class="keyword">private</span> Receiver receiver;</div><div class="line">    <span class="comment">// 构造函数传递接收者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteCommand2</span><span class="params">(Receiver _receiver)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.receiver = _receiver;</div><div class="line">    &#125;;</div><div class="line">    <span class="comment">// 必须实现一个命令</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务处理</span></div><div class="line">        <span class="keyword">this</span>.receiver.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 调用者Invoker类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Invoker</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Command command;</div><div class="line">    <span class="comment">// 接受命令</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCommand</span><span class="params">(Command _command)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.command = _command;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 执行命令</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">action</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.command.execute();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 首先声明调用者Invoker</span></div><div class="line">        Invoker invoker = <span class="keyword">new</span> Invoker();</div><div class="line">        <span class="comment">// 定义接收者</span></div><div class="line">        Receiver receiver = <span class="keyword">new</span> ConcreteReceiver1();</div><div class="line">        <span class="comment">// 定义一个发送给接受者的命令</span></div><div class="line">        Command command = <span class="keyword">new</span> ConcreteCommand1(receiver);</div><div class="line">        <span class="comment">// 把命令交给调用者去执行</span></div><div class="line">        invoker.setCommand(command);</div><div class="line">        invoker.action();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>类间解耦：调用者与接收者之间没有任何依赖关系，调用者实现功能时只需要调用Command抽象类的execute方法即可，不需要了解是哪个接收者执行。</li>
-<li>可扩展性：Command的子类非常容易扩展。</li>
-<li>命令模式结合其他模式会更优秀，例如责任链模式，模板方法模式。</li>
+        <p>引： <strong>备忘录模式</strong>是我们设计上的“月光宝盒”，可以让我们回到需要的年代；是程序数据的“后悔药”，吃了它就可以返回上一个状态；是设计人员的定心丸，确保即使在最坏的情况下也能获得最近的对象状态。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>备忘录模式提供了一种弥补真实世界缺陷的方法，让“后悔药”在程序的世界中真实可行，其定义如下：</p>
+<p><strong>在不破坏封装性的前提下，捕获一个对象的内部状态，并在改对象之外保存这个状态，这样以后就可将该对象的恢复到原先保存的状态。——行为类</strong></p>
+<p>备忘录模式就是一个对象的备份模式，提供了一种程序数据的备份方法，其通用类图如下：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/memento.png" alt="memento"></p>
+<p>下面简单介绍类图中的几个角色：</p>
+<ol>
+<li>Originator发起人角色：记录当前时刻的内部状态，负责定义哪些属于备份范围的状态，负责创建和恢复备忘录数据。</li>
+<li>Memento备忘录角色：负责存储Originator发起人对象的内部状态，在需要的时候提供发起人需要的内部状态。</li>
+<li>Caretaker备忘录管理员角色：对备忘录进行管理，保存和提供备忘录。</li>
 </ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>有N个命令就会有N个Command的子类，这样这个类就会膨胀了。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>只要是你认为是命令的地方就可以采用命令模式。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>根据开发场景要求可以有多个接收者，那就需要用集合类型来封装Command类了。该设计模式最大的优点就是高层模式不需要知道接收者，Perfect！</p>
+<p>下面是它的通用源代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 发起人角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Originate</span> </span>&#123;</div><div class="line">    <span class="comment">// 内部状态</span></div><div class="line">    <span class="keyword">private</span> String state = <span class="string">""</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String  <span class="title">getState</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> state;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.state = state;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 创建一个备忘录</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">createMemento</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Memento(<span class="keyword">this</span>.state);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 恢复一个备忘录</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">restoreMemento</span><span class="params">(Memento _memento)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.setState(_memento.getState());</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 备忘录角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Memento</span> </span>&#123;</div><div class="line">    <span class="comment">// 发起人内部状态</span></div><div class="line">    <span class="keyword">private</span> String state = <span class="string">""</span>;</div><div class="line">    <span class="comment">// 构造函数传递</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Memento</span><span class="params">(String _state)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.state = _state;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getState</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> state;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.state = state;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 备忘录管理者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CareTaker</span> </span>&#123;</div><div class="line">    <span class="comment">// 备忘录对象</span></div><div class="line">    <span class="keyword">private</span> Memento memento;</div><div class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">getMemento</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> memento;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMemento</span><span class="params">(Memento memento)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.memento = memento;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 定义发起人</span></div><div class="line">        Originator originator = <span class="keyword">new</span> Originator();</div><div class="line">        <span class="comment">// 定义出备忘录管理员</span></div><div class="line">        Caretaker caretaker = <span class="keyword">new</span> Caretaker();</div><div class="line">        <span class="comment">// 创建一个备忘录</span></div><div class="line">        caretaker.setMemento(originator.createMemento());</div><div class="line">        <span class="comment">// 恢复一个备忘录</span></div><div class="line">        originator.restoreMemento(caretaker.getMemento());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>需要保存和恢复数据的相关状态场景。</li>
+<li>提供一个可回滚的操作。</li>
+<li>需要监控的副本场景。</li>
+<li>数据库连接的事务管理就是用的备忘录模式。</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li><p>备忘录的生命周期</p>
+<p> 备忘录创建出来就要在“最近”的代码中使用，要主动管理它的生命周期，建立就要使用，不使用就要立刻删除其引用，等待垃圾回收器对它的回收处理。</p>
+</li>
+<li><p>备忘录性能</p>
+<p> 不要在频繁建立备份的场景中使用备忘录模式，原因有而：一是控制不了备忘录建立的对象数量；二是大对象的建立是要消耗资源的，系统的性能需要考虑。</p>
+</li>
+</ol>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="clone方式的备忘录"><a href="#clone方式的备忘录" class="headerlink" title="clone方式的备忘录"></a>clone方式的备忘录</h2><p>发起人角色融入了发起人角色和备份路角色，利用clone()方法克隆出来的对象充当备忘录对象。但是由于存在深拷贝和浅拷贝的问题，在复杂的场景下它会让你的程序逻辑异常混乱，因此Clone方式的备忘录模式适用于比较简单的场景。</p>
+<h2 id="多状态的备忘录模式"><a href="#多状态的备忘录模式" class="headerlink" title="多状态的备忘录模式"></a>多状态的备忘录模式</h2><p>将多个状态转换到HashMap中，方便备忘录角色存储。</p>
+<h2 id="多备份的备忘录"><a href="#多备份的备忘录" class="headerlink" title="多备份的备忘录"></a>多备份的备忘录</h2><p>将备份的数据存入到HashMap中，并给每个不同的备份一个不同的key。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>大家主要的还是记住数据库的事务用的是备忘录模式就好了。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《设计模式之禅》</li>
 </ol>
@@ -448,8 +464,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/10/设计模式之禅——中介者模式/" rel="next" title="设计模式之禅——中介者模式">
-                <i class="fa fa-chevron-left"></i> 设计模式之禅——中介者模式
+              <a href="/2018/03/13/设计模式之禅——门面模式/" rel="next" title="设计模式之禅——门面模式">
+                <i class="fa fa-chevron-left"></i> 设计模式之禅——门面模式
               </a>
             
           </div>
@@ -457,10 +473,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/07/设计模式之禅——责任链模式/" rel="prev" title="设计模式之禅——责任链模式">
-                设计模式之禅——责任链模式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -659,7 +671,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">2.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点"><span class="nav-number">2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缺点"><span class="nav-number">2.2.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用场景"><span class="nav-number">2.3.</span> <span class="nav-text">使用场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳实践"><span class="nav-number">3.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">2.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用场景"><span class="nav-number">2.1.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">2.2.</span> <span class="nav-text">注意事项</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扩展"><span class="nav-number">3.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#clone方式的备忘录"><span class="nav-number">3.1.</span> <span class="nav-text">clone方式的备忘录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多状态的备忘录模式"><span class="nav-number">3.2.</span> <span class="nav-text">多状态的备忘录模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多备份的备忘录"><span class="nav-number">3.3.</span> <span class="nav-text">多备份的备忘录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳实践"><span class="nav-number">4.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
