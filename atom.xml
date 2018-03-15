@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-14T05:11:27.000Z</updated>
+  <updated>2018-03-15T06:46:34.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,62 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式之禅——访问者模式</title>
+    <link href="http://bestlixiang.site/2018/03/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/03/15/设计模式之禅——访问者模式/</id>
+    <published>2018-03-15T06:45:32.000Z</published>
+    <updated>2018-03-15T06:46:34.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：一个对象结构包含很多类对象，他们又有不同的接口，而你想对这些对象实施一些依赖于其具体类的操作，接可以使用<strong>访问者模式</strong>。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>封装一些作用于某种数据结构中的各元素的操作，它可以在不改变数据结构的前提下定义作用与这些元素的新操作。——行为类</strong></p>
+<p>它的通用类图如下：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/visitor.png" alt="visitor"></p>
+<p>我们看看类图中几个角色的职责：</p>
+<ol>
+<li>Visitor抽象访问者：声明访问者可以访问哪些元素，具体到程序找那个就是visit方法的参数定义哪些对象是可以被访问的。</li>
+<li>ConcreteVisitor具体访问者：它影响访问者访问到一个类后该怎么干，要做什么事情。</li>
+<li>Element抽象元素：声明接受哪一类访问者访问，程序上是通过accept方法中的参数来定义的。</li>
+<li>ConcreteElement具体元素：实现accept方法，通常是visitor.visit(this)，基本都形成了一种模式了。</li>
+<li>ObjectStruture结构对象：元素产生者，一般容纳在多个不同类，不同接口的容器，如List，Set，Map等，在项目中，一般很好抽象出这个角色。</li>
+</ol>
+<p>接着看看具体的通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象元素</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Element</span> </span>&#123;</div><div class="line">	<span class="comment">// 定义业务逻辑</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">	<span class="comment">// 允许谁来访问</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Ivisitor visitor)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体元素</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteElement1</span> <span class="keyword">extends</span> <span class="title">Element</span> </span>&#123;</div><div class="line">    <span class="comment">// 完善业务逻辑</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 允许哪个访问者访问</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Ivisitor visitor)</span> </span>&#123;</div><div class="line">        visitor.visit(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteElement2</span> <span class="keyword">extends</span> <span class="title">Element</span> </span>&#123;</div><div class="line">    <span class="comment">// 完善业务逻辑</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 允许哪个访问者访问</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Ivisitor visitor)</span> </span>&#123;</div><div class="line">        visitor.visit(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象访问者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Ivisitor</span> </span>&#123;</div><div class="line">    <span class="comment">// 可以访问哪些对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitor</span> <span class="params">(ConcreteElement1 el1)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitor</span> <span class="params">(ConcreteElement2 el2)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体访问者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Visitor</span> <span class="keyword">implements</span> <span class="title">Ivisitor</span> </span>&#123;</div><div class="line">    <span class="comment">// 访问el1元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(ConcreteElement1 el1)</span> </span>&#123;</div><div class="line">        el1.doSomething;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 访问el2元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(ConcreteElement2 el2)</span> </span>&#123;</div><div class="line">        el2.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 结构对象 产生不同的元素对象，可以用工厂方式模式模拟</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ObjectStruture</span> </span>&#123;</div><div class="line">    <span class="comment">// 对象生成器，通过工厂方法模式模拟</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Element <span class="title">createElement</span><span class="params">()</span> </span>&#123;</div><div class="line">        Random random = <span class="keyword">new</span> Random();</div><div class="line">        <span class="keyword">if</span>(random.nextInt(<span class="number">100</span>) &gt;<span class="number">50</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ConcreteElement1();</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ConcreteElement2();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;<span class="number">10</span>; i++) &#123;</div><div class="line">            <span class="comment">// 获取元素对象</span></div><div class="line">            Element el = ObjectStruture.createElement();</div><div class="line">            <span class="comment">// 接受访问者访问</span></div><div class="line">            el.accept(<span class="keyword">new</span> Visitor());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>符合单一职责原则。具体元素角色负责数据的加载，访问者类负责报表的展现，职责明确。</li>
+<li>优秀的扩展性。报表不同只需要修改visit方法。</li>
+<li>灵活性非常高。</li>
+</ol>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
+<li>具体元素对访问者公布细节，不符合迪米特法则。</li>
+<li>具体元素变更比较困难。</li>
+<li>违背了依赖倒置原则，访问者依赖的是具体元素，而不是抽象元素。</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>一个对象结构包含很多类对象，他们又有不同的接口，而你想对这些对象实施一些依赖于其具体类的操作，也就是说用迭代器模式已经不能胜任的情景。</li>
+<li>需要对一个对象结构中的对象进行不同并且不相关的操作，而你想避免让这些操作“污染”这些对象的类。</li>
+<li>总结：在这种地方一定要考虑使用访问者模式：业务规则要求遍历多个不同的对象，迭代器只能访问同类或同接口的数据，而访问者模式是对迭代器模式的扩充，可以遍历不同的对象，然后执行不同的操作。访问者模式还可以充当拦截器的角色。</li>
+</ol>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>访问者模式一种集中规整模式，特别适用于大规模重构的项目。通过访问这么欧式可以很容易吧一些进行梳理，达到最终目的——功能集中化。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：一个对象结构包含很多类对象，他们又有不同的接口，而你想对这些对象实施一些依赖于其具体类的操作，接可以使用&lt;strong&gt;访问者模式&lt;/strong&gt;。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>设计模式之禅——备忘录模式</title>
@@ -1091,92 +1147,6 @@
       <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
     
       <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>UML_Java类图</title>
-    <link href="http://bestlixiang.site/2018/01/27/UML-Java%E7%B1%BB%E5%9B%BE/"/>
-    <id>http://bestlixiang.site/2018/01/27/UML-Java类图/</id>
-    <published>2018-01-27T13:38:28.000Z</published>
-    <updated>2018-01-27T13:40:39.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：在看源码或者很多技术书籍的时候都避免不了看到类图，时间长了总会忘了含义，在这里就总结一下，方便以后回顾。这里使用的工具是startUML。<a id="more"></a></p>
-<h1 id="UML"><a href="#UML" class="headerlink" title="UML"></a>UML</h1><p><strong>UML：</strong> 统一建模语言（Unified Modeling Language）。在 UML 系统开发中有三个主要的模型：</p>
-<ul>
-<li>功能模型：从用户的角度展示系统的功能，包括用例图。</li>
-<li>对象模型：采用对象，属性，操作，关联等概念展示系统的结构和基础，包括类图、对象图、包图。</li>
-<li>动态模型：展现系统的内部行为。包括时序图，活动图，状态图。</li>
-</ul>
-<h1 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h1><p>类图使用类来描述系统的静态结构，类图包含类和它们之间的关系，它描述系统内所声明的类，但它没有描述系统运行时类的行为。</p>
-<p>在UML类图中，类一般由三部分组成：类名、属性以及操作。</p>
-<h2 id="类名"><a href="#类名" class="headerlink" title="类名"></a>类名</h2><p>每个类都必须有一个名字，类名是一个字符串。</p>
-<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><p>属性是指类的性质，即类的成员变量。类可以有任意多个属性，也可以没有属性。</p>
-<p>格式为： 【可见性】 属性名 【：类型】 【=初始值】 【{属性字符串}】</p>
-<p>可见性：在UML中public类型用符号“+”表示，private类型用“-”表示，protected类型用“#”表示。</p>
-<p>属性字符串：用来指定关于属性的其他信息，任何希望添加属性定义字符串但又没有合适地方可以加入的规则都可以放在属性字符串里，例如类变量。</p>
-<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><p>操作是类的任意一个实例对象都可以使用的行为，操作是类的成员方法。</p>
-<p>格式为：【可见性】 操作名 【{参数列表}】 【：返回类型】 【{属性字符串}】</p>
-<h1 id="类之间的关系"><a href="#类之间的关系" class="headerlink" title="类之间的关系"></a>类之间的关系</h1><h2 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h2><p>关联关系(Association)是类与类之间最常用的一种关系，它是一种结构化关系，用于表示一个类与另一个类之间有联系。</p>
-<p>在 UML 类图中，用实线连接有关联的的类。在实现关联关系时，通常将一个类的对象作为另一个类的属性。</p>
-<h3 id="单向关联"><a href="#单向关联" class="headerlink" title="单向关联"></a>单向关联</h3><p>类的关联关系可以是单向的，单向关联用带箭头的实线表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/derectAssociation.png" alt="derectAssociation"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Address address;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Address</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="双向关联"><a href="#双向关联" class="headerlink" title="双向关联"></a>双向关联</h3><p>默认情况下，关联是双向的。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/association.png" alt="association"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Order</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Product product;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Order order;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="自关联"><a href="#自关联" class="headerlink" title="自关联"></a>自关联</h3><p>在系统中可能会存在一些类的属性对象类型为该类本身，这种特殊的关联关系称为自关联。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/1slfeAssociation.png" alt="slfeAssociation"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Node node;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="重数性关联"><a href="#重数性关联" class="headerlink" title="重数性关联"></a>重数性关联</h3><p>重数性关联关系又称为多重性关联关系，表示一个类的对象与另一个类的对象连接的个数。在 UML 中多重性关系可以直接在关联直线上增加一个数字表示与之对应的另一个类的对象的个数。<br>如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/multiplicityAssociation.png" alt="multiplicityAssociation"></p>
-<p>其中数字的种类及含义如下表：</p>
-<table>
-<thead>
-<tr>
-<th>表示方式</th>
-<th>表示含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1..1</td>
-<td>表示另一个类的一个对象只与一个该类对象有关系</td>
-</tr>
-<tr>
-<td>0..*</td>
-<td>表示另一个类的一个对象与零个或多个该类对象有关系</td>
-</tr>
-<tr>
-<td>1..*</td>
-<td>表示另一个类的一个对象与一个或多个该类对象有关系</td>
-</tr>
-<tr>
-<td>0..1</td>
-<td>表示另一个类的一个对象没有或只与一个该类对象有关系</td>
-</tr>
-<tr>
-<td>m..n</td>
-<td>表示另一个类的一个对象与最少m、最多n个该类对象有关系 (m&lt;=n)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="聚合关系"><a href="#聚合关系" class="headerlink" title="聚合关系"></a>聚合关系</h2><p>聚合关系表示一个整体与部分的关系。通常在定义一个整体类后，再去找出这个整体类的一些成员类，该整体类和成员类之间就形成了聚合关系。</p>
-<p>在聚合关系中，成员类是整体类的一部分，即成员对象是整体对象的一部分，但是成员对象可以脱离整体对象独立存在。在UML中，聚合关系用带空心菱形的直线表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/aggregation.png" alt="aggregation"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Engine engine;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Car</span><span class="params">(Engine engine)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.engine = engine;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">setEngine</span><span class="params">(Engine engine)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.engine = engine;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Engine</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="组合关系"><a href="#组合关系" class="headerlink" title="组合关系"></a>组合关系</h2><p>组合关系也表示类之间整体和部分的关系，但是<strong>组合关系中部分和整体具有统一的生存期</strong>。一旦整体对象不存在，部分对象也将不存在，部分对象与整体对象之间具有同生共死的关系。</p>
-<p>在组合关系中，成员类是整体类的一部分，而且整体类可以控制成员类的生命周期，即成员类的存在依赖于整体类。在UML中，组合关系用带实心菱形的直线表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/composition.png" alt="composition"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Head</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Eye eye;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Head</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.eye = <span class="keyword">new</span> Eye();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Eye</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h2><p>依赖关系是一种使用关系，特定事物的改变有可能会影响到使用该事物的其他事物，在需要表示一个事物使用另一个事物时使用依赖关系。大多数情况下，依赖关系体现在某个类的方法使用另一个类的对象作为参数。在UML中，依赖关系用带箭头的虚线表示，由依赖的一方指向被依赖的一方。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/dependency.png" alt="dependency"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Driver</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">drive</span><span class="params">(Car car)</span> </span>&#123;</div><div class="line">        car.move();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">move</span><span class="params">()</span> </span>&#123;</div><div class="line">        ...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="泛化关系"><a href="#泛化关系" class="headerlink" title="泛化关系"></a>泛化关系</h2><p>泛化关系也就是继承关系，也称为“is-a-kind-of”关系，泛化关系用于描述父类与子类之间的关系。在UML中，泛化关系用带空心三角形的直线来表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/generalization.png" alt="generalization"></p>
-<h2 id="实现关系"><a href="#实现关系" class="headerlink" title="实现关系"></a>实现关系</h2><p>实现关系是类实现了接口，类中的操作实现了接口中所声明的操作。在UML中，类与接口之间的实现关系用<strong>带空心三角形的虚线</strong>(mac中的startUML画不出来，大家将就着看)来表示。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/tool/png/realization.png" alt="realization"></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>理解类图有助于我们更好的去看技术书籍，以及源码，这是必备技能，get it！</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://segmentfault.com/a/1190000011556007" target="_blank" rel="external">UML 及 StarUml</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：在看源码或者很多技术书籍的时候都避免不了看到类图，时间长了总会忘了含义，在这里就总结一下，方便以后回顾。这里使用的工具是startUML。
-    
-    </summary>
-    
-      <category term="工具" scheme="http://bestlixiang.site/categories/%E5%B7%A5%E5%85%B7/"/>
-    
-    
-      <category term="UML" scheme="http://bestlixiang.site/tags/UML/"/>
     
   </entry>
   
