@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-18T05:48:41.000Z</updated>
+  <updated>2018-03-18T12:03:32.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,60 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式之禅——享元模式</title>
+    <link href="http://bestlixiang.site/2018/03/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/03/18/设计模式之禅——享元模式/</id>
+    <published>2018-03-18T12:03:02.000Z</published>
+    <updated>2018-03-18T12:03:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：对象多了，而且还都是处于有用状态，那一定会出现内存溢出的问题，我们可以通过<strong>享元模式</strong>来实现对象的复用，以达到减少的目的，从而解决内存溢出的问题。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>享元模式是<strong>池技术</strong>的重要实现方式，其定义如下：</p>
+<p><strong>使用”共享对象”可有效地支持大量的”细粒度的对象”。——结构类</strong></p>
+<p>享元模式的定义为我们提出了两个要求：细粒度对象和共享对象。我们知道分配太多的对象到应用程序中将有损程序的性能，同时还容易造成内存溢出，那怎么避免呢？就是享元模式提到的共享技术。我们先来了解一下对象的内部状态和外部状态：</p>
+<ul>
+<li>内部状态：内部状态是对象可共享出来的信息，存储在享元对象并且不会随环境改变而改变，不必存储在具体某个对象中，属于可以共享的部分。</li>
+<li>外部状态：外部状态是对象得以依赖的一个标记，是随环境改变而改变的，不可以共享的状态，他是一批对象的统一标识，是唯一的索引值。</li>
+</ul>
+<p>下面是享元模式的通用类图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/flyweight.png" alt="flyweight"></p>
+<p>简单介绍类图中的角色：</p>
+<ol>
+<li>Flyweight抽象享元角色：产品的抽象类，同时定义出对象的外部状态和内部状态的接口或实现。</li>
+<li>ConcreteFlyWeight具体享元角色：具体的一个产品类，实现抽象角色定义的业务。该角色中需要注意的是内部状态处理应该与环境无关，不应该出现一个操作改变了内部状态，同时修改了外部状态，这是绝对不允许的。</li>
+<li>UnsharedConcreteFlyWeight不可共享的享元角色：不存在外部状态或者安全要求（如线程安全）不能够使用共享技术的对象，该对象一般不会出现享元工厂中。（有点不太理解）</li>
+<li>FlyWeightFactory享元工厂：职责非常简单，就是构造一个池容器，同时提供从池中获取对象的方法。</li>
+</ol>
+<p>享元模式的目的在于运用共享技术，使得一些细粒度的对象可以共享，多使用细粒度的对象，便于重构或重用，下面是它的通用代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//  抽象享元角色</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Flyweight</span> </span>&#123;</div><div class="line">    <span class="comment">// 内部状态</span></div><div class="line">    <span class="keyword">private</span> String intrinsic;</div><div class="line">    <span class="comment">// 外部状态 注意final</span></div><div class="line">    <span class="keyword">protected</span> <span class="keyword">final</span> String extrinsic;</div><div class="line">    <span class="comment">// 要求享元角色必须接受外部状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Flyweight</span><span class="params">(String _extrinsic)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.extrinsic = _extrinsic;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 定义业务操作</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> vid <span class="title">operate</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 内部状态的getter/setter</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getIntrinsic</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> intrinsic;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setIntrinsic</span><span class="params">(String intrinsic)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.intrinsic = intrinsic;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体享元角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFlyweight1</span> <span class="keyword">extends</span> <span class="title">Flyweight</span> </span>&#123;</div><div class="line">    <span class="comment">// 接受外部状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteFlyweight1</span><span class="params">(String _extrinsic)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(_extrinsic)</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 根据外部状态进行逻辑处理</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFlyweight2</span> <span class="keyword">extends</span> <span class="title">Flyweight</span> </span>&#123;</div><div class="line">    <span class="comment">// 接受外部状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteFlyweight2</span><span class="params">(String _extrinsic)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(_extrinsic)</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 根据外部状态进行逻辑处理</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 享元工厂</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlyweightFactory</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义一个池容器</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> HashMap&lt;String,Flyweight&gt; pool = <span class="keyword">new</span> HashMap&lt;String,Flyweight&gt;();</div><div class="line">    <span class="comment">// 享元工厂</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Flyweight <span class="title">getFlyweight</span><span class="params">(String extrinsic)</span> </span>&#123;</div><div class="line">        <span class="comment">// 需要返回的对象</span></div><div class="line">        Flyweight flyweight = <span class="keyword">null</span>;</div><div class="line">        <span class="comment">// 在池中没有该对象</span></div><div class="line">        <span class="keyword">if</span>(pool.containKey(extrinsic)) &#123;</div><div class="line">            flyweight = pool.get(extrinsic);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 根据外部状态创建享元对象</span></div><div class="line">            flyweight = <span class="keyword">new</span> ConcreteFlyweight1(extrinsic);</div><div class="line">            <span class="comment">// 放置到池中</span></div><div class="line">            pool.put(extrinsic,flyweight);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> flyweight;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>可以大大减少应用程序创建的对象，降低程序内存的占用，增强程序对的性能。</p>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>提高了系统的复杂性，需要分离出外部状态和内部状态，而且外部状态具有固化特性（加fianl关键字），不应该随内部改变而改变，否则导致系统的逻辑混乱。</p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>系统中存在大量的相似对象。</li>
+<li>细粒度的对象都具有较接近的外部状态，而且内部状态与环境无关，也就是说对象没有特定身份。</li>
+<li>需要缓冲池的场景。</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>当对象池的对象太少时，会出现线程不安全的现象。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>享元模式在Java API中也是随处可见的，比如String类的intern方法就是利用了String的对象池。当然对象池主要解决复用，而享元模式主要解决对象的共享问题，如果建立多个可共享的细粒度对象是其关注的重点。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：对象多了，而且还都是处于有用状态，那一定会出现内存溢出的问题，我们可以通过&lt;strong&gt;享元模式&lt;/strong&gt;来实现对象的复用，以达到减少的目的，从而解决内存溢出的问题。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>设计模式之禅——解释器模式</title>
@@ -999,65 +1053,6 @@
     <summary type="html">
     
       &lt;p&gt;引：在开发应用的时候为了适应不同的操作系统以及不同数据库时，我们总会显得力不从心。而抽象工厂模式为了我们提供了优秀的解决方案。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——工厂方法模式</title>
-    <link href="http://bestlixiang.site/2018/02/06/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/02/06/设计模式之禅——工厂方法模式/</id>
-    <published>2018-02-06T13:37:09.000Z</published>
-    <updated>2018-02-06T13:38:08.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：在面向对象的思维中，万物皆对象，就像有女蜗造人，我们也可以用工厂方法模式造对象。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>定义一个用于创建对象的接口，让子类决定实例化哪一个类。工厂方法使一个类的实例化延迟到子类。——创造类</strong></p>
-<p>工厂方法模式的通用类图如下：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/factoryMethod.png" alt="FactoryMethod"></p>
-<p>下面是一个比较实用的通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象产品类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="comment">// 产品类的公共方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">//抽象方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体产品类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteProduct1</span> <span class="keyword">extends</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteProduct2</span> <span class="keyword">extends</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Creator</span> </span>&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 创建一个产品对象，其输入参数类型可以自行设置</div><div class="line">     * 通常为String, Enum, Class等，当然也可以为空</div><div class="line">     */</div><div class="line"></div><div class="line">     <span class="keyword">public</span> <span class="keyword">abstract</span> &lt;T extends Product&gt; <span class="function">T <span class="title">createProduct</span><span class="params">(Class&lt;T&gt; c)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体工厂类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteCreator</span> <span class="keyword">extends</span> <span class="title">Creator</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> &lt;T extends Product&gt; <span class="function">T <span class="title">createProduct</span><span class="params">(Class&lt;T&gt; c)</span> </span>&#123;</div><div class="line">        Product product = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            product = (Product) Class.forName(c.getName()).newInstance();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            <span class="comment">// 异常处理</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> （T）product;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Creator creator = <span class="keyword">new</span> ContreteCreate();</div><div class="line">        Product product = creator.createProduct(ContreteProduct1.class);</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * 继续业务处理</div><div class="line">         */</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>良好的封装性，代码结构清晰。</li>
-<li>扩展性非常优秀，要增加一个新的产品，只要实现Product接口。</li>
-<li>屏闭产品类。只要关心产品的接口即可，例如换数据库只要换驱动即可。</li>
-<li>符合迪米特法则（只要知道产品的接口即可）；符合依赖倒置原则（值依赖产品的抽象类即可）；符合里氏替换原则（使用产品子类可以替换产品父类）。</li>
-</ol>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>只要使用new的地方都可以使用工厂方法模式，但是要考虑代码的复杂度。</li>
-<li>需要灵活的，可扩展的框架时（有多个产品可选且可以随时增加时），可以考虑工厂方法模式。</li>
-<li>工厂方法模式可以用在异构项目中。</li>
-<li>可以使用在测试驱动开发的框架下。</li>
-</ol>
-<h1 id="工厂方法模式的扩展"><a href="#工厂方法模式的扩展" class="headerlink" title="工厂方法模式的扩展"></a>工厂方法模式的扩展</h1><ol>
-<li><p>缩小为简单工厂模式</p>
-<p> 实质是去掉了创造者接口，使具体创造者直接依赖产品接口。缺点是扩展比较困难，不符合开闭原则。</p>
-</li>
-<li><p>升级为多个工厂类</p>
-<p> 实质是为了结构清晰，我们为每个产品定义一个创造者，然后由调用者自己去选择与那个工厂方法关联。</p>
-</li>
-<li><p>替代单例模式</p>
-<p> 代码如下：</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonFactory</span> </span>&#123;</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;</div><div class="line"><span class="keyword">static</span> &#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        Class c1 = Class.forName(Singleton.class.getName());</div><div class="line">        <span class="comment">// 获得无参构造</span></div><div class="line">        Constructor constructor = c1.getDeclaredConstructor();</div><div class="line">        <span class="comment">//设置无参构造是可访问的</span></div><div class="line">        constructor.setAccessible(<span class="keyword">true</span>);</div><div class="line">        <span class="comment">// 产生一个实例对象</span></div><div class="line">        singleton = (Singleton) constructor.newInstance();</div><div class="line"></div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">        e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> singleton;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>延迟初始化</p>
-<p> 所谓延迟初始化即一个对象被消费完毕后，并不立刻释放，工厂类保持其初始状态，等待再次被使用。其实质，是利用一个Map保存创造过的对象，如果在Map容器已经有的对象，则直接取出返回；如果没有，则根据需要的类型产生一个对象并放入到Map容器中，以方便下次调用。</p>
-</li>
-</ol>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>孰能生巧，熟练掌握该设计模式，多思考工厂方法如和应用，而且工厂方法模式可以与其他模式混合使用，变化出无穷的优秀设计。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：在面向对象的思维中，万物皆对象，就像有女蜗造人，我们也可以用工厂方法模式造对象。
     
     </summary>
     
