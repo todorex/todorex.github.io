@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="算法导论,排序," />
+  <meta name="keywords" content="java,设计模式," />
 
 
 
@@ -89,20 +89,19 @@
 
 
 
-<meta name="description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta name="keywords" content="算法导论,排序">
+<meta name="description" content="引：无论是编译原理，还是解释型语言，都会涉及到解释，其思想也都和解释器模式类似。">
+<meta name="keywords" content="java,设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="快速排序及随机化算法">
-<meta property="og:url" content="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/index.html">
+<meta property="og:title" content="设计模式之禅——解释器模式">
+<meta property="og:url" content="http://bestlixiang.site/2018/03/18/设计模式之禅——解释器模式/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-05%20%E4%B8%8B%E5%8D%8810.15.58.png">
-<meta property="og:updated_time" content="2017-05-05T23:42:16.000Z">
+<meta property="og:description" content="引：无论是编译原理，还是解释型语言，都会涉及到解释，其思想也都和解释器模式类似。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/interpreter.png">
+<meta property="og:updated_time" content="2018-03-18T05:48:41.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="快速排序及随机化算法">
-<meta name="twitter:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg">
+<meta name="twitter:title" content="设计模式之禅——解释器模式">
+<meta name="twitter:description" content="引：无论是编译原理，还是解释型语言，都会涉及到解释，其思想也都和解释器模式类似。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/interpreter.png">
 
 
 
@@ -130,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/18/设计模式之禅——解释器模式/"/>
 
 
 
 
 
-  <title> 快速排序及随机化算法 | rex note </title>
+  <title> 设计模式之禅——解释器模式 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -289,7 +288,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/18/设计模式之禅——解释器模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -310,7 +309,7 @@
             
             
               
-                快速排序及随机化算法
+                设计模式之禅——解释器模式
               
             
           </h2>
@@ -325,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-06T00:04:52+08:00">
-                2017-05-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-18T13:46:46+08:00">
+                2018-03-18
               </time>
             
 
@@ -348,8 +347,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
                   </a>
                 </span>
 
@@ -388,117 +387,33 @@
       
 
       
-        <p>引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。<a id="more"></a></p>
-<h2 id="快速排序算法"><a href="#快速排序算法" class="headerlink" title="快速排序算法"></a>快速排序算法</h2><ol>
-<li>核心思想<br>分治思想和原址运算：看一张图<br><img src="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg" alt="快速排序"></li>
-<li><p>算法具体实现 </p>
-<blockquote>
-</blockquote>
-<pre><code>public class QuickSort {
-    public int partition(int[] a,int p,int r){
-        int x = a[r];
-        int i = -1;
-        int temp = 0;
-        for (int j = 0; j &lt; a.length-1; j++) {
-            if(a[j]&lt;x){
-                i=i+1;
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
-        }
-        temp = a[i+1];
-        a[i+1] = x;
-        a[r] = temp;
-        return i+1;
-    }
-
-    public int[] quicksort(int[] b,int p,int r){
-        if(p&lt;r){
-            int q = partition(b,p,r);
-            quicksort(b, p, q-1);
-            quicksort(b, q+1, r);
-        }
-        return b;
-    }
-
-    public static void main(String[] args) {
-        QuickSort sort = new QuickSort();
-        int[] a = {2,8,7,1,3,5,6,4};
-        int[] b = sort.quicksort(a, 0, a.length-1);
-        for (int i : b) {
-            System.out.print(i+&quot; &quot;);
-        }
-    }
-}
-</code></pre></li>
-</ol>
-<p>3.时间复杂度</p>
-<p>通过分析我们最看重的平均复杂度是nlgn</p>
-<h2 id="随机化算法"><a href="#随机化算法" class="headerlink" title="随机化算法"></a>随机化算法</h2><ol>
-<li>核心思想</li>
-</ol>
-<p>在算法加入随机性，要么在使序列生成随机化，要么就是使主元随机化，这里我们使主元随机化。</p>
+        <p>引：无论是编译原理，还是解释型语言，都会涉及到解释，其思想也都和<strong>解释器模式</strong>类似。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>给定一门语言，定义它的文法的一组表示，并定义一个解释器，该解释器使用该表示来解释语言中的句子。——行为类</strong></p>
+<p>解释器模式的通用类图如下：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/interpreter.png" alt="interpreter"></p>
+<p>这里解释一下类图中的角色:</p>
 <ol>
-<li><p>算法具体实现</p>
-<blockquote>
-</blockquote>
-<pre><code>import java.util.Random;    
-public class RandomQuickSort {
-    public int partition(int[] a,int p,int r){
-        int x = a[r];
-        int i = -1;
-        int temp = 0;
-        for (int j = 0; j &lt; a.length-1; j++) {
-            if(a[j]&lt;x){
-                i=i+1;
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
-        }
-        temp = a[i+1];
-        a[i+1] = x;
-        a[r] = temp;
-        return i+1;
-    }
-
-    public int randompartition(int[] a,int p,int r){
-        int temp = 0;
-        Random random = new Random();
-        int i = random.nextInt(r);
-        temp = a[i];
-        a[i] = a[r];
-        a[r] = temp;
-        return partition(a, p, r);
-    }
-
-    public int[] randomquicksort(int[] b,int p,int r){
-        if(p&lt;r){
-            int q = randompartition(b, p, r);
-            randomquicksort(b, p, q-1);
-            randomquicksort(b, q+1, r);
-        }
-        return b;
-    }
-
-    public static void main(String[] args) {
-        RandomQuickSort sort = new RandomQuickSort();
-        int[] a = {2,8,7,1,3,5,6,4};
-        int[] b = sort.randomquicksort(a, 0, a.length-1);
-        for (int i : b) {
-            System.out.print(i+&quot; &quot;);
-        }
-    }
-}
-</code></pre></li>
-<li><p>时间复杂度</p>
-</li>
+<li>AbstractExpression抽象解释器：具体的即时任务又各个实现类完成，具体的解释器分别由TerminalExpression（值）和NotermianlExpression（符号）完成。</li>
+<li>TerminalExpression终结符表达式：实现与文法中的元素相关联的解释操作，通常一个解释器模式中只有一个终结符表达式，但是有多个实例，对应不同的终结符。</li>
+<li>NotermianlExpression非终结符表达式：文法中的每条规则对应于一个非终结表达式。</li>
+<li>Context环境角色：存放数据</li>
 </ol>
-<p>通过分析我们最看重的平均复杂度是nlgn</p>
-<h2 id="基本排序算法"><a href="#基本排序算法" class="headerlink" title="基本排序算法"></a>基本排序算法</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-05%20%E4%B8%8B%E5%8D%8810.15.58.png" alt="排序"></p>
-<p>小结：同等情况下快速排序&gt;随机化算法&gt;归并排序&gt;插入排序；<br>在有序的情况下随机化算法&gt;快速排序</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>慢慢走，不要急！</p>
+<p>解释器是一个比较少用的模式，以下为其通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象表达式</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Expression</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个表达式必须有一个解释任务</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Object <span class="title">interpreter</span><span class="params">(Context ctx)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 终结符表达式</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TerminalExpression</span> <span class="keyword">extends</span> <span class="title">Expression</span> </span>&#123;</div><div class="line">    <span class="comment">// 通常终结符表达式只有一个，但是有多个对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">interpreter</span><span class="params">(Context ctx)</span> </span>&#123;</div><div class="line">        <span class="comment">// 主要处理场景元素和数据的转换</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 非终结符表达式</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotermianlExpression</span> <span class="keyword">extends</span> <span class="title">Expression</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个非终结符表达式都会对其他表达式产生依赖</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NotermianlExpression</span><span class="params">(Expression... expression)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">interpreter</span><span class="params">(Context ctx)</span> </span>&#123;</div><div class="line">        <span class="comment">// 进行文法处理</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Context ctx = <span class="keyword">new</span> Context();</div><div class="line">        <span class="comment">// 通常定一个语法容器，容纳一个具体的表达式，通常为ListArray、LinkedList、Stack等容器</span></div><div class="line">        Stack&lt;Expression&gt; stack = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">for</span>(;;) &#123;</div><div class="line">            <span class="comment">// 进行语法判断，并产生递归调用</span></div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 产生一个完整的语法树，由各个具体的语法分析进行解析</span></div><div class="line">        Expression exp = stack.pop();</div><div class="line">        <span class="comment">// 具体元素进入场景</span></div><div class="line">        exp.interpreter(ctx);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通常Client是一个封装类，封装的结果就是传递进来的规范语法文件，解释器分析后产生结果并返回，避免了调用者与语法解析器的耦合关系。</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>解释器是一个简单语法分析工具，它最显著的有点就是扩展性，修改语法规则只要修改相应的非终结符表达式就可以了，若扩展语法，则只要增加非终结符类就可以了。</p>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
+<li>解释器模式会引起类膨胀（显而易见）</li>
+<li>解释器采用递归调用方法，调试复杂，且影响效率。</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>重复发生的问题可以使用解释器模式，如对不同的日志文件进行不同的分析。</li>
+<li>一个简单语法需要解释的场景。</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>尽量不要在重要的模块中使用解释器模式，否则维护回事一个很大的问题。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>解释器模式在实际的系统开发中使用得非常少，因为它会引起效率问题、性能以及维护等问题，一般在大中型的框架型项目能够找到它的身影，如一些数据分析工具、报表设计工具、科学计算工具等，若你确实遇到“一种特定类型的问题发生的频率足够高”的情况下，准备使用解释器模式时，可以考虑一下Expression4J、MESP、Jep等开元的解析工具包。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
 
       
     </div>
@@ -528,9 +443,9 @@ public class RandomQuickSort {
       
         <div class="post-tags">
           
-            <a href="/tags/算法导论/" rel="tag"># 算法导论</a>
+            <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/排序/" rel="tag"># 排序</a>
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
           
         </div>
       
@@ -543,8 +458,8 @@ public class RandomQuickSort {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/04/git个人使用与多人协作/" rel="next" title="git个人使用与多人协作">
-                <i class="fa fa-chevron-left"></i> git个人使用与多人协作
+              <a href="/2018/03/18/设计模式之禅——状态模式/" rel="next" title="设计模式之禅——状态模式">
+                <i class="fa fa-chevron-left"></i> 设计模式之禅——状态模式
               </a>
             
           </div>
@@ -552,10 +467,6 @@ public class RandomQuickSort {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/06/nginx反向代理与负载均衡/" rel="prev" title="nginx反向代理与负载均衡">
-                nginx反向代理与负载均衡 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -754,7 +665,7 @@ public class RandomQuickSort {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速排序算法"><span class="nav-number">1.</span> <span class="nav-text">快速排序算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机化算法"><span class="nav-number">2.</span> <span class="nav-text">随机化算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本排序算法"><span class="nav-number">3.</span> <span class="nav-text">基本排序算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">2.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#优点"><span class="nav-number">2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缺点"><span class="nav-number">2.2.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用场景"><span class="nav-number">2.3.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">2.4.</span> <span class="nav-text">注意事项</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳实践"><span class="nav-number">3.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>

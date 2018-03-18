@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-18T04:57:36.000Z</updated>
+  <updated>2018-03-18T05:48:41.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式之禅——解释器模式</title>
+    <link href="http://bestlixiang.site/2018/03/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/03/18/设计模式之禅——解释器模式/</id>
+    <published>2018-03-18T05:46:46.000Z</published>
+    <updated>2018-03-18T05:48:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：无论是编译原理，还是解释型语言，都会涉及到解释，其思想也都和<strong>解释器模式</strong>类似。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>给定一门语言，定义它的文法的一组表示，并定义一个解释器，该解释器使用该表示来解释语言中的句子。——行为类</strong></p>
+<p>解释器模式的通用类图如下：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/interpreter.png" alt="interpreter"></p>
+<p>这里解释一下类图中的角色:</p>
+<ol>
+<li>AbstractExpression抽象解释器：具体的即时任务又各个实现类完成，具体的解释器分别由TerminalExpression（值）和NotermianlExpression（符号）完成。</li>
+<li>TerminalExpression终结符表达式：实现与文法中的元素相关联的解释操作，通常一个解释器模式中只有一个终结符表达式，但是有多个实例，对应不同的终结符。</li>
+<li>NotermianlExpression非终结符表达式：文法中的每条规则对应于一个非终结表达式。</li>
+<li>Context环境角色：存放数据</li>
+</ol>
+<p>解释器是一个比较少用的模式，以下为其通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象表达式</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Expression</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个表达式必须有一个解释任务</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Object <span class="title">interpreter</span><span class="params">(Context ctx)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 终结符表达式</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TerminalExpression</span> <span class="keyword">extends</span> <span class="title">Expression</span> </span>&#123;</div><div class="line">    <span class="comment">// 通常终结符表达式只有一个，但是有多个对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">interpreter</span><span class="params">(Context ctx)</span> </span>&#123;</div><div class="line">        <span class="comment">// 主要处理场景元素和数据的转换</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 非终结符表达式</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotermianlExpression</span> <span class="keyword">extends</span> <span class="title">Expression</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个非终结符表达式都会对其他表达式产生依赖</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NotermianlExpression</span><span class="params">(Expression... expression)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">interpreter</span><span class="params">(Context ctx)</span> </span>&#123;</div><div class="line">        <span class="comment">// 进行文法处理</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Context ctx = <span class="keyword">new</span> Context();</div><div class="line">        <span class="comment">// 通常定一个语法容器，容纳一个具体的表达式，通常为ListArray、LinkedList、Stack等容器</span></div><div class="line">        Stack&lt;Expression&gt; stack = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">for</span>(;;) &#123;</div><div class="line">            <span class="comment">// 进行语法判断，并产生递归调用</span></div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 产生一个完整的语法树，由各个具体的语法分析进行解析</span></div><div class="line">        Expression exp = stack.pop();</div><div class="line">        <span class="comment">// 具体元素进入场景</span></div><div class="line">        exp.interpreter(ctx);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通常Client是一个封装类，封装的结果就是传递进来的规范语法文件，解释器分析后产生结果并返回，避免了调用者与语法解析器的耦合关系。</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>解释器是一个简单语法分析工具，它最显著的有点就是扩展性，修改语法规则只要修改相应的非终结符表达式就可以了，若扩展语法，则只要增加非终结符类就可以了。</p>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
+<li>解释器模式会引起类膨胀（显而易见）</li>
+<li>解释器采用递归调用方法，调试复杂，且影响效率。</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>重复发生的问题可以使用解释器模式，如对不同的日志文件进行不同的分析。</li>
+<li>一个简单语法需要解释的场景。</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>尽量不要在重要的模块中使用解释器模式，否则维护回事一个很大的问题。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>解释器模式在实际的系统开发中使用得非常少，因为它会引起效率问题、性能以及维护等问题，一般在大中型的框架型项目能够找到它的身影，如一些数据分析工具、报表设计工具、科学计算工具等，若你确实遇到“一种特定类型的问题发生的频率足够高”的情况下，准备使用解释器模式时，可以考虑一下Expression4J、MESP、Jep等开元的解析工具包。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：无论是编译原理，还是解释型语言，都会涉及到解释，其思想也都和&lt;strong&gt;解释器模式&lt;/strong&gt;类似。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>设计模式之禅——状态模式</title>
@@ -1007,56 +1058,6 @@
     <summary type="html">
     
       &lt;p&gt;引：在面向对象的思维中，万物皆对象，就像有女蜗造人，我们也可以用工厂方法模式造对象。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——单例模式</title>
-    <link href="http://bestlixiang.site/2018/02/06/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/02/06/设计模式之禅——单例模式/</id>
-    <published>2018-02-06T13:36:57.000Z</published>
-    <updated>2018-02-06T13:37:55.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：如果每个人可以走的路只有一条，如果每个人想要的东西都是一个(单例模式)，那么人应该都不会迷茫了吧。虽然解决了迷茫，但是也抹杀了多样性，有好有坏，各有所见。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例。——创造类</strong></p>
-<p>下面是它的通用类图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/singleton.png" alt="singleton"></p>
-<p>代码实现有两种，如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 饿汉式单例 线程安全</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton = <span class="keyword">new</span> Singleton();</div><div class="line">    <span class="comment">// 限制产生多个对象</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// 通过该方法获得实例对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> singleton;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 类中其他方法尽量是static</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> doSomething &#123; ... &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 懒汉式单例 线程不安全</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 限制产生多个对象</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// 通过该方法获得实例对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (singleton = <span class="keyword">null</span>) &#123;</div><div class="line">            singleton = <span class="keyword">new</span> Singleton();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> singleton;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 类中其他方法尽量是static</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> doSomething &#123; ... &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>减少内存开支</li>
-<li>减少系统的性能开销</li>
-<li>避免对资源的多重占用</li>
-</ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
-<li>扩展困难，由于它需要自行实例化</li>
-<li>不利于测试，由于单例没完成，不能测试</li>
-<li>与<strong>单一职责</strong>有冲突</li>
-</ol>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>要求生成唯一序列号的环境</li>
-<li>在整个项目中需要一个共享访问带你或共享数据</li>
-<li>创建一个对象需要消耗的资源过多，如访问IO和数据库</li>
-<li>需要定义大量的静态常量和静态方法（如工具类）的环境</li>
-</ol>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
-<li>在高并发的情况下，请注意单例模式的线程同步问题，选择合适的实现模式。</li>
-<li>不可以复制，即不实现Cloneable接口。</li>
-</ol>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>在Spring中，每个Bean默认就是单例的，这样的优点是Spring容器可以管理这些Bean的生命周期，决定什么时候销魂，销毁的时候要如何处理，等等。如果采用非单例模式，则Bean初始化后的管理交由J2EE容器，Spring容器不在跟踪管理Bean的生命周期。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：如果每个人可以走的路只有一条，如果每个人想要的东西都是一个(单例模式)，那么人应该都不会迷茫了吧。虽然解决了迷茫，但是也抹杀了多样性，有好有坏，各有所见。
     
     </summary>
     
