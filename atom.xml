@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-18T12:03:32.000Z</updated>
+  <updated>2018-03-19T01:32:58.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>设计模式之禅——桥梁模式</title>
+    <link href="http://bestlixiang.site/2018/03/19/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E6%A1%A5%E6%A2%81%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/03/19/设计模式之禅——桥梁模式/</id>
+    <published>2018-03-19T01:32:24.000Z</published>
+    <updated>2018-03-19T01:32:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：不变的部分用继承来实现，变得部分放在外部，并通过<strong>桥梁模式</strong>抽象耦合进来，这样就解决了继承的弊端。<a id="more"></a></p>
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>桥梁模式也叫做桥接模式，其定义如下：</p>
+<p><strong>将抽象和实现解耦，使得两者可以独立变化。——结构类</strong></p>
+<p>下面是桥梁模式的通用类图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/bridge.png" alt="bridge"></p>
+<p>我们看看桥梁模式类图中的4个角色：</p>
+<ol>
+<li>Abstraction抽象化角色：主要职责是定义出该角色的行为，同时保存一个对实现化角色的引用，该角色一般是抽象类。</li>
+<li>Implementor实现化角色：定义角色必须的行为和属性。</li>
+<li>RefinedAbstraction修正抽象化角色：它引用实现化角色对抽象化角色进行修正。</li>
+<li>ConcreteImplementor具体实现化角色：实现接口或抽象类定义的方法和属性。</li>
+</ol>
+<p>它的通用源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Implementor</span> </span>&#123;</div><div class="line">    <span class="comment">// 基本方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doAnything</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体实现化角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteImplementor1</span> <span class="keyword">implements</span> <span class="title">Implementor</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doAnything</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteImplementor2</span> <span class="keyword">implements</span> <span class="title">Implementor</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doAnything</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象化角色</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Abstraction</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义对实现化角色的引用</span></div><div class="line">    <span class="keyword">private</span> Implementor imp;</div><div class="line">    <span class="comment">// 约束子类必须实现该构造函数</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Abstraction</span><span class="params">(Implementor _imp)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.imp = _imp;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 自身的行为和属性</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.imp.doSomething();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 获得实现化角色</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Implementor <span class="title">getImp</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> imp;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体抽象化角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RefinedAbstraction</span> <span class="keyword">extends</span> <span class="title">Abstraction</span> </span>&#123;</div><div class="line">    <span class="comment">// 覆写构造函数</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RefinedAbstraction</span><span class="params">(Implementor _imp)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(_imp);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 修正父类的行为</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.request();</div><div class="line">        <span class="keyword">super</span>.getImp().doAnything();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 定义一个实现化角色</span></div><div class="line">        Implementor imp = <span class="keyword">new</span> ConcreteImplementor1();</div><div class="line">        <span class="comment">// 定义一个抽象化角色</span></div><div class="line">        Abstraction abs = <span class="keyword">new</span> RefinedAbstraction(imp);</div><div class="line">        <span class="comment">// 执行</span></div><div class="line">        abs.request();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
+<li>抽象和实现分离。</li>
+<li>优秀的扩充能力。</li>
+<li>实现细节对客户透明。</li>
+</ol>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
+<li>不希望或不合适使用继承的场景。</li>
+<li>接口或抽象类不稳定的场景。</li>
+<li>重用性要求较高的场景。</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>使用桥梁模式主要考虑如何拆分抽象和实现。桥梁模式的意图还是对变化的封装，尽量把可能变化的因素封装到最细、最小的逻辑单元，避免风险扩散。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>继承非常好，但是有缺点。我们可以扬长避短，对于比较明确不发生变化的，则通过继承来完成；若不能确定是否会发生变化的，那就认为会发生变化，则通过桥梁模式来搭建一个桥梁将变化的的东西放在外部和本体进行连接。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《设计模式之禅》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：不变的部分用继承来实现，变得部分放在外部，并通过&lt;strong&gt;桥梁模式&lt;/strong&gt;抽象耦合进来，这样就解决了继承的弊端。
+    
+    </summary>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+    
+      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
+    
+      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title>设计模式之禅——享元模式</title>
@@ -1011,48 +1063,6 @@
     <summary type="html">
     
       &lt;p&gt;引：少写代码，大家一定觉得很有吸引力。而且还是先确定一个框架，再写其中的部分，这么结构清晰地写代码，大家一定会觉得更有吸引力，那么我想&lt;strong&gt;模板方法模式&lt;/strong&gt;可以达到你的需求。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——抽象工厂模式</title>
-    <link href="http://bestlixiang.site/2018/02/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/02/07/设计模式之禅——抽象工厂模式/</id>
-    <published>2018-02-07T06:26:31.000Z</published>
-    <updated>2018-02-07T06:26:55.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：在开发应用的时候为了适应不同的操作系统以及不同数据库时，我们总会显得力不从心。而抽象工厂模式为了我们提供了优秀的解决方案。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>为创建一组相关或相互依赖的对象提供一个接口，而且无须指定他们的具体类。——创造类</strong></p>
-<p>它的通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/abstractFactory.png" alt="abstractFactory"></p>
-<p>为了展示通用的源代码，将原来的通用类图扩展为如下类图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/abstractFactoryDemo.png" alt="abstractFactoryDemo"></p>
-<p>下面是基于类图的代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象产品类 ProductA与ProductB类似;1,2代表产品等级</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractProductA</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个产品共有方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shareMethod</span><span class="params">()</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// 每个产品相同方法，不同实现</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 产品A1的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductA1</span> <span class="keyword">extends</span> <span class="title">AbstractProductA</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"产品A1的实现方法"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 产品A2的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductA2</span> <span class="keyword">extends</span> <span class="title">AbstractProductA</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"产品A2的实现方法"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象工厂类 有N个产品族，在抽象工厂类就有N个创建方法</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractCreator</span> </span>&#123;</div><div class="line">    <span class="comment">// 创建A产品家族</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> AbstractProductA <span class="title">createProductA</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 创建B产品家族</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> AbstractProductB <span class="title">createProductB</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 有M个产品等级就应该有M个实现工厂类，在每个实现工厂中，实现不同产品族的生产任务</span></div><div class="line"><span class="comment">// 产品等级1的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Creator1</span> <span class="keyword">extends</span> <span class="title">AbstractCreator</span> </span>&#123;</div><div class="line">    <span class="comment">// 只生产产品等级为1的A产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductA <span class="title">createProductA</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductA1</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 只生产产品等级为1的B产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductB <span class="title">createProductB</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductB1</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 产品等级2的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Creator2</span> <span class="keyword">extends</span> <span class="title">AbstractCreator</span> </span>&#123;</div><div class="line">    <span class="comment">// 只生产产品等级为2的A产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductA <span class="title">createProductA</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductA2</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 只生产产品等级为2的B产品</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AbstractProductB <span class="title">createProductB</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function">retrurn new <span class="title">ProductB2</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 定义两个工厂</span></div><div class="line">        AbstractCreator creator1 = <span class="keyword">new</span> Creator1();</div><div class="line">        AbstractCreator creator2 = <span class="keyword">new</span> Creator2();</div><div class="line">        <span class="comment">// 产生A1对象</span></div><div class="line">        AbstractProductA a1 = creator1.createProductA();</div><div class="line">        <span class="comment">// 产生A2对象</span></div><div class="line">        AbstractProductA a2 = creator2.createProductA();</div><div class="line">        <span class="comment">// 产生B1对象</span></div><div class="line">        AbstractProductB b1 = creator1.createProductB();</div><div class="line">        <span class="comment">// 产生B2对象</span></div><div class="line">        AbstractProductB b2 = creator2.createProductB();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>主要是要理解产品族以及产品等级的关系。</p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>封装性，它只需要了解接口。</li>
-<li>产品族的约束为非公开状态。</li>
-</ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>扩展非常困难。如果要新增一个产品，需要修改AbstractCreator类以及它的实现类。这严重<strong>违反了开闭原则</strong>。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>如果一个对象族都有相同的约束，就可以使用抽象工厂模式。例如linux和windows下得编辑器和不同数据库的规范操作。</p>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>上面的扩展困难是指产品族扩展困难，但是产品等级扩展还是容易的。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>在涉及不同操作系统，不同数据库的时候非常适合抽象工厂模式，因为它可以屏蔽掉操作系统或数据库对应用的影响。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：在开发应用的时候为了适应不同的操作系统以及不同数据库时，我们总会显得力不从心。而抽象工厂模式为了我们提供了优秀的解决方案。
     
     </summary>
     
