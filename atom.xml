@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-19T01:32:58.000Z</updated>
+  <updated>2018-03-20T10:29:53.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,139 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_计算机基础</title>
+    <link href="http://bestlixiang.site/2018/03/20/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/"/>
+    <id>http://bestlixiang.site/2018/03/20/Linux私房菜-计算机基础/</id>
+    <published>2018-03-20T10:29:00.000Z</published>
+    <updated>2018-03-20T10:29:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：我也算是从通信专业转到计算机的，所以当然对计算机专业课知识不太了解，所以也想简单掌握以下计算机基础知识。<a id="more"></a></p>
+<p>计算机其实是：<strong>接收用户输入指令和数据，经过中央处理器的数据欲逻辑单元运算处理后，以产生或存储成有用的信息。</strong></p>
+<h1 id="计算机组成"><a href="#计算机组成" class="headerlink" title="计算机组成"></a>计算机组成</h1><h2 id="计算机硬件的五大单元"><a href="#计算机硬件的五大单元" class="headerlink" title="计算机硬件的五大单元"></a>计算机硬件的五大单元</h2><ol>
+<li>输入单元</li>
+<li>输出单元</li>
+<li>CPU内部的控制单元</li>
+<li>CPU内部的算术逻辑单元</li>
+<li>内存</li>
+</ol>
+<h2 id="CPU的种类"><a href="#CPU的种类" class="headerlink" title="CPU的种类"></a>CPU的种类</h2><p>CPU内部已经含有一些小指令集，我们所使用的软件都要经过CPU内部的微指令集来完成才行。这些指令集的设计主要被分为两种设计理念，如下：</p>
+<ol>
+<li><p>精简指令集（RISC）</p>
+<p> 采用精简指令集的cpu的指令较为精简，每条指令的执行时间很短，完成的操作也很单纯，指令的执行性能较好；但是如果要做一些复杂的操作，则需要多个指令来协同完成。</p>
+<p> 常见的精简指令集CPU有：</p>
+<ul>
+<li>sun公司的SPARC系列，常应用于学术领域的大型工作站</li>
+<li>IBM公司的Power Architecture（包括Power PC），如索尼的PS3</li>
+<li>IBM公司的ARM系列，常用于手机、pda、导航系统、网络设备等 （使用最广泛）</li>
+</ul>
+</li>
+<li><p>复杂指令集（CISC）</p>
+<p> 每一条指令较为复杂，因为执行的时间比较长，但是每条指令处理的工作较为丰富。</p>
+<p> 常见的复杂指令集的CPU：AMD、Intel、VIA等x86架构的cpu。由于这些采用了复杂指令集的x86架构的cpu常常被用在个人计算机上，所以个人计算机常常就被称为x86计算机。x86架构的CPU最早由因特尔开发，并且它将CPU从8位提升为16位、32位。后来，AMD公司基于x86架构开发出了64位的CPU。所以64位CPUu的架构叫做x86_64，非64位cpu的架构仍然叫做x86。</p>
+</li>
+</ol>
+<h2 id="接口设备"><a href="#接口设备" class="headerlink" title="接口设备"></a>接口设备</h2><ol>
+<li>存储设备：包括硬盘，软盘等</li>
+<li>显示设备：显卡等</li>
+<li>网络设备：网卡等</li>
+</ol>
+<h2 id="计算机分类"><a href="#计算机分类" class="headerlink" title="计算机分类"></a>计算机分类</h2><ol>
+<li>超级计算机：运算速度最快的计算机，主要是用于需要有高速计算的项目中。</li>
+<li>大型计算机：功能上不及超级计算机，但也可以用来处理大量数据与复杂计算。</li>
+<li>迷你计算机：主机可以放在一般场所，无需像大型计算机一样需要特殊的空调场所。</li>
+<li>工作站：工作站的价格比迷你计算机便宜许多，。是针对特殊用途而设计的计算机。</li>
+<li>微电脑：个人计算机（PC）。</li>
+</ol>
+<h2 id="计算机上面的常用的计算单位（大小、速度等）"><a href="#计算机上面的常用的计算单位（大小、速度等）" class="headerlink" title="计算机上面的常用的计算单位（大小、速度等）"></a>计算机上面的常用的计算单位（大小、速度等）</h2><ol>
+<li>文件大小：1GB=1024*1024*1024Byte；1Byte=8bit</li>
+<li>CPU运算速度：MHz或者GHz，Hz为秒分之一</li>
+<li>网络传输：Mbit/s或者MB/s，注意bit还是Byte</li>
+</ol>
+<h1 id="个人计算机架构与接口设备"><a href="#个人计算机架构与接口设备" class="headerlink" title="个人计算机架构与接口设备"></a>个人计算机架构与接口设备</h1><p>在计算机主板上的芯片组通常又分为两个桥接器来控制各组件的通信：</p>
+<ul>
+<li>北桥负责连接速度较快的CPU、内存与显卡等组件。北桥的总线称为系统总线。因为是内存传输的主要通道，所以速度快。</li>
+<li>南桥负责链接速度较慢的周边接口，包括硬盘、USB、网卡等。南桥的总线称为输入输出(I/O)总线。</li>
+</ul>
+<p>AMD和Intel的芯片组架构最主要的区别是AMD的内存是直接与CPU通信而不通过北桥。</p>
+<h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><h3 id="外频与内屏"><a href="#外频与内屏" class="headerlink" title="外频与内屏"></a>外频与内屏</h3><ol>
+<li>外频：CPU与外部组件进行数据传输/运算时的速度。</li>
+<li>倍频：CPU内部用来加速工作性能的一个倍速，两者相乘才是cpu 的频率。</li>
+</ol>
+<h3 id="32位与64位"><a href="#32位与64位" class="headerlink" title="32位与64位"></a>32位与64位</h3><ol>
+<li>北桥所支持的频率称为前端总线速（FSB）度，而每次传送的位数则是总线宽度，所谓总线频宽则是“FSB*总线宽度”，业技术每秒钟可以传送的最大数据量。</li>
+<li>CPU每次能处理的数据量称为字组大小(word size)，字组大小依据cpu的设计有32／64位。我们现在称计算机是32／64位是根据CPU解析的字组大小来的。</li>
+</ol>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><p>我们平时所说的内存的全名叫做动态随机访问存储器（DRAM）。DRAM是一种挥发性内存，只有它通电的时候才能被使用，断电数据就消失。DRAM分为：</p>
+<ol>
+<li>SDRAM</li>
+<li>DDR SDRAM，DDR=Double Data Rate 所以他的传输速度比SDRAM要快。</li>
+</ol>
+<p>对服务器而言，内存的容量比CPU的速度更加重要。CPU与内存的外频应该相同才好。</p>
+<h3 id="双通道设计"><a href="#双通道设计" class="headerlink" title="双通道设计"></a>双通道设计</h3><p>总线宽度一般是64位，也就是每次总线从内存中读写64位数据，若在主板上插两根内存条，那么总线宽度就达到128位，从而提升了内存的读写速度。在主板上插两根内存条的设计就叫做双通道设计。<br>但是要启动双通道功能，安插的两根内存条必须型号一样，大小一样，这样才能整体上提升内存的读写速度。</p>
+<h3 id="DRAM与SRAM"><a href="#DRAM与SRAM" class="headerlink" title="DRAM与SRAM"></a>DRAM与SRAM</h3><p>DRAM就是我们平时所说的内存，它的全称叫做动态随机访问存储器。而SRAM的全程叫做静态随机访问存储器。SRAM可以用在很多不同的地方，而CPU中的第二层高速缓存就是选择SRAM作为存储器。由于L2 Cache集成在CPU内部，CPU读取数据无需再经过北桥从内存中获取，直接从L2 Cache中获取，从而能提升性能。</p>
+<h2 id="显卡"><a href="#显卡" class="headerlink" title="显卡"></a>显卡</h2><p>显卡又叫做VGA（Video Graphics Array）。图形影响的显示质量的好坏重点在于分辨率和色彩深度。<br>由于显示的每一个像素都会占用内存，因此显卡上面也有个存储器，而这个存储器的大小直接影响显示的效果。早期时候3D的运算是交给CPU去处理的，为了减少CPU的负担，所以在显卡上设置一个处理器，这个处理器就是GPU。</p>
+<p>PS: 如果你的主机是用来打3D游戏，那么显卡的选购非常重要，如果你的主机是用来作为网络服务器，那么简单的入门级显卡对你的主机来说就非常够用了。</p>
+<h2 id="硬盘与存储设备"><a href="#硬盘与存储设备" class="headerlink" title="硬盘与存储设备"></a>硬盘与存储设备</h2><p>计算机系统上的存储设备包括硬盘、软盘、U盘等，我们主要介绍硬盘：</p>
+<ol>
+<li>硬盘主要是由许多的盘片、机械手臂、磁头与主轴马达所组成。实际的数据都是写在具有磁性物质的盘片上，硬盘运行时，主轴马达让盘片转动，机械手臂可以伸缩，让读取头在盘片上面进行读写操作。</li>
+<li>硬盘的最小存储单位是扇区，每个扇区的大小是512bytes，这个值是不可改变的。扇区组成的环叫做磁道。上下的所有磁道构成柱面。柱面是分割硬盘的最小单位。一般硬盘制造商杂显示硬盘容量时，大多是以十进制来编号，所有500GB的硬盘，理论上仅会有460GB左右的容量。</li>
+<li>传输接口主要有以下几种：<ul>
+<li>IDE接口：每秒传输可达133MB。</li>
+<li>SATA接口：SATA－1每秒传输150MB，SATA－2每秒传输300MB，目前个人计算机都已使用SATA。</li>
+<li>SCSI接口：这个接口含有一个处理器，硬盘的读写操作由这个处理器完成，从而提升计算机整体性能。</li>
+</ul>
+</li>
+</ol>
+<p>PS：硬盘很脆弱，千万别让它摔了还是怎样，血的教训。</p>
+<h2 id="主板"><a href="#主板" class="headerlink" title="主板"></a>主板</h2><p>主板可以说是整台主机相当重要的地方，因为重要的组件都是安插在主板上面的，而主板上面负责通信各个组件的就是芯片组。下面说说主板我们常用的东西：</p>
+<ol>
+<li>CMOS与BIOS：CMOS主要的功能是记录主板上面的重要参数，如系统时间等。BIOS为写入到主板上某一块闪存或EEPROM的程序，它可以在开机的时候执行，已加载CMOS当中的参数，并尝试调用存储设备中的开机程序，进一步进入操作系统当中。</li>
+<li>连接接口设备：主板与各项输出/输入设备的链接主要都是在主机箱的后方，如USB接口RJ-45接口等。</li>
+</ol>
+<h1 id="计算机编码"><a href="#计算机编码" class="headerlink" title="计算机编码"></a>计算机编码</h1><ol>
+<li>常用的英文编码表是ASKII，每个字符占1B，因此总共有2的8次方种变化。</li>
+<li>中文编码表常用gb2312，每个字符占2B，定义了一万三千多个字。但是，这个编码表对于数据库存储有问题，从数据库读出数据的时候有些字会被读错。</li>
+<li>为了解决上面的问题，出现了Unicode编码表，就是UTF-8。</li>
+</ol>
+<h1 id="软件程序运行"><a href="#软件程序运行" class="headerlink" title="软件程序运行"></a>软件程序运行</h1><h2 id="机器程序与编译程序"><a href="#机器程序与编译程序" class="headerlink" title="机器程序与编译程序"></a>机器程序与编译程序</h2><ol>
+<li>机器程序：都是机器码，可以直接给机器识别。</li>
+<li>编译程序：能够将高级语言编译成机器程序。</li>
+</ol>
+<h2 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h2><p>先看看操作系统的角色，从底层到高层：硬件-&gt;内核-&gt;系统调用-&gt;应用程序。其中内核以及系统调用被称为操作系统。</p>
+<ol>
+<li>操作系统内核：操作系统其实也是一组程序，这组程序的重点在于管理计算机的所有活动以及驱动系统的所有硬件。</li>
+<li>系统调用：操作系统提供的一组开发接口。</li>
+<li>内核功能：<ul>
+<li>系统调用接口</li>
+<li>程序管理</li>
+<li>内存管理</li>
+<li>文件系统管理</li>
+<li>设备驱动</li>
+</ul>
+</li>
+<li>操作系统与驱动程序：操作系统通常会提供一个开发接口给硬件商，让他们可以根据这个接口色合计可以驱动他们硬件的驱动程序。</li>
+</ol>
+<h2 id="应用程序"><a href="#应用程序" class="headerlink" title="应用程序"></a>应用程序</h2><p>应用程序是参考操作系统提供的开发接口所开发出来的软件，这些软件可以让用户操作，以达到某些计算机的功能利用。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>了解好计算机的基础知道，我们对计算机里面的硬件以及程序的实现有了一个大概的了解，有利于我们学习下面的知识。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：我也算是从通信专业转到计算机的，所以当然对计算机专业课知识不太了解，所以也想简单掌握以下计算机基础知识。
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>设计模式之禅——桥梁模式</title>
@@ -1002,67 +1135,6 @@
     <summary type="html">
     
       &lt;p&gt;引：生产一个产品，它必然有很多零部件，不同的组装顺序和零部件个数可能会导致不同的产品，通过控制这些顺序与个数可以达到快速生成不同产品的目的，就可以使用&lt;strong&gt;建造者模式&lt;/strong&gt;。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——模板方法模式</title>
-    <link href="http://bestlixiang.site/2018/02/08/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/02/08/设计模式之禅——模板方法模式/</id>
-    <published>2018-02-08T04:06:26.000Z</published>
-    <updated>2018-02-08T04:09:01.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：少写代码，大家一定觉得很有吸引力。而且还是先确定一个框架，再写其中的部分，这么结构清晰地写代码，大家一定会觉得更有吸引力，那么我想<strong>模板方法模式</strong>可以达到你的需求。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>定义一个操作中的算法的框架，而将一些步骤延迟到子类中。使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。——行为类</strong></p>
-<p>下面是他的通用类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/templateMethod.png" alt="templateMethod"></p>
-<p>其中AbstractClass叫做抽象模板，它的方法分为两类<br>：</p>
-<ul>
-<li>基本方法：由子类实现的方法，并且在模板方法被调用。</li>
-<li>模板方法：一般是一个具体方法，实现对基本方法的调度，完成固定的逻辑。</li>
-</ul>
-<p>为了防止恶意的操作，一般模板方法都加上final关键字，不允许被覆写。</p>
-<p>而ConcreteClass属于具体模板，实现父类所定义的抽象方法。</p>
-<p>下面再看看他的通用代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象模板类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstrctClass</span> </span>&#123;</div><div class="line">    <span class="comment">// 基本方法</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 基本方法</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doAngthing</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 模板方法</span></div><div class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">templateMethod</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 调用基本方法，完成相关逻辑</span></div><div class="line">        <span class="keyword">this</span>.doAnything();</div><div class="line">        <span class="keyword">this</span>.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体模板类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteClass1</span> <span class="keyword">extends</span> <span class="title">AbstractClass</span> </span>&#123;</div><div class="line">    <span class="comment">// 实现基本方法</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doAngthing</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContreteClass2</span> <span class="keyword">extends</span> <span class="title">AbstractClass</span> </span>&#123;</div><div class="line">    <span class="comment">// 实现基本方法</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doAngthing</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String[] args)</span> </span>&#123;</div><div class="line">       AbstractClass class1 = <span class="keyword">new</span> ConcreteClass1();</div><div class="line">       AbstractClass class2 = <span class="keyword">new</span> ConcreteClass2();</div><div class="line">       <span class="comment">// 调用模板方法</span></div><div class="line">       class1.templateMethod();</div><div class="line">       class2.templateMethod();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>抽象模板中的基本方法尽量设计为protected类型，符合迪米特原则。实现类若非必要，尽量不要扩大父类中的访问权限。</p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>封装不变部分，扩展可变部分。</li>
-<li>提取公共部分代码，便于维护。</li>
-<li>行为由父类控制，子类实现。符合开闭原则。</li>
-</ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>是优点也是缺点：子类对父类产生了影响。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>多个子类有公有的方法，并且逻辑基本相同。</li>
-<li>重要、复杂的算法，可以把核心算法设计为模板方法，周边的相关细节功能则由各个子类实现。</li>
-<li>重构时，模板方法模式一个常用的模式，把相同的代码抽取到父类中，然后通过<strong>钩子函数</strong>约束其行为。有了钩子方法的模板方法模式才是完美的。</li>
-</ol>
-<p>ps：钩子方法就是子类实现的一个方法，可以利用其返回值决定公共部分的执行结果。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><ol>
-<li><p>父类如何调用子类的方法（极度不建议这么做）</p>
-<ul>
-<li>把子类传递到父类的有参构造函数中，然后调用。</li>
-<li>使用反射的方式调用。</li>
-<li><p>父类调用子类的静态方法。</p>
-<p>但是通过模板方法模式就可以变相地实现父类调用子类的方法。</p>
-</li>
-</ul>
-</li>
-<li>在开源框架中，它提供了一个抽象类，然后开源框架写了一堆子类。如果你需要扩展，可以继承这个抽象类，然后覆写protected方法，再调用一个类似execute方法，就完成了扩展开发。相信大家一定深有感触。</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：少写代码，大家一定觉得很有吸引力。而且还是先确定一个框架，再写其中的部分，这么结构清晰地写代码，大家一定会觉得更有吸引力，那么我想&lt;strong&gt;模板方法模式&lt;/strong&gt;可以达到你的需求。
     
     </summary>
     
