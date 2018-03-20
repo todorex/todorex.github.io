@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-20T10:29:53.000Z</updated>
+  <updated>2018-03-20T10:38:03.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://bestlixiang.site/2018/03/20/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/"/>
     <id>http://bestlixiang.site/2018/03/20/Linux私房菜-计算机基础/</id>
     <published>2018-03-20T10:29:00.000Z</published>
-    <updated>2018-03-20T10:29:53.000Z</updated>
+    <updated>2018-03-20T10:38:03.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：我也算是从通信专业转到计算机的，所以当然对计算机专业课知识不太了解，所以也想简单掌握以下计算机基础知识。<a id="more"></a></p>
 <p>计算机其实是：<strong>接收用户输入指令和数据，经过中央处理器的数据欲逻辑单元运算处理后，以产生或存储成有用的信息。</strong></p>
@@ -110,7 +110,8 @@
 <li>中文编码表常用gb2312，每个字符占2B，定义了一万三千多个字。但是，这个编码表对于数据库存储有问题，从数据库读出数据的时候有些字会被读错。</li>
 <li>为了解决上面的问题，出现了Unicode编码表，就是UTF-8。</li>
 </ol>
-<h1 id="软件程序运行"><a href="#软件程序运行" class="headerlink" title="软件程序运行"></a>软件程序运行</h1><h2 id="机器程序与编译程序"><a href="#机器程序与编译程序" class="headerlink" title="机器程序与编译程序"></a>机器程序与编译程序</h2><ol>
+<h1 id="软件程序运行"><a href="#软件程序运行" class="headerlink" title="软件程序运行"></a>软件程序运行</h1><p>一般来说目前的计算机系统将软件分为两大类：一是系统软件（内核），一个是应用程序（日常所说的软件）。</p>
+<h2 id="机器程序与编译程序"><a href="#机器程序与编译程序" class="headerlink" title="机器程序与编译程序"></a>机器程序与编译程序</h2><ol>
 <li>机器程序：都是机器码，可以直接给机器识别。</li>
 <li>编译程序：能够将高级语言编译成机器程序。</li>
 </ol>
