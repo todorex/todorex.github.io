@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,设计模式," />
+  <meta name="keywords" content="Linux," />
 
 
 
@@ -89,19 +89,17 @@
 
 
 
-<meta name="description" content="引：提起迭代器，大家一定能想到Java的Iterator，不错，我们这次讲的迭代器模式就是目前大部分语言都已经实现的迭代器。">
-<meta name="keywords" content="java,设计模式">
+<meta name="description" content="引：Linux在我印象中最大的特点就是它把所有的硬件都当做一个文件，然后还是以/为根节点的目录树，简洁明了，相信大家一定会爱上它的。因为涉及到文件的存储，所以我们要重视磁盘分区。">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式之禅——迭代器模式">
-<meta property="og:url" content="http://bestlixiang.site/2018/03/08/设计模式之禅——迭代器模式/index.html">
+<meta property="og:title" content="Linux私房菜_Linux磁盘分区">
+<meta property="og:url" content="http://bestlixiang.site/2018/03/21/Linux私房菜-Linux磁盘分区/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：提起迭代器，大家一定能想到Java的Iterator，不错，我们这次讲的迭代器模式就是目前大部分语言都已经实现的迭代器。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/iterator.png">
-<meta property="og:updated_time" content="2018-03-08T07:46:40.000Z">
+<meta property="og:description" content="引：Linux在我印象中最大的特点就是它把所有的硬件都当做一个文件，然后还是以/为根节点的目录树，简洁明了，相信大家一定会爱上它的。因为涉及到文件的存储，所以我们要重视磁盘分区。">
+<meta property="og:updated_time" content="2018-03-21T05:49:52.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式之禅——迭代器模式">
-<meta name="twitter:description" content="引：提起迭代器，大家一定能想到Java的Iterator，不错，我们这次讲的迭代器模式就是目前大部分语言都已经实现的迭代器。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/iterator.png">
+<meta name="twitter:title" content="Linux私房菜_Linux磁盘分区">
+<meta name="twitter:description" content="引：Linux在我印象中最大的特点就是它把所有的硬件都当做一个文件，然后还是以/为根节点的目录树，简洁明了，相信大家一定会爱上它的。因为涉及到文件的存储，所以我们要重视磁盘分区。">
 
 
 
@@ -129,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/03/08/设计模式之禅——迭代器模式/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/21/Linux私房菜-Linux磁盘分区/"/>
 
 
 
 
 
-  <title> 设计模式之禅——迭代器模式 | rex note </title>
+  <title> Linux私房菜_Linux磁盘分区 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -288,7 +286,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/08/设计模式之禅——迭代器模式/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/21/Linux私房菜-Linux磁盘分区/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -309,7 +307,7 @@
             
             
               
-                设计模式之禅——迭代器模式
+                Linux私房菜_Linux磁盘分区
               
             
           </h2>
@@ -324,8 +322,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-08T15:45:50+08:00">
-                2018-03-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-21T13:49:21+08:00">
+                2018-03-21
               </time>
             
 
@@ -347,8 +345,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
+                  <a href="/categories/Linux私房菜/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux私房菜</span>
                   </a>
                 </span>
 
@@ -387,22 +385,114 @@
       
 
       
-        <p>引：提起迭代器，大家一定能想到Java的Iterator，不错，我们这次讲的迭代器模式就是目前大部分语言都已经实现的迭代器。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>它提供一种方法访问一个容器对象中各个元素，而又不需要暴露该对象的内部细节。——创造类</strong></p>
-<p>迭代器是为容器服务的，能容纳对象的所有类型都可以称为容器。迭代器模式提供了遍历 容器的方便性，容器主要管理增减元素就可以了，需要遍历时交由迭代器进行。目前基本上不会单独写一个迭代器。下面是它的通用类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/iterator.png" alt="iterator"></p>
-<p>下面简单介绍类图中的几个角色：</p>
+        <p>引：Linux在我印象中最大的特点就是它把所有的硬件都当做一个文件，然后还是以/为根节点的目录树，简洁明了，相信大家一定会爱上它的。因为涉及到文件的存储，所以我们要重视磁盘分区。<a id="more"></a></p>
+<h1 id="硬件设备在linux中的文件名"><a href="#硬件设备在linux中的文件名" class="headerlink" title="硬件设备在linux中的文件名"></a>硬件设备在linux中的文件名</h1><p>Linux中每一个设备都被当成文件，所有的设备文件都在/dev这个目录下。下面列出几个常见设备与其在Linux当中的文件名，如下表：</p>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th>设备在Linux内的文件名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IDE硬盘</td>
+<td>/dev/hd[a-d]</td>
+</tr>
+<tr>
+<td>SATA/USB/SCSI硬盘</td>
+<td>/dev/sd[a-p]</td>
+</tr>
+<tr>
+<td>U盘</td>
+<td>/dev/sd[a-p]（与SATA相同）</td>
+</tr>
+<tr>
+<td>软驱</td>
+<td>/dev/fd[0－1]</td>
+</tr>
+<tr>
+<td>打印机</td>
+<td>25针：/dev/lp[0－2] usb：/dev/usb/lp[0-15]</td>
+</tr>
+<tr>
+<td>鼠标</td>
+<td>usb:/dev/usb/mouse[0－15] ps2:/dev/psaux</td>
+</tr>
+<tr>
+<td>当前CD/DVD ROM</td>
+<td>/dev/cdrom</td>
+</tr>
+<tr>
+<td>当前鼠标</td>
+<td>/dev/mouse</td>
+</tr>
+<tr>
+<td>磁带机</td>
+<td>IDE:/dev/ht0 SCSI:/dev/st0</td>
+</tr>
+</tbody>
+</table>
+<h1 id="硬盘分区"><a href="#硬盘分区" class="headerlink" title="硬盘分区"></a>硬盘分区</h1><h2 id="磁盘的文件命名规则"><a href="#磁盘的文件命名规则" class="headerlink" title="磁盘的文件命名规则"></a>磁盘的文件命名规则</h2><p>磁盘的接口有两种，分别是IDE接口、SATA接口。目前主流的接口是SATA接口。<br>使用IDE接口的设备我们称为IDE设备。</p>
 <ol>
-<li>Iterator抽象迭代器：抽象迭代器负责定义访问和遍历元素的接口。</li>
-<li>ConcreteIterator具体迭代器：实现迭代器接口，完成容器元素的遍历。</li>
-<li>Aggregate抽象容器：容器角色负责提供创建具体迭代器角色的的接口，必然提供一个类似createIterator()这样的方法，在Java中一般是iterator()方法。</li>
-<li>ConcreteAggregate具体容器：实现容器接口定义的方法，创建出容纳迭代器的对象。</li>
+<li>IDE设备：一个IDE接口可以连接两个IDE设备，主机中一般用两个IDE接口，因此最多可以连接四个IDE设备。这两个IDE接口通常被称为IDE1、IDE2，而每个IDE接口连接的两个IDE设备又被分为主设备和从设备。这四个IDE设备的文件名如下表：</li>
 </ol>
-<p>下面是迭代器模式的通用源代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象迭代器</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Iterator</span> </span>&#123;</div><div class="line">    <span class="comment">// 遍历到下一个元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">next</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 是否已经遍历到尾部</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 删除当前指向的元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体迭代器</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteIterator</span> <span class="keyword">implements</span> <span class="title">Iterator</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Vector vector = <span class="keyword">new</span> Vector();</div><div class="line">    <span class="comment">// 定义当前游标</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> cursor = <span class="number">0</span>;</div><div class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"checked"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteIterator</span><span class="params">(Vector _vector)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.vector = _vector;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 判断是否到达尾部</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.cursor == <span class="keyword">this</span>.vector.size()) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 返回下一个元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">        Object result = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.hasNext()) &#123;</div><div class="line">            result = <span class="keyword">this</span>.vector.get(<span class="keyword">this</span>.cursor++);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            result = <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 删除当前元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.vector.remove(<span class="keyword">this</span>.cursor);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象容器</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Aggregate</span> </span>&#123;</div><div class="line">    <span class="comment">// 是容器必然有元素的增加</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Object object)</span></span>;</div><div class="line">    <span class="comment">// 减少元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(Object object)</span></span>;</div><div class="line">    <span class="comment">// 由迭代器来遍历所有的元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Iterator <span class="title">iterator</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体容器</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteAggregate</span> <span class="keyword">implements</span> <span class="title">Aggregate</span> </span>&#123;</div><div class="line">    <span class="comment">// 容纳对象的容器</span></div><div class="line">    <span class="keyword">private</span> Vector vector = <span class="keyword">new</span> Vector();</div><div class="line">    <span class="comment">// 增加一个元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Object object)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.vector.add(object);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 返回迭代器对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Iterator <span class="title">iterator</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ConcreteIterator(<span class="keyword">this</span>.vector);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 删除一个元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(Object object)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.remove(object);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 声明容器</span></div><div class="line">        Aggregate agg = <span class="keyword">new</span> ConcreteAggregate();</div><div class="line">        <span class="comment">// 产生对象数据放进去</span></div><div class="line">        agg.add(<span class="string">"abc"</span>);</div><div class="line">        agg.add(<span class="string">"aaa"</span>);</div><div class="line">        agg.add(<span class="string">"1234"</span>);</div><div class="line">        <span class="comment">// 遍历一下</span></div><div class="line">        Iterator iterator = agg.iterator();</div><div class="line">        <span class="keyword">while</span>(Iterator.hasNext()) &#123;</div><div class="line">            System.out.println(iterator.next());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><p>只要不是在使用那些古董级的编程语言，都不用自己动手写迭代器。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>如果你是做Java开发，尽量不要自己写迭代器模式。</p>
+<table>
+<thead>
+<tr>
+<th>IDE接口</th>
+<th>主设备</th>
+<th>从设备</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IDE1</td>
+<td>/dev/hda</td>
+<td>/dev/hdb</td>
+</tr>
+<tr>
+<td>IDE2</td>
+<td>/dev/hdc</td>
+<td>/dev/hdd</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>SATA设备：以SATA/USB/SCSI为接口的磁盘使用的都是SCSI模块来驱动的，因此他们的设备文件名都是/dev/sd[a-p]。但是与IDE设备不同的是，他们的文件名没有一定的顺序，谁先插上去，谁就是a，以此类推。</li>
+</ol>
+<h2 id="磁盘的组成"><a href="#磁盘的组成" class="headerlink" title="磁盘的组成"></a>磁盘的组成</h2><p>整个磁盘的第一个扇区非常重要，因为他记录了下面的重要的信息：</p>
+<ol>
+<li>主引导分区Master Boot Record,MBR：可以安装“引导加载程序”的地方。有446bytes。</li>
+<li>分区表：记录整块硬盘的分区状况，有64bytes。</li>
+</ol>
+<h2 id="磁盘分区表"><a href="#磁盘分区表" class="headerlink" title="磁盘分区表"></a>磁盘分区表</h2><p>对磁盘进行分区时，采用柱面作为基本单位。分区表有64bytes，被分成四个区域，每个区域记录当前磁盘的所有分区的起始和结束柱面号。例如：一块IDE硬盘被分成四个区域： P1：/dev/hda1 ，P2：/dev/hda2 ，P3：/dev/hda3 ，P4：/dev/hda4。每个磁盘的分区表只能被分成四个区域，这四个区域被称为<strong>主分区或扩展分区</strong>。当系统进行数据的读写时，一定要参考分区表才能进行。</p>
+<h3 id="分区的原因"><a href="#分区的原因" class="headerlink" title="分区的原因"></a>分区的原因</h3><p>保证数据的安全性（分区不会影响）；提升系统的性能（只在自己的分区查找）。</p>
+<h3 id="扩展分区"><a href="#扩展分区" class="headerlink" title="扩展分区"></a>扩展分区</h3><p>主分区和扩展分区都是分区表中的一条记录，主分区中存放通过直接索引就能到达的分区的开始和结束的柱面号；而扩展分区中存放的是逻辑分区表的开始和结束柱面号，这张逻辑分区表中才存放分区的开始和结束柱面号。</p>
+<p>由于一张分区表只能存放四条记录，也就是四个分区，当我们想要多一些分区的时候就必须要通过扩展分区来实现。 分区表中的四条记录对应的设备文件名是不会变的。如上面的四个名字，所以逻辑分区的文件名一定是从5开始的。如：/dev/hda5。</p>
+<h3 id="提醒"><a href="#提醒" class="headerlink" title="提醒"></a>提醒</h3><ol>
+<li>扩展分区最多只能有1个。</li>
+<li>Linux中，IDE硬盘最多有59个逻辑分区，5号－63号；SATA硬盘最多有11个逻辑分区，5号－15号。</li>
+<li>在Windows中若D、E盘都是扩展分区中的逻辑分区，那么他们可以整合成一个分区；若两个盘一个是逻辑分区，一个是主分区，那他们是不能合并的。</li>
+<li>一块硬盘的第一个扇区记录了MBR和分区表，非常的重要，如果第一个扇区坏了，那么整个硬盘就报废了。</li>
+</ol>
+<h1 id="开机流程"><a href="#开机流程" class="headerlink" title="开机流程"></a>开机流程</h1><p>整个开机流程到操作系统之前的动作应该是这样的：</p>
+<ol>
+<li>BIOS：开机主动执行的韧体，会认识第一个可开机的对象。</li>
+<li>MBR：第一个可开机设备的第一个扇区的主引导分区块，内包含引导加载程序。</li>
+<li>引导加载程序：一支可读取内核文件来执行的软件。（可多个不同系统的加载程序对应了不同的操作系统）</li>
+<li>内核文件：开始操作系统的功能。</li>
+</ol>
+<p>PS：为什么如果安装多重引导，最好先安装Windows在安装Linux？——因为Linux在安装的时候可以选择将引导加载程序安装在MBR或个别分区的启动扇区，而且在linnux的loader可以手动设置菜单，所以你可以在Linux的boot loader里面加入Windows开机的选项。Windows在安装的时候，它的安装程序会主动覆盖掉MBR以及自己所在分区的启动扇区，你没有选择的机会，而且没有让我们选择菜单的功能。</p>
+<h1 id="挂载"><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h1><h2 id="目录树"><a href="#目录树" class="headerlink" title="目录树"></a>目录树</h2><p>在Linux中，整个文件系统呈一棵以/为根目录的树。</p>
+<h2 id="文件系统与目录树的关系（挂载）"><a href="#文件系统与目录树的关系（挂载）" class="headerlink" title="文件系统与目录树的关系（挂载）"></a>文件系统与目录树的关系（挂载）</h2><p><strong>挂载</strong>就是把一个目录当作磁盘中某一个分区的进入点，也就是说，进入了这个目录，就进入了这个磁盘的这个分区。这个进入的目录我们就称为挂载点。<br>根目录一定要挂载到某个分区。</p>
+<p>如何寻找挂载点（判断某个在文件在哪个分区下）？答：通过反向追踪即可，当我们想要知道/home/rex/test文件在那个分区时，只要逆向寻找第一个挂载点就是这个文件的挂载点。 可以使用下面的命令：</p>
+<blockquote>
+<p>df /home/rex/test</p>
+</blockquote>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>了解分区，了解开机流程，了解挂载，ok，就这些！</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
+<li>《鸟哥的Linux私房菜》</li>
 </ol>
 
       
@@ -433,9 +523,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
           
         </div>
       
@@ -448,8 +536,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/08/设计模式之禅——适配器模式/" rel="next" title="设计模式之禅——适配器模式">
-                <i class="fa fa-chevron-left"></i> 设计模式之禅——适配器模式
+              <a href="/2018/03/20/Linux私房菜-Linux基础学习/" rel="next" title="Linux私房菜_Linux基础学习">
+                <i class="fa fa-chevron-left"></i> Linux私房菜_Linux基础学习
               </a>
             
           </div>
@@ -457,10 +545,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/10/设计模式之禅——组合模式/" rel="prev" title="设计模式之禅——组合模式">
-                设计模式之禅——组合模式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -659,7 +743,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">2.</span> <span class="nav-text">应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳实践"><span class="nav-number">3.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#硬件设备在linux中的文件名"><span class="nav-number">1.</span> <span class="nav-text">硬件设备在linux中的文件名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#硬盘分区"><span class="nav-number">2.</span> <span class="nav-text">硬盘分区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#磁盘的文件命名规则"><span class="nav-number">2.1.</span> <span class="nav-text">磁盘的文件命名规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#磁盘的组成"><span class="nav-number">2.2.</span> <span class="nav-text">磁盘的组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#磁盘分区表"><span class="nav-number">2.3.</span> <span class="nav-text">磁盘分区表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分区的原因"><span class="nav-number">2.3.1.</span> <span class="nav-text">分区的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展分区"><span class="nav-number">2.3.2.</span> <span class="nav-text">扩展分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提醒"><span class="nav-number">2.3.3.</span> <span class="nav-text">提醒</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开机流程"><span class="nav-number">3.</span> <span class="nav-text">开机流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#挂载"><span class="nav-number">4.</span> <span class="nav-text">挂载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录树"><span class="nav-number">4.1.</span> <span class="nav-text">目录树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件系统与目录树的关系（挂载）"><span class="nav-number">4.2.</span> <span class="nav-text">文件系统与目录树的关系（挂载）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>

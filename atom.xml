@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-20T12:13:32.000Z</updated>
+  <updated>2018-03-21T05:49:52.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,137 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_Linux磁盘分区</title>
+    <link href="http://bestlixiang.site/2018/03/21/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA/"/>
+    <id>http://bestlixiang.site/2018/03/21/Linux私房菜-Linux磁盘分区/</id>
+    <published>2018-03-21T05:49:21.000Z</published>
+    <updated>2018-03-21T05:49:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：Linux在我印象中最大的特点就是它把所有的硬件都当做一个文件，然后还是以/为根节点的目录树，简洁明了，相信大家一定会爱上它的。因为涉及到文件的存储，所以我们要重视磁盘分区。<a id="more"></a></p>
+<h1 id="硬件设备在linux中的文件名"><a href="#硬件设备在linux中的文件名" class="headerlink" title="硬件设备在linux中的文件名"></a>硬件设备在linux中的文件名</h1><p>Linux中每一个设备都被当成文件，所有的设备文件都在/dev这个目录下。下面列出几个常见设备与其在Linux当中的文件名，如下表：</p>
+<table>
+<thead>
+<tr>
+<th>设备</th>
+<th>设备在Linux内的文件名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IDE硬盘</td>
+<td>/dev/hd[a-d]</td>
+</tr>
+<tr>
+<td>SATA/USB/SCSI硬盘</td>
+<td>/dev/sd[a-p]</td>
+</tr>
+<tr>
+<td>U盘</td>
+<td>/dev/sd[a-p]（与SATA相同）</td>
+</tr>
+<tr>
+<td>软驱</td>
+<td>/dev/fd[0－1]</td>
+</tr>
+<tr>
+<td>打印机</td>
+<td>25针：/dev/lp[0－2] usb：/dev/usb/lp[0-15]</td>
+</tr>
+<tr>
+<td>鼠标</td>
+<td>usb:/dev/usb/mouse[0－15] ps2:/dev/psaux</td>
+</tr>
+<tr>
+<td>当前CD/DVD ROM</td>
+<td>/dev/cdrom</td>
+</tr>
+<tr>
+<td>当前鼠标</td>
+<td>/dev/mouse</td>
+</tr>
+<tr>
+<td>磁带机</td>
+<td>IDE:/dev/ht0 SCSI:/dev/st0</td>
+</tr>
+</tbody>
+</table>
+<h1 id="硬盘分区"><a href="#硬盘分区" class="headerlink" title="硬盘分区"></a>硬盘分区</h1><h2 id="磁盘的文件命名规则"><a href="#磁盘的文件命名规则" class="headerlink" title="磁盘的文件命名规则"></a>磁盘的文件命名规则</h2><p>磁盘的接口有两种，分别是IDE接口、SATA接口。目前主流的接口是SATA接口。<br>使用IDE接口的设备我们称为IDE设备。</p>
+<ol>
+<li>IDE设备：一个IDE接口可以连接两个IDE设备，主机中一般用两个IDE接口，因此最多可以连接四个IDE设备。这两个IDE接口通常被称为IDE1、IDE2，而每个IDE接口连接的两个IDE设备又被分为主设备和从设备。这四个IDE设备的文件名如下表：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>IDE接口</th>
+<th>主设备</th>
+<th>从设备</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IDE1</td>
+<td>/dev/hda</td>
+<td>/dev/hdb</td>
+</tr>
+<tr>
+<td>IDE2</td>
+<td>/dev/hdc</td>
+<td>/dev/hdd</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>SATA设备：以SATA/USB/SCSI为接口的磁盘使用的都是SCSI模块来驱动的，因此他们的设备文件名都是/dev/sd[a-p]。但是与IDE设备不同的是，他们的文件名没有一定的顺序，谁先插上去，谁就是a，以此类推。</li>
+</ol>
+<h2 id="磁盘的组成"><a href="#磁盘的组成" class="headerlink" title="磁盘的组成"></a>磁盘的组成</h2><p>整个磁盘的第一个扇区非常重要，因为他记录了下面的重要的信息：</p>
+<ol>
+<li>主引导分区Master Boot Record,MBR：可以安装“引导加载程序”的地方。有446bytes。</li>
+<li>分区表：记录整块硬盘的分区状况，有64bytes。</li>
+</ol>
+<h2 id="磁盘分区表"><a href="#磁盘分区表" class="headerlink" title="磁盘分区表"></a>磁盘分区表</h2><p>对磁盘进行分区时，采用柱面作为基本单位。分区表有64bytes，被分成四个区域，每个区域记录当前磁盘的所有分区的起始和结束柱面号。例如：一块IDE硬盘被分成四个区域： P1：/dev/hda1 ，P2：/dev/hda2 ，P3：/dev/hda3 ，P4：/dev/hda4。每个磁盘的分区表只能被分成四个区域，这四个区域被称为<strong>主分区或扩展分区</strong>。当系统进行数据的读写时，一定要参考分区表才能进行。</p>
+<h3 id="分区的原因"><a href="#分区的原因" class="headerlink" title="分区的原因"></a>分区的原因</h3><p>保证数据的安全性（分区不会影响）；提升系统的性能（只在自己的分区查找）。</p>
+<h3 id="扩展分区"><a href="#扩展分区" class="headerlink" title="扩展分区"></a>扩展分区</h3><p>主分区和扩展分区都是分区表中的一条记录，主分区中存放通过直接索引就能到达的分区的开始和结束的柱面号；而扩展分区中存放的是逻辑分区表的开始和结束柱面号，这张逻辑分区表中才存放分区的开始和结束柱面号。</p>
+<p>由于一张分区表只能存放四条记录，也就是四个分区，当我们想要多一些分区的时候就必须要通过扩展分区来实现。 分区表中的四条记录对应的设备文件名是不会变的。如上面的四个名字，所以逻辑分区的文件名一定是从5开始的。如：/dev/hda5。</p>
+<h3 id="提醒"><a href="#提醒" class="headerlink" title="提醒"></a>提醒</h3><ol>
+<li>扩展分区最多只能有1个。</li>
+<li>Linux中，IDE硬盘最多有59个逻辑分区，5号－63号；SATA硬盘最多有11个逻辑分区，5号－15号。</li>
+<li>在Windows中若D、E盘都是扩展分区中的逻辑分区，那么他们可以整合成一个分区；若两个盘一个是逻辑分区，一个是主分区，那他们是不能合并的。</li>
+<li>一块硬盘的第一个扇区记录了MBR和分区表，非常的重要，如果第一个扇区坏了，那么整个硬盘就报废了。</li>
+</ol>
+<h1 id="开机流程"><a href="#开机流程" class="headerlink" title="开机流程"></a>开机流程</h1><p>整个开机流程到操作系统之前的动作应该是这样的：</p>
+<ol>
+<li>BIOS：开机主动执行的韧体，会认识第一个可开机的对象。</li>
+<li>MBR：第一个可开机设备的第一个扇区的主引导分区块，内包含引导加载程序。</li>
+<li>引导加载程序：一支可读取内核文件来执行的软件。（可多个不同系统的加载程序对应了不同的操作系统）</li>
+<li>内核文件：开始操作系统的功能。</li>
+</ol>
+<p>PS：为什么如果安装多重引导，最好先安装Windows在安装Linux？——因为Linux在安装的时候可以选择将引导加载程序安装在MBR或个别分区的启动扇区，而且在linnux的loader可以手动设置菜单，所以你可以在Linux的boot loader里面加入Windows开机的选项。Windows在安装的时候，它的安装程序会主动覆盖掉MBR以及自己所在分区的启动扇区，你没有选择的机会，而且没有让我们选择菜单的功能。</p>
+<h1 id="挂载"><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h1><h2 id="目录树"><a href="#目录树" class="headerlink" title="目录树"></a>目录树</h2><p>在Linux中，整个文件系统呈一棵以/为根目录的树。</p>
+<h2 id="文件系统与目录树的关系（挂载）"><a href="#文件系统与目录树的关系（挂载）" class="headerlink" title="文件系统与目录树的关系（挂载）"></a>文件系统与目录树的关系（挂载）</h2><p><strong>挂载</strong>就是把一个目录当作磁盘中某一个分区的进入点，也就是说，进入了这个目录，就进入了这个磁盘的这个分区。这个进入的目录我们就称为挂载点。<br>根目录一定要挂载到某个分区。</p>
+<p>如何寻找挂载点（判断某个在文件在哪个分区下）？答：通过反向追踪即可，当我们想要知道/home/rex/test文件在那个分区时，只要逆向寻找第一个挂载点就是这个文件的挂载点。 可以使用下面的命令：</p>
+<blockquote>
+<p>df /home/rex/test</p>
+</blockquote>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>了解分区，了解开机流程，了解挂载，ok，就这些！</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：Linux在我印象中最大的特点就是它把所有的硬件都当做一个文件，然后还是以/为根节点的目录树，简洁明了，相信大家一定会爱上它的。因为涉及到文件的存储，所以我们要重视磁盘分区。
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_Linux基础学习</title>
@@ -1105,62 +1236,6 @@
     <summary type="html">
     
       &lt;p&gt;引：由一个正本创建多个副本，并可以进行适当的修改，这就是&lt;strong&gt;原型模式&lt;/strong&gt;。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——代理模式</title>
-    <link href="http://bestlixiang.site/2018/02/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/02/09/设计模式之禅——代理模式/</id>
-    <published>2018-02-09T11:32:47.000Z</published>
-    <updated>2018-02-09T11:34:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：如果你不想干就找个代理帮你干好了，就像游戏不想自己升级就找个代理帮你升级好了，这就是<strong>代理模式</strong>。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>为其他对象提供一种代理以控制对这个对象的访问。——结构类。</strong></p>
-<p>它的通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/proxy.png" alt="proxy"></p>
-<p>我们可以看到类图中的三个角色：</p>
-<ul>
-<li>Subject抽象主题角色：它可以是抽象类也可以是接口，是一个最普通的业务类型定义。</li>
-<li>RealSubject具体主题角色：也叫做被委托角色、被代理角色。</li>
-<li>Proxy代理主题角色：也叫做委托类、代理类。它负责对真实角色的应用，把所有抽象主题类定义的方法限制委托给真实主题角色实现，并且在真实主题角色处理完毕前后做预处理和善后处理工作。</li>
-</ul>
-<p>下面是它的通用实现代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象主题类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Subject</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义一个方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 真实主题类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RealSubject</span> <span class="keyword">implements</span> <span class="title">Subject</span> </span>&#123;</div><div class="line">    <span class="comment">// 实现方法</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑处理</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 代理类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Proxy</span> <span class="keyword">implements</span> <span class="title">Subject</span> </span>&#123;</div><div class="line">    <span class="comment">// 要代理哪个实现类</span></div><div class="line">    <span class="keyword">private</span> Subject subject = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 默认被代理者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Proxy</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.subject = <span class="keyword">new</span> Proxy();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 通过构造函数传递被代理者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Proxy</span><span class="params">(Subject _subject)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.subject = _subject;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 实现接口中定义的方法</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.before();</div><div class="line">        <span class="keyword">this</span>.subject.request();</div><div class="line">        <span class="keyword">this</span>.after();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 预处理</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// do something</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 善后处理</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// do something();</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>职责清晰，真实的角色就是实现实际的业务逻辑，不用关心其他非本职责的事务，通过后期的代理完成一件事务。</li>
-<li>高扩展性，无论具体角色怎么变化。</li>
-</ol>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>典型的Spring AOP</p>
-<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="普通代理"><a href="#普通代理" class="headerlink" title="普通代理"></a>普通代理</h2><p>要求只能访问代理角色，而不能访问真实角色，真实角色的创建是在代理的内部创建的。在该模式下，调用者只知代理而不用知道真实的角色是谁，屏蔽了真实角色的变更对高层模块的影响。</p>
-<p>ps：在实际项目中，一般是通过约定来禁止new一个真实的角色。</p>
-<h2 id="强制代理"><a href="#强制代理" class="headerlink" title="强制代理"></a>强制代理</h2><p>要求必须通过真实角色找到一个代理角色，否则不能直接访问，即要求真实角色有一个赋予自己一个代理的方法。</p>
-<h2 id="代理增强"><a href="#代理增强" class="headerlink" title="代理增强"></a>代理增强</h2><p>一个类可以实现多个接口，代理类也可以实现多个主题接口，实现不同的任务。而且代理的目的是在目标对象方法的基础上做增强，这种增强的本质通常是对目标对象的方法精心拦截和过滤。代理类可以为真是角色预处理消息、过滤消息、消息转发、事后处理消息等功能、</p>
-<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><p>动态代理是在实现阶段不用关心代理谁，而是在运行阶段才指定代理哪一个对象，即面向切面编程，也叫AOP。</p>
-<p>下面是它的通用类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/dynamicProxy.png" alt="dynamicProxy"></p>
-<p>两条独立发展的线路。动态代理实现代理的职责，业务逻辑Subject实现相关的逻辑功能，两者没有必然的相互耦合的关系。通知Advice从另一个切面切入，最终在高层模块Client进行耦合，完成逻辑的封装任务。下面是他的通用实现代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象主题</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Subject</span> </span>&#123;</div><div class="line">    <span class="comment">// 业务操作</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">(String str)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 真实主题</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RealSubject</span> <span class="keyword">implements</span> <span class="title">Subject</span> </span>&#123;</div><div class="line">    <span class="comment">// 业务操作</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">(String str)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"do Something!----&gt;"</span> + str);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 动态代理的Handler</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyInvocationHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</div><div class="line">    <span class="comment">// 被代理的对象</span></div><div class="line">    <span class="keyword">private</span> Object target = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 通过一个构造函数传递一个对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="title">MyInvocationHandler</span><span class="params">(Object _obj)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.target = _obj;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="keyword">return</span> method.invoke(<span class="keyword">this</span>.target,args);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 动态代理类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicProxy</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">newProxyInstance</span><span class="params">(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler h)</span> </span>&#123;</div><div class="line">        <span class="comment">// Spring AOP知识。</span></div><div class="line">        <span class="keyword">if</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            <span class="comment">// 执行一个前置通知</span></div><div class="line">            (<span class="keyword">new</span> BeforeAdvice()).exec();</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 执行目标，并返回结果</span></div><div class="line">        <span class="keyword">return</span> (T) Proxy.newProxyInstance(loader,interfaces,h);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 通知接口及实现</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IAdvice</span> </span>&#123;</div><div class="line">    <span class="comment">// 通知只有一个方法，执行即可</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exec</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeforeAdvice</span> <span class="keyword">implements</span> <span class="title">IAdvice</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exec</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"我是前置通知，我被执行了！"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 动态代理的场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 定义一个主题</span></div><div class="line">        Subject subject = <span class="keyword">new</span> RealSubject();</div><div class="line">        <span class="comment">// 定义一个Handler</span></div><div class="line">        InvocationHandler invocationHandler = <span class="keyword">new</span> MyInvocationHandler(subject);</div><div class="line">        <span class="comment">// 定义主题的代理</span></div><div class="line">        Subject proxy = DynamicProxy.newProxyInstance(subject.getClass().getClassLoader(),subject.getClass().getInterfaces(),invocationHandler);</div><div class="line">        <span class="comment">// 代理的行为</span></div><div class="line">        proxy.doSomething(<span class="string">"Finish"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 输出</span></div><div class="line">我是前置通知，我被执行了！</div><div class="line"><span class="keyword">do</span> Something!----&gt;Finish</div></pre></td></tr></table></figure></p>
-<p>subject.getInterfaces()是查找该类的所有接口，然后实现接口的所有方法，然后又InvocationHandler实现该类的所有的方法，由其invoke方法接管所有方法的实现。其动态调用过程如下：</p>
-<p>Client -&gt; dynamicProxy -&gt; MyInvocationHandler -&gt; RealSubject</p>
-<p>从上面可以看出要实现动态代理的首要条件时：被代理类要实现一个接口。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>代理模式应用得非常广泛，大到一个系统框架、企业平台，小到代码片段、事务处理，都会用到代理模式。特别是在Sping AOP里面，如果调试看到$Proxy()这个东西，它应该就是一个动态代理了。</p>
-<p>在学习AOP框架时，弄清楚几个名词就成：切面（Aspect）、切入点（JoinPoint）、通知（Advice）、织入（weave）就足够了。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：如果你不想干就找个代理帮你干好了，就像游戏不想自己升级就找个代理帮你升级好了，这就是&lt;strong&gt;代理模式&lt;/strong&gt;。
     
     </summary>
     
