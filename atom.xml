@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-21T05:49:52.000Z</updated>
+  <updated>2018-03-21T09:00:11.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,228 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_Linux基本命令</title>
+    <link href="http://bestlixiang.site/2018/03/21/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/"/>
+    <id>http://bestlixiang.site/2018/03/21/Linux私房菜-Linux基本命令/</id>
+    <published>2018-03-21T08:55:52.000Z</published>
+    <updated>2018-03-21T09:00:11.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。<br><a id="more"></a></p>
+<h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><h2 id="开始执行命令"><a href="#开始执行命令" class="headerlink" title="开始执行命令"></a>开始执行命令</h2><p>首先我们要了解命令的格式：</p>
+<blockquote>
+<p>command(命令或可执行文件) <a href="选项">-options</a> parameter1(参数1) parameter2(参数2)</p>
+</blockquote>
+<p>如果命令太长，我们可以使用反斜杠(\)来转义[enter符号]，注意反斜杠必须立刻接特殊字符，才能转义。</p>
+<p>在linux下面是区分大小写的。</p>
+<h2 id="基础命令的操作"><a href="#基础命令的操作" class="headerlink" title="基础命令的操作"></a>基础命令的操作</h2><ol>
+<li>显示日期与时间的命令：date</li>
+<li>显示日历的命令：cal</li>
+<li>简单好用的计算器：bc，使用quit停止</li>
+</ol>
+<h2 id="重要的热键"><a href="#重要的热键" class="headerlink" title="重要的热键"></a>重要的热键</h2><ol>
+<li>Tab按键：具有命令补全，文件补齐的功能</li>
+<li>ctrl + c：可以让程序立刻停下来</li>
+<li>ctrl + d：通常代码键盘输入结束，相当于exit</li>
+</ol>
+<h1 id="在线求助man-page-与info-page"><a href="#在线求助man-page-与info-page" class="headerlink" title="在线求助man page 与info page"></a>在线求助man page 与info page</h1><h2 id="man-page"><a href="#man-page" class="headerlink" title="man page"></a>man page</h2><p>man其实是manual（操作说明）的简写，只要通过（man + 命令） 就会有详细的说明出现。</p>
+<p>如 man date可以得到下面的文本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">DATE(1)                                  User Commands                                  DATE(1)</div><div class="line"></div><div class="line">NAME</div><div class="line">       date - print or set the system date and time</div><div class="line"></div><div class="line">SYNOPSIS</div><div class="line">       date [OPTION]... [+FORMAT]</div><div class="line">       date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]</div><div class="line"></div><div class="line">DESCRIPTION</div><div class="line">       Display the current time in the given FORMAT, or set the system date.</div><div class="line"></div><div class="line">       Mandatory arguments to long options are mandatory for short options too.</div><div class="line"></div><div class="line">       -d, --date=STRING</div><div class="line">              display time described by STRING, not &apos;now&apos;</div><div class="line"></div><div class="line">        ...省略其他参数</div><div class="line"></div><div class="line">ENVIRONMENT</div><div class="line"></div><div class="line">EXAMPLES</div><div class="line"></div><div class="line">DATE STRING</div><div class="line"></div><div class="line">AUTHOR</div><div class="line">       Written by David MacKenzie.</div><div class="line"></div><div class="line">COPYRIGHT</div><div class="line"></div><div class="line">SEE ALSO</div><div class="line"></div><div class="line">GNU coreutils 8.22                       November 2016                                  DATE(1)</div></pre></td></tr></table></figure></p>
+<p>我们首先看到的是“DATE(1)”，这个(1)是有特殊含义的，如下表：</p>
+<table>
+<thead>
+<tr>
+<th>代号</th>
+<th>代表内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>用户在shell环境中可以操作的命令或可执行的文件</td>
+</tr>
+<tr>
+<td>2</td>
+<td>系统内核可调用的函数与工具等</td>
+</tr>
+<tr>
+<td>3</td>
+<td>一些常用的函数与函数库，大部分为C的函数库</td>
+</tr>
+<tr>
+<td>4</td>
+<td>设备文件的说明，通常在/dev的文件</td>
+</tr>
+<tr>
+<td>5</td>
+<td>配置文件或者某些文件的格式</td>
+</tr>
+<tr>
+<td>6</td>
+<td>游戏</td>
+</tr>
+<tr>
+<td>7</td>
+<td>惯例与协议等，例如Linux文件系统，网络协议、ASCII code等说明</td>
+</tr>
+<tr>
+<td>8</td>
+<td>系统管理员与可用的管理命令</td>
+</tr>
+<tr>
+<td>9</td>
+<td>跟kernel有关的文件</td>
+</tr>
+</tbody>
+</table>
+<p>我们要特别注意1，5，8这三个号码，尽量背下来。</p>
+<p>在上面的man page中，以NAME作为开始介绍，最后还有个SEE ALSO来作为结束。基本上，man page大致分为以下几个部分：</p>
+<table>
+<thead>
+<tr>
+<th>代号</th>
+<th>内容说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAME</td>
+<td>简短的命令、数据名称说明</td>
+</tr>
+<tr>
+<td>SYNOPSIS</td>
+<td>简短的命令执行语法（syntax）简介</td>
+</tr>
+<tr>
+<td>DESCRIPTION</td>
+<td>较为完整的说明，最好仔细看看</td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>针对SYNNPSIS部分中，有列举的所有可用的选项说明</td>
+</tr>
+<tr>
+<td>COMMANDS</td>
+<td>在这个程序在执行的时候，可以在此程序中执行的命令</td>
+</tr>
+<tr>
+<td>FILES</td>
+<td>这个程序或数据所使用或参考或连接到的某些文件</td>
+</tr>
+<tr>
+<td>SEE ALSO</td>
+<td>这个命令或数据有相关的其他说明</td>
+</tr>
+<tr>
+<td>EXAMPLES</td>
+<td>一些可以参考的范例</td>
+</tr>
+<tr>
+<td>BUGS</td>
+<td>是否有相关的错误</td>
+</tr>
+</tbody>
+</table>
+<p>通常在查询某些数据是这样来查阅的：</p>
+<ol>
+<li>先看NAME的项目，略微看一下数据的意思</li>
+<li>再仔细看一下DESCRIPTION，这个部分会提到很多相关的资料和用法。</li>
+<li>如果这个命令其实很熟悉了，那么主要就是查询OPTIONS的部分了。</li>
+<li>最后会看一下和这个资料有关的还有哪些东西可以使用。</li>
+<li>某些说明内容还会列举有关的文件（FILES）来提供我们参考。</li>
+</ol>
+<p>man page 常用的按键：</p>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>进行工作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空格键</td>
+<td>向下翻一页</td>
+</tr>
+<tr>
+<td>Page Down</td>
+<td>向下翻一页</td>
+</tr>
+<tr>
+<td>Page Up</td>
+<td>向上翻一页</td>
+</tr>
+<tr>
+<td>Home</td>
+<td>去到第一页</td>
+</tr>
+<tr>
+<td>End</td>
+<td>在去到最后一页</td>
+</tr>
+<tr>
+<td>/string</td>
+<td>向下查询string字符串</td>
+</tr>
+<tr>
+<td>?string</td>
+<td>向上查询string字符串</td>
+</tr>
+<tr>
+<td>n,N</td>
+<td>利用/或？来查询字符串时，可以用n来继续查询下一个查询，可以利用N来进行反向查询</td>
+</tr>
+<tr>
+<td>q</td>
+<td>结束这次man page</td>
+</tr>
+</tbody>
+</table>
+<p>下面还有两个man的用途：</p>
+<ol>
+<li>man -f command （= whatis）：查询和command这个命令有关的说明文件</li>
+<li>man -k data（= apropos）：查询包含data这个数据有关的文件</li>
+</ol>
+<h2 id="info-page"><a href="#info-page" class="headerlink" title="info page"></a>info page</h2><p>info与man的用途差不多，都是用来查询命令的用法或者文件的格式，但是与man page一下子输出一堆信息不同的是，info page则是将文件数据拆成一个一个段落，每个段落用自己的页面来撰写，并且在各个页面中还有类似网页的“超链接”来调到各个页面，每个独立的页面也被称为一个节点（node）。</p>
+<p>这里这里不多说，有兴趣者可以自己去看看使用。</p>
+<h2 id="其他有用的文件"><a href="#其他有用的文件" class="headerlink" title="其他有用的文件"></a>其他有用的文件</h2><p>一般而言，命令或者软件开发者都会将自己的命令或者是软件的说明制作成“在线帮助文件”，但是毕竟不是什么都需要做成在线帮助文件的，在/usr/share/doc中我们会发现会有很多说明文件文档，这些会告诉我们怎么做，以及一些相关的原理。</p>
+<h1 id="开机与关机"><a href="#开机与关机" class="headerlink" title="开机与关机"></a>开机与关机</h1><h2 id="开机与登录"><a href="#开机与登录" class="headerlink" title="开机与登录"></a>开机与登录</h2><p>一般服务器都不怎么重启，我们在登录服务器的时候，基本上都是使用ssh来登录，我们可以使用下面的命令：</p>
+<blockquote>
+<p>ssh ip</p>
+</blockquote>
+<p>在这个命令之后会要求与你输入密码即可成功。</p>
+<h2 id="关机"><a href="#关机" class="headerlink" title="关机"></a>关机</h2><p>在Linux中，由于每个程序都是在后台运行的，因此你看不到屏幕后面其实可能有很多人同时在你的主机上面工作，所以我们不能随意关机。所以在正常情况下，要关机时要注意下面几件事：</p>
+<ol>
+<li>查看系统的使用状态<ul>
+<li>如果要看目前有谁在线：执行“who”这个命令</li>
+<li>如果要看网络的联机状态：执行“netstat -a”这个命令</li>
+<li>如果要看后台执行的程序：执行“ps -aux”这个命令</li>
+</ul>
+</li>
+<li>通知在线用户关机的时刻</li>
+<li>正确地关机命令使用：shutdown与reboot</li>
+<li>将数据同步写入硬盘的命令：sync</li>
+<li>惯用的关机命令：shutdown</li>
+<li>重启、关机：reboot,halt,poweroff</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这一章最为基础，灰常重要，就像地基，只有有了地基，我们才能好好造下面的房子。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_Linux磁盘分区</title>
@@ -1181,61 +1403,6 @@
     <summary type="html">
     
       &lt;p&gt;引：多个对象相互依赖，关系错综复杂，我们经常会感到无从下手，如果这个时候出现一个对象，能够协调各个对象的关系，并且其他对象只要与这个对象交流，那还不是美滋滋，这就是&lt;strong&gt;中介者模式&lt;/strong&gt;。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——原型模式</title>
-    <link href="http://bestlixiang.site/2018/02/10/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/02/10/设计模式之禅——原型模式/</id>
-    <published>2018-02-10T04:52:31.000Z</published>
-    <updated>2018-02-10T04:52:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：由一个正本创建多个副本，并可以进行适当的修改，这就是<strong>原型模式</strong>。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>用原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。——创造类</strong></p>
-<p>下面是它的通用类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/prototype.png" alt="prototype
-"></p>
-<p>原型模式的核心是一个clone方法，通过该方法进行对象的拷贝，Java提供了一个Cloneable接口标识这个对象是可拷贝的，在JVM中具有这个标识的对象才<strong>有可能被拷贝</strong>，但是只有在覆盖clone方法之后才<strong>可以被拷贝</strong>。</p>
-<p>它的通用代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象原型类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Prototype</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</div><div class="line">    <span class="comment">// 覆写父类Object方法</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Prototype <span class="title">clone</span><span class="params">()</span> </span>&#123;</div><div class="line">        Prototype prototype = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            prototype = (Prototype) <span class="keyword">super</span>.clone();</div><div class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</div><div class="line">            <span class="comment">// 异常处理</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> prototype;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体原型类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcretePrototype</span> <span class="keyword">extends</span> <span class="title">Prototype</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    Prototype prototype = <span class="keyword">new</span> ConcretePrototype();</div><div class="line">    <span class="comment">// 复制一个对象</span></div><div class="line">    Prototype prototype1 = prototype.clone();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>性能优良。原型模式是在内存二进制流的拷贝，要比直接new一个对象性能好的多，特别是要在一个循环体内产生大量的对象时，</li>
-<li>逃避构造函数的约束。是优点也是缺点。</li>
-</ol>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>资源优化场景。因为类的初始化需要消耗非常多的资源。</li>
-<li>性能和安全要求的场景。因为通过new产生一个对象需要非常繁琐的数据准备和访问权限。</li>
-<li>一个对象多个修改者。这样次就能避免并发带来数据混乱的问题。</li>
-</ol>
-<p>原型模式很少单独出现，一般是与工厂方法模式一起出现，通过clone的方法创建一个对象，然后由工厂方法提供给调用者。</p>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
-<li>构造函数不会执行。因为Object类的clone方法的原理是从内存中以二进制流的方式进行拷贝，重新分配一个内存块。</li>
-<li>浅拷贝和深拷贝<ul>
-<li>浅拷贝：只拷贝本对象，其对象内部的数组、引用对象等都不拷贝，还是指向原生对象的内部元素地址。</li>
-<li>深拷贝：在浅拷贝的基础上，对私有的类变量进行独立的拷贝。</li>
-<li>使用原型模式时，引用的成员变量必须满足两个条件才不会被拷贝：一是类的成员变量，二是必须是一个可变的引用对象。</li>
-</ul>
-</li>
-<li>对象的clone和对象内的final关键字是有冲突的。要使用clone方法，类的成员变量上不要增加final关键字。</li>
-</ol>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>原型模式先产生一个包含大量信息的类，然后可以拷贝出副本，修正细节信息，建立了一个完整的个性对象。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：由一个正本创建多个副本，并可以进行适当的修改，这就是&lt;strong&gt;原型模式&lt;/strong&gt;。
     
     </summary>
     
