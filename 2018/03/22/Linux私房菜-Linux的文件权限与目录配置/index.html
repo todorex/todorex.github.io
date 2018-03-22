@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="线性时间排序,算法导论," />
+  <meta name="keywords" content="Linux," />
 
 
 
@@ -89,17 +89,17 @@
 
 
 
-<meta name="description" content="引：排序慢慢来，今天要接触到线性时间排序了：计数排序，基数排序，桶排序。">
-<meta name="keywords" content="线性时间排序,算法导论">
+<meta name="description" content="引：了解好文件权限和目录的具体含义才能更好的操作Linux，所以理解好文件权限与目录配置才至关重要。">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="“线性时间排序（未完，待续）”">
-<meta property="og:url" content="http://bestlixiang.site/2017/05/10/“线性时间排序（未完，待续）”/index.html">
+<meta property="og:title" content="Linux私房菜_Linux的文件权限与目录配置">
+<meta property="og:url" content="http://bestlixiang.site/2018/03/22/Linux私房菜-Linux的文件权限与目录配置/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：排序慢慢来，今天要接触到线性时间排序了：计数排序，基数排序，桶排序。">
-<meta property="og:updated_time" content="2017-05-10T02:13:31.000Z">
+<meta property="og:description" content="引：了解好文件权限和目录的具体含义才能更好的操作Linux，所以理解好文件权限与目录配置才至关重要。">
+<meta property="og:updated_time" content="2018-03-22T09:06:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="“线性时间排序（未完，待续）”">
-<meta name="twitter:description" content="引：排序慢慢来，今天要接触到线性时间排序了：计数排序，基数排序，桶排序。">
+<meta name="twitter:title" content="Linux私房菜_Linux的文件权限与目录配置">
+<meta name="twitter:description" content="引：了解好文件权限和目录的具体含义才能更好的操作Linux，所以理解好文件权限与目录配置才至关重要。">
 
 
 
@@ -127,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/05/10/“线性时间排序（未完，待续）”/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/22/Linux私房菜-Linux的文件权限与目录配置/"/>
 
 
 
 
 
-  <title> “线性时间排序（未完，待续）” | rex note </title>
+  <title> Linux私房菜_Linux的文件权限与目录配置 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -286,7 +286,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/10/“线性时间排序（未完，待续）”/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/22/Linux私房菜-Linux的文件权限与目录配置/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -307,7 +307,7 @@
             
             
               
-                “线性时间排序（未完，待续）”
+                Linux私房菜_Linux的文件权限与目录配置
               
             
           </h2>
@@ -322,8 +322,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-10T10:11:16+08:00">
-                2017-05-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T17:03:13+08:00">
+                2018-03-22
               </time>
             
 
@@ -345,8 +345,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
+                  <a href="/categories/Linux私房菜/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux私房菜</span>
                   </a>
                 </span>
 
@@ -385,13 +385,253 @@
       
 
       
-        <p>引：排序慢慢来，今天要接触到线性时间排序了：计数排序，基数排序，桶排序。<a id="more"></a></p>
-<h2 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a>计数排序</h2><p>前提条件：知道输入数组的最大值。<br>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public int[] countingsort(int[] a,int k)&#123;</div><div class="line">//初始化临时数组,k为数组的最大值</div><div class="line">int[] c = new int[k+1];</div><div class="line">for(int i=0; i&lt;=k; i++) &#123;</div><div class="line">c[i]=0;</div><div class="line">&#125;</div><div class="line">//获得等于i的元素个数</div><div class="line">for(int i= 0; i&lt;a.length-1;i++) &#123;</div><div class="line">c[a[i]] = c[a[i]]+1;</div><div class="line">&#125;</div><div class="line">//获得小于等于i的元素个数(隐含了递归调用)</div><div class="line">for(int i = 1; i&lt;=k; i++) &#123;</div><div class="line">c[i] = c[i] +c[i-1];</div><div class="line">&#125;</div><div class="line">//按顺序分到输出数组</div><div class="line">int[] b = new int[a.length];</div><div class="line">for(int i = a.length-1; i&gt;=0; i--) &#123;</div><div class="line">b[c[a[i]]] = a[i];</div><div class="line">c[a[i]] = c[a[i]]-1;</div><div class="line">&#125;</div><div class="line">return b;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>优劣：实现了线性时间，但是空间损失惨重，像是叫你排序这三个数：1，3，1000000000000，马上高低立见。</p>
-<h2 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h2><p>IBM创始人发明，利用进制数的位进行从低到高比较。其中会将原来的数转化为r进制数，使时间复杂度变为线性。<br>写一下伪代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">redix-sort(A,d)</div><div class="line">for i = 1 to d</div><div class="line">use a stable sort to sort array A on digit i</div></pre></td></tr></table></figure></p>
-<h2 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h2><p>桶排序假设数据服从均匀分布，讲一个区间分成若干个桶，先将数据放到桶中分开排序再合并。<br>伪代码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">bucket-sort(A)</div><div class="line">n = A.length</div><div class="line">let B[0.. n-1] be a new array</div><div class="line">for i = 0 to n - 1</div><div class="line">make  B[i] an empty list</div><div class="line">for i = 1 to n </div><div class="line">insert A[i] into list B[nA[i]]</div><div class="line">for i = 0 to n - 1</div><div class="line">sort list B[i] with insertion sort</div><div class="line">concatenete the lists B[0],B[1].. B[n-1] together in order</div></pre></td></tr></table></figure></p>
-<p>它的期望时间为线形。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其中对于基数排序和桶排序理解得不是很好，需要加深理解，写出具体实现代码，未完，待续…</p>
+        <p>引：了解好文件权限和目录的具体含义才能更好的操作Linux，所以理解好文件权限与目录配置才至关重要。<a id="more"></a></p>
+<h1 id="用户与用户组"><a href="#用户与用户组" class="headerlink" title="用户与用户组"></a>用户与用户组</h1><h2 id="用户（User）"><a href="#用户（User）" class="headerlink" title="用户（User）"></a>用户（User）</h2><ol>
+<li>用户可以随意改变自己所拥有的文件</li>
+<li>root用户就是最大的大佬，可以干任何事。</li>
+</ol>
+<h2 id="用户组（Group）"><a href="#用户组（Group）" class="headerlink" title="用户组（Group）"></a>用户组（Group）</h2><ol>
+<li>同一个用户组的用户可以访问该用户组的文件</li>
+<li>每个账号可以加入多个用户组</li>
+<li>在同一个用户组的文件也可以设置不同的权限，可以不让本组用户查看</li>
+</ol>
+<h2 id="其他人（Others）"><a href="#其他人（Others）" class="headerlink" title="其他人（Others）"></a>其他人（Others）</h2><p>除了文件用户、同组用户以外的人就是其他人。</p>
+<h2 id="Linux用户身份与用户组记录的文件"><a href="#Linux用户身份与用户组记录的文件" class="headerlink" title="Linux用户身份与用户组记录的文件"></a>Linux用户身份与用户组记录的文件</h2><ol>
+<li>系统上的账号与一般身份用户以及root的相关信息都记录在/etc/passwd文件中</li>
+<li>个人的密码都记录在/etc/shadow文件中</li>
+<li>Linux所有的组名都记录在/etc/group文件中</li>
+</ol>
+<h1 id="文件权限概念"><a href="#文件权限概念" class="headerlink" title="文件权限概念"></a>文件权限概念</h1><h2 id="Linux文件属性"><a href="#Linux文件属性" class="headerlink" title="Linux文件属性"></a>Linux文件属性</h2><p>我们可以利用下面的命令来查看文件属性：</p>
+<blockquote>
+<p>ls -al  // 列出所有文件详细的权限和属性（包含隐藏文件）</p>
+</blockquote>
+<p>如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">总用量 92</div><div class="line">drwxr-xr-x. 22 root root 4096 3月  17 12:33 .</div><div class="line">dr-xr-xr-x. 20 root root 4096 3月  22 09:14 ..</div><div class="line">drwxr-xr-x.  2 root root 4096 11月  5 2016 adm</div><div class="line">drwxr-xr-x   2 root root 4096 3月  12 10:27 alldata</div><div class="line">... 省略</div></pre></td></tr></table></figure></p>
+<p>解释一下上面7列的意思：</p>
+<ol>
+<li><p>第一列：文件的类型与权限</p>
+<p> 第一个字符代表这个文件是“目录、文件或链接文件等”。</p>
+<ul>
+<li>d：目录文件</li>
+<li>-：普通文件</li>
+<li>l：链接文件</li>
+<li>b：用于存储数据的设备文件</li>
+<li><p>c：用于传输数据的设备文件：鼠标、键盘</p>
+<p>接下来都是三个字符为一组，分别表示文件所有者的权限、同组用户的权限、其他用户的权限，而且r（读）、w（写）、x（执行）的顺序是固定不变的。</p>
+</li>
+</ul>
+</li>
+<li>第二列：有多少文件名连接到此节点</li>
+<li>第三列：这个文件（或目录）的所有者账号</li>
+<li>第四列：这个文件所属的用户组</li>
+<li>第五列：这个文件的大小，单位是B</li>
+<li>第六列：这个文件的创建日期或修改日期</li>
+<li>第七列：文件名</li>
+</ol>
+<h2 id="改变文件属性与权限的命令"><a href="#改变文件属性与权限的命令" class="headerlink" title="改变文件属性与权限的命令"></a>改变文件属性与权限的命令</h2><ol>
+<li>chgrp：改变文件所属的用户组 （注意-R 参数，递归更改）</li>
+<li>chown：改变文件所有者 （注意-R 参数，递归更改）</li>
+<li><p>chmod：改变文件的权限 （注意-R 参数，递归更改）</p>
+<p> 改变文件的权限有两种办法，分别是：用数字进行权限的修改、用符号进行权限的修改。</p>
+<ul>
+<li><p>用数字进行权限的修改：权限有9个字母组成，并且每三个为一组，分别表示：文件主的权限、同组用户的权限、其他人的权限。在这种方式中，r＝4、w＝2、x＝1，将每一组的三个值加起来，组成一个三位数即可。实例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chmod -R 754 文件或目录</div></pre></td></tr></table></figure>
+</li>
+<li><p>用符号进行权限的修改：我们通过u(user)，g(group)，o(others)，a(all)来表示身份权限，通过<br>r（读）,w（写）,x（执行）来表示读写的权限，通过+（加入），-（除去），=（设置）来表示修改操作，实例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chmod u/g/o/a  +/-/=  r/w/x  文件/目录</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="目录与文件的权限意义"><a href="#目录与文件的权限意义" class="headerlink" title="目录与文件的权限意义"></a>目录与文件的权限意义</h2><ol>
+<li>权限对文件的重要性：<ul>
+<li>r：可读取此文件的实际内容。</li>
+<li>w：可以编辑、新增或者修改该文件的内容（单不含删除该文件）</li>
+<li>x：该文件具有可以被系统执行的权限。</li>
+</ul>
+</li>
+<li>权限对目录的重要性<ul>
+<li>r：表示具有读取目录结构的权限，即可以执行ls命令</li>
+<li>w：表示具有更改该目录结构列表的权限，比如新建新的文件与目录、删除已经存在的文件与目录、将已存在或目录进行重命名、转移该目录内的文件和目录位置</li>
+<li>x：表示用户能否进入该目录，即可以使用cd进入该目录</li>
+</ul>
+</li>
+</ol>
+<h2 id="文件种类与扩展名"><a href="#文件种类与扩展名" class="headerlink" title="文件种类与扩展名"></a>文件种类与扩展名</h2><ol>
+<li>文件种类<ul>
+<li>普通文件<ul>
+<li>纯文本文件（ASCII），可以用cat命令读取</li>
+<li>二进制文件（binary），Linux中的可执行文件</li>
+<li>数据格式文件（data），就是程序运行时会被读取的具有特定格式的文件，如配置文件，需要用last命令去读取，用cat读取会乱码</li>
+</ul>
+</li>
+<li>目录</li>
+<li>连接文件，类似Windows下的快捷方式</li>
+<li>设备与设备文件<ul>
+<li>块设备文件，用于存储数据的设备文件，如：硬盘、软盘</li>
+<li>字符设备文件，用于数据传输的设备文件，如：键盘、鼠标</li>
+<li>套接字，这个设备文件在/var/run中</li>
+<li>管道，用于解决多个程序同时访问一个文件所造成的错误问题</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>文件扩展名</p>
+<p> Linux并没有扩展名，一个Linux的文件是否可以执行，取决于这个文件的属性中是否有x这个权限（也要真的可以执行）。<br> 但是为了增强文件的可读性，我们还是给文件增加了“扩展名“。如下面几种（等）：</p>
+<ul>
+<li>＊.sh表示脚本或批处理文件</li>
+<li>＊Z、＊.tar、＊.tar.gz、＊.zip、＊.tgz他们都是压缩文件</li>
+<li><p>注意：从网上下载的文件的权限是有可能发生改变的，所以当我们下载的文件无法运行时查看一下它的权限是否有x。</p>
+<p>Linux对文件的限制：Linxu默认采用Ext2/Ext3文件系统，对文件名的长度限制为，单个文件名或目录名最大长度255个字符；完整的文件或目录名最大长度为4096个字符。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="Linux目录配置"><a href="#Linux目录配置" class="headerlink" title="Linux目录配置"></a>Linux目录配置</h1><h2 id="Linux目录配置标准"><a href="#Linux目录配置标准" class="headerlink" title="Linux目录配置标准"></a>Linux目录配置标准</h2><p>FHS一句文件系统使用的频繁与否与是否允许用户随意改动，而将目录定义为四中交互的形态，如下：</p>
+<table>
+<thead>
+<tr>
+<th>/</th>
+<th>可分享的(shareable)</th>
+<th>不可分享的(unshareable)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不变的(static)</td>
+<td>/usr (软件放置处)</td>
+<td>/etc (配置文件)</td>
+</tr>
+<tr>
+<td>不变的(static)</td>
+<td>/opt (第三方软件)</td>
+<td>/boot(开机与内核文件)</td>
+</tr>
+<tr>
+<td>可变动的(variable)</td>
+<td>/var/mail (用户邮箱信件)</td>
+<td>/var/run (程序相关)</td>
+</tr>
+<tr>
+<td>可变动的(variable)</td>
+<td>/var/spool/news (新闻组)</td>
+<td>/var/lock (程序相关)</td>
+</tr>
+</tbody>
+</table>
+<p>解释一下四个类型的意思：</p>
+<ul>
+<li>可分享的：可以分享给网络上的其他主机挂载使用</li>
+<li>不可分享的：只与自己的机器有关，所以自然就不能分享给其他主机</li>
+<li>不变的：不管什么样的distributions，这些数据基本不发生变化。一般这些目录中存放函数库、系统配置文件等</li>
+<li>可变的：经常改变的数据，如登录文件、新闻组等</li>
+</ul>
+<p><strong>根目录是整个系统最重要的目录，其他所有的子目录都是由根目录衍生而来的，同时根目录也与开机、还原、系统修复等操作有关。</strong></p>
+<p>FHS建议：根目录要足够的小，而且应用程序不要和根目录放在同一个分区中。同时，FHS建议根目录下应该要有这些目录：</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>应放置文件内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/bin</td>
+<td>在bin目录下的命令可以被所有账号使用，一般的命令是：cat、chmod、chown、date、mv、mkdir、cp、bash</td>
+</tr>
+<tr>
+<td>/boot</td>
+<td>主要放置开机会使用到的文件</td>
+</tr>
+<tr>
+<td>/dev</td>
+<td>任何设备都是以文件的形式存放在这个目录当中</td>
+</tr>
+<tr>
+<td>/etc</td>
+<td>统主要的配置文件都放在这个目录中。这个目录下的文件属性是可以给一般用户查阅的，但只有root才可以修改，FHS建议：这个目录下不要放置可执行文件</td>
+</tr>
+<tr>
+<td>/home</td>
+<td>系统默认的用户主文件夹,～表示当前登陆用户的主文件夹 ，～rex表示指定用户的主文件夹</td>
+</tr>
+<tr>
+<td>/lib</td>
+<td>存放开机时用到的库函数及/bin、/sbin目录下的命令会使用到的库函数</td>
+</tr>
+<tr>
+<td>/media</td>
+<td>放置可删除的设备文件。如：软盘、光盘</td>
+</tr>
+<tr>
+<td>/mnt</td>
+<td>如果要临时挂载一些额外的设备就放在这个文件夹下</td>
+</tr>
+<tr>
+<td>/opt</td>
+<td>放置第三方软件的目录</td>
+</tr>
+<tr>
+<td>/root</td>
+<td>系统管理员的主文件夹</td>
+</tr>
+<tr>
+<td>/sbin</td>
+<td>放置开机过程中需要的，包括开机、修复、还原系统所需要的命令</td>
+</tr>
+<tr>
+<td>/srv</td>
+<td>是service的缩写，存放网络服务所需的一些数据</td>
+</tr>
+<tr>
+<td>/tmp</td>
+<td>一般用户执行程序暂时存放数据的地方。任何人都可以访问，所以要定时清理一下。FHS建议distributions开机时要将这个目录清空</td>
+</tr>
+</tbody>
+</table>
+<p>其他重要的目录：</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>应放置文件内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/lost+found</td>
+<td>使用ext2/ext3文件系统才会产生的一个目录。当文件系统发生错误时，一些丢失的片段就会放在这个目录中</td>
+</tr>
+<tr>
+<td>/proc</td>
+<td>是一个虚拟文件系统，也就是它的数据都是存放在内存中的，不占用硬盘空间</td>
+</tr>
+<tr>
+<td>/sys</td>
+<td>也是一个虚拟文件系统，记录内核相关信息</td>
+</tr>
+</tbody>
+</table>
+<p>开机的时候只有根目录被挂载了，其他的目录所在的分区都是在系统启动完成之后才被挂载的。因此与开机过程有关的目录就必须要和根目录放在同一个分区中。必须与根目录放在同一个分区中的目录有下面这些目录：</p>
+<ul>
+<li>/etc：配置文件</li>
+<li>/bin：重要的执行文件</li>
+<li>/dev：所需要的设备文件</li>
+<li>/lib：执行文件所需要的库函数与内核所需要的模块</li>
+<li>/sbin：重要的系统执行文件</li>
+</ul>
+<p>/usr目录：＝UNIX Software Resource，是操作系统关键资源放置的目录。<br>FHS建议：所有软件开发者都应将数据放置在这个目录的子目录下，而不要自行创建独立的目录。<br>这个目录就相当于Windows下的c:\program files</p>
+<p>/var目录：/usr放置安装程序时所需要的较大容量的文件，而/var下存放系统运行后才会渐渐占用硬盘的目录。如：缓存、日志、Mysql数据库的文件等。</p>
+<h2 id="目录树"><a href="#目录树" class="headerlink" title="目录树"></a>目录树</h2><p>在Linux里面，所有的文件与目录都是由根目录开始的，那是所有目录与文件的源头，然后在一个一个分支下来，我们称这种目录配置为<strong>目录树</strong>。</p>
+<p>目录树主要有以下特征：</p>
+<ol>
+<li>目录树的起始点为根目录（/，root）</li>
+<li>每个目录不只能使用本地端的文件系统，也可以使用网络上的文件系统，例如可以利用NFS服务器挂载某特定目录等</li>
+<li>米格文件在此目录树的文件名（包含完整路径）都是独一无二的。</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
 
       
     </div>
@@ -421,9 +661,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/线性时间排序/" rel="tag"># 线性时间排序</a>
-          
-            <a href="/tags/算法导论/" rel="tag"># 算法导论</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
           
         </div>
       
@@ -436,8 +674,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/10/堆排序/" rel="next" title="堆排序">
-                <i class="fa fa-chevron-left"></i> 堆排序
+              <a href="/2018/03/21/Linux私房菜-Linux基本命令/" rel="next" title="Linux私房菜_Linux基本命令">
+                <i class="fa fa-chevron-left"></i> Linux私房菜_Linux基本命令
               </a>
             
           </div>
@@ -445,10 +683,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/10/选择算法/" rel="prev" title="选择算法">
-                选择算法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -647,7 +881,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#计数排序"><span class="nav-number">1.</span> <span class="nav-text">计数排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基数排序"><span class="nav-number">2.</span> <span class="nav-text">基数排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#桶排序"><span class="nav-number">3.</span> <span class="nav-text">桶排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#用户与用户组"><span class="nav-number">1.</span> <span class="nav-text">用户与用户组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户（User）"><span class="nav-number">1.1.</span> <span class="nav-text">用户（User）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户组（Group）"><span class="nav-number">1.2.</span> <span class="nav-text">用户组（Group）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他人（Others）"><span class="nav-number">1.3.</span> <span class="nav-text">其他人（Others）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux用户身份与用户组记录的文件"><span class="nav-number">1.4.</span> <span class="nav-text">Linux用户身份与用户组记录的文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文件权限概念"><span class="nav-number">2.</span> <span class="nav-text">文件权限概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux文件属性"><span class="nav-number">2.1.</span> <span class="nav-text">Linux文件属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改变文件属性与权限的命令"><span class="nav-number">2.2.</span> <span class="nav-text">改变文件属性与权限的命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录与文件的权限意义"><span class="nav-number">2.3.</span> <span class="nav-text">目录与文件的权限意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件种类与扩展名"><span class="nav-number">2.4.</span> <span class="nav-text">文件种类与扩展名</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux目录配置"><span class="nav-number">3.</span> <span class="nav-text">Linux目录配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux目录配置标准"><span class="nav-number">3.1.</span> <span class="nav-text">Linux目录配置标准</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录树"><span class="nav-number">3.2.</span> <span class="nav-text">目录树</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-21T09:00:11.000Z</updated>
+  <updated>2018-03-22T09:06:25.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,275 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_Linux的文件权限与目录配置</title>
+    <link href="http://bestlixiang.site/2018/03/22/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E7%9A%84%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/"/>
+    <id>http://bestlixiang.site/2018/03/22/Linux私房菜-Linux的文件权限与目录配置/</id>
+    <published>2018-03-22T09:03:13.000Z</published>
+    <updated>2018-03-22T09:06:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：了解好文件权限和目录的具体含义才能更好的操作Linux，所以理解好文件权限与目录配置才至关重要。<a id="more"></a></p>
+<h1 id="用户与用户组"><a href="#用户与用户组" class="headerlink" title="用户与用户组"></a>用户与用户组</h1><h2 id="用户（User）"><a href="#用户（User）" class="headerlink" title="用户（User）"></a>用户（User）</h2><ol>
+<li>用户可以随意改变自己所拥有的文件</li>
+<li>root用户就是最大的大佬，可以干任何事。</li>
+</ol>
+<h2 id="用户组（Group）"><a href="#用户组（Group）" class="headerlink" title="用户组（Group）"></a>用户组（Group）</h2><ol>
+<li>同一个用户组的用户可以访问该用户组的文件</li>
+<li>每个账号可以加入多个用户组</li>
+<li>在同一个用户组的文件也可以设置不同的权限，可以不让本组用户查看</li>
+</ol>
+<h2 id="其他人（Others）"><a href="#其他人（Others）" class="headerlink" title="其他人（Others）"></a>其他人（Others）</h2><p>除了文件用户、同组用户以外的人就是其他人。</p>
+<h2 id="Linux用户身份与用户组记录的文件"><a href="#Linux用户身份与用户组记录的文件" class="headerlink" title="Linux用户身份与用户组记录的文件"></a>Linux用户身份与用户组记录的文件</h2><ol>
+<li>系统上的账号与一般身份用户以及root的相关信息都记录在/etc/passwd文件中</li>
+<li>个人的密码都记录在/etc/shadow文件中</li>
+<li>Linux所有的组名都记录在/etc/group文件中</li>
+</ol>
+<h1 id="文件权限概念"><a href="#文件权限概念" class="headerlink" title="文件权限概念"></a>文件权限概念</h1><h2 id="Linux文件属性"><a href="#Linux文件属性" class="headerlink" title="Linux文件属性"></a>Linux文件属性</h2><p>我们可以利用下面的命令来查看文件属性：</p>
+<blockquote>
+<p>ls -al  // 列出所有文件详细的权限和属性（包含隐藏文件）</p>
+</blockquote>
+<p>如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">总用量 92</div><div class="line">drwxr-xr-x. 22 root root 4096 3月  17 12:33 .</div><div class="line">dr-xr-xr-x. 20 root root 4096 3月  22 09:14 ..</div><div class="line">drwxr-xr-x.  2 root root 4096 11月  5 2016 adm</div><div class="line">drwxr-xr-x   2 root root 4096 3月  12 10:27 alldata</div><div class="line">... 省略</div></pre></td></tr></table></figure></p>
+<p>解释一下上面7列的意思：</p>
+<ol>
+<li><p>第一列：文件的类型与权限</p>
+<p> 第一个字符代表这个文件是“目录、文件或链接文件等”。</p>
+<ul>
+<li>d：目录文件</li>
+<li>-：普通文件</li>
+<li>l：链接文件</li>
+<li>b：用于存储数据的设备文件</li>
+<li><p>c：用于传输数据的设备文件：鼠标、键盘</p>
+<p>接下来都是三个字符为一组，分别表示文件所有者的权限、同组用户的权限、其他用户的权限，而且r（读）、w（写）、x（执行）的顺序是固定不变的。</p>
+</li>
+</ul>
+</li>
+<li>第二列：有多少文件名连接到此节点</li>
+<li>第三列：这个文件（或目录）的所有者账号</li>
+<li>第四列：这个文件所属的用户组</li>
+<li>第五列：这个文件的大小，单位是B</li>
+<li>第六列：这个文件的创建日期或修改日期</li>
+<li>第七列：文件名</li>
+</ol>
+<h2 id="改变文件属性与权限的命令"><a href="#改变文件属性与权限的命令" class="headerlink" title="改变文件属性与权限的命令"></a>改变文件属性与权限的命令</h2><ol>
+<li>chgrp：改变文件所属的用户组 （注意-R 参数，递归更改）</li>
+<li>chown：改变文件所有者 （注意-R 参数，递归更改）</li>
+<li><p>chmod：改变文件的权限 （注意-R 参数，递归更改）</p>
+<p> 改变文件的权限有两种办法，分别是：用数字进行权限的修改、用符号进行权限的修改。</p>
+<ul>
+<li><p>用数字进行权限的修改：权限有9个字母组成，并且每三个为一组，分别表示：文件主的权限、同组用户的权限、其他人的权限。在这种方式中，r＝4、w＝2、x＝1，将每一组的三个值加起来，组成一个三位数即可。实例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chmod -R 754 文件或目录</div></pre></td></tr></table></figure>
+</li>
+<li><p>用符号进行权限的修改：我们通过u(user)，g(group)，o(others)，a(all)来表示身份权限，通过<br>r（读）,w（写）,x（执行）来表示读写的权限，通过+（加入），-（除去），=（设置）来表示修改操作，实例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chmod u/g/o/a  +/-/=  r/w/x  文件/目录</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="目录与文件的权限意义"><a href="#目录与文件的权限意义" class="headerlink" title="目录与文件的权限意义"></a>目录与文件的权限意义</h2><ol>
+<li>权限对文件的重要性：<ul>
+<li>r：可读取此文件的实际内容。</li>
+<li>w：可以编辑、新增或者修改该文件的内容（单不含删除该文件）</li>
+<li>x：该文件具有可以被系统执行的权限。</li>
+</ul>
+</li>
+<li>权限对目录的重要性<ul>
+<li>r：表示具有读取目录结构的权限，即可以执行ls命令</li>
+<li>w：表示具有更改该目录结构列表的权限，比如新建新的文件与目录、删除已经存在的文件与目录、将已存在或目录进行重命名、转移该目录内的文件和目录位置</li>
+<li>x：表示用户能否进入该目录，即可以使用cd进入该目录</li>
+</ul>
+</li>
+</ol>
+<h2 id="文件种类与扩展名"><a href="#文件种类与扩展名" class="headerlink" title="文件种类与扩展名"></a>文件种类与扩展名</h2><ol>
+<li>文件种类<ul>
+<li>普通文件<ul>
+<li>纯文本文件（ASCII），可以用cat命令读取</li>
+<li>二进制文件（binary），Linux中的可执行文件</li>
+<li>数据格式文件（data），就是程序运行时会被读取的具有特定格式的文件，如配置文件，需要用last命令去读取，用cat读取会乱码</li>
+</ul>
+</li>
+<li>目录</li>
+<li>连接文件，类似Windows下的快捷方式</li>
+<li>设备与设备文件<ul>
+<li>块设备文件，用于存储数据的设备文件，如：硬盘、软盘</li>
+<li>字符设备文件，用于数据传输的设备文件，如：键盘、鼠标</li>
+<li>套接字，这个设备文件在/var/run中</li>
+<li>管道，用于解决多个程序同时访问一个文件所造成的错误问题</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>文件扩展名</p>
+<p> Linux并没有扩展名，一个Linux的文件是否可以执行，取决于这个文件的属性中是否有x这个权限（也要真的可以执行）。<br> 但是为了增强文件的可读性，我们还是给文件增加了“扩展名“。如下面几种（等）：</p>
+<ul>
+<li>＊.sh表示脚本或批处理文件</li>
+<li>＊Z、＊.tar、＊.tar.gz、＊.zip、＊.tgz他们都是压缩文件</li>
+<li><p>注意：从网上下载的文件的权限是有可能发生改变的，所以当我们下载的文件无法运行时查看一下它的权限是否有x。</p>
+<p>Linux对文件的限制：Linxu默认采用Ext2/Ext3文件系统，对文件名的长度限制为，单个文件名或目录名最大长度255个字符；完整的文件或目录名最大长度为4096个字符。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="Linux目录配置"><a href="#Linux目录配置" class="headerlink" title="Linux目录配置"></a>Linux目录配置</h1><h2 id="Linux目录配置标准"><a href="#Linux目录配置标准" class="headerlink" title="Linux目录配置标准"></a>Linux目录配置标准</h2><p>FHS一句文件系统使用的频繁与否与是否允许用户随意改动，而将目录定义为四中交互的形态，如下：</p>
+<table>
+<thead>
+<tr>
+<th>/</th>
+<th>可分享的(shareable)</th>
+<th>不可分享的(unshareable)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不变的(static)</td>
+<td>/usr (软件放置处)</td>
+<td>/etc (配置文件)</td>
+</tr>
+<tr>
+<td>不变的(static)</td>
+<td>/opt (第三方软件)</td>
+<td>/boot(开机与内核文件)</td>
+</tr>
+<tr>
+<td>可变动的(variable)</td>
+<td>/var/mail (用户邮箱信件)</td>
+<td>/var/run (程序相关)</td>
+</tr>
+<tr>
+<td>可变动的(variable)</td>
+<td>/var/spool/news (新闻组)</td>
+<td>/var/lock (程序相关)</td>
+</tr>
+</tbody>
+</table>
+<p>解释一下四个类型的意思：</p>
+<ul>
+<li>可分享的：可以分享给网络上的其他主机挂载使用</li>
+<li>不可分享的：只与自己的机器有关，所以自然就不能分享给其他主机</li>
+<li>不变的：不管什么样的distributions，这些数据基本不发生变化。一般这些目录中存放函数库、系统配置文件等</li>
+<li>可变的：经常改变的数据，如登录文件、新闻组等</li>
+</ul>
+<p><strong>根目录是整个系统最重要的目录，其他所有的子目录都是由根目录衍生而来的，同时根目录也与开机、还原、系统修复等操作有关。</strong></p>
+<p>FHS建议：根目录要足够的小，而且应用程序不要和根目录放在同一个分区中。同时，FHS建议根目录下应该要有这些目录：</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>应放置文件内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/bin</td>
+<td>在bin目录下的命令可以被所有账号使用，一般的命令是：cat、chmod、chown、date、mv、mkdir、cp、bash</td>
+</tr>
+<tr>
+<td>/boot</td>
+<td>主要放置开机会使用到的文件</td>
+</tr>
+<tr>
+<td>/dev</td>
+<td>任何设备都是以文件的形式存放在这个目录当中</td>
+</tr>
+<tr>
+<td>/etc</td>
+<td>统主要的配置文件都放在这个目录中。这个目录下的文件属性是可以给一般用户查阅的，但只有root才可以修改，FHS建议：这个目录下不要放置可执行文件</td>
+</tr>
+<tr>
+<td>/home</td>
+<td>系统默认的用户主文件夹,～表示当前登陆用户的主文件夹 ，～rex表示指定用户的主文件夹</td>
+</tr>
+<tr>
+<td>/lib</td>
+<td>存放开机时用到的库函数及/bin、/sbin目录下的命令会使用到的库函数</td>
+</tr>
+<tr>
+<td>/media</td>
+<td>放置可删除的设备文件。如：软盘、光盘</td>
+</tr>
+<tr>
+<td>/mnt</td>
+<td>如果要临时挂载一些额外的设备就放在这个文件夹下</td>
+</tr>
+<tr>
+<td>/opt</td>
+<td>放置第三方软件的目录</td>
+</tr>
+<tr>
+<td>/root</td>
+<td>系统管理员的主文件夹</td>
+</tr>
+<tr>
+<td>/sbin</td>
+<td>放置开机过程中需要的，包括开机、修复、还原系统所需要的命令</td>
+</tr>
+<tr>
+<td>/srv</td>
+<td>是service的缩写，存放网络服务所需的一些数据</td>
+</tr>
+<tr>
+<td>/tmp</td>
+<td>一般用户执行程序暂时存放数据的地方。任何人都可以访问，所以要定时清理一下。FHS建议distributions开机时要将这个目录清空</td>
+</tr>
+</tbody>
+</table>
+<p>其他重要的目录：</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>应放置文件内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/lost+found</td>
+<td>使用ext2/ext3文件系统才会产生的一个目录。当文件系统发生错误时，一些丢失的片段就会放在这个目录中</td>
+</tr>
+<tr>
+<td>/proc</td>
+<td>是一个虚拟文件系统，也就是它的数据都是存放在内存中的，不占用硬盘空间</td>
+</tr>
+<tr>
+<td>/sys</td>
+<td>也是一个虚拟文件系统，记录内核相关信息</td>
+</tr>
+</tbody>
+</table>
+<p>开机的时候只有根目录被挂载了，其他的目录所在的分区都是在系统启动完成之后才被挂载的。因此与开机过程有关的目录就必须要和根目录放在同一个分区中。必须与根目录放在同一个分区中的目录有下面这些目录：</p>
+<ul>
+<li>/etc：配置文件</li>
+<li>/bin：重要的执行文件</li>
+<li>/dev：所需要的设备文件</li>
+<li>/lib：执行文件所需要的库函数与内核所需要的模块</li>
+<li>/sbin：重要的系统执行文件</li>
+</ul>
+<p>/usr目录：＝UNIX Software Resource，是操作系统关键资源放置的目录。<br>FHS建议：所有软件开发者都应将数据放置在这个目录的子目录下，而不要自行创建独立的目录。<br>这个目录就相当于Windows下的c:\program files</p>
+<p>/var目录：/usr放置安装程序时所需要的较大容量的文件，而/var下存放系统运行后才会渐渐占用硬盘的目录。如：缓存、日志、Mysql数据库的文件等。</p>
+<h2 id="目录树"><a href="#目录树" class="headerlink" title="目录树"></a>目录树</h2><p>在Linux里面，所有的文件与目录都是由根目录开始的，那是所有目录与文件的源头，然后在一个一个分支下来，我们称这种目录配置为<strong>目录树</strong>。</p>
+<p>目录树主要有以下特征：</p>
+<ol>
+<li>目录树的起始点为根目录（/，root）</li>
+<li>每个目录不只能使用本地端的文件系统，也可以使用网络上的文件系统，例如可以利用NFS服务器挂载某特定目录等</li>
+<li>米格文件在此目录树的文件名（包含完整路径）都是独一无二的。</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：了解好文件权限和目录的具体含义才能更好的操作Linux，所以理解好文件权限与目录配置才至关重要。
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_Linux基本命令</title>
@@ -1351,58 +1620,6 @@
     <summary type="html">
     
       &lt;p&gt;引：作为领导人只要发布命令即可，而不用在发布命令的时候还要去找到实施的人，我相信领导人一定超级高兴，因为实施的人已经包含在命令里了。这就是&lt;strong&gt;命令模式&lt;/strong&gt;。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——中介者模式</title>
-    <link href="http://bestlixiang.site/2018/02/10/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/02/10/设计模式之禅——中介者模式/</id>
-    <published>2018-02-10T10:29:44.000Z</published>
-    <updated>2018-02-10T10:31:40.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：多个对象相互依赖，关系错综复杂，我们经常会感到无从下手，如果这个时候出现一个对象，能够协调各个对象的关系，并且其他对象只要与这个对象交流，那还不是美滋滋，这就是<strong>中介者模式</strong>。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>用一个中介对象封装一系列的对象交互，中介者使各对象不需要显示地相互作用，从而使其耦合松散，而且可以独立得改变他们之间的交互。——行为类</strong></p>
-<p>它的通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/mediator.png" alt="mediator"></p>
-<p>从类图中看，中介者模式由以下几部分组成：</p>
-<ul>
-<li>Mediator抽象中介者角色：定义统一的接口，用于各同事角色之间的通信。</li>
-<li>ConcreteMediator具体中介者角色：依赖于各个同事角色，协调各同事角色实现协作行为。</li>
-<li>Colleague同事角色：每一个同事角色都知道中介者角色，而且与其他的同时角色通信的时候，一定要通过中介者角色协作。同事类的行为分两种：一是同事本身的行为（本身行为），二是必须依赖中介者才能完成的行为（依赖方法）。</li>
-</ul>
-<p>它的通用源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 通用抽象中介者</span></div><div class="line"><span class="comment">// 在该抽象类中，我们利用了同事实现类注入，是因为同事类虽然有抽象，但是没有每个同事必须要实现的方法。</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Mediator</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义同事类</span></div><div class="line">    protect ConcreteColleague1 c1;</div><div class="line">    protect ConcreteColleague2 c2;</div><div class="line">    <span class="comment">// 通过getter/setter方法吧同事类注入进来</span></div><div class="line">    ... 省略get、set方法</div><div class="line"></div><div class="line">    <span class="comment">// 中介者模式的业务逻辑</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething1</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething2</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 通用中介者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteMediator</span> <span class="title">extend</span> <span class="title">Mediator</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething1</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 调用同事类的方法</span></div><div class="line">        <span class="keyword">super</span>.c1.selfMethod1();</div><div class="line">        <span class="keyword">super</span>.c2.selfMethod2();</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 调用同事类的方法</span></div><div class="line">        <span class="keyword">super</span>.c1.selfMethod1();</div><div class="line">        <span class="keyword">super</span>.c2.selfMethod2();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象同事类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Colleague</span> </span>&#123;</div><div class="line">    <span class="keyword">protected</span> Mediator mediator;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Colleague</span><span class="params">(Mediator _mediator)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.mediator = _mediator;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体同事类 1,2 类似</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteColleague1</span> <span class="keyword">extends</span> <span class="title">Colleague</span> </span>&#123;</div><div class="line">    <span class="comment">// 通过构造函数传递中介者，因为同事类必须要有中介者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteColleague1</span><span class="params">(Mediator _mediator)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(_mediator);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 自有方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selfMethod1</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="comment">// 处理自己的业务逻辑</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 依赖方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">depMethod1</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="comment">// 自己不能处理的业务逻辑，委托给中介者处理</span></div><div class="line">        <span class="keyword">super</span>.mediator.doSomething1();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>减少类间的依赖，把原有的一对多的依赖变成了一对一的依赖。</p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>同事类越多，中介者的逻辑就越复杂。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>中介者模式适用于多个对象之间紧密耦合的情况，紧密耦合的标准是：在类图中出现了蜘蛛网状结构。在这种情况下一定要考虑使用中介者模式，这有利于把蜘蛛网梳理为星型结构，使原本复杂混乱的关系变得清晰简单。但是我们需要量力而行，避免中介者过于复杂化。</p>
-<h1 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h1><ol>
-<li>机场调度中心</li>
-<li>MVC框架的C协调M和V</li>
-<li>媒体网关——中转站</li>
-<li>中介服务</li>
-</ol>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>可以在如下的情况下尝试使用中介者模式:</p>
-<ol>
-<li>N个对象之间产生相互的依赖关系（N &gt; 2）</li>
-<li>多个对象有依赖关系，但是依赖的行为尚不确定或者有发生改变的可能。</li>
-</ol>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：多个对象相互依赖，关系错综复杂，我们经常会感到无从下手，如果这个时候出现一个对象，能够协调各个对象的关系，并且其他对象只要与这个对象交流，那还不是美滋滋，这就是&lt;strong&gt;中介者模式&lt;/strong&gt;。
     
     </summary>
     
