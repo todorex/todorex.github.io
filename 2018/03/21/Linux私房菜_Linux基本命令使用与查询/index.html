@@ -1,0 +1,1171 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux私房菜_Linux基本命令使用与查询">
+<meta property="og:url" content="http://bestlixiang.site/2018/03/21/Linux私房菜_Linux基本命令使用与查询/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。">
+<meta property="og:updated_time" content="2018-03-25T01:44:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux私房菜_Linux基本命令使用与查询">
+<meta name="twitter:description" content="引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/21/Linux私房菜_Linux基本命令使用与查询/"/>
+
+
+
+
+
+  <title> Linux私房菜_Linux基本命令使用与查询 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/21/Linux私房菜_Linux基本命令使用与查询/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Linux私房菜_Linux基本命令使用与查询
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-21T16:55:52+08:00">
+                2018-03-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux私房菜/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux私房菜</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。<br><a id="more"></a></p>
+<h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><h2 id="开始执行命令"><a href="#开始执行命令" class="headerlink" title="开始执行命令"></a>开始执行命令</h2><p>首先我们要了解命令的格式：</p>
+<blockquote>
+<p>command(命令或可执行文件) <a href="选项">-options</a> parameter1(参数1) parameter2(参数2)</p>
+</blockquote>
+<p>如果命令太长，我们可以使用反斜杠(\)来转义[enter符号]，注意反斜杠必须立刻接特殊字符，才能转义。</p>
+<p>在linux下面是区分大小写的。</p>
+<h2 id="基础命令的操作"><a href="#基础命令的操作" class="headerlink" title="基础命令的操作"></a>基础命令的操作</h2><ol>
+<li>显示日期与时间的命令：date</li>
+<li>显示日历的命令：cal</li>
+<li>简单好用的计算器：bc，使用quit停止</li>
+</ol>
+<h2 id="重要的热键"><a href="#重要的热键" class="headerlink" title="重要的热键"></a>重要的热键</h2><ol>
+<li>Tab按键：具有命令补全，文件补齐的功能</li>
+<li>ctrl + c：可以让程序立刻停下来</li>
+<li>ctrl + d：通常代码键盘输入结束，相当于exit</li>
+</ol>
+<h1 id="在线求助man-page-与info-page"><a href="#在线求助man-page-与info-page" class="headerlink" title="在线求助man page 与info page"></a>在线求助man page 与info page</h1><h2 id="man-page"><a href="#man-page" class="headerlink" title="man page"></a>man page</h2><p>man其实是manual（操作说明）的简写，只要通过（man + 命令） 就会有详细的说明出现。</p>
+<p>如 man date可以得到下面的文本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">DATE(1)                                  User Commands                                  DATE(1)</div><div class="line"></div><div class="line">NAME</div><div class="line">       date - print or set the system date and time</div><div class="line"></div><div class="line">SYNOPSIS</div><div class="line">       date [OPTION]... [+FORMAT]</div><div class="line">       date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]</div><div class="line"></div><div class="line">DESCRIPTION</div><div class="line">       Display the current time in the given FORMAT, or set the system date.</div><div class="line"></div><div class="line">       Mandatory arguments to long options are mandatory for short options too.</div><div class="line"></div><div class="line">       -d, --date=STRING</div><div class="line">              display time described by STRING, not &apos;now&apos;</div><div class="line"></div><div class="line">        ...省略其他参数</div><div class="line"></div><div class="line">ENVIRONMENT</div><div class="line"></div><div class="line">EXAMPLES</div><div class="line"></div><div class="line">DATE STRING</div><div class="line"></div><div class="line">AUTHOR</div><div class="line">       Written by David MacKenzie.</div><div class="line"></div><div class="line">COPYRIGHT</div><div class="line"></div><div class="line">SEE ALSO</div><div class="line"></div><div class="line">GNU coreutils 8.22                       November 2016                                  DATE(1)</div></pre></td></tr></table></figure></p>
+<p>我们首先看到的是“DATE(1)”，这个(1)是有特殊含义的，如下表：</p>
+<table>
+<thead>
+<tr>
+<th>代号</th>
+<th>代表内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>用户在shell环境中可以操作的命令或可执行的文件</td>
+</tr>
+<tr>
+<td>2</td>
+<td>系统内核可调用的函数与工具等</td>
+</tr>
+<tr>
+<td>3</td>
+<td>一些常用的函数与函数库，大部分为C的函数库</td>
+</tr>
+<tr>
+<td>4</td>
+<td>设备文件的说明，通常在/dev的文件</td>
+</tr>
+<tr>
+<td>5</td>
+<td>配置文件或者某些文件的格式</td>
+</tr>
+<tr>
+<td>6</td>
+<td>游戏</td>
+</tr>
+<tr>
+<td>7</td>
+<td>惯例与协议等，例如Linux文件系统，网络协议、ASCII code等说明</td>
+</tr>
+<tr>
+<td>8</td>
+<td>系统管理员与可用的管理命令</td>
+</tr>
+<tr>
+<td>9</td>
+<td>跟kernel有关的文件</td>
+</tr>
+</tbody>
+</table>
+<p>我们要特别注意1，5，8这三个号码，尽量背下来。</p>
+<p>在上面的man page中，以NAME作为开始介绍，最后还有个SEE ALSO来作为结束。基本上，man page大致分为以下几个部分：</p>
+<table>
+<thead>
+<tr>
+<th>代号</th>
+<th>内容说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAME</td>
+<td>简短的命令、数据名称说明</td>
+</tr>
+<tr>
+<td>SYNOPSIS</td>
+<td>简短的命令执行语法（syntax）简介</td>
+</tr>
+<tr>
+<td>DESCRIPTION</td>
+<td>较为完整的说明，最好仔细看看</td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>针对SYNNPSIS部分中，有列举的所有可用的选项说明</td>
+</tr>
+<tr>
+<td>COMMANDS</td>
+<td>在这个程序在执行的时候，可以在此程序中执行的命令</td>
+</tr>
+<tr>
+<td>FILES</td>
+<td>这个程序或数据所使用或参考或连接到的某些文件</td>
+</tr>
+<tr>
+<td>SEE ALSO</td>
+<td>这个命令或数据有相关的其他说明</td>
+</tr>
+<tr>
+<td>EXAMPLES</td>
+<td>一些可以参考的范例</td>
+</tr>
+<tr>
+<td>BUGS</td>
+<td>是否有相关的错误</td>
+</tr>
+</tbody>
+</table>
+<p>通常在查询某些数据是这样来查阅的：</p>
+<ol>
+<li>先看NAME的项目，略微看一下数据的意思</li>
+<li>再仔细看一下DESCRIPTION，这个部分会提到很多相关的资料和用法。</li>
+<li>如果这个命令其实很熟悉了，那么主要就是查询OPTIONS的部分了。</li>
+<li>最后会看一下和这个资料有关的还有哪些东西可以使用。</li>
+<li>某些说明内容还会列举有关的文件（FILES）来提供我们参考。</li>
+</ol>
+<p>man page 常用的按键：</p>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>进行工作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空格键</td>
+<td>向下翻一页</td>
+</tr>
+<tr>
+<td>Page Down</td>
+<td>向下翻一页</td>
+</tr>
+<tr>
+<td>Page Up</td>
+<td>向上翻一页</td>
+</tr>
+<tr>
+<td>Home</td>
+<td>去到第一页</td>
+</tr>
+<tr>
+<td>End</td>
+<td>在去到最后一页</td>
+</tr>
+<tr>
+<td>/string</td>
+<td>向下查询string字符串</td>
+</tr>
+<tr>
+<td>?string</td>
+<td>向上查询string字符串</td>
+</tr>
+<tr>
+<td>n,N</td>
+<td>利用/或？来查询字符串时，可以用n来继续查询下一个查询，可以利用N来进行反向查询</td>
+</tr>
+<tr>
+<td>q</td>
+<td>结束这次man page</td>
+</tr>
+</tbody>
+</table>
+<p>下面还有两个man的用途：</p>
+<ol>
+<li>man -f command （= whatis）：查询和command这个命令有关的说明文件</li>
+<li>man -k data（= apropos）：查询包含data这个数据有关的文件</li>
+</ol>
+<h2 id="info-page"><a href="#info-page" class="headerlink" title="info page"></a>info page</h2><p>info与man的用途差不多，都是用来查询命令的用法或者文件的格式，但是与man page一下子输出一堆信息不同的是，info page则是将文件数据拆成一个一个段落，每个段落用自己的页面来撰写，并且在各个页面中还有类似网页的“超链接”来调到各个页面，每个独立的页面也被称为一个节点（node）。</p>
+<p>这里这里不多说，有兴趣者可以自己去看看使用。</p>
+<h2 id="其他有用的文件"><a href="#其他有用的文件" class="headerlink" title="其他有用的文件"></a>其他有用的文件</h2><p>一般而言，命令或者软件开发者都会将自己的命令或者是软件的说明制作成“在线帮助文件”，但是毕竟不是什么都需要做成在线帮助文件的，在/usr/share/doc中我们会发现会有很多说明文件文档，这些会告诉我们怎么做，以及一些相关的原理。</p>
+<h1 id="开机与关机"><a href="#开机与关机" class="headerlink" title="开机与关机"></a>开机与关机</h1><h2 id="开机与登录"><a href="#开机与登录" class="headerlink" title="开机与登录"></a>开机与登录</h2><p>一般服务器都不怎么重启，我们在登录服务器的时候，基本上都是使用ssh来登录，我们可以使用下面的命令：</p>
+<blockquote>
+<p>ssh ip</p>
+</blockquote>
+<p>在这个命令之后会要求与你输入密码即可成功。</p>
+<h2 id="关机"><a href="#关机" class="headerlink" title="关机"></a>关机</h2><p>在Linux中，由于每个程序都是在后台运行的，因此你看不到屏幕后面其实可能有很多人同时在你的主机上面工作，所以我们不能随意关机。所以在正常情况下，要关机时要注意下面几件事：</p>
+<ol>
+<li>查看系统的使用状态<ul>
+<li>如果要看目前有谁在线：执行“who”这个命令</li>
+<li>如果要看网络的联机状态：执行“netstat -a”这个命令</li>
+<li>如果要看后台执行的程序：执行“ps -aux”这个命令</li>
+</ul>
+</li>
+<li>通知在线用户关机的时刻</li>
+<li>正确地关机命令使用：shutdown与reboot</li>
+<li>将数据同步写入硬盘的命令：sync</li>
+<li>惯用的关机命令：shutdown</li>
+<li>重启、关机：reboot,halt,poweroff</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这一章最为基础，灰常重要，就像地基，只有有了地基，我们才能好好造下面的房子。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/21/Linux私房菜-Linux磁盘分区/" rel="next" title="Linux私房菜_Linux磁盘分区">
+                <i class="fa fa-chevron-left"></i> Linux私房菜_Linux磁盘分区
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/22/Linux私房菜-Linux的文件权限与目录配置/" rel="prev" title="Linux私房菜_Linux的文件权限与目录配置">
+                Linux私房菜_Linux的文件权限与目录配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">87</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础命令"><span class="nav-number">1.</span> <span class="nav-text">基础命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开始执行命令"><span class="nav-number">1.1.</span> <span class="nav-text">开始执行命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础命令的操作"><span class="nav-number">1.2.</span> <span class="nav-text">基础命令的操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重要的热键"><span class="nav-number">1.3.</span> <span class="nav-text">重要的热键</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在线求助man-page-与info-page"><span class="nav-number">2.</span> <span class="nav-text">在线求助man page 与info page</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#man-page"><span class="nav-number">2.1.</span> <span class="nav-text">man page</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#info-page"><span class="nav-number">2.2.</span> <span class="nav-text">info page</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他有用的文件"><span class="nav-number">2.3.</span> <span class="nav-text">其他有用的文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开机与关机"><span class="nav-number">3.</span> <span class="nav-text">开机与关机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开机与登录"><span class="nav-number">3.1.</span> <span class="nav-text">开机与登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关机"><span class="nav-number">3.2.</span> <span class="nav-text">关机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
