@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-25T03:20:10.000Z</updated>
+  <updated>2018-03-25T12:02:36.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -16,11 +16,123 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Linux私房菜_Linux磁盘与文件系统管理</title>
+    <link href="http://bestlixiang.site/2018/03/25/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E7%A3%81%E7%9B%98%E4%B8%8E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    <id>http://bestlixiang.site/2018/03/25/Linux私房菜-Linux磁盘与文件系统管理/</id>
+    <published>2018-03-25T12:02:04.000Z</published>
+    <updated>2018-03-25T12:02:36.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：系统管理员最重要的任务之一就是管理好自己的磁盘文件系统，所以本文的知识对于那些需要规划自己磁盘文件系统的人群特别重要，有些内容可能不太详细，所以日后自己亲身实践过后，希望能再开一篇详细的文章。<a id="more"></a></p>
+<h1 id="认识文件系统"><a href="#认识文件系统" class="headerlink" title="认识文件系统"></a>认识文件系统</h1><p>Linux最传统的磁盘文件系统使用的是EXT2（索引式文件系统）。所以要了解文件系统就得要又认识EXT2开始。</p>
+<p>在Linux中，需要记录文件权限与文件属性，所以文件系统通常会将这两部分的数据分别存放在不同的块，权限和属性放置到inode中，至于实际数据则放置到data block块中，另外还有一个超级块（superblock）会记录整体文件系统的整体信息。<br>每个inode，block都有编号，下面简略说明上面三个数据的意义：</p>
+<ol>
+<li>super block：记录此文件系统的整体信息，包括inode/block的总量、使用量、以及文件系统的格式与相关信息。</li>
+<li>inode：记录文件的属性，一个文件占用一个inode，同时记录此文件的数据所在的block号码。</li>
+<li>block：实际记录文件的内容，若文件太大时，会占用多个block。</li>
+</ol>
+<h1 id="Linux的Ext2文件系统"><a href="#Linux的Ext2文件系统" class="headerlink" title="Linux的Ext2文件系统"></a>Linux的Ext2文件系统</h1><ol>
+<li>Ext2文件系统主要有boot sector，superblock，inode bitmap，block bitmap，inode table，data block六大部分。</li>
+<li>data block是用来放置文件内容数据的地方，在Ext2文件系统中所支持的block大小有1KB、2KB及4KB三种。</li>
+<li>inode记录文件的属性/权限等数据，每个inode大小均固定为128bytes；每个文件都仅占有一个inode而已；因此文件系统能够新建的文件数量，与inode数量有关。</li>
+<li>文件的block记录文件的实际数据，目录的block则记录该目录下面文件名与其inode号码的对照表。</li>
+<li>日志文件系统会多出一块记录区，随时记载文件系统的主要活动，可加快恢复时间。</li>
+<li>Linux文件系统为增加其性能，会让主存储器作为大量的磁盘高速缓存。</li>
+</ol>
+<h1 id="文件系统的简单操作"><a href="#文件系统的简单操作" class="headerlink" title="文件系统的简单操作"></a>文件系统的简单操作</h1><h2 id="磁盘与目录的容量：df，du"><a href="#磁盘与目录的容量：df，du" class="headerlink" title="磁盘与目录的容量：df，du"></a>磁盘与目录的容量：df，du</h2><ol>
+<li><p>df：列出文件系统的整体磁盘使用量</p>
+<p> 在执行df命令之后，会出现如下信息：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">文件系统          1K-块    已用     可用 已用% 挂载点</div><div class="line">/dev/vda1      51474044 6759800 42092876   14% /</div><div class="line">devtmpfs         932632       0   932632    0% /dev</div><div class="line">tmpfs            941920      24   941896    1% /dev/shm</div><div class="line">tmpfs            941920     316   941604    1% /run</div><div class="line">tmpfs            941920       0   941920    0% /sys/fs/cgroup</div><div class="line">tmpfs            188388       0   188388    0% /run/user/0</div></pre></td></tr></table></figure>
+</li>
+<li><p>du：评估文件系统的磁盘使用量（常用于评估目录所占容量）</p>
+<p> 可以看看下面的案例：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 1. 列出目前目录下的所有文件容量</div><div class="line">du</div><div class="line">// 2. 同范例一，但是将文件的容量也列出来</div><div class="line">du -a</div><div class="line">// 3. 检查根目录下面每个目录所占用的容量</div><div class="line">du -sm /*</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="连接文件"><a href="#连接文件" class="headerlink" title="连接文件"></a>连接文件</h2><ol>
+<li><p>hard link (硬连接或实际连接)</p>
+<p> hard link只是在某个目录下新建一条文件名连接到某inode号码的管理记录。它的命令如下：</p>
+<blockquote>
+<p>ln</p>
+</blockquote>
+<p> hard link是有如下限制的：</p>
+<ul>
+<li>不能跨文件系统</li>
+<li>不能连接到目录</li>
+</ul>
+</li>
+<li><p>symbolic link (符号连接，也即是快捷方式)</p>
+<p> symbolic link就是在创建一个独立的文件，而这个文件会让数据的读取指向它连接的按个文件的文件名。它的命令如下：</p>
+<blockquote>
+<p>ls -s</p>
+</blockquote>
+<p> symbolic link与Windows的快捷方式可以画上等号，如果原文件被删除了，那symbolic link也就不能用了。</p>
+</li>
+</ol>
+<h1 id="磁盘的分区、格式化、校验与挂载"><a href="#磁盘的分区、格式化、校验与挂载" class="headerlink" title="磁盘的分区、格式化、校验与挂载"></a>磁盘的分区、格式化、校验与挂载</h1><p>对于一个系统管理者(root)而言，磁盘的管理是相对重要的一环，如果我们想要在系统里面新增一块硬盘，应该有哪些动作需要做？</p>
+<ol>
+<li>对磁盘进行分区，以新建可用的分区</li>
+<li>对该分区进行格式化，以创建系统可用的文件系统</li>
+<li>若想要仔细一点，则可对刚才新建好的文件系统进行校验</li>
+<li>在Linux系统上，需要创建挂载点（也即是目录），并将它挂载上来</li>
+</ol>
+<h2 id="磁盘分区：fdisk"><a href="#磁盘分区：fdisk" class="headerlink" title="磁盘分区：fdisk"></a>磁盘分区：fdisk</h2><p>输入如下命令，进入磁盘分区操作：</p>
+<blockquote>
+<p>fdisk /dev/hdc(磁盘名)</p>
+</blockquote>
+<p>接下来就是按照提示新增或者删除分区了。</p>
+<h2 id="磁盘格式化：mkfs"><a href="#磁盘格式化：mkfs" class="headerlink" title="磁盘格式化：mkfs"></a>磁盘格式化：mkfs</h2><p>分区完毕之后就要进行格式化，格式化非常简单，使用mkfs（make file system）即可。命令如下：</p>
+<blockquote>
+<p>mkfs [-t 文件系统格式] 磁盘设备的文件名</p>
+</blockquote>
+<p>-t后的文件系统格式就是让你指定将文件系统格式化成哪种文件系统。如ext2、ext3、vfat等。</p>
+<h2 id="磁盘检验：fsck"><a href="#磁盘检验：fsck" class="headerlink" title="磁盘检验：fsck"></a>磁盘检验：fsck</h2><p>当系统运行出现问题导致文件系统发生错乱，此时就需要磁盘的检验。命令如下：</p>
+<blockquote>
+<p>fsck [-t 文件系统] [-ACay] 设备名称</p>
+</blockquote>
+<p>通常只有root用户，而且在文件系统有问题的时候才能进行这个操作，因为在正常情况下使用这个命令会对系统伤害很大。 此外，fsck在扫描的时候，有问题的数据会被放在lost＋found这个文件夹中。所以正常情况下这个文件夹中是不应该有数据的。</p>
+<h2 id="磁盘挂载与卸载：mount，umount"><a href="#磁盘挂载与卸载：mount，umount" class="headerlink" title="磁盘挂载与卸载：mount，umount"></a>磁盘挂载与卸载：mount，umount</h2><p>在挂载前需要确定下面几件事：</p>
+<ol>
+<li>单一文件系统不应该被重复挂载在不同的挂载点（目录）中</li>
+<li>单一目录不应该重复挂载多个文件系统</li>
+<li>作为挂载带你的目录理论上应该都是空目录</li>
+</ol>
+<p>具体命令如下</p>
+<ul>
+<li><p>挂载：</p>
+<blockquote>
+<p>mount [-t 文件系统] [-L 文件系统的卷标名称] [-o 额外选项] [-n] 设备文件名 挂载点  </p>
+</blockquote>
+</li>
+<li><p>卸载</p>
+<blockquote>
+<p>umount [-fn] 设备文件名或挂载点</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：系统管理员最重要的任务之一就是管理好自己的磁盘文件系统，所以本文的知识对于那些需要规划自己磁盘文件系统的人群特别重要，有些内容可能不太详细，所以日后自己亲身实践过后，希望能再开一篇详细的文章。
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Linux私房菜_Linux文件与目录管理大全解</title>
     <link href="http://bestlixiang.site/2018/03/25/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%E5%A4%A7%E5%85%A8%E8%A7%A3/"/>
     <id>http://bestlixiang.site/2018/03/25/Linux私房菜-Linux文件与目录管理大全解/</id>
     <published>2018-03-25T01:40:30.000Z</published>
-    <updated>2018-03-25T03:20:10.000Z</updated>
+    <updated>2018-03-25T03:20:17.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：在使用Linux的过程中，最多的命令莫过于在操作文件与目录，所以通过本文，能让你大概率熟悉所有关于文件与目录的命令与知识，但是参数方面就需要自己去查询了。<a id="more"></a></p>
 <h1 id="目录与路径"><a href="#目录与路径" class="headerlink" title="目录与路径"></a>目录与路径</h1><h2 id="绝对路径和相对路径"><a href="#绝对路径和相对路径" class="headerlink" title="绝对路径和相对路径"></a>绝对路径和相对路径</h2><ol>
@@ -1756,49 +1868,6 @@
     <summary type="html">
     
       &lt;p&gt;引：想给某些类增加一些功能，有些人可能会想到直接修改类，但是要求不影响子类，这就需要用到&lt;strong&gt;装饰模式&lt;/strong&gt;了。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——责任链模式</title>
-    <link href="http://bestlixiang.site/2018/03/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/07/设计模式之禅——责任链模式/</id>
-    <published>2018-03-07T01:58:26.000Z</published>
-    <updated>2018-03-07T01:58:50.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：一个问题对应一个解决方法，你一般需要去找到对应的方法，现在有一种方法就是你不管遇到什么问题只要交给第一个解决方法就可以了，美滋滋，这就是<strong>责任链模式</strong>。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>使多个对象都有机会处理请求，从而避免了请求的发送者和接受者之间的耦合关系。将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理它为止。——行为类</strong></p>
-<p>责任链模式的重点在“链”上，由一条链去处理相似的请求在链中决定谁来处理这个请求，并返回相应的结果。其通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/chain.png" alt="chain"></p>
-<p>责任链模式的核心在链上，“链”是由多个处理者ConcreteHandle组成的，它的通用源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象处理者</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Handler nextHandler;</div><div class="line">    <span class="comment">// 每个处理者都必须对请求做出处理</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Response <span class="title">handleMessage</span><span class="params">(Request request)</span> </span>&#123; <span class="comment">// final关键字参考模板模式的模板方法</span></div><div class="line">        <span class="comment">//  判断是否是自己的处理级别</span></div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.getHandlerLevel().equals(request.getRequestLevel())) &#123;</div><div class="line">            response = <span class="keyword">this</span>.echo(request);</div><div class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// 不属于自己的处理级别</span></div><div class="line">            <span class="comment">// 判断是否有下一个处理者</span></div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.nextHandler != <span class="keyword">null</span>) &#123;</div><div class="line">                response = <span class="keyword">this</span>.nextHandler.handleMessage(request);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 没有适当处理者，业务自行处理</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> response;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置下一个处理者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNext</span><span class="params">(Handler _handler)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.nextHandler = _handler;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 每个处理者都有一个处理级别</span></div><div class="line">    <span class="function">protect <span class="keyword">abstract</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">//每个处理者都必须实现处理任务</span></div><div class="line">    <span class="function">protect <span class="keyword">abstract</span> Response <span class="title">echo</span><span class="params">(Request request)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体处理者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Concretehandler1</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义自己的处理逻辑</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">echo</span><span class="params">(Request request)</span> </span>&#123;</div><div class="line">        <span class="comment">// 完成处理逻辑</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置自己的处理级别</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 设置自己的处理级别</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Concretehandler2</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义自己的处理逻辑</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">echo</span><span class="params">(Request request)</span> </span>&#123;</div><div class="line">        <span class="comment">// 完成处理逻辑</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置自己的处理级别</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 设置自己的处理级别</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Concretehandler3</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义自己的处理逻辑</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">echo</span><span class="params">(Request request)</span> </span>&#123;</div><div class="line">        <span class="comment">// 完成处理逻辑</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置自己的处理级别</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 设置自己的处理级别</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 模式中有关框架代码</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Level</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义一个请求和处理等级</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Request</span> </span>&#123;</div><div class="line">    <span class="comment">// 请求的等级</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Level <span class="title">getRequestLevel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">publci <span class="class"><span class="keyword">class</span> <span class="title">Request</span> </span>&#123;</div><div class="line">    <span class="comment">// 处理者返回的数据</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 声明所有的处理节点</span></div><div class="line">        Handler handler1 = <span class="keyword">new</span> ConcreteHandler1();</div><div class="line">        Handler handler2 = <span class="keyword">new</span> ConcreteHandler2();</div><div class="line">        Handler handler3 = <span class="keyword">new</span> ConcreteHandler3();</div><div class="line">        <span class="comment">// 设置链中的阶段顺序1--&gt;2--&gt;3</span></div><div class="line">        handler1.setNext(handler2);</div><div class="line">        handler2.setNext(handler3);</div><div class="line">        <span class="comment">// 提交请求，返回结果</span></div><div class="line">        Response response = handler1.handlerMessage(<span class="keyword">new</span> Request());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在实际应用中，一般会有一个封装类对责任模式进行封装，直接返回链中的第一个处理者，具体链的设置不需要高层模块关系，这样，简化了高层次模式的调用，减少模块间的耦合，提高系统的灵活性。</p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>将请求和处理分开，请求者可以不用知道谁处理的，处理者可以不用知道请求的全貌，两者解耦。</p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
-<li>性能问题，每个请求都是从链头遍历到链尾，在链比较长的时候，性能就会出现问题。</li>
-<li>调试不方便，调试逻辑复制。</li>
-</ol>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>链中节点数量需要控制，避免出现超长链的情况，一般做法是在Handler中设置一个最大节点数量，在setNext方法中判断是否已经超过其阈值，超过则不允许该链建立。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><ol>
-<li>融合模板方法模式，每个实现类只要实现两个方法：echo方法处理请求和getHandlerLevel获得处理级别，符合单一职责原则和迪米特法则。</li>
-<li>责任链模式的核心它屏蔽了请求的处理过程，只要你把请求抛给责任链的第一个处理者，最终会返回一个处理结果，作为请求者不用知道需要谁来处理。</li>
-</ol>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：一个问题对应一个解决方法，你一般需要去找到对应的方法，现在有一种方法就是你不管遇到什么问题只要交给第一个解决方法就可以了，美滋滋，这就是&lt;strong&gt;责任链模式&lt;/strong&gt;。
     
     </summary>
     
