@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-25T12:02:36.000Z</updated>
+  <updated>2018-03-26T09:46:51.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,279 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_学会使用vim程序编辑器</title>
+    <link href="http://bestlixiang.site/2018/03/26/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E5%AD%A6%E4%BC%9A%E4%BD%BF%E7%94%A8vim%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%BE%91%E5%99%A8/"/>
+    <id>http://bestlixiang.site/2018/03/26/Linux私房菜-学会使用vim程序编辑器/</id>
+    <published>2018-03-26T09:06:33.000Z</published>
+    <updated>2018-03-26T09:46:51.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：系统管理员的重要工作就是修改与设置某些重要软件的配置文件，因此至少得到学会一种以上的命令行界面的文本编辑器。在所有的Linux发行版中都具有vi这款编辑器，我们这次学的它的高级版vim。<a id="more"></a></p>
+<h1 id="vi与vim"><a href="#vi与vim" class="headerlink" title="vi与vim"></a>vi与vim</h1><p>虽然在Linux在命令行界面下的文本编辑器有很多，比如Emacs，pico，nano，joe与vim等。但是我们却一定要学会vi或者说vim，vim相当于vi的高级版。</p>
+<h2 id="为什么要学vim"><a href="#为什么要学vim" class="headerlink" title="为什么要学vim"></a>为什么要学vim</h2><ol>
+<li>所有的UNIX Like系统都会内置vi文本编辑器，其他文本编辑器不一定存在。</li>
+<li>所有软件的编辑结构都会主动调用vi（例如crontab，visudo,edquota等）<strong>很重要</strong></li>
+<li>vim具有程序编辑能力，可以主动以字体颜色辨别语法的正确性，方便程序设计。</li>
+<li>程序简单，编辑速度相当快速。</li>
+</ol>
+<h1 id="vi的使用"><a href="#vi的使用" class="headerlink" title="vi的使用"></a>vi的使用</h1><p>vi分为3种模式，分别是一般模式、编辑模式与命令行模式。它们的作用如下：</p>
+<ol>
+<li>一般模式：以vi打开一个文件就直接进入一般模式了。在这个模式中，你可以使用左右按键来移动光标，你可以删除字符或删除整行，也可以复制，粘贴你的文件数据。</li>
+<li>编辑模式：在一般模式中是无法编辑文件内容的。要等到你按下“i,l,o,O,a,A,r,R”等任何一个字母之后才会进入编辑模式。通常在Linux中，按下这些按键时，在界面的左下方会出现INSERT或REPLACE的字样，此时才可以编辑，如果要回到一般模式，必须要按下ESC才可以退出编辑模式。</li>
+<li>命令行模式：在一般模式中，输入“:、/、?”3个中的任何一个按钮，就可以将光标移动到最下面的那一行。在这个模式当中，可以提供你查找数据的操作，而读取、保存、大量替换字符、离开vi、显示行号等操作就是在此模式中完成的。</li>
+</ol>
+<h2 id="vi按键说明"><a href="#vi按键说明" class="headerlink" title="vi按键说明"></a>vi按键说明</h2><p>这个按键说明大部分人都会有总结，所以这里也就不再做无用功了，所以贴出下面的链接，遇到问题去查就好了，但是需要保证所有按键都亲自去试一遍！</p>
+<p><strong><a href="https://blog.csdn.net/zyq522376829/article/details/47321739" target="_blank" rel="external">Linux - vim按键说明</a></strong></p>
+<p>但是这里我还是想把<strong>常用的命令</strong>在这里再贴出来，希望能够记住：</p>
+<ol>
+<li>一般模式可用的按钮说明，光标移动、复制粘贴、查找替换等</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>按键说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ctrl + f</td>
+<td>屏幕『向下』移动一页，相当于 [Page Down]按键</td>
+</tr>
+<tr>
+<td>Ctrl + b</td>
+<td>屏幕『向上』移动一页，相当于 [Page Up] 按键</td>
+</tr>
+<tr>
+<td>0 或功能键Home</td>
+<td>这是数字『 0 』：移动到这一行的最前面字符处 (常用)</td>
+</tr>
+<tr>
+<td>$ 或功能键End</td>
+<td>移动到这一行的最后面字符处(常用)</td>
+</tr>
+<tr>
+<td>G</td>
+<td>移动到这个档案的最后一行(常用)</td>
+</tr>
+<tr>
+<td>gg</td>
+<td>移动到这个档案的第一行，相当于 1G 啊！ (常用)</td>
+</tr>
+<tr>
+<td>nEnter</td>
+<td>n为数字。光标向下移动 n 行(常用)</td>
+</tr>
+<tr>
+<td>/word</td>
+<td>向光标之下寻找一个名称为 word 的字符串。例如要在档案内搜寻 server这个字符串，就输入 /vbird 即可！ (常用)</td>
+</tr>
+<tr>
+<td>:n1,n2s/word1/word2/g</td>
+<td>n1 与 n2 为数字。在第 n1 与 n2 行之间寻找 word1 这个字符串，并将该字符串取代为 word2</td>
+</tr>
+<tr>
+<td>:1,$s/word1/word2/g</td>
+<td>从第一行到最后一行寻找 word1 字符串，并将该字符串取代为 word2</td>
+</tr>
+<tr>
+<td>:1,$s/word1/word2/gc</td>
+<td>从第一行到最后一行寻找 word1 字符串，并将该字符串取代为 word2 ！且在取代前显示提示字符给用户确认 (confirm) 是否需要取代</td>
+</tr>
+<tr>
+<td>x, X</td>
+<td>在一行字当中，x 为向后删除一个字符 (相当于 [del] 按键)， X 为向前删除一个字符(相当于 [backspace] 亦即是退格键)</td>
+</tr>
+<tr>
+<td>dd</td>
+<td>删除游标所在的那一整列</td>
+</tr>
+<tr>
+<td>ndd</td>
+<td>n 为数字。删除光标所在的向下 n 列，例如 20dd 则是删除 20 列</td>
+</tr>
+<tr>
+<td>yy</td>
+<td>复制游标所在的那一行</td>
+</tr>
+<tr>
+<td>nyy</td>
+<td>n 为数字。复制光标所在的向下 n 列，例如 20yy 则是复制 20 列</td>
+</tr>
+<tr>
+<td>p, P</td>
+<td>p 为将已复制的数据在光标下一行贴上，P 则为贴在游标上一行！ 举例来说，我目前光标在第 20 行，且已经复制了 10 行数据。则按下 p 后， 那 10 行数据会贴在原本的 20 行之后，亦即由 21 行开始贴。但如果是按下 P 呢？ 那么原本的第 20 行会被推到变成 30 行。</td>
+</tr>
+<tr>
+<td>u</td>
+<td>复原前一个动作</td>
+</tr>
+<tr>
+<td>Ctrl+r</td>
+<td>重做上一个动作</td>
+</tr>
+<tr>
+<td>.</td>
+<td>不要怀疑！这就是小数点！意思是重复前一个动作的意思。 如果你想要重复删除、重复贴上等等动作，按下小数点“.”就好了！</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>一般模式切换到编辑模式的可用的按钮说明</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>按键说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i, I</td>
+<td>进入插入模式(Insert mode)：i 为从目前光标所在处插入， I 为在目前所在行的第一个非空格符处开始插入。</td>
+</tr>
+<tr>
+<td>a, A</td>
+<td>进入插入模式(Insert mode)：a为从目前光标所在的下一个字符处开始插入， A 为从光标所在行的最后一个字符处开始插入。</td>
+</tr>
+<tr>
+<td>o, O</td>
+<td>进入插入模式(Insert mode)：这是英文字母 o 的大小写。o 为在目前光标所在的下一行处插入新的一』； O 为在目前光标所在处的上一行插入新的一行！</td>
+</tr>
+<tr>
+<td>r, R</td>
+<td>进入取代模式(Replace mode)：r 只会取代光标所在的那一个字符一次；R会一直取代光标所在的文字，直到按下 ESC 为止。</td>
+</tr>
+<tr>
+<td>Esc</td>
+<td>退出编辑模式，回到一般模式中</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>一般模式切换到指令列模式的可用的按钮说明</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>按键说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:w</td>
+<td>将编辑的数据写入硬盘档案中</td>
+</tr>
+<tr>
+<td>:q</td>
+<td>离开 vi</td>
+</tr>
+<tr>
+<td>:wq</td>
+<td>储存后离开，若为 :wq! 则为强制储存后离开</td>
+</tr>
+</tbody>
+</table>
+<h1 id="vim的功能"><a href="#vim的功能" class="headerlink" title="vim的功能"></a>vim的功能</h1><p>目前大部分的发行版都以vim替代vi的功能了，如果你使用vi后，却看到界面的右下角有显示目前光标的行列号码，那么你的vi已经被vim替代了，vim相比于vi有许多新的功能。</p>
+<h2 id="块操作"><a href="#块操作" class="headerlink" title="块操作"></a>块操作</h2><p>vi的操作基本上都是以行为单位的操作，但是vim具有块操作的功能，具体的按键说明如下：</p>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>按键说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v</td>
+<td>字符选择，将光标经过的地方反白选择</td>
+</tr>
+<tr>
+<td>V</td>
+<td>行选择，将光标经过的行反白选择</td>
+</tr>
+<tr>
+<td>Ctrl + v</td>
+<td>块选择，可以用长方形选择数据</td>
+</tr>
+<tr>
+<td>y</td>
+<td>将反白的地方复制</td>
+</tr>
+<tr>
+<td>d</td>
+<td>删除反白的地方</td>
+</tr>
+</tbody>
+</table>
+<h2 id="多文件编辑"><a href="#多文件编辑" class="headerlink" title="多文件编辑"></a>多文件编辑</h2><p>有事我们需要在一个vim内编辑多个文件，这个时候我们就需要多文件编辑功能，具体按键如下：</p>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>按键说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:n</td>
+<td>编辑下一个文件</td>
+</tr>
+<tr>
+<td>:N</td>
+<td>编辑上一个文件</td>
+</tr>
+<tr>
+<td>:files</td>
+<td>列出目前这个vim打开的所有文件</td>
+</tr>
+</tbody>
+</table>
+<h2 id="多窗口功能"><a href="#多窗口功能" class="headerlink" title="多窗口功能"></a>多窗口功能</h2><p>很多时候我们需要对比文件，但是情况是在同一个vim窗口，这时候也就需要用到多窗口功能，具体按键如下：</p>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>按键说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>：sp filename</td>
+<td>打开新窗口，如果有加filename,新窗口打开新文件，否则打开相同文件</td>
+</tr>
+<tr>
+<td>Ctrl + w + j/↓</td>
+<td>按键的按法是：先按下Ctrl不放，再按下w后放开所有的按键，然后再按下j或箭头，则光标可移动到下方的窗口</td>
+</tr>
+<tr>
+<td>Ctrl + w + k/↑</td>
+<td>同上，但是光标移动到上面的窗口</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vim常用命令示意图"><a href="#vim常用命令示意图" class="headerlink" title="vim常用命令示意图"></a>vim常用命令示意图</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/linux/jpg/vim.jpg" alt="vim"></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+<li><a href="https://blog.csdn.net/zyq522376829/article/details/47321739" target="_blank" rel="external">Linux - vim按键说明</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：系统管理员的重要工作就是修改与设置某些重要软件的配置文件，因此至少得到学会一种以上的命令行界面的文本编辑器。在所有的Linux发行版中都具有vi这款编辑器，我们这次学的它的高级版vim。
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_Linux磁盘与文件系统管理</title>
@@ -1814,60 +2087,6 @@
     <summary type="html">
     
       &lt;p&gt;引：将所有方法封装起来，要用什么方法就打开什么方法，这就是&lt;strong&gt;策略模式&lt;/strong&gt;。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——装饰模式</title>
-    <link href="http://bestlixiang.site/2018/03/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/07/设计模式之禅——装饰模式/</id>
-    <published>2018-03-07T04:09:48.000Z</published>
-    <updated>2018-03-07T05:42:41.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：想给某些类增加一些功能，有些人可能会想到直接修改类，但是要求不影响子类，这就需要用到<strong>装饰模式</strong>了。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>动态地给一个对象添加一些额外的职责。就增加功能来说，装饰模式相比生成子类更为灵活。——结构类</strong></p>
-<p>装饰模式和代理模式很像，它的通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/decorator.png" alt="decorator"></p>
-<p>下面简单说说类图中的4个对象：</p>
-<ol>
-<li>Component是一个接口或者抽象类，就是定义我们最核心的对象，也是最原始的对象。</li>
-<li>ConcreteComponent是最核心的对象的实现，我们要装饰的就是它。</li>
-<li>Decorator装饰对象，它里面不一定有抽象的方法，但是它的属性里必然有一个private变量指向Component。</li>
-<li>ConcreteDecorator是装饰对象的实现类。</li>
-</ol>
-<p>装饰模式的具体实现代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="comment">// 抽象的方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteComponent</span> <span class="title">exgtends</span> <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="comment">// 具体实现</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"do something"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象装饰类，如果只有一个装饰类，则可以没有抽象装饰者</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Decorator</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Component component = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 通过构造函数传递被修饰者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Decorator</span><span class="params">(Component _component)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.component = _component;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 委托给被修饰者执行</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.component.operate();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体装饰类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecorator1</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义被修饰者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecorator1</span><span class="params">(Component _component)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(_component);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 定义自己的修饰方法</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"method1 修饰"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 重写父类的operate方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.method1();</div><div class="line">        <span class="keyword">super</span>.operate();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecorator2</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义被修饰者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecorator2</span><span class="params">(Component _component)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(_component);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 定义自己的修饰方法</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"method2 修饰"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 重写父类的operate方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.method2();</div><div class="line">        <span class="keyword">super</span>.operate();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Component component = <span class="keyword">new</span> ConcreteComponent();</div><div class="line">        <span class="comment">// 第一次修饰</span></div><div class="line">        component = <span class="keyword">new</span> ConcreteDecorator1(component);</div><div class="line">        <span class="comment">// 第二次修饰</span></div><div class="line">        component = <span class="keyword">new</span> ConcreteDecorator2(component);</div><div class="line">        <span class="comment">// 修饰后运行</span></div><div class="line">        component.operate();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>装饰类和被修饰类可以独立发展，而不会相互耦合。</li>
-<li>装饰模式是继承关系的一个替代方案。</li>
-<li>装饰模式可以动态地扩展一个实现类的功能。</li>
-</ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>多层的装饰是比较复杂的。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>需要扩展一个类的功能，或给一个类增加附加功能。</li>
-<li>需要动态地给一个对象增加功能，这些功能可以再动态地撤销的。</li>
-<li>需要为一批兄弟类进行改装或加装功能。</li>
-</ol>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><ol>
-<li>装饰模式是对继承的有力补充。</li>
-<li>在业务变更的时候，增强类的功能。</li>
-</ol>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：想给某些类增加一些功能，有些人可能会想到直接修改类，但是要求不影响子类，这就需要用到&lt;strong&gt;装饰模式&lt;/strong&gt;了。
     
     </summary>
     
