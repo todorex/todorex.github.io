@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-26T09:46:51.000Z</updated>
+  <updated>2018-03-28T05:52:24.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,272 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_初探shell步入bash</title>
+    <link href="http://bestlixiang.site/2018/03/28/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E5%88%9D%E6%8E%A2shell%E6%AD%A5%E5%85%A5bash/"/>
+    <id>http://bestlixiang.site/2018/03/28/Linux私房菜-初探shell步入bash/</id>
+    <published>2018-03-28T05:44:19.000Z</published>
+    <updated>2018-03-28T05:52:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：在Linux的环境下，如果你不懂bash是什么，那么其他的东西就不用学了！<a id="more"></a></p>
+<h1 id="认识bash这个shell"><a href="#认识bash这个shell" class="headerlink" title="认识bash这个shell"></a>认识bash这个shell</h1><p>管理整个计算机硬件的其实是操作系统的内核，这个内核是需要保护的，所以我们一般用户就只能通过shell来跟内核通信，以让内核达到我们所想要达到的工作，那么系统。</p>
+<h2 id="硬件、内核与shell"><a href="#硬件、内核与shell" class="headerlink" title="硬件、内核与shell"></a>硬件、内核与shell</h2><p>下面是硬件、内核与shell的关系：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/linux/png/relation_shell.png" alt="shell"></p>
+<p>我们必须要通过“shell”将我们输入的命令与内核通信，好让内核可以控制硬件来正确无误地工作。</p>
+<p>其实shell的功能只是提供用户操作系统的一个接口，因此这个shell需要可以调用其他软件才好。<strong>只要能够操作应用程序的接口都能够称为shell。</strong> <strong>狭义的shell</strong>指的是命令行方面的软件，包括bash等。<strong>广义的shell</strong>包括图形界面的软件，因为图形界面也能够操作各种应用程序来调用内核工作。</p>
+<h2 id="为什么要学命令行界面的shell"><a href="#为什么要学命令行界面的shell" class="headerlink" title="为什么要学命令行界面的shell"></a>为什么要学命令行界面的shell</h2><ol>
+<li>命令行界面的shell：大家（几乎所有发行版）都一样</li>
+<li>远程管理：命令行界面就是比较快，而且较不容易出现断线或者信息外流的问题。</li>
+<li>Linux的任督二脉：shell是也。因为要想将自己的主机管理好，良好的shell程序编写是必须的。</li>
+</ol>
+<h2 id="系统合法与-etc-shells功能"><a href="#系统合法与-etc-shells功能" class="headerlink" title="系统合法与/etc/shells功能"></a>系统合法与/etc/shells功能</h2><p>目前我们的Linux有下面几个可以用的shell，我们可以通过查看/etc/shells这个文件，可以看到如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/bin/sh   (已经被/bin/bash所替代)</div><div class="line">/bin/bash  (Linux默认的shell)</div><div class="line">/sbin/nologin</div><div class="line">/usr/bin/sh</div><div class="line">/usr/bin/bash</div><div class="line">/usr/sbin/nologin</div><div class="line">/bin/tcsh   (整合C shell，提供了更多的功能)</div><div class="line">/bin/csh  (已经被/bin/tcsh所替代)</div></pre></td></tr></table></figure></p>
+<p>Linux默认的就是bash。系统上合法的shell都要写入/etc/shells这个文件中，因为系统某些服务在运行过程中，会去检查用户能够使用的shells，而这些shell的查询就是借助/etc/shells这个文件。</p>
+<p>用户默认取得的shell可以通过查看/etc/passwd文件，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">root:x:0:0:root:/root:/bin/bash</div><div class="line">bin:x:1:1:bin:/bin:/sbin/nologin</div><div class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</div></pre></td></tr></table></figure></p>
+<h2 id="bash-shell的功能"><a href="#bash-shell的功能" class="headerlink" title="bash shell的功能"></a>bash shell的功能</h2><p>bash的优点如下：</p>
+<ol>
+<li>命令记忆能力，~/.bash_history里面会记录前一次登录所执行过的命令，而这一次登录都被暂存在临时内存中，成功注销后，本次执行的命令会记录到文件中。最大的好处就是可以查询曾经做过的操作，利于排错。</li>
+<li>命令与文件补全功能（Tab键的好处）</li>
+<li>命令别名设置功能（alias）执行如下得命令：<blockquote>
+<p>alias 简化命令=’实际命令’ （设置别名）; unalias 简化命令（解除别名）</p>
+</blockquote>
+</li>
+<li>作业控制、前台、后台控制</li>
+<li>程序脚本</li>
+<li>通配符（*）</li>
+</ol>
+<h1 id="shell的变量功能"><a href="#shell的变量功能" class="headerlink" title="shell的变量功能"></a>shell的变量功能</h1><p>变量是bash环境中非常重要的一个玩意儿。</p>
+<h2 id="什么是变量"><a href="#什么是变量" class="headerlink" title="什么是变量"></a>什么是变量</h2><p><strong>变量：</strong> 就是以一组文字或符号等，来替代一些设置或者一串保留的数据。</p>
+<p>变量的方便性在于：</p>
+<ol>
+<li>变量的可变性与方便性</li>
+<li>简化bash环境操作</li>
+<li>脚本程序设计的好帮手</li>
+</ol>
+<h2 id="变量的分类"><a href="#变量的分类" class="headerlink" title="变量的分类"></a>变量的分类</h2><p>在Linux中，变量分为环境变量(全局变量) 和 局部变量。<br>环境变量能被子进程继承，而局部变量只能在当前进程中使用。</p>
+<p>不论是环境变量还是局部变量。他们又都可以分为系统变量 和 自定义变量。系统变量是系统启动时自动创建的变量，往往为系统运行提供支持；而自定义变量是用户自己定义的。一般而言，系统变量全为大写，自定义变量全为小写。</p>
+<h2 id="变量的显示与设置：echo，unset"><a href="#变量的显示与设置：echo，unset" class="headerlink" title="变量的显示与设置：echo，unset"></a>变量的显示与设置：echo，unset</h2><ol>
+<li><p>变量的显示：echo</p>
+<p> 读变量，只需要在变量名称前面加上$，或者是以${变量}的方式来显示就可以。</p>
+</li>
+<li><p>变量的修改：“=”</p>
+<p> 只需要用等号连接变量与它的内容就好了。它具有如下设置规则：</p>
+<ul>
+<li>等号两边不能直接接空格符</li>
+<li>变量名称只能是英文字母与数字，但是开头字符不能是数字</li>
+<li>变量内容若有空格可使用双引号或单引号将变量的内容结合起来</li>
+<li>可以用转义字符”\”将特殊符号（如enter、$、\、空格符、！等）变成一般字符。</li>
+<li>在一串命令中，还需要其他的命令提供的信息，可以使用反单引号“`命令`”或“$(命令)”</li>
+<li>若该变量为了增加变量内容时，则可用“$变量名称”或${变量}累加内容，后用冒号连接。</li>
+<li>若该变量需要在其他自进程执行，则需要以export来使变量变成环境变量。</li>
+<li>通常大写字符为系统默认变量，自行设置变量可以使用小写字符，方便判断。</li>
+<li><p>取消变量的方法为使用“unset 变量名称”</p>
+<p>什么是<strong>子进程：</strong> 在一个bash中开启一个新的bash，那么原本的bash称为父进程，新的bash称为子进程。 子进程会继承父进程的所有环境变量，而父进程的局部变量只能在父进程中使用。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="环境变量的功能"><a href="#环境变量的功能" class="headerlink" title="环境变量的功能"></a>环境变量的功能</h2><p><strong>环境变量</strong>可以帮我们达到很多功能，包括主文件夹的变换、提示符的显示、执行文件查找的路径等。在shell环境下，可以通过env与export查看环境变量。下面主要介绍一下主要的环境变量：</p>
+<ul>
+<li>HOME：用户主目录，当我们使用cd 或cd ~时就会调用这个环境变量找到用户主目录</li>
+<li>SHELL：当前使用的SHELL，默认使用/bin/bash</li>
+<li>HISTSIZE：历史命令的最大条数</li>
+<li>PATH：可执行文件的查找路径。这是一个非常重要的环境变量，当我们直接写一个命令时，系统就会在PATH路径中寻找这个命令，这样我们在执行命令的时候就不用输命令完整的路径了。多个路径之间用:分隔</li>
+<li>LANG：当前系统的语言</li>
+<li>RANDOM：随机数生成器的路径。该路径默认指向/dev/random这个文件，这个文件是一个随机数生成器，当我们使用$RANDOM时就能获得一个0-32767之间的随机整数</li>
+</ul>
+<p>当然我们还可以通过set来查看所有变量（含环境变量和自定义变量）：这里也解释几个比较重要的变量：</p>
+<ul>
+<li>PS1：命令提示符，在命令输入光标前有一串用中括号括起来的信息，这就是命令提示符。命令提示符究竟需要显示哪些信息，这就是由PS1这个局部变量决定的。由于它是局部变量，因此子进程中无法继承这个变量，子进程拥有自己的PS1。</li>
+<li><p>$：当前shell的PID，可以通过如下命令查看当前shell的PID：</p>
+<blockquote>
+<p>echo $$</p>
+</blockquote>
+</li>
+<li><p>?：上个命令的执行结果,上个命令若执行成功，则echo $?就会返回0；若上个命令执行失败，则该值为一个非0整数。</p>
+</li>
+</ul>
+<h2 id="变量内容的删除与替换"><a href="#变量内容的删除与替换" class="headerlink" title="变量内容的删除与替换"></a>变量内容的删除与替换</h2><table>
+<thead>
+<tr>
+<th>操作方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>${变量名#关键词}</td>
+<td>从变量值的头部开始，依次向后删除到关键词第一次出现的位置为止</td>
+</tr>
+<tr>
+<td>${变量名##关键词}</td>
+<td>从变量值的头部开始，依次向后删除到关键词最后一次出现的位置为止</td>
+</tr>
+<tr>
+<td>${变量名%关键词}</td>
+<td>从变量值的尾部开始，依次向前删除到关键词第一次出现的位置为止</td>
+</tr>
+<tr>
+<td>${变量名%%关键词}</td>
+<td>从变量值的尾部开始，依次向前删除到关键词最后一次出现的位置为止</td>
+</tr>
+<tr>
+<td>${变量名/旧字符串/新字符串}</td>
+<td>从变量值的头部开始，依次向后找到第一个旧字符串，并将其替换</td>
+</tr>
+<tr>
+<td>${变量名//旧字符串/新字符串}</td>
+<td>将变量值中所有的旧字符串替换成新字符串</td>
+</tr>
+</tbody>
+</table>
+<h1 id="Bash-Shell的操作环境"><a href="#Bash-Shell的操作环境" class="headerlink" title="Bash Shell的操作环境"></a>Bash Shell的操作环境</h1><h2 id="路径与命令的查找顺序"><a href="#路径与命令的查找顺序" class="headerlink" title="路径与命令的查找顺序"></a>路径与命令的查找顺序</h2><p>基本上，命令运行的顺序可以这样看：</p>
+<ol>
+<li>以相对/绝对路径执行命令，例如：“/bin/ls”或“./ls”</li>
+<li>由alias找到该命令来执行</li>
+<li>有bash内置的(builtin)命令来执行</li>
+<li>通过$PATH这个变量的顺序找到的第一个命令来执行</li>
+</ol>
+<h2 id="bash的登录与欢迎环境：-etc-issue-etc-motd"><a href="#bash的登录与欢迎环境：-etc-issue-etc-motd" class="headerlink" title="bash的登录与欢迎环境：/etc/issue,/etc/motd"></a>bash的登录与欢迎环境：/etc/issue,/etc/motd</h2><ol>
+<li>/etc/issue：放置终端机接口登录成功的界面提示的字符。</li>
+<li>/etc/issue.net：放置telnet远程登录成功的界面提示的字符。</li>
+<li>/etc/motd：如果你想让用户登录后取得一些信息，可以将信息加入其中。比如告知登录者系统将在什么时候维护。</li>
+</ol>
+<h2 id="bash的环境配置文件"><a href="#bash的环境配置文件" class="headerlink" title="bash的环境配置文件"></a>bash的环境配置文件</h2><p>由于系统有一些环境配置文件的存在，让bash在启动时直接读取这些配置文件，所有已进入bash就能够取得一堆有用的变量。而这些配置文件又可以分为全体系统的配置文件以及用户个人偏好配置文件。要注意的是，之前我们说的命令别名、自定义的变量在你注销bash后就会失效。所以你想要保留你的设置，就得要讲这些设置写入配置文件才行。，下面就看看这些东西：</p>
+<ol>
+<li><p>login shell与non-login shell</p>
+<p> login shell和non-login shell是两种shell登录的方式，它们登录后加载的环境配置文件有所不同。</p>
+<ul>
+<li>login shell在获取bash前需要进行一套完整的登录过程，这个登录过程就称为login shell。所谓“完整的登录过程”指需要输入用户名和密码。login shell其实只会读取这两个配置文件：/etc/profile和(~/.bash_profile或 ~/.bash\_login或~/.profile)</li>
+<li>non-login shell获取bash不需要输入密码的登录过程称为non-login shell。如在bash中直接输入bash，从而打开一个子bash，这个过程不需要输入密码，因此称为non-login shell。比如在图形界面中。</li>
+</ul>
+</li>
+<li>/etc/profile：系统级的环境变量(login shell才会读) 。<br>该文件存放系统级环境变量，所有的用户都会拥有，一般不建议修改这个文件。</li>
+<li>~/.bash_profile：用户个人的环境变量(login shell才会读)<br>当/etc/profile中的环境变量加载完毕后就会加载本文件，本文件中定义了当前用户的环境变量。</li>
+<li>~/.bashrc：non-login shell会读取的环境配置文件<br>当用户以non-login方式登录后，只会加载这个文件，该文件会对一些操作加上安全询问。这个文件不管哪种登录方式都会被加载，因此这里可以存放别名。</li>
+<li>/etc/man.conf：设置man的存放路径<br>如果使用源码安装软件的话(非rpm、yum)，一般软件会安装在自定义的目录中(一般为/usr/local/软件名)。那么软件中的man文件就无法被系统找到，从而无法通过“man+命令”找到这个软件的命令帮助文档。我们需要手动将该软件的man目录添加到/etc/man.conf中去，从而执行“man+命令”就能找到这个目录的帮助文档。</li>
+<li>~/.bash_history：存储用户历史命令</li>
+<li>~/.bash_logout：记录注销后系统执行的操作</li>
+</ol>
+<h2 id="通配符和特殊字符"><a href="#通配符和特殊字符" class="headerlink" title="通配符和特殊字符"></a>通配符和特殊字符</h2><h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h3><p>在bash的操作环境中还有一个非常有用的功能，那就是通配符。下面是一些常用的通配符：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>代表任意多个字符</td>
+</tr>
+<tr>
+<td>?</td>
+<td>代表一个字符</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>[abcd]：代表该范围内的一个字符</td>
+</tr>
+<tr>
+<td>[-]</td>
+<td>[a-z]：代表a-z之间的一个字符</td>
+</tr>
+<tr>
+<td>[^]</td>
+<td>[^a-z]：代表除了a-z以外的所有字符</td>
+</tr>
+</tbody>
+</table>
+<h3 id="特殊字符"><a href="#特殊字符" class="headerlink" title="特殊字符"></a>特殊字符</h3><p>下面是bash环境中的特殊符号：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#</td>
+<td>注释</td>
+</tr>
+<tr>
+<td>\</td>
+<td>转移字符，将特殊字符转为普通字符</td>
+</tr>
+<tr>
+<td>;</td>
+<td>分隔多个目录，使得依次执行</td>
+</tr>
+<tr>
+<td>~</td>
+<td>用户主目录</td>
+</tr>
+<tr>
+<td>$</td>
+<td>变量的起始符</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>将目录置于后台执行</td>
+</tr>
+<tr>
+<td>!</td>
+<td>非</td>
+</tr>
+<tr>
+<td>/</td>
+<td>目录分隔符</td>
+</tr>
+<tr>
+<td>&gt;,&gt;&gt;</td>
+<td>数据流重定向，输出导向</td>
+</tr>
+<tr>
+<td>&lt;,&lt;&lt;</td>
+<td>数据流重定向，输入导向</td>
+</tr>
+<tr>
+<td>‘’</td>
+<td>不含变量置换功能</td>
+</tr>
+<tr>
+<td>“”</td>
+<td>含有变量置换功能</td>
+</tr>
+<tr>
+<td>``</td>
+<td>中间为待执行的命令，和$()一致</td>
+</tr>
+<tr>
+<td>()</td>
+<td>中间为子shell的起始和结束</td>
+</tr>
+<tr>
+<td>{}</td>
+<td>中间为命令块</td>
+</tr>
+</tbody>
+</table>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：在Linux的环境下，如果你不懂bash是什么，那么其他的东西就不用学了！
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_学会使用vim程序编辑器</title>
@@ -2032,61 +2298,6 @@
     <summary type="html">
     
       &lt;p&gt;引：&lt;strong&gt;适配器模式&lt;/strong&gt;在生活中非常常见，比如你的笔记本上的电源适配器，通过它笔记本可以使用在110~220V之间变化的电源，而笔记本还可以正常工作。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——策略模式</title>
-    <link href="http://bestlixiang.site/2018/03/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/07/设计模式之禅——策略模式/</id>
-    <published>2018-03-07T09:19:02.000Z</published>
-    <updated>2018-03-07T09:19:35.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：将所有方法封装起来，要用什么方法就打开什么方法，这就是<strong>策略模式</strong>。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>定义一组算法，将每个算法都封装起来，并且使他们之间可以互换。——行为类</strong></p>
-<p>我们先看它的类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/strategy.png" alt="strategy"></p>
-<p>简单介绍类图中的几个类：</p>
-<ol>
-<li>Context封装角色，也叫上下文角色，起承上启下封装作用，屏蔽高层模块对策略、算法的直接访问。</li>
-<li>Strategy抽象策略角色，定义每个策略或算法必须具有的方法和属性。</li>
-<li>ConcreteStrategy具体策略角色，实现抽象策略的操作，该类含有具体的算法。</li>
-</ol>
-<p>下面是它的通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象的策略角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Strategy</span> </span>&#123;</div><div class="line">    <span class="comment">// 策略模式的运算法则</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体角色类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStrategy1</span> <span class="keyword">implements</span> <span class="title">Strategy</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"具体策略1的运算法则"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteStrategy2</span> <span class="keyword">implements</span> <span class="title">Strategy</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"具体策略2的运算法则"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 封装角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Context</span> </span>&#123;</div><div class="line">    <span class="comment">// 抽象策略</span></div><div class="line">    <span class="keyword">private</span> Strategy strategy = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 构造函数设置具体策略</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Context</span><span class="params">(Strategy _strategy)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.strategy = _strategy;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 封装后的策略方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doAngthing</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.strategy.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 声明一个具体的策略</span></div><div class="line">        Strategy strategy = <span class="keyword">new</span> ConcreteStrategy1();</div><div class="line">        <span class="comment">// 声明上下文对象</span></div><div class="line">        Context context = <span class="keyword">new</span> Context(strategy);</div><div class="line">        <span class="comment">// 执行封装后的方法</span></div><div class="line">        context.doAngthing();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>策略模式实质是采用了面向对象的继承和<strong>多态机制</strong>。但是一个类实现多个接口很正常，所以识别出抽象策略接口是系统分析师的价值所在。策略模式和代理模式的区别是策略模式的封装角色和被封装的策略类不用是同一个接口。</p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>算法可以自由切换</li>
-<li>避免使用多重条件判断</li>
-<li>扩展性良好</li>
-</ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
-<li>策略类数量增多，复用可能性小</li>
-<li>所有策略类都需要对外暴露，上层模块需要知道有哪些策略，违背了迪米特法则</li>
-</ol>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>多个类只有在算法或行为上稍有不同的场景</li>
-<li>算法需要自由切换的场景</li>
-<li>需要屏蔽算法规则的场景</li>
-</ol>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>如果系统中的一个策略家族的具体策略数量超过4个，则需要考虑使用混合模式，解决策略类膨胀和对外暴露问题。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>策略模式在项目中会经常使用，但是它具有一个致命缺陷：所有的策略都需要暴露出去。在实际项目中，我们一般通过工厂方法模式来实现策略类的声明。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：将所有方法封装起来，要用什么方法就打开什么方法，这就是&lt;strong&gt;策略模式&lt;/strong&gt;。
     
     </summary>
     
