@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-28T05:52:24.000Z</updated>
+  <updated>2018-03-30T07:13:54.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,213 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_深入bash数据操作</title>
+    <link href="http://bestlixiang.site/2018/03/30/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E6%B7%B1%E5%85%A5bash%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"/>
+    <id>http://bestlixiang.site/2018/03/30/Linux私房菜-深入bash数据操作/</id>
+    <published>2018-03-30T07:12:54.000Z</published>
+    <updated>2018-03-30T07:13:54.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：在这里有一切你想要的bash数据操作知识，比如数据流重定向，管道命令，正则表达式的使用，大家可以快快进来！<a id="more"></a></p>
+<h1 id="数据流的重定向"><a href="#数据流的重定向" class="headerlink" title="数据流的重定向"></a>数据流的重定向</h1><h2 id="什么是数据流重定向"><a href="#什么是数据流重定向" class="headerlink" title="什么是数据流重定向"></a>什么是数据流重定向</h2><p>一般来说，如果你要执行一个命令，通常它会是这样的：</p>
+<ol>
+<li>文件 -&gt; 标准输入 -&gt;命令</li>
+<li>如果执行正确，命令 -&gt; 标准输出 -&gt; 文件/设备；如果执行错误，命令 -&gt; 标准错误输出 -&gt; 文件或设备</li>
+</ol>
+<h3 id="标准输出，标准错误输出，标准输入"><a href="#标准输出，标准错误输出，标准输入" class="headerlink" title="标准输出，标准错误输出，标准输入"></a>标准输出，标准错误输出，标准输入</h3><ol>
+<li>标准输出：指的是命令执行所回传的正确信息，代码为1，使用&gt; 或 &gt;&gt;;</li>
+<li>标准错误输出：指的是命令执行错误失败后，所回传的错误信息，代码为12，使用2&gt; 或 2&gt;&gt;;</li>
+<li>标准输入：将原本需要键盘输入的数据改由文件内容来替代，代码为0，使用&lt; 或 &lt;&lt;;</li>
+</ol>
+<p>如下面的命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ll / &gt; ~/rootfile // 显示文件名信息到rootfile文件中</div></pre></td></tr></table></figure></p>
+<p>关于重定向输出文件的创建方式如下：</p>
+<ol>
+<li>该文件如果不存在，系统会自动将它创建起来</li>
+<li>当这个文件存在，那么系统就会将这个文件内容清空，然后再将数据写入</li>
+<li>若以&gt;输入到一个以存在的文件中，那个文件就会被覆盖，如果不想被覆盖，可以使用 &gt;&gt;</li>
+</ol>
+<h3 id="dev-null-垃圾桶黑洞设备与特殊写法"><a href="#dev-null-垃圾桶黑洞设备与特殊写法" class="headerlink" title="/dev/null 垃圾桶黑洞设备与特殊写法"></a>/dev/null 垃圾桶黑洞设备与特殊写法</h3><ol>
+<li><p>/dev/null 垃圾桶黑洞设备，如果我们知道错误信息会发生，所以要讲错误信息忽略掉而不显示或存储，我们就需要使用/dev/null这个黑洞设备了。写法如下：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ll /  2&gt; /dev/null</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果我们要将正确地与错误数据都写入同一个文件中去，这个时候就需要使用特殊写法了，如下：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ll / &gt; ~/rootfile 2&gt;&amp;1  </div><div class="line">ll / &amp;&gt; ~/rootfile</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="为什么要使用命令输出重定向"><a href="#为什么要使用命令输出重定向" class="headerlink" title="为什么要使用命令输出重定向"></a>为什么要使用命令输出重定向</h3><ol>
+<li>屏幕输出的信息很重要，而且我们需要将它存下来的时候</li>
+<li>后台执行中的程序，不希望它干扰屏幕正常的输出结果时</li>
+<li>一些系统的例行命令的执行结果，希望它可以存下来时</li>
+<li>一些执行命令的可能已知信息时，想以“2&gt;/dev/null”将它丢掉时</li>
+<li>错误信息与正确信息需要分别输出时</li>
+</ol>
+<h2 id="命令执行的判断依据：；，-amp-amp-，"><a href="#命令执行的判断依据：；，-amp-amp-，" class="headerlink" title="命令执行的判断依据：；， &amp;&amp;，||"></a>命令执行的判断依据：；， &amp;&amp;，||</h2><p>在某些情况下，很多命令我们需要一次输入去执行，而不像分开执行，基本有两个选择，一个是通过shell script编写脚本去执行，一种是听过下面的介绍来一直输入多重命令。</p>
+<ol>
+<li>cmd ; cmd (不考虑命令相关性的连续命令执行，第一个命令执行结束后便会执行第二个命令)</li>
+<li>cmd &amp;&amp; cmd (若第一个命令执行成功才会执行第二个命令；若第一个命令执行失败，则不会执行第二个命令。)</li>
+<li>cmd || cmd (若第一个命令执行成功，则不执行第二个命令；若第一个命令执行失败，才会执行第二个命令。)</li>
+</ol>
+<h1 id="管道命令-pipe"><a href="#管道命令-pipe" class="headerlink" title="管道命令(pipe)"></a>管道命令(pipe)</h1><h2 id="什么是管道命令"><a href="#什么是管道命令" class="headerlink" title="什么是管道命令"></a>什么是管道命令</h2><p><strong>管道命令</strong> 能够将一个命令的执行结果经过<strong>筛选</strong>，只保留我们需要的信息。 它的符号是 <strong>“ | ”</strong>。</p>
+<p>管道命令有下面两个比较需要注意的地方：</p>
+<ol>
+<li>管道命令仅会处理标准输出，对于标准错误输出会予以忽略</li>
+<li>管道命令必须要能够接收来自前一个命令的数据成为标准输人继续处理才行。</li>
+</ol>
+<h2 id="管道命令"><a href="#管道命令" class="headerlink" title="管道命令"></a>管道命令</h2><h3 id="选取指定列：cut"><a href="#选取指定列：cut" class="headerlink" title="选取指定列：cut"></a>选取指定列：cut</h3><p>cut为剪切的意思，它能将一行行的数据按照指定的分隔符切成一列列，然后只显示特定列的数据。 cut有两种使用方式：</p>
+<ul>
+<li><p>按照指定字符分隔，这个命令会按照特定的分隔符将数据切分，并只显示第n列的数据。如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cut -d &apos;分隔符&apos; -f n(第几列)</div></pre></td></tr></table></figure>
+</li>
+<li><p>选择特定范围内的数据，如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cut -c 起始字符的下标-结束字符的下标</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="关键词搜索指定行：grep"><a href="#关键词搜索指定行：grep" class="headerlink" title="关键词搜索指定行：grep"></a>关键词搜索指定行：grep</h3><p>grep用于进行关键词查找，它会将文件中含有关键词的那一整行输出来。grep的两种使用方式如下：</p>
+<ul>
+<li><p>从指定文件中将符合关键词的行搜索出来，如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep [-参数] ‘关键词’ 文件</div></pre></td></tr></table></figure>
+</li>
+<li><p>采用管道，将前一个命令的执行结果输出给grep，并通过grep的关键词搜索将符合条件的行搜索出来，如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">命令 | grep [-参数] ‘关键词’</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="排序：sort"><a href="#排序：sort" class="headerlink" title="排序：sort"></a>排序：sort</h3><p>sort命令能够将指定文件 或 前一个命令的结果数据 按照指定字段进行排序。sort两种使用方式与grep基本一样，一种是将文件中的数据按照指定字段排序。另一种是使用管道，将前一个命令执行的结果按照指定字段进行排序。。</p>
+<h3 id="去除重复行：uniq"><a href="#去除重复行：uniq" class="headerlink" title="去除重复行：uniq"></a>去除重复行：uniq</h3><p>该命令只能用于管道，如统计当前系统所有用户的登录次数：如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">last | cut -d &apos; &apos; -f 1 | uniq -c</div></pre></td></tr></table></figure></p>
+<h3 id="统计字数、行数、字符数：wc"><a href="#统计字数、行数、字符数：wc" class="headerlink" title="统计字数、行数、字符数：wc"></a>统计字数、行数、字符数：wc</h3><p>wc只能通过管道使用，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">命令 | wc [-参数]</div></pre></td></tr></table></figure></p>
+<h3 id="双向重定向：tee"><a href="#双向重定向：tee" class="headerlink" title="双向重定向：tee"></a>双向重定向：tee</h3><p>tee只能和管道结合使用，如将last中的信息输出指文件并显示在屏幕上,指令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">last | tee -a lastfile | cut -d &apos; &apos; f 1</div></pre></td></tr></table></figure></p>
+<h3 id="切割文件：split"><a href="#切割文件：split" class="headerlink" title="切割文件：split"></a>切割文件：split</h3><p>该命令能将一个大文件切分成若干个小文件。用法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">split [-bl] 大文件 小文件名字前缀</div></pre></td></tr></table></figure></p>
+<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><h2 id="什么是正则表达式"><a href="#什么是正则表达式" class="headerlink" title="什么是正则表达式"></a>什么是正则表达式</h2><p><strong>正则表达式</strong> 就是处理字符串的方法，它是行为单位来进行字符串的处理行为<br>正则表达式通过一些特殊符号的辅助，可以让用户轻易达到查找、删除、替换某特定字符串的处理程序。</p>
+<p>正则表达式基本上就是一种“表示法”，只要工具支持这种表示法，那么工具程序就可以用来作为正则表达式的字符串处理之用。比如vi、grep、awk、sed等工具。</p>
+<p>正则表达式的字符串表达方式依照不同的严谨度可以分为<strong>基本正则表达式</strong>与<strong>扩展正则表达式</strong>。</p>
+<h2 id="基础正则表达式"><a href="#基础正则表达式" class="headerlink" title="基础正则表达式"></a>基础正则表达式</h2><h3 id="基础正则表达式字符"><a href="#基础正则表达式字符" class="headerlink" title="基础正则表达式字符"></a>基础正则表达式字符</h3><table>
+<thead>
+<tr>
+<th>RE字符</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^word</td>
+<td>待查找的字符串(word)在行首</td>
+</tr>
+<tr>
+<td>word$</td>
+<td>待查找的字符串(word)在行尾</td>
+</tr>
+<tr>
+<td>.</td>
+<td>代表一定有一个任意字符的字符</td>
+</tr>
+<tr>
+<td>\/</td>
+<td>转义字符,将特殊符号的特殊意义去除</td>
+</tr>
+<tr>
+<td>*</td>
+<td>重复0个或多个的前一个字符</td>
+</tr>
+<tr>
+<td>[list]</td>
+<td>从字符集合的RE字符里面找出想要选取的字符</td>
+</tr>
+<tr>
+<td>[n1-n2]</td>
+<td>从字符集合的RE字符里面找出想要选取的字符范围</td>
+</tr>
+<tr>
+<td>[^list]</td>
+<td>从字符集合的RE字符里面找出不要的字符串或范围</td>
+</tr>
+<tr>
+<td>/{n,m/}</td>
+<td>连续n到m个的前一个RE字符,/{n/}表示连续n个,/{n,/}表示连续n个及以上</td>
+</tr>
+</tbody>
+</table>
+<p>PS：正则表达式的特殊字符与一般在命令行输入的“通配符”并不相同，通配符的*代表的是零到无限多个字符的意思，但是在正则表达式中*是表示重复0到无穷多个前一个RE字符的意思。</p>
+<h3 id="基础正则表达式练习-以grep工具为例"><a href="#基础正则表达式练习-以grep工具为例" class="headerlink" title="基础正则表达式练习(以grep工具为例)"></a>基础正则表达式练习(以grep工具为例)</h3><ol>
+<li><p>查找特定字符串</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">grep -n ‘the’ regular_express.txt</div><div class="line"></div><div class="line">grep -vn &apos;the&apos; regular_express.txt  (-v反向选择)</div></pre></td></tr></table></figure>
+</li>
+<li><p>利用中括号[]来查找集合字符</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">grep -n &apos;t[ae]st&apos; regular_express.txt (可匹配test或tast)</div><div class="line"></div><div class="line">grep -n &apos;[^g]oo&apos; regular_express.txt (oo前不能有g的字符)</div><div class="line"></div><div class="line">grep -n &apos;[^[:lower:]]oo&apos; regular_express.txt   ([:lower:]代表a-z的意思)</div></pre></td></tr></table></figure>
+</li>
+<li><p>行首和行尾字符</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">grep -n &apos;^test&apos; regular_express.txt (注:^在[]内表示“反向选择”,在[]外表示定位在行首)</div><div class="line"></div><div class="line">grep -n &apos;/.$&apos; regular_express.txt  (找出行尾结束为小数点的那一行)</div></pre></td></tr></table></figure>
+</li>
+<li><p>任意一个字符.与重复字符*</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">grep -n ‘g..d’ regular_express.txt (可匹配good,glad等字符)</div><div class="line"></div><div class="line">grep -n &apos;ooo*&apos; regular_express.txt  (匹配至少两个o以上的字符)</div><div class="line"></div><div class="line">grep -n &apos;g.*g&apos; regular_express.txt (找出g开头与g结尾的字符串,.*表示o个或多个任意字符的意思)</div></pre></td></tr></table></figure>
+</li>
+<li><p>限定连续RE(Regular Expression)字符范围{}</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">grep -n &apos;o/&#123;2/&#125;&apos; regular_express.txt (找出两个o的字符串)</div><div class="line"></div><div class="line">grep -n ‘go/&#123;2,5/&#125;g’ regular_express.txt (g后有两个到5个o,然后接一个g的字符串)</div><div class="line"></div><div class="line">grep -n ‘go/&#123;2,/&#125;g’ regular_express.txt (g后有两个及以上的o,然后接一个g的字符串)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="sed工具"><a href="#sed工具" class="headerlink" title="sed工具"></a>sed工具</h3><p>sed本身是一个管道命令，它可以将数据进行替换、删除、新增、选取特定行等功能。使用方式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sed [-nefr] [动作]</div></pre></td></tr></table></figure></p>
+<h2 id="扩展正则表达式"><a href="#扩展正则表达式" class="headerlink" title="扩展正则表达式"></a>扩展正则表达式</h2><p>一般情况下只需要基础正则表达式即可，但是有时候还需要一些扩展功能，比如整合两条管道命令，这就需要用到扩展正则表达式，如果是grep，它基本使用命令是egrep，基本的符号如下：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>意义与范例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+</td>
+<td>重复一个或多个的前一个RE字符，如：egrep -n ‘go+d’ regular_express.txt</td>
+</tr>
+<tr>
+<td>?</td>
+<td>0个或一个的前一个RE字符，如：egrep -n ‘go?d’ regular_express.txt</td>
+</tr>
+<tr>
+<td>\</td>
+<td></td>
+<td>用或的方式找出字符串，如：egrep -n ‘gd\</td>
+<td>good’ regular_express.txt</td>
+</tr>
+<tr>
+<td>()</td>
+<td>找出“组”的字符串 (如:egrep -n ‘g(la \</td>
+<td>oo)d’ regular_express.txt  表示找出glad或good字符串)</td>
+</tr>
+<tr>
+<td>()+</td>
+<td>多个重复组的判别  (如echo ‘AxyzxyzxyzxyzC’ \</td>
+<td>egrep ‘A(xyz)+C’  找出开头是A结尾是C,中间有一个以上的“xyz”字符串)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="文件的格式化处理"><a href="#文件的格式化处理" class="headerlink" title="文件的格式化处理"></a>文件的格式化处理</h1><h2 id="文件格式化：printf"><a href="#文件格式化：printf" class="headerlink" title="文件格式化：printf"></a>文件格式化：printf</h2><p>如果我们需要将自己的数据给它格式化输出，我们就需要一个好的样式，输出的方式其实和C语言的格式化输出差不多，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">printf &apos;打印格式&apos; 实际内容</div></pre></td></tr></table></figure></p>
+<h2 id="好用的数据处理工具：awk"><a href="#好用的数据处理工具：awk" class="headerlink" title="好用的数据处理工具：awk"></a>好用的数据处理工具：awk</h2><p>awk相当适合处理小型的数据，它的基本用法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">awk ‘条件类型1&#123;动作1&#125; 条件类型2&#123;动作2&#125; ...’ filename</div><div class="line"></div><div class="line">// 例子</div><div class="line">last -n 5 | awk &apos;&#123;print $1 &quot;\t&quot; $3&#125;&apos; // 取出登录者账号和ip</div></pre></td></tr></table></figure></p>
+<p>这个awk的处理流程如下：</p>
+<ol>
+<li>读入第一行，并将第一行的填入$0,$1等变量中</li>
+<li>依据条件类型的限制，判断是否需要进行后面的动作</li>
+<li>做完所有的动作与条件类型</li>
+<li>若还有后续行，就重复上面1~3的步骤，直到所有数据都读完为止。</li>
+</ol>
+<h2 id="文件比较工具：diff"><a href="#文件比较工具：diff" class="headerlink" title="文件比较工具：diff"></a>文件比较工具：diff</h2><p>diff用于比较两个文件之间的区别,并且是以行为单位的,diff也可以比较两个目录。用法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">diff [-bBi] from-file to-file</div></pre></td></tr></table></figure></p>
+<p>patch这个命令与diff有密不可分的联系，将旧的文件升级成为新的文件的方法是先比较新旧版本的区别，将将区别文件制作成为补丁文件，再有补丁问价更新旧文件即可。例子如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 范例:以/tmp/test内的passwd.old 与passwd.new 制作补丁文件,并更新旧版数据</div><div class="line"></div><div class="line">diff -Naur passwd.old passwd.new &gt;passwd.patch</div><div class="line"></div><div class="line">// 更新旧文件,变成和新文件一样</div><div class="line"></div><div class="line">patch -p0 &lt; passwd.patch</div><div class="line"></div><div class="line">// 恢复旧文件的内容</div><div class="line"></div><div class="line">patch -R -p0 &lt; passwd.patch</div></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：在这里有一切你想要的bash数据操作知识，比如数据流重定向，管道命令，正则表达式的使用，大家可以快快进来！
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_初探shell步入bash</title>
@@ -2251,53 +2458,6 @@
     <summary type="html">
     
       &lt;p&gt;引：提起迭代器，大家一定能想到Java的Iterator，不错，我们这次讲的迭代器模式就是目前大部分语言都已经实现的迭代器。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——适配器模式</title>
-    <link href="http://bestlixiang.site/2018/03/08/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/08/设计模式之禅——适配器模式/</id>
-    <published>2018-03-08T05:35:56.000Z</published>
-    <updated>2018-03-08T07:46:37.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：<strong>适配器模式</strong>在生活中非常常见，比如你的笔记本上的电源适配器，通过它笔记本可以使用在110~220V之间变化的电源，而笔记本还可以正常工作。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>将一个类的接口变换成客户端期待的另一种接口，从而使原本因接口不匹配而无法再一起工作的两个类能够在一起工作。——结构类</strong></p>
-<p>下面是它的通用类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/adapter.png" alt="adapter"></p>
-<p>下面简单介绍类图中的几个类：</p>
-<ol>
-<li>Target目标角色：该角色定义吧其他类转化为何种接口，也就是我们期望的接口。</li>
-<li>Adaptee源角色：需要转化的角色，通过适配器角色的包装可以成为一个新角色。</li>
-<li>Adapter适配器角色：它的职责就是通过继承或者类关联的方式把源角色转化为目标角色。</li>
-</ol>
-<p>下面是他的通过源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 目标角色</span></div><div class="line"><span class="keyword">public</span>  <span class="class"><span class="keyword">interface</span> <span class="title">Target</span> </span>&#123;</div><div class="line">    <span class="comment">// 目标角色有自己的方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 目标角色的实现类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteTarget</span> <span class="keyword">implements</span> <span class="title">Target</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"if you need any help,please call me!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 源角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Adaptee</span> </span>&#123;</div><div class="line">    <span class="comment">// 原有的业务逻辑</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"I`m kind of busy,leave me alone,please!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 适配器橘色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Adapter</span> <span class="keyword">extends</span> <span class="title">Adaptee</span> <span class="keyword">implements</span> <span class="title">Target</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">request</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 原有的业务逻辑</span></div><div class="line">        Target target = <span class="keyword">new</span> ConcreteTarget();</div><div class="line">        target.request();</div><div class="line">        <span class="comment">// 现在增加了适配器角色的业务逻辑</span></div><div class="line">        Target target2 = <span class="keyword">new</span> Adapter();</div><div class="line">        target2.request();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>适配器模式可以让两个没有任何关系的类一起运行</li>
-<li>提高了类的透明性，源角色对于高层模块是透明的</li>
-<li>提高了类的复用度，源角色在原系统中还是可以正常使用的</li>
-<li>灵活性非常好，不需要适配器的时候删除掉这个适配器即可</li>
-</ol>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>当你有动机修改一个已经投产中的接口时，适配器可能是最适合的你模式。比如系统扩展了，需要使用一个已有或新建立的类，当这个类又不符合系统的接口，那么就可以使用适配器模式。</p>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>适配器模式最好在详细设计阶段不要考虑它，它不是为解决还处在开发阶段的问题，而是解决正在服役的项目问题。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>适配器模式是一个补救模式，通常用来解决接口不相容的问题。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：&lt;strong&gt;适配器模式&lt;/strong&gt;在生活中非常常见，比如你的笔记本上的电源适配器，通过它笔记本可以使用在110~220V之间变化的电源，而笔记本还可以正常工作。
     
     </summary>
     
