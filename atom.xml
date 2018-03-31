@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-30T10:04:00.000Z</updated>
+  <updated>2018-03-31T05:23:07.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -16,11 +16,281 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Linux私房菜_账号管理</title>
+    <link href="http://bestlixiang.site/2018/03/31/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E8%B4%A6%E5%8F%B7%E7%AE%A1%E7%90%86/"/>
+    <id>http://bestlixiang.site/2018/03/31/Linux私房菜-账号管理/</id>
+    <published>2018-03-31T05:15:52.000Z</published>
+    <updated>2018-03-31T05:23:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：管理员的工作中，相对重要的一环就是“账号管理”。因为整个系统都是你在管理，并且所有的一般用户的账号申请必须要通过你的协助才行。所以我们必须要知道如果管理好一个服务器主机的账号！<a id="more"></a></p>
+<h1 id="账号与用户组"><a href="#账号与用户组" class="headerlink" title="账号与用户组"></a>账号与用户组</h1><p>在管理Linux账号时，我们必须要先了解一下Linux到底是如何辨别每一个用户的。</p>
+<h2 id="用户表示符：UID与GID"><a href="#用户表示符：UID与GID" class="headerlink" title="用户表示符：UID与GID"></a>用户表示符：UID与GID</h2><p>虽然我们登录Linux主机的时候，输入的是我们的账号，但是其实Linux主机并不会直接认识你的账号，它仅认识ID，而你的ID域账号的对应关系就在/etc/passwd当中。</p>
+<p>每一个文件都具有<strong>所有者与所属用户组</strong>的属性，所以每个登录的用户至少会取得两个ID，一个是用户ID(UID)，一个是用户组ID(GID)。</p>
+<h2 id="用户账号"><a href="#用户账号" class="headerlink" title="用户账号"></a>用户账号</h2><p>Linyx系统上面的用户如果需要登录主机以取得shell的工作环境，它必须要在计算机前面利用tty1~tty7的终端机提供的login接口，并输入账号与密码后才能登录。当我们输入账号密码后，系统主要做了如下工作：</p>
+<ol>
+<li>先寻找/etc/passwd里面是否有你输入的帐号？如果没有则跳出，如果有的话则将该帐号对应的UID与GID（在/etc/group中）读出来，另外，该帐号的主文件夹与shell设定也一并读出。</li>
+<li>再来则是核对密码表啦！这是Linux会进入/etc/shadow里面找出对应的帐号与UID，然后核对一下你刚刚输入的密码与里面的密码是否相符。</li>
+<li>如果一切都OK的话，就进入Shell控管的阶段咯！</li>
+</ol>
+<ul>
+<li><p>/etc/passwd文件结构如下：</p>
+<p>  这个文件的构造是这样的：每一行代表一个帐号，有几行就代表有几个帐号在你的系统中！不过需要特别留意的是，里头很多帐号本身就是系统正常运作所必须要的，我们可以简称为<strong>系统帐号</strong>，如bin，daemon，adm，nobody等。</p>
+<p>  我们先来看一下每个Linux系统都会有的第一行，就是root这个系统管理员那一行好了，你可以明显的看出来，每一行使用：分隔，共有七个字段，分别是</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字段号</th>
+<th>字段含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>    1</td>
+<td>账号名称</td>
+</tr>
+<tr>
+<td>    2</td>
+<td>密码，被该放到/etc/shadow文件中，以x代替</td>
+</tr>
+<tr>
+<td>    3</td>
+<td>UID，0为系统管理员，可以多个账号的UID为0，但不建议。1~99为发现版自建系统账号，100~499为用户使用的系统账号，500~*为一般用户可登录账号</td>
+</tr>
+<tr>
+<td>    4</td>
+<td>密码，GID，与/etc/group有关</td>
+</tr>
+<tr>
+<td>    5</td>
+<td>用户信息说明</td>
+</tr>
+<tr>
+<td>    6</td>
+<td>主文件夹</td>
+</tr>
+<tr>
+<td>    7</td>
+<td>shell</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>/etc/shadow文件结构如下：</p>
+<p>  文件构造基本与/etc/passwd一样，但是它有9个字段，分别是：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字段号</th>
+<th>字段含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>    1</td>
+<td>账号名称，需要与/etc/passwd对应</td>
+</tr>
+<tr>
+<td>    2</td>
+<td>密码，但是被加密过的</td>
+</tr>
+<tr>
+<td>    3</td>
+<td>最近更改密码的日期，以1970年1月1号作为1而累加的日期</td>
+</tr>
+<tr>
+<td>    4</td>
+<td>密码不可被更动的日期</td>
+</tr>
+<tr>
+<td>    5</td>
+<td>密码需要重新更改的天数</td>
+</tr>
+<tr>
+<td>    6</td>
+<td>密码需要更改期限前的警告天数</td>
+</tr>
+<tr>
+<td>    7</td>
+<td>密码过期后的账号宽限时间（密码失效日）</td>
+</tr>
+<tr>
+<td>    8</td>
+<td>账号失效日期</td>
+</tr>
+<tr>
+<td>    9</td>
+<td>保留，用于以后扩展</td>
+</tr>
+</tbody>
+</table>
+<h2 id="有效与初始用户组：groups，newgrp"><a href="#有效与初始用户组：groups，newgrp" class="headerlink" title="有效与初始用户组：groups，newgrp"></a>有效与初始用户组：groups，newgrp</h2><ul>
+<li><p>/etc/group文件结构如下：</p>
+<p>  文件构造基本与/etc/passwd一样，但是它有4个字段，分别是：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字段号</th>
+<th>字段含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>    1</td>
+<td>用户组名称</td>
+</tr>
+<tr>
+<td>    2</td>
+<td>用户组密码，以x代替</td>
+</tr>
+<tr>
+<td>    3</td>
+<td>GID，/etc/passwd第四个字段使用的GID对应的用户组名就是由这里来的</td>
+</tr>
+<tr>
+<td>    4</td>
+<td>用户组支持的账号名称，多用户以”,”分割</td>
+</tr>
+</tbody>
+</table>
+<pre><code>我们知道用户可以同时加入多个用户组，那么我们在执行工作时，到底是以哪个用户组为准呢？，这就需要引入有效用户组的概念。    
+</code></pre><ul>
+<li><p>/etc/gshadow文件结构如下：</p>
+<p>  文件构造基本与/etc/group一样，它有4个字段，分别是：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字段号</th>
+<th>字段含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>    1</td>
+<td>用户组名称</td>
+</tr>
+<tr>
+<td>    2</td>
+<td>用户组密码,开头为!表示无合法密码，所以无用户组管理员</td>
+</tr>
+<tr>
+<td>    3</td>
+<td>用户组管理员的账号，用户组管理员能够将账号添加到自己管理的用户组中</td>
+</tr>
+<tr>
+<td>    4</td>
+<td>该用户组的所属账号（与/etc/group内容相同）</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>有效用户组与初始用户组<ul>
+<li>初始用户组：就是/etc/passwd里面的第四列的GID，当用户登录系统，立刻就拥有这个用户组的相关权限。</li>
+<li>有效用户组：就是利用groups命令看到的第一个用户组，可以利用newgrp命令更改有效用户组，newgrp命令更改目前用户的有效用户组是以另一个shell来提供这个功能的，如果要回到原来的用户组只要输入exit即可。</li>
+</ul>
+</li>
+</ul>
+<h1 id="账号管理"><a href="#账号管理" class="headerlink" title="账号管理"></a>账号管理</h1><p>管理账号主要是新增、删除与更改用户的相关信息。</p>
+<h2 id="新增与删除用户"><a href="#新增与删除用户" class="headerlink" title="新增与删除用户"></a>新增与删除用户</h2><p>账号可以使用useradd命令来新建用户，密码的给予则是使用passwd命令。下面是范例：（里面有很多参数，自己可以去了解）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> 新增</div><div class="line">useradd leonard</div><div class="line">ll -d /home/leonard/</div><div class="line"><span class="meta">#</span> 默认会创建用户主文件夹，且权限为700，这是重点</div><div class="line"><span class="meta">#</span> drwx------ 2 leonard leonard 4096 3月  31 09:36 /home/leonard/</div><div class="line"></div><div class="line">grep leonard /etc/passwd /etc/shadow /etc/group</div><div class="line"><span class="meta">#</span> /etc/passwd:leonard:x:1001:1001::/home/leonard:/bin/bash</div><div class="line"><span class="meta">#</span> /etc/shadow:leonard:!!:17621:0:99999:7:::</div><div class="line"><span class="meta">#</span> /etc/group:leonard:x:1001:</div><div class="line"><span class="meta"></span></div><div class="line"># 不加账号，默认修改自己的密码</div><div class="line">passwd leonard</div><div class="line"><span class="meta"></span></div><div class="line"># 显示账号的相关信息</div><div class="line">chage leonard</div><div class="line"><span class="meta"></span></div><div class="line"># 修改账号的相关信息</div><div class="line">usermod leonard</div><div class="line"><span class="meta"></span></div><div class="line"># 删除账号，-r：连主文件夹一起删除</div><div class="line">userdel leonard</div></pre></td></tr></table></figure></p>
+<p>其实系统已经帮我们设置好了非常多的默认值，所以我们可以简单的使用“useradd 账号”来创建用户，Centos这些默认值主要会帮我们处理下面几个项目：</p>
+<ul>
+<li>在/etc/passwd 里面创建一行与账号相关的数据，包括创建UID/GID/主文件夹等；</li>
+<li>在/etc/shadow里面将此账号的密码相关参数填入，但是尚未有密码；</li>
+<li>在/etc/group里面加入一个与账号名称一模一样的组名；</li>
+<li>在/home下面创建一个与账号同名的目录作为用户的主文件夹，且权限为700</li>
+</ul>
+<h2 id="用户功能"><a href="#用户功能" class="headerlink" title="用户功能"></a>用户功能</h2><p>不论是useradd、usermod还是userdel，那都是系统管理员能够使用的命令，下面我们就介绍一些一般身份用户常用的账号数据更改与查询命令</p>
+<ul>
+<li><p>finger，可以查阅很多用户相关的信息，大部分都是/etc/passwd这个文件的信息。范例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 我的linux默认没有装finger，可以利用下面的命令安装</div><div class="line">yum install finger</div><div class="line"></div><div class="line">// 查阅用户信息，若不跟没有用户，则查询当前用户</div><div class="line">finger rex</div></pre></td></tr></table></figure>
+</li>
+<li><p>chfn(change finger)，用于修改一些相关信息,范例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">chfn rex</div><div class="line">Changing finger information for rex.</div><div class="line">名称 []: rex</div><div class="line">办公 []: 123456</div><div class="line">办公电话 []: 123456</div><div class="line">住宅电话 []: 123456</div></pre></td></tr></table></figure>
+</li>
+<li><p>chsh(change shell)，用于修改shell。</p>
+</li>
+<li>id，用于查询自己或某人的相关UID/GID等信息。</li>
+</ul>
+<h2 id="新增与删除用户组"><a href="#新增与删除用户组" class="headerlink" title="新增与删除用户组"></a>新增与删除用户组</h2><p>基本上，用户组的内容都与这两个文件有关：/etc/group,/etc/gshadow。下面是一些相关命令使用的范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"># 新建一个用户组，名称为hd</div><div class="line">groupadd hd</div><div class="line"></div><div class="line"># 修改用户组的相关参数 -g：修改既有GID，-n：修改既有组名</div><div class="line">groupmod -g 201 -n myhd hd</div><div class="line"></div><div class="line"># 删除用户组名</div><div class="line">groupdel myhd</div><div class="line"></div><div class="line"># 用户组管理员相关命令</div><div class="line"># 给用户组设置一个密码</div><div class="line">gpasswd hd</div><div class="line"># 加入用户组管理员为rex</div><div class="line">gpasswd -A rex hd</div><div class="line"># 让rex登录系统，增加leonard为hd成员</div><div class="line">gpasswd -a leonard hd</div></pre></td></tr></table></figure></p>
+<h1 id="主机的具体权限规划：ACL的使用"><a href="#主机的具体权限规划：ACL的使用" class="headerlink" title="主机的具体权限规划：ACL的使用"></a>主机的具体权限规划：ACL的使用</h1><h2 id="什么是ACL"><a href="#什么是ACL" class="headerlink" title="什么是ACL"></a>什么是ACL</h2><p>ACL是Access Control List的缩写，主要的目的是提供传统的owner、group、others的read、write、execute权限之外的具体权限设置。ACL可以针对单一用户、单一文件或目录进行r、w、x的权限设置，对于需要特殊权限的使用状况非常有帮助。</p>
+<p>ACL主要可以针对下面几方面来设置控制权限：</p>
+<ul>
+<li>用户：可以针对用户来设置权限</li>
+<li>用户组：可以针对用户组来设置权限</li>
+<li>默认属性（mask）：还可以在该目录下新建文件目录设置新数据的权限、</li>
+</ul>
+<h2 id="ACL的设置技巧"><a href="#ACL的设置技巧" class="headerlink" title="ACL的设置技巧"></a>ACL的设置技巧</h2><ol>
+<li>getfacl：取得某个文件/目录的ACL设置项目</li>
+<li>setfacl：设置某个文件/目录的ACL规定</li>
+</ol>
+<p>下面是范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 取得某个文件/目录的ACL设置项目</div><div class="line">getfacl rootfile</div><div class="line"></div><div class="line">// 输出</div><div class="line"># file: rootfile</div><div class="line"># owner: root</div><div class="line"># group: root</div><div class="line">user::rw-</div><div class="line">group::r--</div><div class="line">other::r--</div><div class="line"></div><div class="line">// 设置某个文件/目录的ACL规定</div><div class="line">setfacl -m u:rex:rwx rootfile</div></pre></td></tr></table></figure></p>
+<h1 id="用户身份切换"><a href="#用户身份切换" class="headerlink" title="用户身份切换"></a>用户身份切换</h1><p>在Linux系统中是需要做身份的变换的，主要有以下几个原因：</p>
+<ul>
+<li>使用一般账号：系统平日操作的好习惯（不然你就有机会从删库到跑路了）</li>
+<li>用较低的权限启动系统服务</li>
+<li>软件本身的限制</li>
+</ul>
+<p>根据上面的考虑，我们都是使用一般账号登录系统的，等有需要进行系统维护或软件更新时才转为root身份来操作。从一般用户转变为root主要有下面两种方式：</p>
+<ul>
+<li>“su -”：需要root用户密码</li>
+<li>“sudo命令”：sudo需要输入用户自己的密码</li>
+</ul>
+<h2 id="su"><a href="#su" class="headerlink" title="su"></a>su</h2><p>su是最简单的身份切换命令了，它可以进行任何身份的切换。但是下面有几点比较重要：</p>
+<ol>
+<li>若要完整切换到新用户的环境，必须要使用“su -username” 或 “su -|username”，才会连同PATH/USER/MAIL等变量都转成新用户的环境。如果只是使用“su”切换到root用户，PATH/USER/MAIL等变量都没有变，会导致很多命令执行不了。</li>
+<li>如果仅想执行一次root命令，可以利用“su - -c “命令串””d的方式来处理。</li>
+<li>使用root切换成为任何用户时，并不需要输入新用户的密码。</li>
+</ol>
+<p>虽然使用su很方便，但是会导致root密码外流。所以很多情况下我们通过sudo来处理。</p>
+<h2 id="sudo"><a href="#sudo" class="headerlink" title="sudo"></a>sudo</h2><p>sudo的执行仅需要自己的密码即可！甚至可以设置不需要密码即可执行sudo，由于sudo可以让你以其他用户身份执行命令（通常是使用root的身份来执行命令），因此不是所有人都能够执行sudo，而是仅有/etc/sudoers内的用户才能够执行sudo这个命令。</p>
+<ol>
+<li><p>sudo的命令用法</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo [-u 新用户账号]</div><div class="line"></div><div class="line">// 范例，以sshd的身份在/tmp下面新建一个名为mysshd的文件</div><div class="line">sudo -u sshd touch /tmp/mysshd</div></pre></td></tr></table></figure>
+</li>
+<li><p>sudo的执行流程</p>
+<ul>
+<li>当用户执行sudo时，系统在/etc/sudoers文件中查找该用户是否有执行sudo的权限；</li>
+<li>若用户具有可执行sudo的权限后，便让用户输入用户自己的密码来确认；</li>
+<li>若密码输入成功，便开始进行sudo后面接的命令（root执行sudo不需要输入密码）</li>
+<li>若欲切换的身份与执行者的身份相同，也不需要输入密码</li>
+</ul>
+</li>
+<li><p>visudo与/etc/sudoers</p>
+<p> 我们一般不直接去修改/etc/sudoers文件，而是利用visudo命令去修改，因为这个命令会在结束离开的时候去检验/etc/sudoers的语法，下面是他的用法案例：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">// 1. 单一用户可以执行root的所有命令与sudoers文件语法</div><div class="line">// 四个参数含义为(1).用户账号，(2).登陆者的来源主机，(3).(可切换的身份)，(4).可执行的命令</div><div class="line">root    ALL=(ALL)       ALL //文件中原有</div><div class="line">rex     ALL=(ALL)       ALL //新增</div><div class="line"></div><div class="line">// 2. 利用用户组以及免密码的功能处理visudo</div><div class="line"># %wheel        ALL=(ALL)       NOPASSWD: ALL //文件中原有，需要将#去掉，文件中的%表示后面接一个用户组</div><div class="line">usermod -a -G wheel rex //将rex加入wheel组中</div><div class="line"></div><div class="line">// 3. 有限制的命令操作，通过更改可执行的命令一栏的数据，就可以控制具体操作的安全性</div><div class="line">rex ALL=(ALL) !/usr/bin/passed //不让rex可以修改密码</div><div class="line"></div><div class="line">// 4. 通过别名设置visudo</div><div class="line">User_Alias ADMPW(大写) = rex1,rex2</div><div class="line">Cmnd_Alias ADMPWCOM(大写) = !/usr/bin/passwd, /usr/bin/passed [A-Za-z]</div><div class="line">ADMPW     ALL=(root)       ADMPWCOM</div><div class="line"></div><div class="line">// 5. sudo搭配su的使用方式,让用户用自己的密码变成root</div><div class="line">User_Alias ADMPW(大写) = rex1,rex2</div><div class="line">ADMPW     ALL=(root)       /bin/su -</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：管理员的工作中，相对重要的一环就是“账号管理”。因为整个系统都是你在管理，并且所有的一般用户的账号申请必须要通过你的协助才行。所以我们必须要知道如果管理好一个服务器主机的账号！
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Linux私房菜_shell script 入门</title>
     <link href="http://bestlixiang.site/2018/03/30/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-shell-script-%E5%85%A5%E9%97%A8/"/>
     <id>http://bestlixiang.site/2018/03/30/Linux私房菜-shell-script-入门/</id>
     <published>2018-03-30T10:01:49.000Z</published>
-    <updated>2018-03-30T10:04:00.000Z</updated>
+    <updated>2018-03-31T05:07:22.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：要想管理好自己的主机，自动化管理系统的好工具——shell script，这个家伙是真的需要好好学习学习的！<a id="more"></a></p>
 <h1 id="什么是shell-script"><a href="#什么是shell-script" class="headerlink" title="什么是shell script"></a>什么是shell script</h1><p><strong>shell script</strong> 是利用shell的功能所写的一个“程序”，这个程序是使用纯文本文件，将一些shell的语法与命令（含外部命令）写在里面，搭配正则表达式，管道命令与数据重定向等功能，以达到我们所想要的处理目的。</p>
@@ -105,7 +375,7 @@
     <link href="http://bestlixiang.site/2018/03/30/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E6%B7%B1%E5%85%A5bash%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"/>
     <id>http://bestlixiang.site/2018/03/30/Linux私房菜-深入bash数据操作/</id>
     <published>2018-03-30T07:12:54.000Z</published>
-    <updated>2018-03-30T07:13:54.000Z</updated>
+    <updated>2018-03-31T05:08:21.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：在这里有一切你想要的bash数据操作知识，比如数据流重定向，管道命令，正则表达式的使用，大家可以快快进来！<a id="more"></a></p>
 <h1 id="数据流的重定向"><a href="#数据流的重定向" class="headerlink" title="数据流的重定向"></a>数据流的重定向</h1><h2 id="什么是数据流重定向"><a href="#什么是数据流重定向" class="headerlink" title="什么是数据流重定向"></a>什么是数据流重定向</h2><p>一般来说，如果你要执行一个命令，通常它会是这样的：</p>
@@ -2452,56 +2722,6 @@
     <summary type="html">
     
       &lt;p&gt;引：被观察者做出动作了，然后通知观察者做出反应。&lt;strong&gt;观察者模式&lt;/strong&gt;就是这么简单！
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——组合模式</title>
-    <link href="http://bestlixiang.site/2018/03/10/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/10/设计模式之禅——组合模式/</id>
-    <published>2018-03-10T01:46:05.000Z</published>
-    <updated>2018-03-10T01:46:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：部分类可以组成整体类，然后拥有一个统一的接口，这就是<strong>组合模式</strong>。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>将对象组合成树形结构以表示“部分-整体”的层次结构，使得用户对单个对象和组合对象的使用具有一致性。——结构类</strong></p>
-<p>组合模式也叫合成模式，有时又叫做部分——整体模式，主要用来描述部分和整体的关系。下面是它的通用类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/composite.png" alt="composite"></p>
-<p>接下来简单介绍类图的几个类：</p>
-<ol>
-<li>Component抽象构建角色：定义参加组合对象的共有方法和属性，可以定义一些默认的行为或属性。</li>
-<li>Leaf叶子构件：叶子对象，其下再也没有其他的分支，遍历的最小单位。</li>
-<li>Composite树枝构件：树枝对象，它的作用是组合树枝节点和叶子节点形成一个树形结构。</li>
-</ol>
-<p>下面是它的通用源代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象构建</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="comment">// 个体和整体都具有的共享</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="comment">// 编写逻辑业务</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 树枝构件</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Composite</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="comment">// 构件容器</span></div><div class="line">    <span class="keyword">private</span> ArrayList&lt;Component&gt; componentArrayList = <span class="keyword">new</span> ArrayList&lt;Component&gt;();</div><div class="line">    <span class="comment">// 增加一个叶子构件或树枝构件</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Component component)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.componentArrayList.add(component);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 删除一个叶子构件或树枝构件</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(Component component)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.componentArrayList.remove(component);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 获得分支下的所有叶子构件和树枝构件</span></div><div class="line">    <span class="function"><span class="keyword">public</span> ArrayList&lt;Component&gt; <span class="title">getChildren</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.componentArrayList;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 树叶节点</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Leaf</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 覆写父类方法</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 创建一个根节点</span></div><div class="line">        Composite root = <span class="keyword">new</span> Composite();</div><div class="line">        root.doSomething();</div><div class="line">        <span class="comment">// 创建一个树枝节点</span></div><div class="line">        Composite branch = <span class="keyword">new</span> Composite();</div><div class="line">        <span class="comment">// 创建一个叶子节点</span></div><div class="line">        Leaf leaf = <span class="keyword">new</span> Leaf();</div><div class="line">        <span class="comment">// 建立整体</span></div><div class="line">        root.add(branch);</div><div class="line">        branch.add(leaf);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 通过递归遍历树</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">(Composite root)</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span>(Component c : root.getChildren()) &#123;</div><div class="line">            <span class="keyword">if</span> (c <span class="keyword">instanceof</span> Leaf) &#123;</div><div class="line">                c.doSomething();</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                display((Composite) c);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>我们可以从场景类看出组合模式破坏了依赖倒转原则，树枝和树叶直接使用了实现类。</p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>高层模块调用节点，一棵树机构中的所有节点都是Component。</li>
-<li>节点自由增加，容易扩展，符合开闭原则。</li>
-</ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>与依赖倒置原则冲突，限制了接口的影响范围。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>维护和展示部分-整体关系的场景，如树形菜单，文件和文件夹管理。</li>
-<li>从一个整体能够独立出部分模块或功能的场景。</li>
-</ol>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>只要是树形结构或者体现局部和整体的关系的时候，要考虑组合模式。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>组合模式在项目中到处都有，比如页面结构，XML结构等等。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：部分类可以组成整体类，然后拥有一个统一的接口，这就是&lt;strong&gt;组合模式&lt;/strong&gt;。
     
     </summary>
     
