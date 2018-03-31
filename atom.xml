@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-31T05:23:07.000Z</updated>
+  <updated>2018-03-31T12:35:30.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_例行性工作(crontab)</title>
+    <link href="http://bestlixiang.site/2018/03/31/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E4%BE%8B%E8%A1%8C%E6%80%A7%E5%B7%A5%E4%BD%9C-crontab/"/>
+    <id>http://bestlixiang.site/2018/03/31/Linux私房菜-例行性工作-crontab/</id>
+    <published>2018-03-31T12:35:07.000Z</published>
+    <updated>2018-03-31T12:35:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。<a id="more"></a></p>
+<h1 id="什么是例行性工作（定时任务crontab）"><a href="#什么是例行性工作（定时任务crontab）" class="headerlink" title="什么是例行性工作（定时任务crontab）"></a>什么是例行性工作（定时任务crontab）</h1><p>根据单词crontab（定时任务）就可以知道 <strong>例行性工作</strong> 其实就是每天都会干的事。</p>
+<h2 id="Linux工作调度的种类"><a href="#Linux工作调度的种类" class="headerlink" title="Linux工作调度的种类"></a>Linux工作调度的种类</h2><ol>
+<li>例行性的，就是每隔一定的周期要来办的事，利用crontab实现，这个命令所设置的工作将会循环一直进行下去，可循环的时间为分钟，小时，每周，每月或每年等，crontab除了可以使用命令执行外，也可编辑/etc/crontab来支持。至于让crontab可以生效的后台服务是crond这个服务。</li>
+<li>突发性的，就是这次做完以后就没有的事，利用at实现，但是这个必须要有atd后台服务支持才行。</li>
+</ol>
+<h2 id="Linux上常见的例行性工作"><a href="#Linux上常见的例行性工作" class="headerlink" title="Linux上常见的例行性工作"></a>Linux上常见的例行性工作</h2><ol>
+<li>进行日志文件的轮替，让旧的数据和新的数据分开存放</li>
+<li>日志文件分析logwatch的任务</li>
+<li>新建locate的数据库，系统会主动进行updatedb</li>
+<li>whatis数据库的建立</li>
+<li>删除临时文件</li>
+</ol>
+<h1 id="仅执行一次的工作调度：at"><a href="#仅执行一次的工作调度：at" class="headerlink" title="仅执行一次的工作调度：at"></a>仅执行一次的工作调度：at</h1><h2 id="at的运行方式"><a href="#at的运行方式" class="headerlink" title="at的运行方式"></a>at的运行方式</h2><p>我们使用at这个命令来生成所要进行的工作，并将这个工作以文本文件的方式写入/var/spool/at目录中，该工作便能等待atd这个服务的取用与执行了。但是并不是所有的人都可以进行at工作调度工作的，因为安全。我们可以利用/etc/at.allow与/etc/at.deny这两个文件进行at的使用限制，加上这两个文件后，at的工作情况其实是这样的：</p>
+<ol>
+<li>先寻找/etc/at.allow这个文件，写在这个文件中的用户才能使用at，没有在这个文件中的用户则不能使用at(即时没有写在at.deny当中)</li>
+<li>如果/etc/at.allow不存在，就寻找/etc/at.deny这个文件，若卸载这个at.deny的用户则不能使用at，而没有在这个文件中的用户就可以使用at了</li>
+<li>如果这两个文件都不存在，那么就只有root可以使用at这个命令</li>
+</ol>
+<h2 id="实际运行单一工作调度"><a href="#实际运行单一工作调度" class="headerlink" title="实际运行单一工作调度"></a>实际运行单一工作调度</h2><p>单一工作调度的进行就使用at这个命令，这个命令的运行十分简单！将at加上一个时间即可！范例入下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 1. at [-mldv] TIME</div><div class="line">at noe + 5 minutes // 再过五分钟执行，接下来输入执行的命令，使用ctrl  + d 结束。</div><div class="line"></div><div class="line">// 2. at -c 工作号码 // 将第几号工作调出来查看</div><div class="line">at -c 1 // 将第一号工作调出来</div></pre></td></tr></table></figure></p>
+<p>事实上，当我们使用at时会进入一个at shell的环境来让用户执行工作命令，此时，建议你最好使用绝对路径来执行你的命令，比较不会有问题。</p>
+<p>at还有一个很棒的优点就是<strong>后台执行的功能</strong>，和nohup类似。</p>
+<p><strong>at的工作管理</strong> 主要是利用下面的命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 查询目前主机上面有多少的at工作调度</div><div class="line">atq</div><div class="line"></div><div class="line"># 将第3个工作删除</div><div class="line">atrm 3</div></pre></td></tr></table></figure></p>
+<h1 id="循环执行的例行性工作调度"><a href="#循环执行的例行性工作调度" class="headerlink" title="循环执行的例行性工作调度"></a>循环执行的例行性工作调度</h1><p>相对于at是仅执行一次的工作，循环执行的例行性工作调度室友crond这个系统服务来控制的，由于Linux系统上原本就有很多的例行性工作，所以这个系统服务是默认开启的。另外，由于用户自己也可以进行例行性工作调度，所以，Linux可提供用户控制例行性工作调度的命令（crontab）。</p>
+<h2 id="用户的设置与使用"><a href="#用户的设置与使用" class="headerlink" title="用户的设置与使用"></a>用户的设置与使用</h2><p>为了安全性的问题，与at类似，我们可以限制使用crontab的用户账号。使用的限制数据有：</p>
+<ul>
+<li>/etc/cron.allow：将可以使用crontab的账号写入其中，若不在这个文件内的用户则不可使用crontab。</li>
+<li>/etc/cron.deny：将不可以使用crontab的账号写入其中，若为记录到这个文件中的用户，就可以使用crontab。</li>
+</ul>
+<p>以优先级来说，/etc/cron.allow比/etc/cron.deny要优先，而判断上面，两个文件只选择一个来限制而已，因此，建议你只要保留一个即可。</p>
+<p>当用户使用crontab这个命令来新建工作调度之后，该项工作就会被记录/var/spool/cron/里面，而且是以账号来区分的。另外，cron执行的每一项工作都会被记录到/var/log/cron这个日志文件中，所以，如果你的Linux不知道是否被植入密码，也可以查询一下这个日志文件。</p>
+<p>下面是它的使用范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 1. 用root的身份在每天的12:00和14:00查看主文件夹目录ß</div><div class="line"># 编辑crontab的工作内容</div><div class="line">crontab -e</div><div class="line"># 进入vi界面，每项工作都是一行</div><div class="line">0 12,14 * * * ls /  // 解释各列含义：</div><div class="line">// 1. 分；2. 小时；3. 日期；4. 月份; 5. 周； 6. 命令</div><div class="line">// 其中“,”表示分割时段，“-”表示一段时间范围，/n 表示每隔n单位间隔</div><div class="line"></div><div class="line">// 2. 查询crontab任务</div><div class="line">crontab -l</div><div class="line"></div><div class="line">// 3. 若要删除一项工作，必须要用crontab -e去编辑，如果想要删除全部工作，如下：</div><div class="line">crontab -r</div></pre></td></tr></table></figure></p>
+<h2 id="系统的配置文件：-etc-crontab"><a href="#系统的配置文件：-etc-crontab" class="headerlink" title="系统的配置文件：/etc/crontab"></a>系统的配置文件：/etc/crontab</h2><p>crontab -e是针对用户的例行性工作来设计的，如果我们要修改系统的例行性任务，就需要编辑/etc/crontab了。</p>
+<p>基本上，cron这个服务的最低检测限制是“分钟”，所以cron会每分钟去读取一次/etc/crontab与/var/spool/cron里面的数据内容。</p>
+<h1 id="可唤醒停机期间的工作任务"><a href="#可唤醒停机期间的工作任务" class="headerlink" title="可唤醒停机期间的工作任务"></a>可唤醒停机期间的工作任务</h1><p>如果例行性工作是在凌晨4点运行的，但是刚好关机了， 你7点开机了，你总不能不管它吧，这就需要用到anacron。</p>
+<h2 id="什么是anacron"><a href="#什么是anacron" class="headerlink" title="什么是anacron"></a>什么是anacron</h2><p><strong>anacron存在的目的</strong> 是处理非24小时一直启动的linux系统的crontab的执行。</p>
+<p>anacron也是通过crontab来运行的，因此anacron的运行的时间通常有两个，一是系统开机期间运行，一个是写入crontab的调度中。</p>
+<h2 id="anacron使用"><a href="#anacron使用" class="headerlink" title="anacron使用"></a>anacron使用</h2><p>anacron的语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">anacron [-sfn] [job]</div></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_账号管理</title>
@@ -2649,79 +2712,6 @@
     <summary type="html">
     
       &lt;p&gt;引：怎样保证“金玉其外，败絮其中”，&lt;strong&gt;门面模式&lt;/strong&gt;可以达到你的要求！
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——观察者模式</title>
-    <link href="http://bestlixiang.site/2018/03/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/12/设计模式之禅——观察者模式/</id>
-    <published>2018-03-12T12:33:37.000Z</published>
-    <updated>2018-03-12T12:34:47.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：被观察者做出动作了，然后通知观察者做出反应。<strong>观察者模式</strong>就是这么简单！<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>观察者模式又称发布订阅模式。</p>
-<p><strong>定义对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有它依赖的对象都会得到通知并被自动更新。行为类</strong></p>
-<p>下面是它的通用类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/observer.png" alt="observer"></p>
-<p>下面简单介绍一下类图中的几个角色：</p>
-<ol>
-<li>Subject被观察者：定义观察者必须实现的职责，它必须能够动态地增加、取消观察者。管理观察者并通知观察者。</li>
-<li>Observer观察者：观察者接受到消息后，即进行update操作，对接收的信息进行处理。</li>
-</ol>
-<p>下面是它的通用源代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 被观察者</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Subject</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义一个观察者数组</span></div><div class="line">    <span class="keyword">private</span> Vector&lt;Observer&gt; observerVector = <span class="keyword">new</span> Vector&lt;Observer&gt;();</div><div class="line">    <span class="comment">// 增加一个观察者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addObserver</span><span class="params">(Observer o)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.observerVector.add(o);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 删除一个观察者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteObserver</span><span class="params">(Observer <span class="number">0</span>)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.observerVector.remove(o);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 通知所有观察者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyObservers</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (Observer o : <span class="keyword">this</span>.observerVector) &#123;</div><div class="line">            o.update();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体被观察者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteSubject</span> <span class="keyword">extends</span> <span class="title">Subject</span> </span>&#123;</div><div class="line">    <span class="comment">// 具体的业务</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// do somthing</span></div><div class="line">        <span class="keyword">super</span>.notifyObservers();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 观察者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Observer</span> </span>&#123;</div><div class="line">    <span class="comment">// 更新方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体观察者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteObserver</span> <span class="keyword">implements</span> <span class="title">Observer</span> </span>&#123;</div><div class="line">    <span class="comment">// 实现更新方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updatea</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"接到消息，并进行处理"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 场景一个被观察者</span></div><div class="line">        ConcreteSubject subject = <span class="keyword">new</span> ConcreteSubject();</div><div class="line">        <span class="comment">// 定义一个观察者</span></div><div class="line">        Observer obs = <span class="keyword">new</span> ConcreteObserver();</div><div class="line">        <span class="comment">// 观察者观察被观察者</span></div><div class="line">        subject.addObserver(obs);</div><div class="line">        <span class="comment">// 观察者开始活动了</span></div><div class="line">        subject.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>观察者和被观察者之间是<strong>抽象耦合</strong>的，不管是增加观察者都非常容易扩展。</li>
-<li>建立一套触发机制。容易在单一职责下构建一条触发链。</li>
-</ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>观察者模式需要考虑一下开发效率和运行效率问题，一个被观察者，多个观察者，开发和调试就会比较复杂，而且在Java中消息的通知默认是顺序执行的，一个观察者卡壳，会影响整体的执行效率。在这种情况下，一般考虑采用异步的方式。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>关联行为场景。这种关联行为时可以拆分的。</li>
-<li>事件多级触发场景。</li>
-<li>跨系统的消息交换场景，如消息队列的处理机制。</li>
-</ol>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
-<li>广播链。在一个观察者模式中最多出现一个对象既是观察者又是被观察者，也就是说消息最多被转发一次。（和责任链的区别在于广播链在消息传播过程中消息是可变的）</li>
-<li>异步处理问题。如果观察者比较多，处理时间长，我们就需要用异步。异步处理需要考虑到线程安全和队列问题。</li>
-</ol>
-<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="Java世界中的观察者模式"><a href="#Java世界中的观察者模式" class="headerlink" title="Java世界中的观察者模式"></a>Java世界中的观察者模式</h2><p>在JDK中已经提供了java.util.Observable实现类（被观察者）以及java.util.Observer接口（观察者）。大家要记住在java的世界里横行时，多看看API，有很大的帮助，很多东西Java已经帮我们设计了一个良好的框架。</p>
-<h2 id="项目中真实的观察者模式"><a href="#项目中真实的观察者模式" class="headerlink" title="项目中真实的观察者模式"></a>项目中真实的观察者模式</h2><p>在系统设计中会对观察者模式进行改造或改装，主要在以下3个方面：</p>
-<ol>
-<li><p>观察者和被观察者之间的消息沟通</p>
-<p> 被观察者状态改变会触发观察者的一个行为，同时会传递一个消息给观察者，这是正确地，但是在实际中一般的做法是：观察者中update方法会接受两个参数，一个是被观察者，一个是DTO（数据传输对象），DTO一般是一个纯洁的JavaBean，由被观察者生成，由观察者消费。</p>
-</li>
-<li><p>观察者响应方式</p>
-<p>为了解决观察者的快速响应有以下两个办法：</p>
-<ul>
-<li>采用多线程技术</li>
-<li>缓存技术（同步架构）</li>
-</ul>
-</li>
-<li><p>被观察者尽量自己做主</p>
-<p>被观察者的状态改变不一定要通知观察者，所以doSomething方法可以被重载，增加一个doSomething(boolean isNotifyObs)方法，决定是否通知观察者，而不是在消息到达观察和才判断是否要消费。</p>
-</li>
-</ol>
-<h2 id="订阅发布模型"><a href="#订阅发布模型" class="headerlink" title="订阅发布模型"></a>订阅发布模型</h2><p>顾名思义就是消息的发布者发布一个消息，然后利用消息队列通知订阅者做出反应。这相当于观察者模式的升级版。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>观察者模式在实际项目中和生活中非常常见，如下面的例子：</p>
-<ol>
-<li>文件系统：在一个目录下新建立一个文件，这个动作会同时通知目录管理器增加该目录。文件是一个被观察者，目录管理器是一个被观察者。</li>
-<li>广播收音机：电台在广播，收音机在收听。电台是一个被观察者，收音机是一个被观察者。<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1></li>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：被观察者做出动作了，然后通知观察者做出反应。&lt;strong&gt;观察者模式&lt;/strong&gt;就是这么简单！
     
     </summary>
     

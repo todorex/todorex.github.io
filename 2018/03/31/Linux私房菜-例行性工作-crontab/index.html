@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java,JVM," />
+  <meta name="keywords" content="Linux," />
 
 
 
@@ -89,19 +89,17 @@
 
 
 
-<meta name="description" content="引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。">
-<meta name="keywords" content="java,JVM">
+<meta name="description" content="引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解JVM_1_JVM内存模型">
-<meta property="og:url" content="http://bestlixiang.site/2017/11/20/深入理解JVM-1-JVM内存模型/index.html">
+<meta property="og:title" content="Linux私房菜_例行性工作(crontab)">
+<meta property="og:url" content="http://bestlixiang.site/2018/03/31/Linux私房菜-例行性工作-crontab/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。">
-<meta property="og:image" content="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaRunningDataModel.jpg">
-<meta property="og:updated_time" content="2017-12-09T12:04:23.000Z">
+<meta property="og:description" content="引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。">
+<meta property="og:updated_time" content="2018-03-31T12:35:30.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解JVM_1_JVM内存模型">
-<meta name="twitter:description" content="引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。">
-<meta name="twitter:image" content="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaRunningDataModel.jpg">
+<meta name="twitter:title" content="Linux私房菜_例行性工作(crontab)">
+<meta name="twitter:description" content="引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。">
 
 
 
@@ -129,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/11/20/深入理解JVM-1-JVM内存模型/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/31/Linux私房菜-例行性工作-crontab/"/>
 
 
 
 
 
-  <title> 深入理解JVM_1_JVM内存模型 | rex note </title>
+  <title> Linux私房菜_例行性工作(crontab) | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -288,7 +286,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/11/20/深入理解JVM-1-JVM内存模型/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/31/Linux私房菜-例行性工作-crontab/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -309,7 +307,7 @@
             
             
               
-                深入理解JVM_1_JVM内存模型
+                Linux私房菜_例行性工作(crontab)
               
             
           </h2>
@@ -324,8 +322,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-20T18:41:36+08:00">
-                2017-11-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-31T20:35:07+08:00">
+                2018-03-31
               </time>
             
 
@@ -347,8 +345,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
-                    <span itemprop="name">深入理解Java虚拟机</span>
+                  <a href="/categories/Linux私房菜/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux私房菜</span>
                   </a>
                 </span>
 
@@ -387,78 +385,46 @@
       
 
       
-        <p>引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。<a id="more"></a></p>
-<h1 id="Java内存模型组成"><a href="#Java内存模型组成" class="headerlink" title="Java内存模型组成"></a>Java内存模型组成</h1><p>这里讲的是Java虚拟机在执行Java程序的过程中会把它所管理的内存划分五大区域。</p>
+        <p>引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。<a id="more"></a></p>
+<h1 id="什么是例行性工作（定时任务crontab）"><a href="#什么是例行性工作（定时任务crontab）" class="headerlink" title="什么是例行性工作（定时任务crontab）"></a>什么是例行性工作（定时任务crontab）</h1><p>根据单词crontab（定时任务）就可以知道 <strong>例行性工作</strong> 其实就是每天都会干的事。</p>
+<h2 id="Linux工作调度的种类"><a href="#Linux工作调度的种类" class="headerlink" title="Linux工作调度的种类"></a>Linux工作调度的种类</h2><ol>
+<li>例行性的，就是每隔一定的周期要来办的事，利用crontab实现，这个命令所设置的工作将会循环一直进行下去，可循环的时间为分钟，小时，每周，每月或每年等，crontab除了可以使用命令执行外，也可编辑/etc/crontab来支持。至于让crontab可以生效的后台服务是crond这个服务。</li>
+<li>突发性的，就是这次做完以后就没有的事，利用at实现，但是这个必须要有atd后台服务支持才行。</li>
+</ol>
+<h2 id="Linux上常见的例行性工作"><a href="#Linux上常见的例行性工作" class="headerlink" title="Linux上常见的例行性工作"></a>Linux上常见的例行性工作</h2><ol>
+<li>进行日志文件的轮替，让旧的数据和新的数据分开存放</li>
+<li>日志文件分析logwatch的任务</li>
+<li>新建locate的数据库，系统会主动进行updatedb</li>
+<li>whatis数据库的建立</li>
+<li>删除临时文件</li>
+</ol>
+<h1 id="仅执行一次的工作调度：at"><a href="#仅执行一次的工作调度：at" class="headerlink" title="仅执行一次的工作调度：at"></a>仅执行一次的工作调度：at</h1><h2 id="at的运行方式"><a href="#at的运行方式" class="headerlink" title="at的运行方式"></a>at的运行方式</h2><p>我们使用at这个命令来生成所要进行的工作，并将这个工作以文本文件的方式写入/var/spool/at目录中，该工作便能等待atd这个服务的取用与执行了。但是并不是所有的人都可以进行at工作调度工作的，因为安全。我们可以利用/etc/at.allow与/etc/at.deny这两个文件进行at的使用限制，加上这两个文件后，at的工作情况其实是这样的：</p>
 <ol>
-<li>程序计算器</li>
-<li>Java虚拟机栈</li>
-<li>本地方法栈</li>
-<li>Java堆</li>
-<li>方法区</li>
+<li>先寻找/etc/at.allow这个文件，写在这个文件中的用户才能使用at，没有在这个文件中的用户则不能使用at(即时没有写在at.deny当中)</li>
+<li>如果/etc/at.allow不存在，就寻找/etc/at.deny这个文件，若卸载这个at.deny的用户则不能使用at，而没有在这个文件中的用户就可以使用at了</li>
+<li>如果这两个文件都不存在，那么就只有root可以使用at这个命令</li>
 </ol>
-<p>下面也把来自深入理解Java虚拟机的图片贴一下：</p>
-<p><img src="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaRunningDataModel.jpg" alt="image"></p>
-<p>接着我们重点理解一下这五大区域。</p>
-<h1 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h1><h2 id="什么是程序计数器"><a href="#什么是程序计数器" class="headerlink" title="什么是程序计数器"></a>什么是程序计数器</h2><ol>
-<li>程序计数器是一块较小的内存空间，他可以看做当前<strong>线程</strong>所执行的字节码的行号指示器。</li>
-<li>如果<strong>线程</strong>在执行一个Java方法的时候，这个计数器记录的是正在执行的虚拟机字节码指令地址，如果正在执行的是Native方法，这个计数器值则为空。</li>
-</ol>
-<h2 id="程序计数器的作用"><a href="#程序计数器的作用" class="headerlink" title="程序计数器的作用"></a>程序计数器的作用</h2><ol>
-<li>单线程的时候：通过改变这个计数器的值来选取下一条需要执行的字节码指令，从而实现分支、循环、跳转、异常处理、线程回复等基础功能。</li>
-<li>多线程的时候：当每个线程都有独立的程序计数器，则线程切换后就能回复到正确的执行位置。<br><strong>PS：</strong> Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式来实现的。</li>
-</ol>
-<h2 id="程序计数器的特点"><a href="#程序计数器的特点" class="headerlink" title="程序计数器的特点"></a>程序计数器的特点</h2><ol>
-<li>存储空间较小</li>
-<li>线程私有，每个线程都有一个程序计数器</li>
-<li>唯一一个没有规定任何OutOfMemoryError情况的区域</li>
-<li>生命周期与线程相同</li>
-</ol>
-<h1 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h1><h2 id="什么是Java虚拟机栈"><a href="#什么是Java虚拟机栈" class="headerlink" title="什么是Java虚拟机栈"></a>什么是Java虚拟机栈</h2><p>Java虚拟机栈描述的是Java方法执行的内存模型：每个方法在执行的同时都会创建一个<strong>栈帧</strong>用于存储局部变量表（包括基本数据类型，对象引用和returnAddress,其中long和double会占据2个局部变量空间，其他只占用一个）、操作数栈、动态链接、方法出口等信息。每个方法从调用直至执行完成的过程，就对应着一个<strong>栈帧</strong>在虚拟机栈中入栈到出栈的过程。</p>
-<p><strong>Ps：</strong> 人们常说的Java内存区分为“堆”和“栈”，“堆”存放对象（可以），“栈”只是值其中的局部变量表（不可以），这是不正确的。</p>
-<h2 id="Java虚拟机栈的特点"><a href="#Java虚拟机栈的特点" class="headerlink" title="Java虚拟机栈的特点"></a>Java虚拟机栈的特点</h2><ol>
-<li>线程私有，生命周期与线程相同</li>
-<li>如果线程请求的栈深度大于虚拟机所允许的深度，将抛出StackOverflowError异常</li>
-<li>虚拟机栈可以动态扩展，也可以固定长度，在动态扩展的时候如果无法申请到足够的内存，就会抛出OutOfMemoryError异常</li>
-</ol>
-<h1 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h1><h2 id="什么是本地方法栈"><a href="#什么是本地方法栈" class="headerlink" title="什么是本地方法栈"></a>什么是本地方法栈</h2><p>本地方法栈描述的是本地方法执行的内存模型，它发挥的作用与虚拟机栈发挥的作用是非常相似的，如Sun HotSpot虚拟机直接把本地方法栈和虚拟机栈合二为一，它与虚拟机栈一样，本地方法栈区域也会抛出StackOverflowError和OutOfMemoryError异常。</p>
-<h1 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h1><h2 id="什么是Java堆"><a href="#什么是Java堆" class="headerlink" title="什么是Java堆"></a>什么是Java堆</h2><ol>
-<li>Java堆是存放对象实例的内存区域</li>
-<li><strong>几乎所有</strong>对象实例都在这里分配内存</li>
-</ol>
-<h2 id="Java堆的特点"><a href="#Java堆的特点" class="headerlink" title="Java堆的特点"></a>Java堆的特点</h2><ol>
-<li>Java虚拟机管理的内存中最大的一块</li>
-<li>线程共享，在虚拟机启动时创建</li>
-<li>垃圾收集器管理的主要区域，从内存回收的角度来看，由于现在收集器都采用分代收集算法，所以可分为新生代和老年代，再细致一点可以分为Eden空间、From Survivor空间和To Survivor空间等。从内存分配来看，线程共享的Java堆可能划分出多个线程私有的分配缓存区TLAB,进一步划分的目的是为了更好地回收内存，或者更快的分配内存</li>
-<li>实现中可以固定大小，也可以是可扩展的，如果在堆中没有内存完成实例的分配，并且堆也无法再扩展时，就会抛出OutOfMemoryError异常</li>
-</ol>
-<h1 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h1><h2 id="什么是方法区"><a href="#什么是方法区" class="headerlink" title="什么是方法区"></a>什么是方法区</h2><ol>
-<li>Java虚拟机规范把方法区描述为堆的一个逻辑部分。</li>
-<li>他用于存储被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码</li>
-</ol>
-<h2 id="方法区的特点"><a href="#方法区的特点" class="headerlink" title="方法区的特点"></a>方法区的特点</h2><ol>
-<li>线程共享，在虚拟机启动时创建</li>
-<li>永久代是因为HotSpot选择将GC分代收集器扩展到方法区，或者使用永久代来实现方法区，对于HotSpot官方发布的路线图信息，现在也有放弃永久代逐步采用Native Memory来实现方法区的规划了，并且已经把原本放在永久代的字符串常量池移除</li>
-<li>不需要连续的内存，可以选择固定大小或者可扩展，还可以选择不实现垃圾回收</li>
-<li>内存回收的主要目标主要是针对常量池的回收和对类型的卸载，但是回收效率低</li>
-<li>当方法区无法满足内存分配的需求的时候，将抛出OutOfMemoryError的异常</li>
-</ol>
-<h2 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h2><ol>
-<li>Class文件除了包含类的版本<br>字段、方法、接口等描述信息外，还有一项信息是常量池</li>
-<li>常量池用于存放编译期间生成的各种字面量和符号引用，这部分内容在类加载后进入运行时常量池中存放</li>
-<li>运行时常量池相对于Class文件常量池具有动态性，Java语言不要求只有Class文件中的常量池的内容才能进入运行时常量池，运行时也可能将新的常量放入池中，如String类的intern方法</li>
-<li>当常量池无法再申请内存时将会抛出OutOfMemoryError异常</li>
-</ol>
-<p><strong>PS：</strong> jdk1.7的常量池移到了堆中，同时在jdk1.8中移除整个永久代，取而代之的是一个叫元空间（Metaspace）的区域</p>
-<h1 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h1><ol>
-<li>通过一个存储在Java堆中的DirectByteBuffer对象最为这块内存的引用进行操作，这个可以显著提高性能，因为避免了在Java堆和Native堆中来回复制数据</li>
-<li>案例是NIO类引入一种基于通道与缓存区的I/O方式，它可以使用Native函数库直接分配对外内存，然后通过DirectByteBuffer进行操作</li>
-<li>本机直接内存的分配不会受到Java堆大小的限制，但是会受到本机总内存大小和处理器寻址空间的限制，也可能会抛出OutOfMemoryError异常</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本篇文章是参考《深入理解Java虚拟机》第二版所写，当时作者用的是jdk1.7，结果现在jdk1.9都出了，最大的改变就是方法区了，目前还没有能力改正，也就将就了，望作者早日更新，或者自己成为大牛，将这部分重新整理。</p>
+<h2 id="实际运行单一工作调度"><a href="#实际运行单一工作调度" class="headerlink" title="实际运行单一工作调度"></a>实际运行单一工作调度</h2><p>单一工作调度的进行就使用at这个命令，这个命令的运行十分简单！将at加上一个时间即可！范例入下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 1. at [-mldv] TIME</div><div class="line">at noe + 5 minutes // 再过五分钟执行，接下来输入执行的命令，使用ctrl  + d 结束。</div><div class="line"></div><div class="line">// 2. at -c 工作号码 // 将第几号工作调出来查看</div><div class="line">at -c 1 // 将第一号工作调出来</div></pre></td></tr></table></figure></p>
+<p>事实上，当我们使用at时会进入一个at shell的环境来让用户执行工作命令，此时，建议你最好使用绝对路径来执行你的命令，比较不会有问题。</p>
+<p>at还有一个很棒的优点就是<strong>后台执行的功能</strong>，和nohup类似。</p>
+<p><strong>at的工作管理</strong> 主要是利用下面的命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 查询目前主机上面有多少的at工作调度</div><div class="line">atq</div><div class="line"></div><div class="line"># 将第3个工作删除</div><div class="line">atrm 3</div></pre></td></tr></table></figure></p>
+<h1 id="循环执行的例行性工作调度"><a href="#循环执行的例行性工作调度" class="headerlink" title="循环执行的例行性工作调度"></a>循环执行的例行性工作调度</h1><p>相对于at是仅执行一次的工作，循环执行的例行性工作调度室友crond这个系统服务来控制的，由于Linux系统上原本就有很多的例行性工作，所以这个系统服务是默认开启的。另外，由于用户自己也可以进行例行性工作调度，所以，Linux可提供用户控制例行性工作调度的命令（crontab）。</p>
+<h2 id="用户的设置与使用"><a href="#用户的设置与使用" class="headerlink" title="用户的设置与使用"></a>用户的设置与使用</h2><p>为了安全性的问题，与at类似，我们可以限制使用crontab的用户账号。使用的限制数据有：</p>
+<ul>
+<li>/etc/cron.allow：将可以使用crontab的账号写入其中，若不在这个文件内的用户则不可使用crontab。</li>
+<li>/etc/cron.deny：将不可以使用crontab的账号写入其中，若为记录到这个文件中的用户，就可以使用crontab。</li>
+</ul>
+<p>以优先级来说，/etc/cron.allow比/etc/cron.deny要优先，而判断上面，两个文件只选择一个来限制而已，因此，建议你只要保留一个即可。</p>
+<p>当用户使用crontab这个命令来新建工作调度之后，该项工作就会被记录/var/spool/cron/里面，而且是以账号来区分的。另外，cron执行的每一项工作都会被记录到/var/log/cron这个日志文件中，所以，如果你的Linux不知道是否被植入密码，也可以查询一下这个日志文件。</p>
+<p>下面是它的使用范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 1. 用root的身份在每天的12:00和14:00查看主文件夹目录ß</div><div class="line"># 编辑crontab的工作内容</div><div class="line">crontab -e</div><div class="line"># 进入vi界面，每项工作都是一行</div><div class="line">0 12,14 * * * ls /  // 解释各列含义：</div><div class="line">// 1. 分；2. 小时；3. 日期；4. 月份; 5. 周； 6. 命令</div><div class="line">// 其中“,”表示分割时段，“-”表示一段时间范围，/n 表示每隔n单位间隔</div><div class="line"></div><div class="line">// 2. 查询crontab任务</div><div class="line">crontab -l</div><div class="line"></div><div class="line">// 3. 若要删除一项工作，必须要用crontab -e去编辑，如果想要删除全部工作，如下：</div><div class="line">crontab -r</div></pre></td></tr></table></figure></p>
+<h2 id="系统的配置文件：-etc-crontab"><a href="#系统的配置文件：-etc-crontab" class="headerlink" title="系统的配置文件：/etc/crontab"></a>系统的配置文件：/etc/crontab</h2><p>crontab -e是针对用户的例行性工作来设计的，如果我们要修改系统的例行性任务，就需要编辑/etc/crontab了。</p>
+<p>基本上，cron这个服务的最低检测限制是“分钟”，所以cron会每分钟去读取一次/etc/crontab与/var/spool/cron里面的数据内容。</p>
+<h1 id="可唤醒停机期间的工作任务"><a href="#可唤醒停机期间的工作任务" class="headerlink" title="可唤醒停机期间的工作任务"></a>可唤醒停机期间的工作任务</h1><p>如果例行性工作是在凌晨4点运行的，但是刚好关机了， 你7点开机了，你总不能不管它吧，这就需要用到anacron。</p>
+<h2 id="什么是anacron"><a href="#什么是anacron" class="headerlink" title="什么是anacron"></a>什么是anacron</h2><p><strong>anacron存在的目的</strong> 是处理非24小时一直启动的linux系统的crontab的执行。</p>
+<p>anacron也是通过crontab来运行的，因此anacron的运行的时间通常有两个，一是系统开机期间运行，一个是写入crontab的调度中。</p>
+<h2 id="anacron使用"><a href="#anacron使用" class="headerlink" title="anacron使用"></a>anacron使用</h2><p>anacron的语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">anacron [-sfn] [job]</div></pre></td></tr></table></figure></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="http://blog.csdn.net/u010425776/article/details/51170118" target="_blank" rel="external">深入理解JVM(一)——JVM内存模型</a></li>
-<li><a href="http://blog.csdn.net/zhyhang/article/details/17246223/" target="_blank" rel="external">Java 8: 从永久代（PermGen）到元空间（Metaspace）
-</a></li>
+<li>《鸟哥的Linux私房菜》</li>
 </ol>
 
       
@@ -489,9 +455,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/JVM/" rel="tag"># JVM</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
           
         </div>
       
@@ -504,8 +468,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/20/springboot静态资源的处理/" rel="next" title="springboot静态资源的处理">
-                <i class="fa fa-chevron-left"></i> springboot静态资源的处理
+              <a href="/2018/03/31/Linux私房菜-账号管理/" rel="next" title="Linux私房菜_账号管理">
+                <i class="fa fa-chevron-left"></i> Linux私房菜_账号管理
               </a>
             
           </div>
@@ -513,10 +477,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/21/深入理解JVM-2-HotSpot对象揭秘/" rel="prev" title="深入理解JVM_2_HotSpot对象揭秘">
-                深入理解JVM_2_HotSpot对象揭秘 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -715,7 +675,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java内存模型组成"><span class="nav-number">1.</span> <span class="nav-text">Java内存模型组成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#程序计数器"><span class="nav-number">2.</span> <span class="nav-text">程序计数器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是程序计数器"><span class="nav-number">2.1.</span> <span class="nav-text">什么是程序计数器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序计数器的作用"><span class="nav-number">2.2.</span> <span class="nav-text">程序计数器的作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序计数器的特点"><span class="nav-number">2.3.</span> <span class="nav-text">程序计数器的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">3.</span> <span class="nav-text">Java虚拟机栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java虚拟机栈"><span class="nav-number">3.1.</span> <span class="nav-text">什么是Java虚拟机栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java虚拟机栈的特点"><span class="nav-number">3.2.</span> <span class="nav-text">Java虚拟机栈的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本地方法栈"><span class="nav-number">4.</span> <span class="nav-text">本地方法栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是本地方法栈"><span class="nav-number">4.1.</span> <span class="nav-text">什么是本地方法栈</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java堆"><span class="nav-number">5.</span> <span class="nav-text">Java堆</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java堆"><span class="nav-number">5.1.</span> <span class="nav-text">什么是Java堆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java堆的特点"><span class="nav-number">5.2.</span> <span class="nav-text">Java堆的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法区"><span class="nav-number">6.</span> <span class="nav-text">方法区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是方法区"><span class="nav-number">6.1.</span> <span class="nav-text">什么是方法区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法区的特点"><span class="nav-number">6.2.</span> <span class="nav-text">方法区的特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行时常量池"><span class="nav-number">6.3.</span> <span class="nav-text">运行时常量池</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#直接内存"><span class="nav-number">7.</span> <span class="nav-text">直接内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">9.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是例行性工作（定时任务crontab）"><span class="nav-number">1.</span> <span class="nav-text">什么是例行性工作（定时任务crontab）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux工作调度的种类"><span class="nav-number">1.1.</span> <span class="nav-text">Linux工作调度的种类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux上常见的例行性工作"><span class="nav-number">1.2.</span> <span class="nav-text">Linux上常见的例行性工作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#仅执行一次的工作调度：at"><span class="nav-number">2.</span> <span class="nav-text">仅执行一次的工作调度：at</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#at的运行方式"><span class="nav-number">2.1.</span> <span class="nav-text">at的运行方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际运行单一工作调度"><span class="nav-number">2.2.</span> <span class="nav-text">实际运行单一工作调度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#循环执行的例行性工作调度"><span class="nav-number">3.</span> <span class="nav-text">循环执行的例行性工作调度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户的设置与使用"><span class="nav-number">3.1.</span> <span class="nav-text">用户的设置与使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统的配置文件：-etc-crontab"><span class="nav-number">3.2.</span> <span class="nav-text">系统的配置文件：/etc/crontab</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可唤醒停机期间的工作任务"><span class="nav-number">4.</span> <span class="nav-text">可唤醒停机期间的工作任务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是anacron"><span class="nav-number">4.1.</span> <span class="nav-text">什么是anacron</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#anacron使用"><span class="nav-number">4.2.</span> <span class="nav-text">anacron使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
