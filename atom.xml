@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-03-31T12:35:30.000Z</updated>
+  <updated>2018-04-02T05:02:08.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_认识你的进程</title>
+    <link href="http://bestlixiang.site/2018/04/02/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E7%A8%8B%E5%BA%8F%E7%AE%A1%E7%90%86/"/>
+    <id>http://bestlixiang.site/2018/04/02/Linux私房菜-程序管理/</id>
+    <published>2018-04-02T04:58:22.000Z</published>
+    <updated>2018-04-02T05:02:08.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：linux服务器上可以跑很多很多的程序，当然也会遇到很多的问题，所以我们需要学会去管理好它。尤其像ps，top这些命令，你一定会很想去了解它吧！<a id="more"></a></p>
+<h1 id="理解进程"><a href="#理解进程" class="headerlink" title="理解进程"></a>理解进程</h1><h2 id="什么是进程"><a href="#什么是进程" class="headerlink" title="什么是进程"></a>什么是进程</h2><p><strong>进程：</strong> 一个程序被加载到内存当中运行，那么在内存中的那个数据就被称为进程。</p>
+<p>系统也会给予这个进程一个ID，称为<strong>PID</strong>。同时触发这个进程的用户与相关属性关系，给予这个PID一组有效的权限设置。</p>
+<h2 id="进程与程序"><a href="#进程与程序" class="headerlink" title="进程与程序"></a>进程与程序</h2><h3 id="程序和进程概念"><a href="#程序和进程概念" class="headerlink" title="程序和进程概念"></a>程序和进程概念</h3><ol>
+<li>程序：通常为二进制程序，放置在存储媒介中，以物理文件的形式存在。</li>
+<li>进程：程序在触发后，执行者的权限与属性、程序的程序代码与所需数据等都会被加载到内存中，操作系统给予这个内存中的单元一个标识符（PID），可以说，进程就是一个正在运行的程序。</li>
+</ol>
+<h3 id="子进程与父进程"><a href="#子进程与父进程" class="headerlink" title="子进程与父进程"></a>子进程与父进程</h3><p>举个栗子：当我们登录系统后，会取得一个bash的shell，然后，我们用这个bash提供的接口去执行另一个命令，那些另外执行的命令也会被触发称为PID，那个后来执行命令才产生的PID就是“子进程”，而在我们原本在bash环境下，就称为“父进程”。子进程会具有PPID(父PID)。</p>
+<h3 id="fork-and-exec：过程调用的流程"><a href="#fork-and-exec：过程调用的流程" class="headerlink" title="fork and exec：过程调用的流程"></a>fork and exec：过程调用的流程</h3><p>在Linux的过程调用中通常被称为fork and exec的流程，进程都会父进程以复制(fork)的方式产生一个一模一样的子进程（PID不一样），然后被复制出来的子进程再以exec的方式来执行实际要进行的进程，最终称为一个子进程的存在。</p>
+<h1 id="工作管理"><a href="#工作管理" class="headerlink" title="工作管理"></a>工作管理</h1><h2 id="什么是工作管理"><a href="#什么是工作管理" class="headerlink" title="什么是工作管理"></a>什么是工作管理</h2><p><strong>工作管理：</strong> 当我们登录系统取得bash shell之后，在<strong>单一终端机下</strong>同时进行多个工作的行为管理。</p>
+<p>下面是前台和后台定义:</p>
+<p><strong>前台:</strong> 你可以控制与执行命令的环境</p>
+<p><strong>后台：</strong> 可以自行运行的工作，你无法用ctrl + c终止它，但是可以用bg/fg调用该工作的环境</p>
+<p>要进行bash的工作管理必须要注意的限制是：</p>
+<ul>
+<li>这些工作所触发的进程必须要来自你的shell子进程（只管理自己的bash）</li>
+<li>后台中“执行”的进程不能等待terminal/shell的输入。</li>
+</ul>
+<h2 id="job管理"><a href="#job管理" class="headerlink" title="job管理"></a>job管理</h2><p>实际中使用的job控制主要有下面的命令：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 1. 直接将命令丢到后台中“执行”的 &amp;</span></div><div class="line">tar -zpcf /tmp/tec/tar.gz /etc &amp;</div><div class="line"><span class="comment">/*</span></div><div class="line">会出现[1]（工作好） 13456（进程号）</div><div class="line">完成后会输出： [1]   完成                  tar -zpcf /tmp/etc.tar.gz /etc */</div><div class="line"><span class="comment">/*</span></div><div class="line">但是需要注意的是，运行的信息还是会出现在屏幕上，会影响我们正常继续使用，</div><div class="line">所以我们需要利用数据流重定向输入到文件中。*/</div><div class="line"></div><div class="line"><span class="comment">// 2. 将目前的工作丢到后台中“暂停”：ctrl + z</span></div><div class="line">vim ~/.bashrc 按ctrl+z</div><div class="line"><span class="comment">/*</span></div><div class="line">会输出 [2]+  已停止               vim ~/.bashrc */</div><div class="line"></div><div class="line"><span class="comment">// 3. 查看目前的后台工作状态：jobs</span></div><div class="line"></div><div class="line"><span class="comment">// 4. 将后台工作拿到前台来处理：fg</span></div><div class="line">fg %<span class="number">2</span> <span class="comment">//拿出刚刚vim的工作</span></div><div class="line"></div><div class="line"><span class="comment">// 5. 让工作在后台下得状态变成运行中：bg</span></div><div class="line">bg %<span class="number">2</span></div><div class="line"></div><div class="line"><span class="comment">// 6. 管理后台当中的工作：kill</span></div><div class="line">kill -signal %jobnumber/PID/命令</div><div class="line"><span class="comment">/* signal</span></div><div class="line">-1：重新读取一次参数的配置文件</div><div class="line">-2：与ctrl + c一样</div><div class="line">-9：立刻强制删除一个工作，不会删除过程文件</div><div class="line">-15(默认值)：以正常的程序方式终止一项工作，会删除过程文件 */</div></pre></td></tr></table></figure></p>
+<h2 id="脱机管理"><a href="#脱机管理" class="headerlink" title="脱机管理"></a>脱机管理</h2><p>如果你是使用&amp;来放置后台工作，当你断开与终端机的连接（脱机），那么后台工作就会被中断掉。如果我们不想这样就可以使用at或者nohup命令，我们主要讲一下nohup的这个命令，这个命令可以让你在脱机或注销系统后，还能够让工作继续进行。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 1. 在终端机前台中工作</div><div class="line">nohup 命令</div><div class="line"></div><div class="line">// 1. 在终端机后台工作</div><div class="line">nohup 命令 &amp;</div></pre></td></tr></table></figure></p>
+<p>当你使用这个命令之后，你会发现会出现一个nohup.out文件，这个文件其实就是将原本前台显示的东西重定向到这个文件中。</p>
+<h1 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h1><h2 id="进程的查看"><a href="#进程的查看" class="headerlink" title="进程的查看"></a>进程的查看</h2><h3 id="静态的ps"><a href="#静态的ps" class="headerlink" title="静态的ps"></a>静态的ps</h3><p>PS：如果man page不好查阅，最好是直接被几个常用的参数。</p>
+<p>这个命令是将某个时间点的进程运行情况选取下来，主要的范例如下：</p>
+<ol>
+<li><p>仅查看自己的bash的相关进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">ps -l</div><div class="line"></div><div class="line">/* 输出列子如下：</div><div class="line">F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD</div><div class="line">4 S     0 10573 10567  0  80   0 - 29064 wait   pts/0    00:00:00 bash</div><div class="line"></div><div class="line">含义如下：</div><div class="line">F：程序标识（process flags），说明程序的权限，4代表root，1代表子程序仅能fork不能exec</div><div class="line"></div><div class="line">S：程序状态（state），主要有R(running)、S(sleep)、D(不可唤醒)、T(stop)、Z（僵尸，命令位会跟&lt;defunct&gt;）</div><div class="line"></div><div class="line">UID/PID/PPID  ：PPID指父程序的PID</div><div class="line"></div><div class="line">C：代表CPU使用率，单位为百分比</div><div class="line"></div><div class="line">PRI/NI：此程序被CPU执行优先级，数值越小程序优先级越高</div><div class="line"></div><div class="line">ADDR/SZ/WCHAN：ADDR代表在内存哪个部分，SZ代表用掉多少内存，WCHAN表示程序是否正在运作</div><div class="line"></div><div class="line">TTY：登陆者的终端机位置，远程登录时为 pts/n</div><div class="line"></div><div class="line">TIME：使用掉的CPU时间，程序实际花费CPU运作时间</div><div class="line"></div><div class="line">CMD：触发程序的指令 */</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看系统所有进程：ps aux</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">ps aux</div><div class="line"></div><div class="line">/* 输出列子如下：</div><div class="line">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</div><div class="line">root         1  0.0  0.1  43156  3136 ?        Ss   3月10   1:27 /usr/lib/systemd/systemd --swi</div><div class="line"></div><div class="line">含义如下：</div><div class="line">USER：该进程属于哪个用户账号</div><div class="line"></div><div class="line">PID  ：进程ID</div><div class="line"></div><div class="line">%CPU：该进程使用掉的CPU资源内存百分比</div><div class="line"></div><div class="line">%MEM：该进程所占用的物理内存百分比</div><div class="line"></div><div class="line">VSZ：该进程使用掉的虚拟内存量（KB）</div><div class="line"></div><div class="line">RSS：该进程占用的固定的内存量（KB）</div><div class="line"></div><div class="line">TTY：登陆者的终端机位置，远程登录时为 pts/n</div><div class="line"></div><div class="line">STAT：与ps -l的S表示相同</div><div class="line"></div><div class="line">START：该进程被触发启动的时间</div><div class="line"></div><div class="line">TIME：程序实际花费CPU运作时间</div><div class="line"></div><div class="line">CMD：该进程的实际命令 */</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="动态的top"><a href="#动态的top" class="headerlink" title="动态的top"></a>动态的top</h3><p>这个命令可以持续的检测进程运行的状态，主要范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// 1. 每两秒更新一次top，查看整体信息，默认5秒</div><div class="line">top -d 2</div><div class="line"></div><div class="line">/* 输出例子：</div><div class="line">top - 10:54:10 up 22 days, 19:25,  1 user,  load average: 0.13, 0.07, 0.06</div><div class="line">Tasks:  69 total,   2 running,  66 sleeping,   1 stopped,   0 zombie</div><div class="line">%Cpu(s):  0.5 us,  0.0 sy,  0.0 ni, 99.5 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</div><div class="line">KiB Mem :  1883844 total,    77012 free,   356884 used,  1449948 buff/cache</div><div class="line">KiB Swap:        0 total,        0 free,        0 used.  1328820 avail Mem</div><div class="line"></div><div class="line">  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                     </div><div class="line"> 1861 root      20   0  608356  12236   1788 S  0.5  0.6  60:48.59 barad_agent</div><div class="line"></div><div class="line"> top见界面主要分为两个界面：</div><div class="line"></div><div class="line"> 上面为整个系统的资源使用状态，基本上总共有六行，显示的内容依次是：</div><div class="line"> 1. 目前的时间，开机到目前为止所经过的时间，已经登录系统的的用户数,系统在1，5，15分钟的平均工作负载</div><div class="line"> 2. 目前进程的总量与各个累呗进程的总量，注意zombie僵尸进程的数量</div><div class="line"> 3. CPU的整体负载，注意wa（I/Owait）</div><div class="line"> 4. 物理内存的使用情况</div><div class="line"> 5. 虚拟内存的使用情况，swap的是用来一定要小</div><div class="line"> 6. 这个是当在top进程中输入命令时显示状态的地方，输入r可修改nice值</div><div class="line"></div><div class="line"> 下面为每个进程使用资源情况，各个参数含义可参照ps。</div><div class="line"> */</div></pre></td></tr></table></figure></p>
+<h3 id="进程树pstree"><a href="#进程树pstree" class="headerlink" title="进程树pstree"></a>进程树pstree</h3><p>如果想找到进程之间的相关性，这个pstree就能够很好的帮助我们，它会使用线段将相关性进程连接起来，范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 1.列出目前系统上面所有的进程数的相关性</div><div class="line">pstree -A</div><div class="line">输入如下：</div><div class="line">systemd-+-acpid</div><div class="line">        |-2*[agetty]</div><div class="line">        |-atd</div><div class="line">        |-auditd---&#123;auditd&#125;</div><div class="line">        ...</div><div class="line"></div><div class="line">// 2. 在1的基础上，同时显示出PID与users</div><div class="line">pstree -Aup</div></pre></td></tr></table></figure></p>
+<h2 id="进程的执行顺序"><a href="#进程的执行顺序" class="headerlink" title="进程的执行顺序"></a>进程的执行顺序</h2><p>CPU优先处理哪个进程，这就需要考虑到程序的优先执行序(priority)与CPU的调度。具体到值来说就是要考虑到PRI和nice值（之前用top和ps显示过）。<strong>PRI值越低代表越优先</strong>，不过这个PRI值是由内核动态调整的，具有无法调整，但是Nice值我们可以改变。下面的PRI值改变的公式：</p>
+<pre><code>PRI(new) = PRI(old) + nice
+</code></pre><p>下面是关于nice值的使用范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 1. 在使用命令的时候设置nice值，给nice值为-5去执行vi</div><div class="line">nice -n vi &amp;</div><div class="line"></div><div class="line">// 2. 已存在进程的nice重新分配，将PID为18625的进程nice值调整到10</div><div class="line">renice 10 18625</div></pre></td></tr></table></figure></p>
+<h2 id="系统资源的查看"><a href="#系统资源的查看" class="headerlink" title="系统资源的查看"></a>系统资源的查看</h2><ol>
+<li><p>查看内存的使用情况，范例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 查看目前系统的内存容量</div><div class="line">free -m</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看系统与内核相关信息，范例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 输出系统的基本信息</div><div class="line">uname -a</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看系统启动时间与内存负载，范例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">uptime</div></pre></td></tr></table></figure>
+</li>
+<li><p>跟踪网络(很重要)，范例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 1. 列出目前系统以及新建的网络连接与unix socket状态</div><div class="line">netstat</div><div class="line"></div><div class="line">// 2. 找出目前系统上已在监听的网络连接机及其PID(很重要)</div><div class="line">netstat -tlnp</div></pre></td></tr></table></figure>
+</li>
+<li><p>分析内核产生的信息，范例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 1. 输出所有的内核开机时的信息</div><div class="line">dmesg | more</div><div class="line"></div><div class="line">// 2. 查找开机的时候硬盘的相关信息</div><div class="line">dmesg | grep i hd</div></pre></td></tr></table></figure>
+</li>
+<li><p>检测系统资源变化，范例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// 1. 统计目前主机CPU状态，每秒一次，共计三次</div><div class="line">vmstat 1 3</div><div class="line"></div><div class="line">// 2. 系统上面所有磁盘的读写状态</div><div class="line">vmstat -d</div><div class="line"></div><div class="line">PS：详细的各个字段的含义，大家就自己查询man vmstat好了，习惯就好。</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：linux服务器上可以跑很多很多的程序，当然也会遇到很多的问题，所以我们需要学会去管理好它。尤其像ps，top这些命令，你一定会很想去了解它吧！
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_例行性工作(crontab)</title>
@@ -2651,67 +2732,6 @@
     <summary type="html">
     
       &lt;p&gt;引： &lt;strong&gt;备忘录模式&lt;/strong&gt;是我们设计上的“月光宝盒”，可以让我们回到需要的年代；是程序数据的“后悔药”，吃了它就可以返回上一个状态；是设计人员的定心丸，确保即使在最坏的情况下也能获得最近的对象状态。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——门面模式</title>
-    <link href="http://bestlixiang.site/2018/03/13/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E9%97%A8%E9%9D%A2%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/13/设计模式之禅——门面模式/</id>
-    <published>2018-03-13T02:18:20.000Z</published>
-    <updated>2018-03-13T02:18:38.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：怎样保证“金玉其外，败絮其中”，<strong>门面模式</strong>可以达到你的要求！<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>要求一个子系统的外部与其内部的通信必须通过一个统一的对象进行。门面模式提供一个高层次的接口，使得子系统更易于使用。——结构类</strong></p>
-<p>门面模式注重<strong>统一的对象</strong>，也就是提供一个访问子系统的接口，除了这个接口不允许有任何访问子系统的行为发生，其通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/facade.png" alt="facade"></p>
-<p>下面简单介绍类图中的两个角色：</p>
-<ol>
-<li>Facade门面角色：客户端调用这个角色的方法，此角色知晓子系统的所有功能和责任。一般情况下，本角色会将所有从客户端发起的请求委派到相应的子系统去，也就是说该角色没有实际的业务逻辑，只是一个委托类。</li>
-<li>Subsystem Classes子系统所有类角色：可以同时有一个或者多个子系统。每个子系统都不是一个单独的类，而是一个类的集合，子系统不知道门面的存在。</li>
-</ol>
-<p>下面是它的通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 子系统</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Class</span> <span class="title">A</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomethingA</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassB</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomethingB</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassC</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomethingC</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 门面对象</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Facade</span> </span>&#123;</div><div class="line">    <span class="comment">// 被委托的对象</span></div><div class="line">    <span class="keyword">private</span> ClassA a = <span class="keyword">new</span> ClassA();</div><div class="line">    <span class="keyword">private</span> ClassB b = <span class="keyword">new</span> ClassB();</div><div class="line">    <span class="keyword">private</span> ClassC c = <span class="keyword">new</span> ClassC();</div><div class="line">    <span class="comment">// 提供给外部访问的方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodA</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.a.doSomethingA();</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodB</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.b.doSomethingB();</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodC</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.c.doSomethingC();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>减少系统的相互依赖。所有的依赖都是对门面对象的依赖，与子系统无关。</li>
-<li>提供了灵活性。不管子系统内部如何变化，只要不影响到门面对象，任你自由活动。</li>
-<li>提供安全性。想让你访问子系统的那些业务就开通那些逻辑，不在门面上开通的方法，你休想访问到。</li>
-</ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>门面模式最大的缺点就是不符合开闭原则，没有对修改关闭，对扩展开放。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>为一个复杂的模块或子系统提供一个供外界访问的接口。</li>
-<li>子系统相对独立——外界对子系统的访问只要黑箱操作即可。</li>
-<li>预防低水平人员带来的风险扩散。</li>
-</ol>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
-<li>一个系统可以有多个门面。比如下面的情况：<ul>
-<li>门面已经庞大到不能忍受的程度</li>
-<li>子系统可以提供不同访问路径</li>
-</ul>
-</li>
-<li>门面不参与子系统内的业务逻辑。</li>
-</ol>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>门面模式是一个很好的封装方法，很多情况都可以使用到，如下面的情况：</p>
-<ol>
-<li>一个子系统比较复杂，就可以封装出一个或多个门面，项目结构简单，扩展性非常好。</li>
-<li>对于一个比较大的项目，为了避免人员带来的风险，也可以使用门面模式，技术水平差的成员，尽量安排独立的模块，然后把他写的程序封装到一个门面李，尽量让其他项目成员不用看到这些人的代码。看也看不懂，哈哈。</li>
-</ol>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：怎样保证“金玉其外，败絮其中”，&lt;strong&gt;门面模式&lt;/strong&gt;可以达到你的要求！
     
     </summary>
     
