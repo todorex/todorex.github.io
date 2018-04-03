@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="算法导论,排序," />
+  <meta name="keywords" content="Linux," />
 
 
 
@@ -89,20 +89,17 @@
 
 
 
-<meta name="description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta name="keywords" content="算法导论,排序">
+<meta name="description" content="引：我们进程会听到daemon，但是却不知道其义，其实就是一个守护进程，作用是支持其他服务(service)的运行。我们下面可以好好看看linux中的daemon与service！">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="快速排序及随机化算法">
-<meta property="og:url" content="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/index.html">
+<meta property="og:title" content="Linux私房菜_daemon为服务(service)保驾护航">
+<meta property="og:url" content="http://bestlixiang.site/2018/04/03/Linux私房菜-daemon为服务-service-保驾护航/index.html">
 <meta property="og:site_name" content="rex note">
-<meta property="og:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-05%20%E4%B8%8B%E5%8D%8810.15.58.png">
-<meta property="og:updated_time" content="2017-05-05T23:42:16.000Z">
+<meta property="og:description" content="引：我们进程会听到daemon，但是却不知道其义，其实就是一个守护进程，作用是支持其他服务(service)的运行。我们下面可以好好看看linux中的daemon与service！">
+<meta property="og:updated_time" content="2018-04-03T09:01:44.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="快速排序及随机化算法">
-<meta name="twitter:description" content="引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg">
+<meta name="twitter:title" content="Linux私房菜_daemon为服务(service)保驾护航">
+<meta name="twitter:description" content="引：我们进程会听到daemon，但是却不知道其义，其实就是一个守护进程，作用是支持其他服务(service)的运行。我们下面可以好好看看linux中的daemon与service！">
 
 
 
@@ -130,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/04/03/Linux私房菜-daemon为服务-service-保驾护航/"/>
 
 
 
 
 
-  <title> 快速排序及随机化算法 | rex note </title>
+  <title> Linux私房菜_daemon为服务(service)保驾护航 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -289,7 +286,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/05/06/快速排序及随机化算法/">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/03/Linux私房菜-daemon为服务-service-保驾护航/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
@@ -310,7 +307,7 @@
             
             
               
-                快速排序及随机化算法
+                Linux私房菜_daemon为服务(service)保驾护航
               
             
           </h2>
@@ -325,8 +322,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-06T00:04:52+08:00">
-                2017-05-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-03T16:59:47+08:00">
+                2018-04-03
               </time>
             
 
@@ -348,8 +345,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
+                  <a href="/categories/Linux私房菜/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux私房菜</span>
                   </a>
                 </span>
 
@@ -388,117 +385,89 @@
       
 
       
-        <p>引：算法一直很重要，最近没有心情去看项目的代码与技术，所以就拿起其了算法导论来看，最经典的快速排序及随机化算法，java实现。<a id="more"></a></p>
-<h2 id="快速排序算法"><a href="#快速排序算法" class="headerlink" title="快速排序算法"></a>快速排序算法</h2><ol>
-<li>核心思想<br>分治思想和原址运算：看一张图<br><img src="http://o6plzvjf2.bkt.clouddn.com/131558588563352.jpg" alt="快速排序"></li>
-<li><p>算法具体实现 </p>
-<blockquote>
-</blockquote>
-<pre><code>public class QuickSort {
-    public int partition(int[] a,int p,int r){
-        int x = a[r];
-        int i = -1;
-        int temp = 0;
-        for (int j = 0; j &lt; a.length-1; j++) {
-            if(a[j]&lt;x){
-                i=i+1;
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
-        }
-        temp = a[i+1];
-        a[i+1] = x;
-        a[r] = temp;
-        return i+1;
-    }
-
-    public int[] quicksort(int[] b,int p,int r){
-        if(p&lt;r){
-            int q = partition(b,p,r);
-            quicksort(b, p, q-1);
-            quicksort(b, q+1, r);
-        }
-        return b;
-    }
-
-    public static void main(String[] args) {
-        QuickSort sort = new QuickSort();
-        int[] a = {2,8,7,1,3,5,6,4};
-        int[] b = sort.quicksort(a, 0, a.length-1);
-        for (int i : b) {
-            System.out.print(i+&quot; &quot;);
-        }
-    }
-}
-</code></pre></li>
-</ol>
-<p>3.时间复杂度</p>
-<p>通过分析我们最看重的平均复杂度是nlgn</p>
-<h2 id="随机化算法"><a href="#随机化算法" class="headerlink" title="随机化算法"></a>随机化算法</h2><ol>
-<li>核心思想</li>
-</ol>
-<p>在算法加入随机性，要么在使序列生成随机化，要么就是使主元随机化，这里我们使主元随机化。</p>
+        <p>引：我们进程会听到daemon，但是却不知道其义，其实就是一个守护进程，作用是支持其他服务(service)的运行。我们下面可以好好看看linux中的daemon与service！<a id="more"></a></p>
+<h1 id="什么是daemon与服务"><a href="#什么是daemon与服务" class="headerlink" title="什么是daemon与服务"></a>什么是daemon与服务</h1><p>系统为了某些功能必须要提供一些服务，这个服务就称为<strong>service</strong>。但是service的提供总是需要进程的运行，所以实现这个service的程序我们就称它为<strong>daemon</strong>。</p>
+<h2 id="daemon的分类"><a href="#daemon的分类" class="headerlink" title="daemon的分类"></a>daemon的分类</h2><p>分类方式一：按照“是否可以独立启动”分类</p>
 <ol>
-<li><p>算法具体实现</p>
-<blockquote>
-</blockquote>
-<pre><code>import java.util.Random;    
-public class RandomQuickSort {
-    public int partition(int[] a,int p,int r){
-        int x = a[r];
-        int i = -1;
-        int temp = 0;
-        for (int j = 0; j &lt; a.length-1; j++) {
-            if(a[j]&lt;x){
-                i=i+1;
-                temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
-            }
-        }
-        temp = a[i+1];
-        a[i+1] = x;
-        a[r] = temp;
-        return i+1;
-    }
-
-    public int randompartition(int[] a,int p,int r){
-        int temp = 0;
-        Random random = new Random();
-        int i = random.nextInt(r);
-        temp = a[i];
-        a[i] = a[r];
-        a[r] = temp;
-        return partition(a, p, r);
-    }
-
-    public int[] randomquicksort(int[] b,int p,int r){
-        if(p&lt;r){
-            int q = randompartition(b, p, r);
-            randomquicksort(b, p, q-1);
-            randomquicksort(b, q+1, r);
-        }
-        return b;
-    }
-
-    public static void main(String[] args) {
-        RandomQuickSort sort = new RandomQuickSort();
-        int[] a = {2,8,7,1,3,5,6,4};
-        int[] b = sort.randomquicksort(a, 0, a.length-1);
-        for (int i : b) {
-            System.out.print(i+&quot; &quot;);
-        }
-    }
-}
-</code></pre></li>
-<li><p>时间复杂度</p>
+<li>stand alone类型的daemon：这种类型的daemon可以自行启动，启动之后可以常驻内存，直到手动关闭该daemon才释放资源。如www。</li>
+<li>由super daemon管理的daemon：这种类型的daemon由super daemon统一管理，当请求到来时，由super daemon启动请求的服务，请求完成后便释放内存资源。如telnet。</li>
+</ol>
+<p>分类方式二：按照“请求到来时是否能够立即运行”分类</p>
+<ol>
+<li><p>signal-control类型的daemon<br>这种类型的daemon当有请求到来时便能立即执行。如打印机服务。</p>
+</li>
+<li><p>interval-control类型的daemon<br>这种类型的daemon会周期性地执行某项工作，因此它没有请求一说，它会周期性地读取配置文件，并执行配置文件中要求的功能。如crond、atd都属于interval-control类型的daemon。</p>
 </li>
 </ol>
-<p>通过分析我们最看重的平均复杂度是nlgn</p>
-<h2 id="基本排序算法"><a href="#基本排序算法" class="headerlink" title="基本排序算法"></a>基本排序算法</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-05%20%E4%B8%8B%E5%8D%8810.15.58.png" alt="排序"></p>
-<p>小结：同等情况下快速排序&gt;随机化算法&gt;归并排序&gt;插入排序；<br>在有序的情况下随机化算法&gt;快速排序</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>慢慢走，不要急！</p>
+<p>通常在服务的名称的之后都会加一个d。</p>
+<h2 id="网络服务与端口的对应"><a href="#网络服务与端口的对应" class="headerlink" title="网络服务与端口的对应"></a>网络服务与端口的对应</h2><p>当系统提供了网络服务，就会涉及到端口的问题，这些服务与端口的定义文件在/etc/services。大家可以自己查看一下。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tcpmux          1/tcp                           # TCP port service multiplexer</div><div class="line">tcpmux          1/udp                           # TCP port service multiplexer</div></pre></td></tr></table></figure></p>
+<p>第一列为daemon的名称，第二列为该daemon所使用的端口号与网络数据包协议。</p>
+<h2 id="daemon的启动脚本与启动方式"><a href="#daemon的启动脚本与启动方式" class="headerlink" title="daemon的启动脚本与启动方式"></a>daemon的启动脚本与启动方式</h2><p>stand-alone类型的daemon和super daemon类型的daemon有各自的启动方式</p>
+<h3 id="stand-alone型Daemon的启动方式"><a href="#stand-alone型Daemon的启动方式" class="headerlink" title="stand alone型Daemon的启动方式"></a>stand alone型Daemon的启动方式</h3><ol>
+<li><p>通过/etc/init.d/xxx启动。启动一个服务是一个繁琐的过程，你需要进行一系列启动前的操作，为了避免这些麻烦，服务提供商把这些繁琐的过程封装在一个shell srcipt中，我们只需执行一个shell script即可启动一个daemon。几乎所有的stand alone型daemon的启动脚本都放在/etc/init.d/下，所以我们只需执行 <strong>/etc/init.d/xxx start</strong> 即可启动xxx服务。</p>
+</li>
+<li><p>通过service命令启动。若每次启动一个命令都要写/etc/init.d/略微有些麻烦，service命令将其进行了封装，我们只要执行 <strong>“service xxx start/status/restart/stop”</strong> 即可开启/查看/重启/关闭xxx服务。</p>
+</li>
+</ol>
+<h3 id="super-daemon型Daemon的启动方式"><a href="#super-daemon型Daemon的启动方式" class="headerlink" title="super daemon型Daemon的启动方式"></a>super daemon型Daemon的启动方式</h3><ol>
+<li><p>设置daemon的配置文件，每一个被super daemon管理的daemon都有一个配置文件，在/etc/xinetd.d/目录下。每个daemon的开启或关闭均在该daemon对应的配置文件中设置。</p>
+</li>
+<li><p>启动super daemon，super daemon是一个stand alone型daemon，因此在daemon的配置文件设置好后可通过<strong>service xinetd start</strong>启动所有由super daemon管理的daemon。</p>
+</li>
+</ol>
+<h1 id="解析super-daemon的配置文件"><a href="#解析super-daemon的配置文件" class="headerlink" title="解析super daemon的配置文件"></a>解析super daemon的配置文件</h1><h2 id="默认值配置文件：xinetd-conf"><a href="#默认值配置文件：xinetd-conf" class="headerlink" title="默认值配置文件：xinetd.conf"></a>默认值配置文件：xinetd.conf</h2><p>高版本的contos可能没有该文件，是因为没有安装，所以要先用“yum install xinetd”安装之后，就可以看见了。</p>
+<p>super daemon的默认配置文件为:/etc/xinetd.conf，它为它所管理的所有daemon做了一些默认的配置。<br>从最后一行的includedir /etc/xinetd.d可以看出，它加载了它所管理的所有daemon的配置。</p>
+<p>下面来看一下具体的某个daemon的配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">service rsync #service后为daemon的名字</div><div class="line">&#123;</div><div class="line">        disable = yes  # yes表示关闭此daemon，no表示开启此daemon</div><div class="line">        socket_type     = stream #stream表示使用TCP、dgram表示使用UDP、raw表示直接与IP交互</div><div class="line">        wait            = no</div><div class="line">        user            = root #以什么用户的身份启动这个daemon</div><div class="line">        server          = /usr/bin/rsync #这个daemon的启动程序</div><div class="line">        server_args     = --daemon #启动时所需的参数</div><div class="line">        log_on_failure  += USERID # 登录失败时需要记录用户</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>=：表示将某个参数设为等号右侧的值，若先前设置中已设置过该参数，则直接覆盖</li>
+<li>+=：表示保留先前设置的这个参数，再给这个参数增加个值。</li>
+<li>-和-=的含义同上。</li>
+</ul>
+<h1 id="super-deamon的防火墙管理"><a href="#super-deamon的防火墙管理" class="headerlink" title="super deamon的防火墙管理"></a>super deamon的防火墙管理</h1><p>由于受super daemon管理的daemon的请求都首先需要经过super daemon，因此super daemon可以充当防火墙的角色，拒绝一些不安全的请求。<br>super daemon提供了两种防火墙机制，第一种方式提供较多详细的安全设置，而第二种方式只能阻挡或允许指定的IP，具体见下：</p>
+<ol>
+<li><p>使用受super daemon管理的daemon的配置文件实现防火墙机制</p>
+<p> 在某个具体的daemon配置文件中添加如下参数，即可为daemon配置防火墙：</p>
+<ul>
+<li>instance=数字/UNLIMITED：设置该daemon能够承受的最大连接数。`  </li>
+<li>per_source=数字/UNLIMITED：每个IP的最大连接数。</li>
+<li>Cps=数字1 数字2：该daemon在一秒内的连接数超过数字1，则暂时关闭该da* emon数字2的秒数。</li>
+<li>log_on_success/failure=PID/HOST/USERID/EXIT/DURATION：当登录成功/* 失败时记录的信息。HOST：连接者的IP、EXIT：离开时间、DURATION：为该用户服务的时间。</li>
+<li>redirect=IP：将用户的请求转至指定服务器。</li>
+<li>bind=IP：允许用户用哪个IP访问本服务。<br>only_from=[0.0.0.0,192.168.1.0:24]：只允许指定IP的用户访问。0.0.0.0表示允许所有用户，192.168.1.0:24表示只允许192.168.1.1－192.168.1.255之间的用户访问。<br>access_time=00:00-12:00：只允许该时间段内访问。</li>
+</ul>
+</li>
+<li><p>使用xinetd提供的/etc/hosts.allow和/etc/hosts.deny实现防火墙机制</p>
+<ul>
+<li><p>/etc/hosts.allow ：我们可以在该文件中设置允许访问的IP</p>
+</li>
+<li><p>/etc/hosts.deny ：我们可以在该文件中设置不允许访问的IP</p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="系统开启的服务"><a href="#系统开启的服务" class="headerlink" title="系统开启的服务"></a>系统开启的服务</h1><h2 id="查看系统启动的服务"><a href="#查看系统启动的服务" class="headerlink" title="查看系统启动的服务"></a>查看系统启动的服务</h2><p>一般情况下，我们会比较关心网络监听的服务，所以都会使用netstat命令(之前也提到过)，这里再次说明几个范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 1. 找出目前系统开启的网络服务</div><div class="line">netstat -tulp</div><div class="line"></div><div class="line">// 2. 找出所有有监听网络的服务</div><div class="line">netstat -lnp</div><div class="line"></div><div class="line">// 3. 查看所有的服务状态</div><div class="line"> service --status-all</div></pre></td></tr></table></figure></p>
+<h2 id="设置Daemon开启启动"><a href="#设置Daemon开启启动" class="headerlink" title="设置Daemon开启启动"></a>设置Daemon开启启动</h2><p>在设置Daemon开机启动之前，最好先了解一下Linux主机是怎么开机的？</p>
+<ol>
+<li>打开计算机电源，开始读取BIOS并进行主机的自我测试</li>
+<li>通过BIOS取得第一个可开机设备，读取主要开机区(MBR)取得启动装载程序</li>
+<li>通过启动装载程序的设置，取得kernel并加载内存且检测系统硬件</li>
+<li>内核主动调用init进程</li>
+<li>init进程开始执行系统初始化(/etc/rc.d/rec.sysinit)</li>
+<li>依据init的设置进行daemonstart(/etc/rc.d/rc[0-6].d/*)</li>
+<li>加载本机设置</li>
+</ol>
+<p>在启动Linux系统时，可以进入不同的模式，这模式我们称为执行等级(run level)，不同执行等级有不同的功能与服务。图型界面为run level5，纯文本界面为run level3。当我们想要知道哪些服务默认可以启动，这就需要下面的命令来查询:</p>
+<ol>
+<li>chkconfig：管理系统服务<strong>默认开机启动与否</strong>，范例如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 1. 列出目前系统上面所有被chkconfig管理的服务</div><div class="line">chkconfig --list | more // 分为两个块，分别为两种启动方式的daemon</div><div class="line"></div><div class="line">// 2. 显示目前在run level 3 启动的服务</div><div class="line">chkconfig --list | grep &apos;2:on&apos;</div><div class="line"></div><div class="line">// 3. 让atd这个服务在run level 3，4，5时启动</div><div class="line">chkconfig --level 345 atd on</div><div class="line"></div><div class="line">// 4. 查看httpd，再查看默认有无启动，之后以chkconfig设置为默认启动</div><div class="line">/etc/init.d/httpd status // 查看本身</div><div class="line">chkconfig --list httpd // 查看是否默认启动</div><div class="line">chconfig httpd on; //设置为开机启动</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li>chkconfig：设置自己的系统服务 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chkconfig [--add|--del] [服务名称] // 该服务必须在/etc/init.d/内</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
 
       
     </div>
@@ -528,9 +497,7 @@ public class RandomQuickSort {
       
         <div class="post-tags">
           
-            <a href="/tags/算法导论/" rel="tag"># 算法导论</a>
-          
-            <a href="/tags/排序/" rel="tag"># 排序</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
           
         </div>
       
@@ -543,8 +510,8 @@ public class RandomQuickSort {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/04/git个人使用与多人协作/" rel="next" title="git个人使用与多人协作">
-                <i class="fa fa-chevron-left"></i> git个人使用与多人协作
+              <a href="/2018/04/02/Linux私房菜-程序管理/" rel="next" title="Linux私房菜_认识你的进程">
+                <i class="fa fa-chevron-left"></i> Linux私房菜_认识你的进程
               </a>
             
           </div>
@@ -552,10 +519,6 @@ public class RandomQuickSort {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/06/nginx反向代理与负载均衡/" rel="prev" title="nginx反向代理与负载均衡">
-                nginx反向代理与负载均衡 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -754,7 +717,7 @@ public class RandomQuickSort {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速排序算法"><span class="nav-number">1.</span> <span class="nav-text">快速排序算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机化算法"><span class="nav-number">2.</span> <span class="nav-text">随机化算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本排序算法"><span class="nav-number">3.</span> <span class="nav-text">基本排序算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是daemon与服务"><span class="nav-number">1.</span> <span class="nav-text">什么是daemon与服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#daemon的分类"><span class="nav-number">1.1.</span> <span class="nav-text">daemon的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络服务与端口的对应"><span class="nav-number">1.2.</span> <span class="nav-text">网络服务与端口的对应</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#daemon的启动脚本与启动方式"><span class="nav-number">1.3.</span> <span class="nav-text">daemon的启动脚本与启动方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stand-alone型Daemon的启动方式"><span class="nav-number">1.3.1.</span> <span class="nav-text">stand alone型Daemon的启动方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#super-daemon型Daemon的启动方式"><span class="nav-number">1.3.2.</span> <span class="nav-text">super daemon型Daemon的启动方式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解析super-daemon的配置文件"><span class="nav-number">2.</span> <span class="nav-text">解析super daemon的配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#默认值配置文件：xinetd-conf"><span class="nav-number">2.1.</span> <span class="nav-text">默认值配置文件：xinetd.conf</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#super-deamon的防火墙管理"><span class="nav-number">3.</span> <span class="nav-text">super deamon的防火墙管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系统开启的服务"><span class="nav-number">4.</span> <span class="nav-text">系统开启的服务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#查看系统启动的服务"><span class="nav-number">4.1.</span> <span class="nav-text">查看系统启动的服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置Daemon开启启动"><span class="nav-number">4.2.</span> <span class="nav-text">设置Daemon开启启动</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>

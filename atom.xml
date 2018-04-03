@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-04-02T05:02:08.000Z</updated>
+  <updated>2018-04-03T09:01:44.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,111 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_daemon为服务(service)保驾护航</title>
+    <link href="http://bestlixiang.site/2018/04/03/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-daemon%E4%B8%BA%E6%9C%8D%E5%8A%A1-service-%E4%BF%9D%E9%A9%BE%E6%8A%A4%E8%88%AA/"/>
+    <id>http://bestlixiang.site/2018/04/03/Linux私房菜-daemon为服务-service-保驾护航/</id>
+    <published>2018-04-03T08:59:47.000Z</published>
+    <updated>2018-04-03T09:01:44.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：我们进程会听到daemon，但是却不知道其义，其实就是一个守护进程，作用是支持其他服务(service)的运行。我们下面可以好好看看linux中的daemon与service！<a id="more"></a></p>
+<h1 id="什么是daemon与服务"><a href="#什么是daemon与服务" class="headerlink" title="什么是daemon与服务"></a>什么是daemon与服务</h1><p>系统为了某些功能必须要提供一些服务，这个服务就称为<strong>service</strong>。但是service的提供总是需要进程的运行，所以实现这个service的程序我们就称它为<strong>daemon</strong>。</p>
+<h2 id="daemon的分类"><a href="#daemon的分类" class="headerlink" title="daemon的分类"></a>daemon的分类</h2><p>分类方式一：按照“是否可以独立启动”分类</p>
+<ol>
+<li>stand alone类型的daemon：这种类型的daemon可以自行启动，启动之后可以常驻内存，直到手动关闭该daemon才释放资源。如www。</li>
+<li>由super daemon管理的daemon：这种类型的daemon由super daemon统一管理，当请求到来时，由super daemon启动请求的服务，请求完成后便释放内存资源。如telnet。</li>
+</ol>
+<p>分类方式二：按照“请求到来时是否能够立即运行”分类</p>
+<ol>
+<li><p>signal-control类型的daemon<br>这种类型的daemon当有请求到来时便能立即执行。如打印机服务。</p>
+</li>
+<li><p>interval-control类型的daemon<br>这种类型的daemon会周期性地执行某项工作，因此它没有请求一说，它会周期性地读取配置文件，并执行配置文件中要求的功能。如crond、atd都属于interval-control类型的daemon。</p>
+</li>
+</ol>
+<p>通常在服务的名称的之后都会加一个d。</p>
+<h2 id="网络服务与端口的对应"><a href="#网络服务与端口的对应" class="headerlink" title="网络服务与端口的对应"></a>网络服务与端口的对应</h2><p>当系统提供了网络服务，就会涉及到端口的问题，这些服务与端口的定义文件在/etc/services。大家可以自己查看一下。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tcpmux          1/tcp                           # TCP port service multiplexer</div><div class="line">tcpmux          1/udp                           # TCP port service multiplexer</div></pre></td></tr></table></figure></p>
+<p>第一列为daemon的名称，第二列为该daemon所使用的端口号与网络数据包协议。</p>
+<h2 id="daemon的启动脚本与启动方式"><a href="#daemon的启动脚本与启动方式" class="headerlink" title="daemon的启动脚本与启动方式"></a>daemon的启动脚本与启动方式</h2><p>stand-alone类型的daemon和super daemon类型的daemon有各自的启动方式</p>
+<h3 id="stand-alone型Daemon的启动方式"><a href="#stand-alone型Daemon的启动方式" class="headerlink" title="stand alone型Daemon的启动方式"></a>stand alone型Daemon的启动方式</h3><ol>
+<li><p>通过/etc/init.d/xxx启动。启动一个服务是一个繁琐的过程，你需要进行一系列启动前的操作，为了避免这些麻烦，服务提供商把这些繁琐的过程封装在一个shell srcipt中，我们只需执行一个shell script即可启动一个daemon。几乎所有的stand alone型daemon的启动脚本都放在/etc/init.d/下，所以我们只需执行 <strong>/etc/init.d/xxx start</strong> 即可启动xxx服务。</p>
+</li>
+<li><p>通过service命令启动。若每次启动一个命令都要写/etc/init.d/略微有些麻烦，service命令将其进行了封装，我们只要执行 <strong>“service xxx start/status/restart/stop”</strong> 即可开启/查看/重启/关闭xxx服务。</p>
+</li>
+</ol>
+<h3 id="super-daemon型Daemon的启动方式"><a href="#super-daemon型Daemon的启动方式" class="headerlink" title="super daemon型Daemon的启动方式"></a>super daemon型Daemon的启动方式</h3><ol>
+<li><p>设置daemon的配置文件，每一个被super daemon管理的daemon都有一个配置文件，在/etc/xinetd.d/目录下。每个daemon的开启或关闭均在该daemon对应的配置文件中设置。</p>
+</li>
+<li><p>启动super daemon，super daemon是一个stand alone型daemon，因此在daemon的配置文件设置好后可通过<strong>service xinetd start</strong>启动所有由super daemon管理的daemon。</p>
+</li>
+</ol>
+<h1 id="解析super-daemon的配置文件"><a href="#解析super-daemon的配置文件" class="headerlink" title="解析super daemon的配置文件"></a>解析super daemon的配置文件</h1><h2 id="默认值配置文件：xinetd-conf"><a href="#默认值配置文件：xinetd-conf" class="headerlink" title="默认值配置文件：xinetd.conf"></a>默认值配置文件：xinetd.conf</h2><p>高版本的contos可能没有该文件，是因为没有安装，所以要先用“yum install xinetd”安装之后，就可以看见了。</p>
+<p>super daemon的默认配置文件为:/etc/xinetd.conf，它为它所管理的所有daemon做了一些默认的配置。<br>从最后一行的includedir /etc/xinetd.d可以看出，它加载了它所管理的所有daemon的配置。</p>
+<p>下面来看一下具体的某个daemon的配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">service rsync #service后为daemon的名字</div><div class="line">&#123;</div><div class="line">        disable = yes  # yes表示关闭此daemon，no表示开启此daemon</div><div class="line">        socket_type     = stream #stream表示使用TCP、dgram表示使用UDP、raw表示直接与IP交互</div><div class="line">        wait            = no</div><div class="line">        user            = root #以什么用户的身份启动这个daemon</div><div class="line">        server          = /usr/bin/rsync #这个daemon的启动程序</div><div class="line">        server_args     = --daemon #启动时所需的参数</div><div class="line">        log_on_failure  += USERID # 登录失败时需要记录用户</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>=：表示将某个参数设为等号右侧的值，若先前设置中已设置过该参数，则直接覆盖</li>
+<li>+=：表示保留先前设置的这个参数，再给这个参数增加个值。</li>
+<li>-和-=的含义同上。</li>
+</ul>
+<h1 id="super-deamon的防火墙管理"><a href="#super-deamon的防火墙管理" class="headerlink" title="super deamon的防火墙管理"></a>super deamon的防火墙管理</h1><p>由于受super daemon管理的daemon的请求都首先需要经过super daemon，因此super daemon可以充当防火墙的角色，拒绝一些不安全的请求。<br>super daemon提供了两种防火墙机制，第一种方式提供较多详细的安全设置，而第二种方式只能阻挡或允许指定的IP，具体见下：</p>
+<ol>
+<li><p>使用受super daemon管理的daemon的配置文件实现防火墙机制</p>
+<p> 在某个具体的daemon配置文件中添加如下参数，即可为daemon配置防火墙：</p>
+<ul>
+<li>instance=数字/UNLIMITED：设置该daemon能够承受的最大连接数。`  </li>
+<li>per_source=数字/UNLIMITED：每个IP的最大连接数。</li>
+<li>Cps=数字1 数字2：该daemon在一秒内的连接数超过数字1，则暂时关闭该da* emon数字2的秒数。</li>
+<li>log_on_success/failure=PID/HOST/USERID/EXIT/DURATION：当登录成功/* 失败时记录的信息。HOST：连接者的IP、EXIT：离开时间、DURATION：为该用户服务的时间。</li>
+<li>redirect=IP：将用户的请求转至指定服务器。</li>
+<li>bind=IP：允许用户用哪个IP访问本服务。<br>only_from=[0.0.0.0,192.168.1.0:24]：只允许指定IP的用户访问。0.0.0.0表示允许所有用户，192.168.1.0:24表示只允许192.168.1.1－192.168.1.255之间的用户访问。<br>access_time=00:00-12:00：只允许该时间段内访问。</li>
+</ul>
+</li>
+<li><p>使用xinetd提供的/etc/hosts.allow和/etc/hosts.deny实现防火墙机制</p>
+<ul>
+<li><p>/etc/hosts.allow ：我们可以在该文件中设置允许访问的IP</p>
+</li>
+<li><p>/etc/hosts.deny ：我们可以在该文件中设置不允许访问的IP</p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="系统开启的服务"><a href="#系统开启的服务" class="headerlink" title="系统开启的服务"></a>系统开启的服务</h1><h2 id="查看系统启动的服务"><a href="#查看系统启动的服务" class="headerlink" title="查看系统启动的服务"></a>查看系统启动的服务</h2><p>一般情况下，我们会比较关心网络监听的服务，所以都会使用netstat命令(之前也提到过)，这里再次说明几个范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 1. 找出目前系统开启的网络服务</div><div class="line">netstat -tulp</div><div class="line"></div><div class="line">// 2. 找出所有有监听网络的服务</div><div class="line">netstat -lnp</div><div class="line"></div><div class="line">// 3. 查看所有的服务状态</div><div class="line"> service --status-all</div></pre></td></tr></table></figure></p>
+<h2 id="设置Daemon开启启动"><a href="#设置Daemon开启启动" class="headerlink" title="设置Daemon开启启动"></a>设置Daemon开启启动</h2><p>在设置Daemon开机启动之前，最好先了解一下Linux主机是怎么开机的？</p>
+<ol>
+<li>打开计算机电源，开始读取BIOS并进行主机的自我测试</li>
+<li>通过BIOS取得第一个可开机设备，读取主要开机区(MBR)取得启动装载程序</li>
+<li>通过启动装载程序的设置，取得kernel并加载内存且检测系统硬件</li>
+<li>内核主动调用init进程</li>
+<li>init进程开始执行系统初始化(/etc/rc.d/rec.sysinit)</li>
+<li>依据init的设置进行daemonstart(/etc/rc.d/rc[0-6].d/*)</li>
+<li>加载本机设置</li>
+</ol>
+<p>在启动Linux系统时，可以进入不同的模式，这模式我们称为执行等级(run level)，不同执行等级有不同的功能与服务。图型界面为run level5，纯文本界面为run level3。当我们想要知道哪些服务默认可以启动，这就需要下面的命令来查询:</p>
+<ol>
+<li>chkconfig：管理系统服务<strong>默认开机启动与否</strong>，范例如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 1. 列出目前系统上面所有被chkconfig管理的服务</div><div class="line">chkconfig --list | more // 分为两个块，分别为两种启动方式的daemon</div><div class="line"></div><div class="line">// 2. 显示目前在run level 3 启动的服务</div><div class="line">chkconfig --list | grep &apos;2:on&apos;</div><div class="line"></div><div class="line">// 3. 让atd这个服务在run level 3，4，5时启动</div><div class="line">chkconfig --level 345 atd on</div><div class="line"></div><div class="line">// 4. 查看httpd，再查看默认有无启动，之后以chkconfig设置为默认启动</div><div class="line">/etc/init.d/httpd status // 查看本身</div><div class="line">chkconfig --list httpd // 查看是否默认启动</div><div class="line">chconfig httpd on; //设置为开机启动</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li>chkconfig：设置自己的系统服务 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chkconfig [--add|--del] [服务名称] // 该服务必须在/etc/init.d/内</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：我们进程会听到daemon，但是却不知道其义，其实就是一个守护进程，作用是支持其他服务(service)的运行。我们下面可以好好看看linux中的daemon与service！
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_认识你的进程</title>
@@ -2675,63 +2780,6 @@
     <summary type="html">
     
       &lt;p&gt;引：一个对象结构包含很多类对象，他们又有不同的接口，而你想对这些对象实施一些依赖于其具体类的操作，接可以使用&lt;strong&gt;访问者模式&lt;/strong&gt;。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——备忘录模式</title>
-    <link href="http://bestlixiang.site/2018/03/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%A4%87%E5%BF%98%E5%BD%95%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/14/设计模式之禅——备忘录模式/</id>
-    <published>2018-03-14T05:11:10.000Z</published>
-    <updated>2018-03-14T05:11:27.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引： <strong>备忘录模式</strong>是我们设计上的“月光宝盒”，可以让我们回到需要的年代；是程序数据的“后悔药”，吃了它就可以返回上一个状态；是设计人员的定心丸，确保即使在最坏的情况下也能获得最近的对象状态。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>备忘录模式提供了一种弥补真实世界缺陷的方法，让“后悔药”在程序的世界中真实可行，其定义如下：</p>
-<p><strong>在不破坏封装性的前提下，捕获一个对象的内部状态，并在改对象之外保存这个状态，这样以后就可将该对象的恢复到原先保存的状态。——行为类</strong></p>
-<p>备忘录模式就是一个对象的备份模式，提供了一种程序数据的备份方法，其通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/memento.png" alt="memento"></p>
-<p>下面简单介绍类图中的几个角色：</p>
-<ol>
-<li>Originator发起人角色：记录当前时刻的内部状态，负责定义哪些属于备份范围的状态，负责创建和恢复备忘录数据。</li>
-<li>Memento备忘录角色：负责存储Originator发起人对象的内部状态，在需要的时候提供发起人需要的内部状态。</li>
-<li>Caretaker备忘录管理员角色：对备忘录进行管理，保存和提供备忘录。</li>
-</ol>
-<p>下面是它的通用源代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 发起人角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Originate</span> </span>&#123;</div><div class="line">    <span class="comment">// 内部状态</span></div><div class="line">    <span class="keyword">private</span> String state = <span class="string">""</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String  <span class="title">getState</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> state;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.state = state;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 创建一个备忘录</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">createMemento</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Memento(<span class="keyword">this</span>.state);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 恢复一个备忘录</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">restoreMemento</span><span class="params">(Memento _memento)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.setState(_memento.getState());</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 备忘录角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Memento</span> </span>&#123;</div><div class="line">    <span class="comment">// 发起人内部状态</span></div><div class="line">    <span class="keyword">private</span> String state = <span class="string">""</span>;</div><div class="line">    <span class="comment">// 构造函数传递</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Memento</span><span class="params">(String _state)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.state = _state;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getState</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> state;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setState</span><span class="params">(String state)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.state = state;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 备忘录管理者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CareTaker</span> </span>&#123;</div><div class="line">    <span class="comment">// 备忘录对象</span></div><div class="line">    <span class="keyword">private</span> Memento memento;</div><div class="line">    <span class="function"><span class="keyword">public</span> Memento <span class="title">getMemento</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> memento;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMemento</span><span class="params">(Memento memento)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.memento = memento;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 定义发起人</span></div><div class="line">        Originator originator = <span class="keyword">new</span> Originator();</div><div class="line">        <span class="comment">// 定义出备忘录管理员</span></div><div class="line">        Caretaker caretaker = <span class="keyword">new</span> Caretaker();</div><div class="line">        <span class="comment">// 创建一个备忘录</span></div><div class="line">        caretaker.setMemento(originator.createMemento());</div><div class="line">        <span class="comment">// 恢复一个备忘录</span></div><div class="line">        originator.restoreMemento(caretaker.getMemento());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>需要保存和恢复数据的相关状态场景。</li>
-<li>提供一个可回滚的操作。</li>
-<li>需要监控的副本场景。</li>
-<li>数据库连接的事务管理就是用的备忘录模式。</li>
-</ol>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
-<li><p>备忘录的生命周期</p>
-<p> 备忘录创建出来就要在“最近”的代码中使用，要主动管理它的生命周期，建立就要使用，不使用就要立刻删除其引用，等待垃圾回收器对它的回收处理。</p>
-</li>
-<li><p>备忘录性能</p>
-<p> 不要在频繁建立备份的场景中使用备忘录模式，原因有而：一是控制不了备忘录建立的对象数量；二是大对象的建立是要消耗资源的，系统的性能需要考虑。</p>
-</li>
-</ol>
-<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="clone方式的备忘录"><a href="#clone方式的备忘录" class="headerlink" title="clone方式的备忘录"></a>clone方式的备忘录</h2><p>发起人角色融入了发起人角色和备份路角色，利用clone()方法克隆出来的对象充当备忘录对象。但是由于存在深拷贝和浅拷贝的问题，在复杂的场景下它会让你的程序逻辑异常混乱，因此Clone方式的备忘录模式适用于比较简单的场景。</p>
-<h2 id="多状态的备忘录模式"><a href="#多状态的备忘录模式" class="headerlink" title="多状态的备忘录模式"></a>多状态的备忘录模式</h2><p>将多个状态转换到HashMap中，方便备忘录角色存储。</p>
-<h2 id="多备份的备忘录"><a href="#多备份的备忘录" class="headerlink" title="多备份的备忘录"></a>多备份的备忘录</h2><p>将备份的数据存入到HashMap中，并给每个不同的备份一个不同的key。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>大家主要的还是记住数据库的事务用的是备忘录模式就好了。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引： &lt;strong&gt;备忘录模式&lt;/strong&gt;是我们设计上的“月光宝盒”，可以让我们回到需要的年代；是程序数据的“后悔药”，吃了它就可以返回上一个状态；是设计人员的定心丸，确保即使在最坏的情况下也能获得最近的对象状态。
     
     </summary>
     
