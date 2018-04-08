@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-04-03T09:01:44.000Z</updated>
+  <updated>2018-04-08T09:14:45.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,153 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux私房菜_软件安装</title>
+    <link href="http://bestlixiang.site/2018/04/08/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"/>
+    <id>http://bestlixiang.site/2018/04/08/Linux私房菜-软件安装/</id>
+    <published>2018-04-08T09:14:14.000Z</published>
+    <updated>2018-04-08T09:14:45.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。<a id="more"></a></p>
+<h1 id="源码安装"><a href="#源码安装" class="headerlink" title="源码安装"></a>源码安装</h1><h2 id="开放源码的软件安装相关概念"><a href="#开放源码的软件安装相关概念" class="headerlink" title="开放源码的软件安装相关概念"></a>开放源码的软件安装相关概念</h2><p>Linux上几乎所有的软件都经过了GPL授权，因此几乎所有的软件都会提供源码。<br>而一个软件要在Linux上执行，必须是二进制文件，因此当我们拿到软件源码后，需要将它编译成二进制文件才能在Linux上运行。</p>
+<h3 id="开放源码、编译程序、可执行文件"><a href="#开放源码、编译程序、可执行文件" class="headerlink" title="开放源码、编译程序、可执行文件"></a>开放源码、编译程序、可执行文件</h3><ol>
+<li>开放源码：就是程序代码，写给人类看的语言，但机器并不认识，所以无法执行。</li>
+<li>编译程序：将程序代码转译称为机器看得懂的语言。</li>
+<li>可执行文件：经过编译程序变成二进制程序后，机器看得懂所以可执行的文件。</li>
+</ol>
+<h3 id="函式库"><a href="#函式库" class="headerlink" title="函式库"></a>函式库</h3><p>类似子程序的角色，可以被呼叫来执行的一段功能函数。</p>
+<h3 id="make与configure"><a href="#make与configure" class="headerlink" title="make与configure"></a>make与configure</h3><ol>
+<li>configure:侦测用户操作环境，是否支持软件的运行，侦测完毕生成makefile文件<ul>
+<li>是否有适合的编译程序可以编译本软件的程序代码</li>
+<li>是否已经存在本软件所需要的函数库，或其他需要的相依软件</li>
+<li>操作系统平台是否适合本软件，包括 Linux 的核心版本</li>
+<li>核心的头文件定义档 (header include) 是否存在 (驱动程序必须要的侦测)。</li>
+</ul>
+</li>
+<li>make:make是一个程序，会去找makefile文件，然后执行编译。</li>
+</ol>
+<h3 id="tarball软件"><a href="#tarball软件" class="headerlink" title="tarball软件"></a>tarball软件</h3><p>tarball文件其实就是将软件的源码先以tar打包，然后再压缩。其实就是一个<strong>软件包</strong>。通常解压缩之后会存在源代码文件、侦测程序文件（configure）、本软件的简易说明与安装说明（README）。</p>
+<h2 id="Tarball的安装的基本步骤"><a href="#Tarball的安装的基本步骤" class="headerlink" title="Tarball的安装的基本步骤"></a>Tarball的安装的基本步骤</h2><ol>
+<li>取得源文件：将tarball文件在/usr/local/src目录解压缩</li>
+<li>取得步骤流程：进入新建立的目录下面，去查阅INSTALL与README等相关文件内容（很重要）</li>
+<li>相关属性软件安装：根据INSTALL/README的内容查看并安装好一些相关的软件</li>
+<li>建立makefile文件：以自动检测程序（configure）检测操作环境，并建立Makefile文件</li>
+<li>编译：以make这个程序并使用该目录下得Makefile作为它的参数配置文件，来进行make的操作</li>
+<li>安装：以make这个程序，并以Makefile这个参数配置文件，依据install这个目标（在Makefile文件中会有多个操作目标，如clean）的指定来安装到正确地路径。</li>
+</ol>
+<h2 id="Tarball软件安装的建议事项"><a href="#Tarball软件安装的建议事项" class="headerlink" title="Tarball软件安装的建议事项"></a>Tarball软件安装的建议事项</h2><p>在默认情况下，原本的Linux distribution发布安装的软件大多是在/usr里面的，而自行安装的软件则建议放置在/usr/local里面。</p>
+<ul>
+<li>linux distribution默认的安装软件的路径如下，以httpd为例：<ul>
+<li>/etc/httpd（配置文件）</li>
+<li>/usr/lib（函数库）</li>
+<li>/usr/bin（可执行文件）</li>
+<li>/usr/share/man（在线帮助文档）</li>
+</ul>
+</li>
+<li>tarball安装，默认放在/usr/local，如下目录：（升级，删除不方便）<ul>
+<li>/usr/local/etc</li>
+<li>/usr/local/bin</li>
+<li>/usr/local/lib</li>
+<li>/usr/local/man</li>
+</ul>
+</li>
+<li>tarball安装，但是单一软件都在同一个目录下，以apache为例：（利于删除，升级）<ul>
+<li>/usr/local/apache/etc</li>
+<li>/usr/local/apache/bin</li>
+<li>/usr/local/apache/lib</li>
+<li>/usr/local/apache/man</li>
+</ul>
+</li>
+</ul>
+<p>当然，<strong>实际安装的时候还是得视该软件的Makefile里头的install目标信息才能知道安装路径情况。</strong></p>
+<p>为了方便Tarball的管理，这样建议：</p>
+<ol>
+<li>最好将tarball的原始数据解压缩到/usr/local/src当中</li>
+<li>安装时，最好安装到/usr/local这个默认路径下</li>
+<li>考虑将来的删除，最好可以将每个软件<strong>单独</strong>安装在/usr/local下面</li>
+<li>为安装到单独目录的软件的man page加入到man path搜索，即在/etc/man.config增加一行。</li>
+</ol>
+<h2 id="简单安装范例（ntp时间服务器）"><a href="#简单安装范例（ntp时间服务器）" class="headerlink" title="简单安装范例（ntp时间服务器）"></a>简单安装范例（ntp时间服务器）</h2><p>假设这个软件在/opt下，解压到/usr/local/src，并安装到/usr/local/ntp目录下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">cd /usr/local/src //切换目录</div><div class="line"></div><div class="line">tar -zxvf /opt/ntp-4.2.4p7.tar.gz //解压缩到此目录</div><div class="line"></div><div class="line">cd ntp-4.2.4p7/</div><div class="line"></div><div class="line">vi INSTALL // 查阅安装信息</div><div class="line"></div><div class="line">// 检查configure支持参数，并实际生成makefile规则文件(很重要)</div><div class="line">./configure --help | more</div><div class="line"></div><div class="line">./configure --prefix=/usr/local/ntp \</div><div class="line">--enable-all-clocks --enable-parse-clocks //开始建立makefile（设置了安装目录等）</div><div class="line"></div><div class="line"></div><div class="line">// 开始编译并安装</div><div class="line">make clean; make</div><div class="line">make check</div><div class="line">make install</div></pre></td></tr></table></figure></p>
+<h2 id="利用patch更新源码"><a href="#利用patch更新源码" class="headerlink" title="利用patch更新源码"></a>利用patch更新源码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// 基本语法</div><div class="line">1. patch -p 数字 &lt; patch_file  更新</div><div class="line">2. patch -R &lt; patch_file 还原更新</div><div class="line"></div><div class="line">假如patch_file第一行是***/home/guest/example/expatch.old，</div><div class="line">如果执行patch -p0  &lt; patch_file，则更新的文件是/home/guest/example/expatch.old，</div><div class="line">如果执行patch -p4  &lt; patch_file，则更新的文件是expatch.old，</div><div class="line">基本语法中数字是指拿掉第几个下划线之前的东西（包括下划线）。</div><div class="line"></div><div class="line">在更新之后，还是需要重新编辑，这才是最终的正确的软件。</div></pre></td></tr></table></figure>
+<h1 id="RPM安装"><a href="#RPM安装" class="headerlink" title="RPM安装"></a>RPM安装</h1><h2 id="RPM和DPKG"><a href="#RPM和DPKG" class="headerlink" title="RPM和DPKG"></a>RPM和DPKG</h2><p>当前Linux上有两款主流的软件管理程序，分别是：RPM和DPKG。<br>这两款软件均提供在线升级机制。</p>
+<ul>
+<li><p>RPM</p>
+<p>  RPM全称为Red Hat Package Manager，是Red Hat公司研发的Linux软件管理程序。目前CentOS、SuSE、Fedora等操作系统使用它。<br>  RPM使用YUM进行在线升级。</p>
+</li>
+<li><p>DPKG<br>  dpkg由Debian Linux开发，目前使用该软件的操作系统有Ubuntu、B2D等。<br>  dpkg使用apt-get进行在线升级。</p>
+</li>
+</ul>
+<p>PS：什么是“在线升级机制”？<br>一个软件往往会依赖其他软件的一些功能，那么在安装过程中，只有确保一个软件所依赖的所有软件都被安装后，该软件才能被正确安装。<br>而在线升级机制能够在软件安装过程中，若发现该软件的依赖软件尚未安装，则会自动从互联网中下载所依赖的软件。这就是在线升级机制</p>
+<h2 id="RPM默认安装的路径"><a href="#RPM默认安装的路径" class="headerlink" title="RPM默认安装的路径"></a>RPM默认安装的路径</h2><table>
+<thead>
+<tr>
+<th>/etc</th>
+<th>一些设置文件放置的目录，例如/etc/crontab</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/usr/bin</td>
+<td>一些可执行文件</td>
+</tr>
+<tr>
+<td>/usr/lib</td>
+<td>一些程序使用的动态函数库</td>
+</tr>
+<tr>
+<td>/usr/share/doc</td>
+<td>一些基本的软件使用手册与帮助文档</td>
+</tr>
+<tr>
+<td>/usr/share/man</td>
+<td>一些man page文件</td>
+</tr>
+</tbody>
+</table>
+<h2 id="RPM安装-1"><a href="#RPM安装-1" class="headerlink" title="RPM安装"></a>RPM安装</h2><p>因为安装软件是root的工作，所以你必须是root用户才能使用rpm命令，使用范例如下(例子为安装rp-pppoe-3.5-32.1.i386.rpm)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 安装软件是，显示安装信息与进度</div><div class="line">rpm -ivh rp-pppoe-3.5-32.1.i386.rpm</div></pre></td></tr></table></figure></p>
+<h2 id="RPM的升级与更新"><a href="#RPM的升级与更新" class="headerlink" title="RPM的升级与更新"></a>RPM的升级与更新</h2><p>范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">rpm -Uvh 需要升级的软件名</div><div class="line"></div><div class="line">-Uvh:若待升级的软件尚未安装，则直接安装</div><div class="line"></div><div class="line">rpm -Fvh 需要升级的软件名</div><div class="line"></div><div class="line">-Fvh:若待升级的软件尚未安装，则该软件不会被安装</div></pre></td></tr></table></figure></p>
+<h2 id="RPM查询"><a href="#RPM查询" class="headerlink" title="RPM查询"></a>RPM查询</h2><p>查询的信息分为两类，一类是查询已被安装的软件的信息(由/var/lib/rpm提供)，另一类是查询尚未被安装的软件安装包的信息。 第一类信息通过rpm -q查询，第二类信息通过rpm -qp查询。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">// 1. 找出你的Linux是否安装logrotate这个软件</div><div class="line">rpm -q logrorate</div><div class="line"></div><div class="line">// 2. 列出logrotate这个软件所提供的所有目录与文件</div><div class="line">rpm -ql logrorate</div><div class="line"></div><div class="line">// 3. 列出logrotate这个软件的相关文件说明</div><div class="line">rpm -qi logrorate</div><div class="line"></div><div class="line">// 4. 列出logrotate这个软件的设置文件与帮助文件</div><div class="line">rpm -qc logrorate</div><div class="line">rpm -qd logrorate</div><div class="line"></div><div class="line">// 5. 列出logrotate这个软件所依赖软件的文件</div><div class="line">rpm -qR logrorate</div><div class="line"></div><div class="line">// 6. 列出该文件属于哪一个软件</div><div class="line">rpm -qf /bin/sh</div></pre></td></tr></table></figure></p>
+<h2 id="卸载RPM与重建数据库"><a href="#卸载RPM与重建数据库" class="headerlink" title="卸载RPM与重建数据库"></a>卸载RPM与重建数据库</h2><p>卸载一个软件非常方便，通过-e即可删除。但一个软件所提供的动态函数库被其他软件引用，那么该软件将无法卸载，除非将引用该函数库的所有软件都卸载后才能卸载。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1. 找出与pam有关的软件名称，并尝试删除pam这个软件</div><div class="line">rpm -qa | grep pam</div><div class="line">rpm -e pam（出错，因为你需要先删除依赖它的软件）</div><div class="line"></div><div class="line">2. 删除pam-devel软件</div><div class="line">rpm -e pam-devel (成功)</div></pre></td></tr></table></figure></p>
+<p>当/var/lib/rpm内的文件发生损坏时，可以通过如下命令重建数据库修复：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rpm --rebuilddb</div></pre></td></tr></table></figure></p>
+<h1 id="YUM安装"><a href="#YUM安装" class="headerlink" title="YUM安装"></a>YUM安装</h1><p>RPM虽然省去了编译过程，并且提供数据库存储软件的信息，但仍然需要我们手动下载RPM安装包，而YUM的出现解决了这一问题。较多软件的RPM安装包都存放在了YUM Server上，只要我们的计算机能连互联网，就能使用yum自动下载RPM安装包并安装软件。</p>
+<h2 id="yum功能"><a href="#yum功能" class="headerlink" title="yum功能"></a>yum功能</h2><p>yum的使用非常简单，就是通过yum这个命令，用法范例如下：</p>
+<ol>
+<li><p>查询功能</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 1. 搜索磁盘阵列相关的软件</div><div class="line">yum search raid</div><div class="line"></div><div class="line">// 2. 找出mdadm这个软件的功能如何</div><div class="line">yum info mdadm</div><div class="line"></div><div class="line">// 3. 列出yum服务器上面提供的所有软件名称</div><div class="line">yum list</div><div class="line"></div><div class="line">// 4. 列出目前服务器上可供本机升级的软件有哪些</div><div class="line">yum list updates</div><div class="line"></div><div class="line">// 5. 列出提供passwd这个文件的软件有哪些</div><div class="line">yum provides passwd</div></pre></td></tr></table></figure>
+</li>
+<li><p>安装/升级功能</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 安装/升级pam-devel</div><div class="line">yum install/update pam-devel</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除功能</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 删除pam-devel</div><div class="line">yum remove pam-devel</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="管理的选择：RPM-or-Tarball"><a href="#管理的选择：RPM-or-Tarball" class="headerlink" title="管理的选择：RPM or Tarball"></a>管理的选择：RPM or Tarball</h1><p>建议如下：</p>
+<ol>
+<li>优先选择原厂的RPM功能</li>
+<li>选择软件官方网站发布的RPM或者是提供的容器网址（yum server）</li>
+<li>利用Tabball安装特殊软件（没有RPM）</li>
+<li>用Tarball测试新版软件</li>
+</ol>
+<p>RPM与Tarball各有优点，但是如果有RPM的话，优先选择RPM。如果无法解决依赖性问题，那就选tarball。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。
+    
+    </summary>
+    
+      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux私房菜_daemon为服务(service)保驾护航</title>
@@ -2724,62 +2871,6 @@
     <summary type="html">
     
       &lt;p&gt;引：状态（一个变量）变化了，然后就会出现不同的行为，这就是对&lt;strong&gt;状态模式&lt;/strong&gt;最简单的理解，当然它还有很多约束。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——访问者模式</title>
-    <link href="http://bestlixiang.site/2018/03/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/15/设计模式之禅——访问者模式/</id>
-    <published>2018-03-15T06:45:32.000Z</published>
-    <updated>2018-03-15T06:46:34.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：一个对象结构包含很多类对象，他们又有不同的接口，而你想对这些对象实施一些依赖于其具体类的操作，接可以使用<strong>访问者模式</strong>。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>封装一些作用于某种数据结构中的各元素的操作，它可以在不改变数据结构的前提下定义作用与这些元素的新操作。——行为类</strong></p>
-<p>它的通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/visitor.png" alt="visitor"></p>
-<p>我们看看类图中几个角色的职责：</p>
-<ol>
-<li>Visitor抽象访问者：声明访问者可以访问哪些元素，具体到程序找那个就是visit方法的参数定义哪些对象是可以被访问的。</li>
-<li>ConcreteVisitor具体访问者：它影响访问者访问到一个类后该怎么干，要做什么事情。</li>
-<li>Element抽象元素：声明接受哪一类访问者访问，程序上是通过accept方法中的参数来定义的。</li>
-<li>ConcreteElement具体元素：实现accept方法，通常是visitor.visit(this)，基本都形成了一种模式了。</li>
-<li>ObjectStruture结构对象：元素产生者，一般容纳在多个不同类，不同接口的容器，如List，Set，Map等，在项目中，一般很好抽象出这个角色。</li>
-</ol>
-<p>接着看看具体的通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象元素</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Element</span> </span>&#123;</div><div class="line">	<span class="comment">// 定义业务逻辑</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">	<span class="comment">// 允许谁来访问</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Ivisitor visitor)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体元素</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteElement1</span> <span class="keyword">extends</span> <span class="title">Element</span> </span>&#123;</div><div class="line">    <span class="comment">// 完善业务逻辑</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 允许哪个访问者访问</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Ivisitor visitor)</span> </span>&#123;</div><div class="line">        visitor.visit(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteElement2</span> <span class="keyword">extends</span> <span class="title">Element</span> </span>&#123;</div><div class="line">    <span class="comment">// 完善业务逻辑</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务处理</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 允许哪个访问者访问</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Ivisitor visitor)</span> </span>&#123;</div><div class="line">        visitor.visit(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 抽象访问者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Ivisitor</span> </span>&#123;</div><div class="line">    <span class="comment">// 可以访问哪些对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitor</span> <span class="params">(ConcreteElement1 el1)</span></span>;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitor</span> <span class="params">(ConcreteElement2 el2)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体访问者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Visitor</span> <span class="keyword">implements</span> <span class="title">Ivisitor</span> </span>&#123;</div><div class="line">    <span class="comment">// 访问el1元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(ConcreteElement1 el1)</span> </span>&#123;</div><div class="line">        el1.doSomething;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 访问el2元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(ConcreteElement2 el2)</span> </span>&#123;</div><div class="line">        el2.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 结构对象 产生不同的元素对象，可以用工厂方式模式模拟</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ObjectStruture</span> </span>&#123;</div><div class="line">    <span class="comment">// 对象生成器，通过工厂方法模式模拟</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Element <span class="title">createElement</span><span class="params">()</span> </span>&#123;</div><div class="line">        Random random = <span class="keyword">new</span> Random();</div><div class="line">        <span class="keyword">if</span>(random.nextInt(<span class="number">100</span>) &gt;<span class="number">50</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ConcreteElement1();</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ConcreteElement2();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;<span class="number">10</span>; i++) &#123;</div><div class="line">            <span class="comment">// 获取元素对象</span></div><div class="line">            Element el = ObjectStruture.createElement();</div><div class="line">            <span class="comment">// 接受访问者访问</span></div><div class="line">            el.accept(<span class="keyword">new</span> Visitor());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
-<li>符合单一职责原则。具体元素角色负责数据的加载，访问者类负责报表的展现，职责明确。</li>
-<li>优秀的扩展性。报表不同只需要修改visit方法。</li>
-<li>灵活性非常高。</li>
-</ol>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
-<li>具体元素对访问者公布细节，不符合迪米特法则。</li>
-<li>具体元素变更比较困难。</li>
-<li>违背了依赖倒置原则，访问者依赖的是具体元素，而不是抽象元素。</li>
-</ol>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>一个对象结构包含很多类对象，他们又有不同的接口，而你想对这些对象实施一些依赖于其具体类的操作，也就是说用迭代器模式已经不能胜任的情景。</li>
-<li>需要对一个对象结构中的对象进行不同并且不相关的操作，而你想避免让这些操作“污染”这些对象的类。</li>
-<li>总结：在这种地方一定要考虑使用访问者模式：业务规则要求遍历多个不同的对象，迭代器只能访问同类或同接口的数据，而访问者模式是对迭代器模式的扩充，可以遍历不同的对象，然后执行不同的操作。访问者模式还可以充当拦截器的角色。</li>
-</ol>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>访问者模式一种集中规整模式，特别适用于大规模重构的项目。通过访问这么欧式可以很容易吧一些进行梳理，达到最终目的——功能集中化。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：一个对象结构包含很多类对象，他们又有不同的接口，而你想对这些对象实施一些依赖于其具体类的操作，接可以使用&lt;strong&gt;访问者模式&lt;/strong&gt;。
     
     </summary>
     

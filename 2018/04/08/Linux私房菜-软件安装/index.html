@@ -1,0 +1,1092 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux私房菜_软件安装">
+<meta property="og:url" content="http://bestlixiang.site/2018/04/08/Linux私房菜-软件安装/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。">
+<meta property="og:updated_time" content="2018-04-08T09:14:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux私房菜_软件安装">
+<meta name="twitter:description" content="引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/04/08/Linux私房菜-软件安装/"/>
+
+
+
+
+
+  <title> Linux私房菜_软件安装 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/08/Linux私房菜-软件安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Linux私房菜_软件安装
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-08T17:14:14+08:00">
+                2018-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux私房菜/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux私房菜</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。<a id="more"></a></p>
+<h1 id="源码安装"><a href="#源码安装" class="headerlink" title="源码安装"></a>源码安装</h1><h2 id="开放源码的软件安装相关概念"><a href="#开放源码的软件安装相关概念" class="headerlink" title="开放源码的软件安装相关概念"></a>开放源码的软件安装相关概念</h2><p>Linux上几乎所有的软件都经过了GPL授权，因此几乎所有的软件都会提供源码。<br>而一个软件要在Linux上执行，必须是二进制文件，因此当我们拿到软件源码后，需要将它编译成二进制文件才能在Linux上运行。</p>
+<h3 id="开放源码、编译程序、可执行文件"><a href="#开放源码、编译程序、可执行文件" class="headerlink" title="开放源码、编译程序、可执行文件"></a>开放源码、编译程序、可执行文件</h3><ol>
+<li>开放源码：就是程序代码，写给人类看的语言，但机器并不认识，所以无法执行。</li>
+<li>编译程序：将程序代码转译称为机器看得懂的语言。</li>
+<li>可执行文件：经过编译程序变成二进制程序后，机器看得懂所以可执行的文件。</li>
+</ol>
+<h3 id="函式库"><a href="#函式库" class="headerlink" title="函式库"></a>函式库</h3><p>类似子程序的角色，可以被呼叫来执行的一段功能函数。</p>
+<h3 id="make与configure"><a href="#make与configure" class="headerlink" title="make与configure"></a>make与configure</h3><ol>
+<li>configure:侦测用户操作环境，是否支持软件的运行，侦测完毕生成makefile文件<ul>
+<li>是否有适合的编译程序可以编译本软件的程序代码</li>
+<li>是否已经存在本软件所需要的函数库，或其他需要的相依软件</li>
+<li>操作系统平台是否适合本软件，包括 Linux 的核心版本</li>
+<li>核心的头文件定义档 (header include) 是否存在 (驱动程序必须要的侦测)。</li>
+</ul>
+</li>
+<li>make:make是一个程序，会去找makefile文件，然后执行编译。</li>
+</ol>
+<h3 id="tarball软件"><a href="#tarball软件" class="headerlink" title="tarball软件"></a>tarball软件</h3><p>tarball文件其实就是将软件的源码先以tar打包，然后再压缩。其实就是一个<strong>软件包</strong>。通常解压缩之后会存在源代码文件、侦测程序文件（configure）、本软件的简易说明与安装说明（README）。</p>
+<h2 id="Tarball的安装的基本步骤"><a href="#Tarball的安装的基本步骤" class="headerlink" title="Tarball的安装的基本步骤"></a>Tarball的安装的基本步骤</h2><ol>
+<li>取得源文件：将tarball文件在/usr/local/src目录解压缩</li>
+<li>取得步骤流程：进入新建立的目录下面，去查阅INSTALL与README等相关文件内容（很重要）</li>
+<li>相关属性软件安装：根据INSTALL/README的内容查看并安装好一些相关的软件</li>
+<li>建立makefile文件：以自动检测程序（configure）检测操作环境，并建立Makefile文件</li>
+<li>编译：以make这个程序并使用该目录下得Makefile作为它的参数配置文件，来进行make的操作</li>
+<li>安装：以make这个程序，并以Makefile这个参数配置文件，依据install这个目标（在Makefile文件中会有多个操作目标，如clean）的指定来安装到正确地路径。</li>
+</ol>
+<h2 id="Tarball软件安装的建议事项"><a href="#Tarball软件安装的建议事项" class="headerlink" title="Tarball软件安装的建议事项"></a>Tarball软件安装的建议事项</h2><p>在默认情况下，原本的Linux distribution发布安装的软件大多是在/usr里面的，而自行安装的软件则建议放置在/usr/local里面。</p>
+<ul>
+<li>linux distribution默认的安装软件的路径如下，以httpd为例：<ul>
+<li>/etc/httpd（配置文件）</li>
+<li>/usr/lib（函数库）</li>
+<li>/usr/bin（可执行文件）</li>
+<li>/usr/share/man（在线帮助文档）</li>
+</ul>
+</li>
+<li>tarball安装，默认放在/usr/local，如下目录：（升级，删除不方便）<ul>
+<li>/usr/local/etc</li>
+<li>/usr/local/bin</li>
+<li>/usr/local/lib</li>
+<li>/usr/local/man</li>
+</ul>
+</li>
+<li>tarball安装，但是单一软件都在同一个目录下，以apache为例：（利于删除，升级）<ul>
+<li>/usr/local/apache/etc</li>
+<li>/usr/local/apache/bin</li>
+<li>/usr/local/apache/lib</li>
+<li>/usr/local/apache/man</li>
+</ul>
+</li>
+</ul>
+<p>当然，<strong>实际安装的时候还是得视该软件的Makefile里头的install目标信息才能知道安装路径情况。</strong></p>
+<p>为了方便Tarball的管理，这样建议：</p>
+<ol>
+<li>最好将tarball的原始数据解压缩到/usr/local/src当中</li>
+<li>安装时，最好安装到/usr/local这个默认路径下</li>
+<li>考虑将来的删除，最好可以将每个软件<strong>单独</strong>安装在/usr/local下面</li>
+<li>为安装到单独目录的软件的man page加入到man path搜索，即在/etc/man.config增加一行。</li>
+</ol>
+<h2 id="简单安装范例（ntp时间服务器）"><a href="#简单安装范例（ntp时间服务器）" class="headerlink" title="简单安装范例（ntp时间服务器）"></a>简单安装范例（ntp时间服务器）</h2><p>假设这个软件在/opt下，解压到/usr/local/src，并安装到/usr/local/ntp目录下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">cd /usr/local/src //切换目录</div><div class="line"></div><div class="line">tar -zxvf /opt/ntp-4.2.4p7.tar.gz //解压缩到此目录</div><div class="line"></div><div class="line">cd ntp-4.2.4p7/</div><div class="line"></div><div class="line">vi INSTALL // 查阅安装信息</div><div class="line"></div><div class="line">// 检查configure支持参数，并实际生成makefile规则文件(很重要)</div><div class="line">./configure --help | more</div><div class="line"></div><div class="line">./configure --prefix=/usr/local/ntp \</div><div class="line">--enable-all-clocks --enable-parse-clocks //开始建立makefile（设置了安装目录等）</div><div class="line"></div><div class="line"></div><div class="line">// 开始编译并安装</div><div class="line">make clean; make</div><div class="line">make check</div><div class="line">make install</div></pre></td></tr></table></figure></p>
+<h2 id="利用patch更新源码"><a href="#利用patch更新源码" class="headerlink" title="利用patch更新源码"></a>利用patch更新源码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// 基本语法</div><div class="line">1. patch -p 数字 &lt; patch_file  更新</div><div class="line">2. patch -R &lt; patch_file 还原更新</div><div class="line"></div><div class="line">假如patch_file第一行是***/home/guest/example/expatch.old，</div><div class="line">如果执行patch -p0  &lt; patch_file，则更新的文件是/home/guest/example/expatch.old，</div><div class="line">如果执行patch -p4  &lt; patch_file，则更新的文件是expatch.old，</div><div class="line">基本语法中数字是指拿掉第几个下划线之前的东西（包括下划线）。</div><div class="line"></div><div class="line">在更新之后，还是需要重新编辑，这才是最终的正确的软件。</div></pre></td></tr></table></figure>
+<h1 id="RPM安装"><a href="#RPM安装" class="headerlink" title="RPM安装"></a>RPM安装</h1><h2 id="RPM和DPKG"><a href="#RPM和DPKG" class="headerlink" title="RPM和DPKG"></a>RPM和DPKG</h2><p>当前Linux上有两款主流的软件管理程序，分别是：RPM和DPKG。<br>这两款软件均提供在线升级机制。</p>
+<ul>
+<li><p>RPM</p>
+<p>  RPM全称为Red Hat Package Manager，是Red Hat公司研发的Linux软件管理程序。目前CentOS、SuSE、Fedora等操作系统使用它。<br>  RPM使用YUM进行在线升级。</p>
+</li>
+<li><p>DPKG<br>  dpkg由Debian Linux开发，目前使用该软件的操作系统有Ubuntu、B2D等。<br>  dpkg使用apt-get进行在线升级。</p>
+</li>
+</ul>
+<p>PS：什么是“在线升级机制”？<br>一个软件往往会依赖其他软件的一些功能，那么在安装过程中，只有确保一个软件所依赖的所有软件都被安装后，该软件才能被正确安装。<br>而在线升级机制能够在软件安装过程中，若发现该软件的依赖软件尚未安装，则会自动从互联网中下载所依赖的软件。这就是在线升级机制</p>
+<h2 id="RPM默认安装的路径"><a href="#RPM默认安装的路径" class="headerlink" title="RPM默认安装的路径"></a>RPM默认安装的路径</h2><table>
+<thead>
+<tr>
+<th>/etc</th>
+<th>一些设置文件放置的目录，例如/etc/crontab</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/usr/bin</td>
+<td>一些可执行文件</td>
+</tr>
+<tr>
+<td>/usr/lib</td>
+<td>一些程序使用的动态函数库</td>
+</tr>
+<tr>
+<td>/usr/share/doc</td>
+<td>一些基本的软件使用手册与帮助文档</td>
+</tr>
+<tr>
+<td>/usr/share/man</td>
+<td>一些man page文件</td>
+</tr>
+</tbody>
+</table>
+<h2 id="RPM安装-1"><a href="#RPM安装-1" class="headerlink" title="RPM安装"></a>RPM安装</h2><p>因为安装软件是root的工作，所以你必须是root用户才能使用rpm命令，使用范例如下(例子为安装rp-pppoe-3.5-32.1.i386.rpm)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 安装软件是，显示安装信息与进度</div><div class="line">rpm -ivh rp-pppoe-3.5-32.1.i386.rpm</div></pre></td></tr></table></figure></p>
+<h2 id="RPM的升级与更新"><a href="#RPM的升级与更新" class="headerlink" title="RPM的升级与更新"></a>RPM的升级与更新</h2><p>范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">rpm -Uvh 需要升级的软件名</div><div class="line"></div><div class="line">-Uvh:若待升级的软件尚未安装，则直接安装</div><div class="line"></div><div class="line">rpm -Fvh 需要升级的软件名</div><div class="line"></div><div class="line">-Fvh:若待升级的软件尚未安装，则该软件不会被安装</div></pre></td></tr></table></figure></p>
+<h2 id="RPM查询"><a href="#RPM查询" class="headerlink" title="RPM查询"></a>RPM查询</h2><p>查询的信息分为两类，一类是查询已被安装的软件的信息(由/var/lib/rpm提供)，另一类是查询尚未被安装的软件安装包的信息。 第一类信息通过rpm -q查询，第二类信息通过rpm -qp查询。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">// 1. 找出你的Linux是否安装logrotate这个软件</div><div class="line">rpm -q logrorate</div><div class="line"></div><div class="line">// 2. 列出logrotate这个软件所提供的所有目录与文件</div><div class="line">rpm -ql logrorate</div><div class="line"></div><div class="line">// 3. 列出logrotate这个软件的相关文件说明</div><div class="line">rpm -qi logrorate</div><div class="line"></div><div class="line">// 4. 列出logrotate这个软件的设置文件与帮助文件</div><div class="line">rpm -qc logrorate</div><div class="line">rpm -qd logrorate</div><div class="line"></div><div class="line">// 5. 列出logrotate这个软件所依赖软件的文件</div><div class="line">rpm -qR logrorate</div><div class="line"></div><div class="line">// 6. 列出该文件属于哪一个软件</div><div class="line">rpm -qf /bin/sh</div></pre></td></tr></table></figure></p>
+<h2 id="卸载RPM与重建数据库"><a href="#卸载RPM与重建数据库" class="headerlink" title="卸载RPM与重建数据库"></a>卸载RPM与重建数据库</h2><p>卸载一个软件非常方便，通过-e即可删除。但一个软件所提供的动态函数库被其他软件引用，那么该软件将无法卸载，除非将引用该函数库的所有软件都卸载后才能卸载。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1. 找出与pam有关的软件名称，并尝试删除pam这个软件</div><div class="line">rpm -qa | grep pam</div><div class="line">rpm -e pam（出错，因为你需要先删除依赖它的软件）</div><div class="line"></div><div class="line">2. 删除pam-devel软件</div><div class="line">rpm -e pam-devel (成功)</div></pre></td></tr></table></figure></p>
+<p>当/var/lib/rpm内的文件发生损坏时，可以通过如下命令重建数据库修复：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rpm --rebuilddb</div></pre></td></tr></table></figure></p>
+<h1 id="YUM安装"><a href="#YUM安装" class="headerlink" title="YUM安装"></a>YUM安装</h1><p>RPM虽然省去了编译过程，并且提供数据库存储软件的信息，但仍然需要我们手动下载RPM安装包，而YUM的出现解决了这一问题。较多软件的RPM安装包都存放在了YUM Server上，只要我们的计算机能连互联网，就能使用yum自动下载RPM安装包并安装软件。</p>
+<h2 id="yum功能"><a href="#yum功能" class="headerlink" title="yum功能"></a>yum功能</h2><p>yum的使用非常简单，就是通过yum这个命令，用法范例如下：</p>
+<ol>
+<li><p>查询功能</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 1. 搜索磁盘阵列相关的软件</div><div class="line">yum search raid</div><div class="line"></div><div class="line">// 2. 找出mdadm这个软件的功能如何</div><div class="line">yum info mdadm</div><div class="line"></div><div class="line">// 3. 列出yum服务器上面提供的所有软件名称</div><div class="line">yum list</div><div class="line"></div><div class="line">// 4. 列出目前服务器上可供本机升级的软件有哪些</div><div class="line">yum list updates</div><div class="line"></div><div class="line">// 5. 列出提供passwd这个文件的软件有哪些</div><div class="line">yum provides passwd</div></pre></td></tr></table></figure>
+</li>
+<li><p>安装/升级功能</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 安装/升级pam-devel</div><div class="line">yum install/update pam-devel</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除功能</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 删除pam-devel</div><div class="line">yum remove pam-devel</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="管理的选择：RPM-or-Tarball"><a href="#管理的选择：RPM-or-Tarball" class="headerlink" title="管理的选择：RPM or Tarball"></a>管理的选择：RPM or Tarball</h1><p>建议如下：</p>
+<ol>
+<li>优先选择原厂的RPM功能</li>
+<li>选择软件官方网站发布的RPM或者是提供的容器网址（yum server）</li>
+<li>利用Tabball安装特殊软件（没有RPM）</li>
+<li>用Tarball测试新版软件</li>
+</ol>
+<p>RPM与Tarball各有优点，但是如果有RPM的话，优先选择RPM。如果无法解决依赖性问题，那就选tarball。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/03/Linux私房菜-daemon为服务-service-保驾护航/" rel="next" title="Linux私房菜_daemon为服务(service)保驾护航">
+                <i class="fa fa-chevron-left"></i> Linux私房菜_daemon为服务(service)保驾护航
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#源码安装"><span class="nav-number">1.</span> <span class="nav-text">源码安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开放源码的软件安装相关概念"><span class="nav-number">1.1.</span> <span class="nav-text">开放源码的软件安装相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开放源码、编译程序、可执行文件"><span class="nav-number">1.1.1.</span> <span class="nav-text">开放源码、编译程序、可执行文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函式库"><span class="nav-number">1.1.2.</span> <span class="nav-text">函式库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#make与configure"><span class="nav-number">1.1.3.</span> <span class="nav-text">make与configure</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tarball软件"><span class="nav-number">1.1.4.</span> <span class="nav-text">tarball软件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tarball的安装的基本步骤"><span class="nav-number">1.2.</span> <span class="nav-text">Tarball的安装的基本步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tarball软件安装的建议事项"><span class="nav-number">1.3.</span> <span class="nav-text">Tarball软件安装的建议事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单安装范例（ntp时间服务器）"><span class="nav-number">1.4.</span> <span class="nav-text">简单安装范例（ntp时间服务器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用patch更新源码"><span class="nav-number">1.5.</span> <span class="nav-text">利用patch更新源码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RPM安装"><span class="nav-number">2.</span> <span class="nav-text">RPM安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM和DPKG"><span class="nav-number">2.1.</span> <span class="nav-text">RPM和DPKG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM默认安装的路径"><span class="nav-number">2.2.</span> <span class="nav-text">RPM默认安装的路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM安装-1"><span class="nav-number">2.3.</span> <span class="nav-text">RPM安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM的升级与更新"><span class="nav-number">2.4.</span> <span class="nav-text">RPM的升级与更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM查询"><span class="nav-number">2.5.</span> <span class="nav-text">RPM查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卸载RPM与重建数据库"><span class="nav-number">2.6.</span> <span class="nav-text">卸载RPM与重建数据库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#YUM安装"><span class="nav-number">3.</span> <span class="nav-text">YUM安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#yum功能"><span class="nav-number">3.1.</span> <span class="nav-text">yum功能</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#管理的选择：RPM-or-Tarball"><span class="nav-number">4.</span> <span class="nav-text">管理的选择：RPM or Tarball</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
