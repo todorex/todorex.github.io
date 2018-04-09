@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-04-08T12:51:51.000Z</updated>
+  <updated>2018-04-09T04:42:10.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -16,11 +16,256 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Linux私房菜_Linux中常用的网络命令</title>
-    <link href="http://bestlixiang.site/2018/04/08/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/"/>
-    <id>http://bestlixiang.site/2018/04/08/Linux私房菜-Linux中常用的网络命令/</id>
+    <title>走进Linux_防火墙配置</title>
+    <link href="http://bestlixiang.site/2018/04/09/%E8%B5%B0%E8%BF%9BLinux-%E9%98%B2%E7%81%AB%E5%A2%99%E9%85%8D%E7%BD%AE/"/>
+    <id>http://bestlixiang.site/2018/04/09/走进Linux-防火墙配置/</id>
+    <published>2018-04-09T04:41:43.000Z</published>
+    <updated>2018-04-09T04:42:10.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：保障数据的安全性是继保障数据的可用性之后最为重要的一项工作。防火墙作为公网与内网之间的保护屏障，在保障数据的安全性方面起着至关重要的作用。<a id="more"></a></p>
+<h1 id="防火墙管理工具"><a href="#防火墙管理工具" class="headerlink" title="防火墙管理工具"></a>防火墙管理工具</h1><p>在公网与企业内网之间充当保护屏障的防火墙虽然有软件或硬件之分，但主要功能都是 <strong>依据策略对穿越防火墙自身的流量进行过滤。</strong> 防火墙策略可以基于流量的源目地址、端口号、协议、应用等信息来定制，然后防火墙使用预先定制的策略规则监控出入的流量，若流量与某一条策略规则相匹配，则执行相应的处理，反之则丢弃。这样一来，就可以保证仅有合法的流量在企业内网和外部公网之间流动了。</p>
+<p>在Centos 7系统中，firewalld防火墙取代了iptables防火墙。但是 <strong>iptables与firewalld都不是真正的防火墙</strong> ，它们都只是用来定义防火墙策略的 <strong>防火墙管理工具</strong> 而已，或者说，它们只是一种 <strong>服务</strong> 。iptables服务会把配置好的防火墙策略交由内核层面的netfilter网络过滤器来处理，而firewalld服务则是把配置好的防火墙策略交由内核层面的nftables包过滤框架来处理。换句话说，当前在Linux系统中其实存在多个防火墙管理工具，旨在方便运维人员管理Linux系统中的防火墙策略，我们只需要配置妥当其中的一个就足够了。虽然这些工具各有优劣，但它们在防火墙策略的配置思路上是保持一致的。</p>
+<h1 id="Iptables"><a href="#Iptables" class="headerlink" title="Iptables"></a>Iptables</h1><p>在早期的Linux系统中，默认使用的是iptables防火墙管理服务来配置防火墙。尽管新型的firewalld防火墙管理服务已经被投入使用多年，但是大量的企业在生产环境中依然出于各种原因而继续使用iptables。</p>
+<h2 id="策略与规则链"><a href="#策略与规则链" class="headerlink" title="策略与规则链"></a>策略与规则链</h2><p>防火墙会从上至下的顺序来读取配置的策略规则，在找到匹配项后就立即结束匹配工作并去执行匹配项中定义的行为（即放行或阻止）。如果在读取完所有的策略规则之后没有匹配项，就去执行默认的策略。<strong>一般而言，防火墙策略规则的设置有两种：一种是“通”（即放行），一种是“堵”（即阻止）。当防火墙的默认策略为拒绝时（堵），就要设置允许规则（通），否则谁都进不来；如果防火墙的默认策略为允许时，就要设置拒绝规则，否则谁都能进来，</strong> 防火墙也就失去了防范的作用。</p>
+<p>iptables服务把用于处理或过滤流量的策略条目称之为规则，多条规则可以组成一个规则链，而规则链则依据数据包处理位置的不同进行分类，具体如下：</p>
+<ul>
+<li>在进行路由选择前处理数据包（PREROUTING）</li>
+<li>处理流入的数据包（INPUT）</li>
+<li>处理流出的数据包（OUTPUT）</li>
+<li>处理转发的数据包（FORWARD）</li>
+<li>在进行路由选择后处理数据包（POSTROUTING）</li>
+</ul>
+<p>一般来说，从内网向外网发送的流量一般都是可控且良性的，<strong>因此我们使用最多的就是INPUT规则链</strong>， 该规则链可以增大黑客人员从外网入侵内网的难度。</p>
+<p>iptables还可以选择采用什么样的动作来处理这些匹配的流量，比如“允许”、“拒绝”、“登记”、“不理它”。这些动作对应到iptables服务的术语中分别是</p>
+<ul>
+<li>ACCEPT（允许流量通过）</li>
+<li>REJECT（拒绝流量通过）：</li>
+<li>LOG（记录日志信息）</li>
+<li>DROP（拒绝流量通过）。</li>
+</ul>
+<p>“允许流量通过”和“记录日志信息”都比较好理解，这里需要着重讲解的是REJECT和DROP的不同点。就DROP来说，它是直接将流量丢弃而且不响应；REJECT则会在拒绝流量后再回复一条“您的信息已经收到，但是被扔掉了”信息，从而让流量发送方清晰地看到数据被拒绝的响应信息。</p>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>iptables是一款基于命令行的防火墙策略管理工具，对于日常的防火墙策略配置来讲，只需要掌握常用的参数并做到灵活搭配即可，这就足以应对日常工作了。</p>
+<p>iptables命令可以根据<strong>流量的源地址、目的地址、传输协议、服务类型等信息进行匹配</strong>，一旦匹配成功，iptables就会根据策略规则所预设的动作来处理这些流量。另外，再次提醒一下，<strong>防火墙策略规则的匹配顺序是从上至下的，因此要把较为严格、优先级较高的策略规则放到前面，以免发生错误</strong>。下表总结归纳了常用的iptables命令参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-P</td>
+<td>设置默认策略</td>
+</tr>
+<tr>
+<td>-F</td>
+<td>清空规则链</td>
+</tr>
+<tr>
+<td>-L</td>
+<td>查看规则链</td>
+</tr>
+<tr>
+<td>-A</td>
+<td>在规则链的末尾加入新规则</td>
+</tr>
+<tr>
+<td>-I num</td>
+<td>在规则链的头部加入新规则</td>
+</tr>
+<tr>
+<td>-D num</td>
+<td>删除某一条规则</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>匹配来源地址IP/MASK，加叹号“!”表示除这个IP外</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>匹配目标地址</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>网卡名称    匹配从这块网卡流入的数据</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>网卡名称    匹配从这块网卡流出的数据</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>匹配协议，如TCP、UDP、ICMP</td>
+</tr>
+<tr>
+<td>–dport num</td>
+<td>匹配目标端口号</td>
+</tr>
+<tr>
+<td>–sport num</td>
+<td>匹配来源端口号</td>
+</tr>
+</tbody>
+</table>
+<p>范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">// 1. 查看已有的防火墙规则链</div><div class="line">iptables -L</div><div class="line"></div><div class="line">// 2. 清空已有的防火墙规则链</div><div class="line">iptables -F</div><div class="line"></div><div class="line">// 3. 把INPUT规则链的默认策略设置为拒绝(规则链的默认策略拒绝动作只能是DROP，而不能是REJECT)</div><div class="line">// 特别注意，如果你是在云服务上做实验，千万不要这样做，因为它会由于防火墙断开你的ssh连接，只能到控制台登录修改。</div><div class="line">iptables -P INPUT DROP</div><div class="line"></div><div class="line">// 4. 向INPUT链中添加拒绝ICMP流量进入的策略规则</div><div class="line">iptables -I INPUT -p icmp -j DROP</div><div class="line"></div><div class="line">// 5. 删除INPUT规则链中刚刚加入的那条策略（允许ICMP流量）</div><div class="line">iptables -D INPUT 1</div><div class="line"></div><div class="line">// 6. 将INPUT规则链设置为只允许指定网段的主机访问本机的22端口，拒绝来自其他所有主机的流量</div><div class="line">iptables -I INPUT -s 192.168.10.0/24 -p tcp --dport 22 -j ACCEPT</div><div class="line"></div><div class="line">// 7. 向INPUT规则链中添加拒绝所有人访问本机12345端口的策略规则</div><div class="line">iptables -I INPUT -p tcp --dport 12345 -j REJECT</div><div class="line"></div><div class="line">// 8. 向INPUT规则链中添加拒绝192.168.10.5主机访问本机80端口（Web服务）的策略规则</div><div class="line">iptables -I INPUT -p tcp -s 192.168.10.5 --dport 80 -j REJECT</div><div class="line"></div><div class="line">// 9. 向INPUT规则链中添加拒绝所有主机访问本机1000～1024端口的策略规则</div><div class="line">iptables -A INPUT -p tcp --dport 1000:1024 -j REJECT</div><div class="line"></div><div class="line">// 10. 使用iptables命令配置的防火墙规则默认会在系统下一次重启时失效，如果想让配置的防火墙策略永久生效，还要执行</div><div class="line">// 保存命令：</div><div class="line">service iptables save</div><div class="line">// 如果出现</div><div class="line">The service command supports only basic LSB actions (start, stop, restart, try-restart, reload, force-reload, status). For other actions, please try to use systemctl.</div><div class="line">需要如下操作：</div><div class="line">yum install iptables-services // 安装服务</div><div class="line">systemctl enable iptables // 设置开机启动iptables</div><div class="line">systemctl start iptables //打开iptables</div><div class="line">然后执行就可以了</div></pre></td></tr></table></figure></p>
+<h1 id="Firewalld"><a href="#Firewalld" class="headerlink" title="Firewalld"></a>Firewalld</h1><p>Centos7系统中集成了多款防火墙管理工具，其中firewalld（Dynamic Firewall Manager of Linux systems，Linux系统的动态防火墙管理器）服务是默认的防火墙配置管理工具，它拥有基于CLI（命令行界面）和基于GUI（图形用户界面）的两种管理方式。但是我们只介绍命令行界面。</p>
+<h2 id="区域Zone"><a href="#区域Zone" class="headerlink" title="区域Zone"></a>区域Zone</h2><p>相较于传统的防火墙管理配置工具，<strong>firewalld支持动态更新技术并加入了区域（zone）的概念</strong>。简单来说，区域就是firewalld预先准备了几套防火墙策略集合（策略模板），用户可以根据生产场景的不同而选择合适的策略集合，从而实现防火墙策略之间的快速切换。从而极大地提升了防火墙策略的应用效率。firewalld中常见的区域名称（默认为public）以及相应的策略规则如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>默认规则策略</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trusted</td>
+<td>允许所有的数据包</td>
+</tr>
+<tr>
+<td>home</td>
+<td>拒绝流入的流量，除非与流出的流量相关；而如果流量与ssh、mdns、ipp-client、amba-client与dhcpv6-client服务相关，则允许流量</td>
+</tr>
+<tr>
+<td>internal</td>
+<td>等同于home区域</td>
+</tr>
+<tr>
+<td>work</td>
+<td>拒绝流入的流量，除非与流出的流量数相关；而如果流量与ssh、ipp-client与dhcpv6-client服务相关，则允许流量</td>
+</tr>
+<tr>
+<td>public</td>
+<td>拒绝流入的流量，除非与流出的流量相关；而如果流量与ssh、dhcpv6-client服务相关，则允许流量</td>
+</tr>
+<tr>
+<td>external</td>
+<td>拒绝流入的流量，除非与流出的流量相关；而如果流量与ssh服务相关，则允许流量</td>
+</tr>
+<tr>
+<td>dmz</td>
+<td>拒绝流入的流量，除非与流出的流量相关；而如果流量与ssh服务相关，则允许流量</td>
+</tr>
+<tr>
+<td>block</td>
+<td>拒绝流入的流量，除非与流出的流量相关</td>
+</tr>
+<tr>
+<td>drop</td>
+<td>拒绝流入的流量，除非与流出的流量相关</td>
+</tr>
+</tbody>
+</table>
+<h2 id="基本使用：firewall-cmd"><a href="#基本使用：firewall-cmd" class="headerlink" title="基本使用：firewall-cmd"></a>基本使用：firewall-cmd</h2><p>firewall-cmd是firewalld防火墙配置管理工具的CLI（命令行界面）版本。它的参数一般都是以“长格式”来提供的，但是Centos7支持部分命令的参数补齐，其中就包含这条命令，美滋滋。也就是说，现在除了能用Tab键自动补齐命令或文件名等内容之外，还可以用Tab键来补齐下表中所示的长格式参数了：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>–get-default-zone</td>
+<td>查询默认的区域名称</td>
+</tr>
+<tr>
+<td>–set-default-zone=&lt;区域名称&gt;</td>
+<td>设置默认的区域，使其永久生效</td>
+</tr>
+<tr>
+<td>–get-zones</td>
+<td>显示可用的区域</td>
+</tr>
+<tr>
+<td>–get-services</td>
+<td>显示预先定义的服务</td>
+</tr>
+<tr>
+<td>–get-active-zones</td>
+<td>显示当前正在使用的区域与网卡名称</td>
+</tr>
+<tr>
+<td>–remove-source=</td>
+<td>将源自此IP或子网的流量导向指定的区域</td>
+</tr>
+<tr>
+<td>–remove-source=</td>
+<td>不再将源自此IP或子网的流量导向某个指定区域</td>
+</tr>
+<tr>
+<td>–add-interface=&lt;网卡名称&gt;</td>
+<td>将源自该网卡的所有流量都导向某个指定区域</td>
+</tr>
+<tr>
+<td>–change-interface=&lt;网卡名称&gt;</td>
+<td>将某个网卡与区域进行关联</td>
+</tr>
+<tr>
+<td>–list-all</td>
+<td>显示当前区域的网卡配置参数、资源、端口以及服务等信息</td>
+</tr>
+<tr>
+<td>–list-all-zones</td>
+<td>显示所有区域的网卡配置参数、资源、端口以及服务等信息</td>
+</tr>
+<tr>
+<td>–add-service=&lt;服务名&gt;</td>
+<td>设置默认区域允许该服务的流量</td>
+</tr>
+<tr>
+<td>–add-port=&lt;端口号/协议&gt;</td>
+<td>设置默认区域允许该端口的流量</td>
+</tr>
+<tr>
+<td>–remove-service=&lt;服务名&gt;</td>
+<td>设置默认区域不再允许该服务的流量</td>
+</tr>
+<tr>
+<td>–remove-port=&lt;端口号/协议&gt;</td>
+<td>设置默认区域不再允许该端口的流量</td>
+</tr>
+<tr>
+<td>–reload</td>
+<td>让“永久生效”的配置规则立即生效，并覆盖当前的配置规则</td>
+</tr>
+<tr>
+<td>–panic-on</td>
+<td>开启应急状况模式</td>
+</tr>
+<tr>
+<td>–panic-off</td>
+<td>关闭应急状况模式</td>
+</tr>
+</tbody>
+</table>
+<p>与Linux系统中其他的防火墙策略配置工具一样，<strong>使用firewalld配置的防火墙策略默认为运行时（Runtime）模式，又称为当前生效模式，而且随着系统的重启会失效。如果想让配置策略一直存在，就需要使用永久（Permanent）模式了，方法就是在用firewall-cmd命令正常设置防火墙策略时添加–permanent参数，这样配置的防火墙策略就可以永久生效了。但是使用永久生效模式设置的策略只有在系统重启之后才能自动生效。如果想让配置的策略立即生效，需要手动执行firewall-cmd –reload命令。</strong></p>
+<p>使用范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">// 1. 查看firewalld服务当前所使用的区域</div><div class="line">firewall-cmd --get-default-zone</div><div class="line"></div><div class="line">// 2. 查询eth0网卡在firewalld服务中的区域</div><div class="line">firewall-cmd --get-zone-of-interface=eth0</div><div class="line"></div><div class="line">// 3. 把firewalld服务中eth0网卡的默认区域修改为external，并在系统重启后生效。</div><div class="line">// 分别查看当前与永久模式下的区域名称：</div><div class="line">firewall-cmd --permanent --zone=external --change-interface=eth0</div><div class="line">firewall-cmd --get-zone-of-interface=eth0</div><div class="line">firewall-cmd --permanent --get-zone-of-interface=eth0</div><div class="line"></div><div class="line">// 4. 把firewalld服务的当前默认区域设置为public</div><div class="line">firewall-cmd --set-default-zone=public</div><div class="line"></div><div class="line">// 5. 启动/关闭firewalld防火墙服务的应急状况模式，阻断一切网络连接（当远程控制服务器时请慎用）</div><div class="line">firewall-cmd --panic-on</div><div class="line">firewall-cmd --panic-off</div><div class="line"></div><div class="line">// 6. 查询public区域是否允许请求SSH和HTTPS协议的流量</div><div class="line">firewall-cmd --zone=public --query-service=ssh</div><div class="line">firewall-cmd --zone=public --query-service=https</div><div class="line"></div><div class="line">// 7. 把firewalld服务中请求HTTPS协议的流量设置为永久允许，并立即生效</div><div class="line">firewall-cmd --zone=public --add-service=https</div><div class="line">firewall-cmd --permanent --zone=public --add-service=https</div><div class="line">firewall-cmd --reload</div><div class="line"></div><div class="line">// 8. 把firewalld服务中请求HTTP协议的流量设置为永久拒绝，并立即生效</div><div class="line">firewall-cmd --permanent --zone=public --remove-service=http</div><div class="line">firewall-cmd --reload</div><div class="line"></div><div class="line">// 9. 把在firewalld服务中访问8080和8081端口的流量策略设置为允许，但仅限当前生效</div><div class="line">firewall-cmd --zone=public --add-port=8080-8081/tcp</div><div class="line"></div><div class="line">// 10. 把原本访问本机888端口的流量转发到22端口，要且求当前和长期均有效</div><div class="line">firewall-cmd --permanent --zone=public --add-forward-port=port=888:proto=tcp:toport=22:toaddr=192.168.10.10(目标地址)</div><div class="line">firewall-cmd --reload</div><div class="line"></div><div class="line">// 11. firewalld中的富规则表示更细致、更详细的防火墙策略配置，</div><div class="line">// 它可以针对系统服务、端口号、源地址和目标地址等诸多信息进行更有针对性的策略配置。</div><div class="line">// 它的优先级在所有的防火墙策略中也是最高的。比如，我们可以在firewalld服务中配置一条富规则，使其拒绝192.168.10.0/24网段的所有用户访问本机的ssh服务（22端口）：</div><div class="line">firewall-cmd --permanent --zone=public --add-rich-rule=&quot;rule family=&quot;ipv4&quot; \</div><div class="line">source address=&quot;192.168.10.0/24&quot; service name=&quot;ssh&quot; reject&quot;</div></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.linuxprobe.com/chapter-08.html" target="_blank" rel="external">iptables与firewalld防火墙</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：保障数据的安全性是继保障数据的可用性之后最为重要的一项工作。防火墙作为公网与内网之间的保护屏障，在保障数据的安全性方面起着至关重要的作用。
+    
+    </summary>
+    
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
+    
+    
+      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>走进Linux_Linux中常用的网络命令</title>
+    <link href="http://bestlixiang.site/2018/04/08/%E8%B5%B0%E8%BF%9BLinux_Linux%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/"/>
+    <id>http://bestlixiang.site/2018/04/08/走进Linux_Linux中常用的网络命令/</id>
     <published>2018-04-08T12:51:27.000Z</published>
-    <updated>2018-04-08T12:51:51.000Z</updated>
+    <updated>2018-04-09T04:31:17.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：Linux的网络功能是相当强大的。所以我们必须要好好了解它，这里我们只是介绍一下常用的命令。<a id="more"></a></p>
 <h1 id="设置网络参数的命令"><a href="#设置网络参数的命令" class="headerlink" title="设置网络参数的命令"></a>设置网络参数的命令</h1><h2 id="ipconfig"><a href="#ipconfig" class="headerlink" title="ipconfig"></a>ipconfig</h2><p>ifconfig主要是可以都手动启动、查看与修改网络接口的相关参数，范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// 1. 查看所有网络接口</div><div class="line">ifconfig</div><div class="line">// 2. 查看eth0网卡</div><div class="line">ifconfig eth0</div><div class="line"></div><div class="line">输出：</div><div class="line">eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</div><div class="line">        inet 172.16.0.9  netmask 255.255.240.0  broadcast 172.16.15.255</div><div class="line">        ether 52:54:00:1c:91:2a  txqueuelen 1000  (Ethernet)</div><div class="line">        RX packets 15979545  bytes 1741444280 (1.6 GiB)</div><div class="line">        RX errors 0  dropped 0  overruns 0  frame 0</div><div class="line">        TX packets 15811187  bytes 2149680103 (2.0 GiB)</div><div class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</div><div class="line"></div><div class="line">* eth0：就是网络卡的代号，也有 lo 这个 loopback</div><div class="line">* mtu：网络接口的最大传输单元</div><div class="line">* inet：IPv4 的 IP 地址，后续是子网掩码和广播地址</div><div class="line">* RX：那一行代表的是网络由启动到目前为止的封包接收情况， packets 代表封包数、errors 代表封包发生错误的数量、 dropped 代表封包由于有问题而遭丢弃的数量等等</div><div class="line">* TX：与 RX 相反，为网络由启动到目前为止的传送情况；collisions：代表封包碰撞的情况，如果发生太多次， 表示您的网络状况不太好</div><div class="line"></div><div class="line">// 3. 暂时修改网络接口，给予eth0一个192.168.100.100/24的参数</div><div class="line">ifconfig eth0 192.168.100.100</div><div class="line"></div><div class="line">// 4. 将手动的处理全部取消，使用原有的设置值重置网络参数</div><div class="line">/etc/init.d/network restart</div></pre></td></tr></table></figure></p>
@@ -44,7 +289,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -52,11 +297,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_软件安装</title>
+    <title>走进Linux_软件安装</title>
     <link href="http://bestlixiang.site/2018/04/08/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"/>
     <id>http://bestlixiang.site/2018/04/08/Linux私房菜-软件安装/</id>
     <published>2018-04-08T09:14:14.000Z</published>
-    <updated>2018-04-08T09:14:45.000Z</updated>
+    <updated>2018-04-09T04:34:08.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。<a id="more"></a></p>
 <h1 id="源码安装"><a href="#源码安装" class="headerlink" title="源码安装"></a>源码安装</h1><h2 id="开放源码的软件安装相关概念"><a href="#开放源码的软件安装相关概念" class="headerlink" title="开放源码的软件安装相关概念"></a>开放源码的软件安装相关概念</h2><p>Linux上几乎所有的软件都经过了GPL授权，因此几乎所有的软件都会提供源码。<br>而一个软件要在Linux上执行，必须是二进制文件，因此当我们拿到软件源码后，需要将它编译成二进制文件才能在Linux上运行。</p>
@@ -191,7 +436,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -199,11 +444,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_daemon为服务(service)保驾护航</title>
-    <link href="http://bestlixiang.site/2018/04/03/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-daemon%E4%B8%BA%E6%9C%8D%E5%8A%A1-service-%E4%BF%9D%E9%A9%BE%E6%8A%A4%E8%88%AA/"/>
-    <id>http://bestlixiang.site/2018/04/03/Linux私房菜-daemon为服务-service-保驾护航/</id>
+    <title>走进Linux_daemon为服务(service)保驾护航</title>
+    <link href="http://bestlixiang.site/2018/04/03/%E8%B5%B0%E8%BF%9BLinux_daemon%E4%B8%BA%E6%9C%8D%E5%8A%A1(service)%E4%BF%9D%E9%A9%BE%E6%8A%A4%E8%88%AA/"/>
+    <id>http://bestlixiang.site/2018/04/03/走进Linux_daemon为服务(service)保驾护航/</id>
     <published>2018-04-03T08:59:47.000Z</published>
-    <updated>2018-04-03T09:01:44.000Z</updated>
+    <updated>2018-04-09T04:31:03.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：我们进程会听到daemon，但是却不知道其义，其实就是一个守护进程，作用是支持其他服务(service)的运行。我们下面可以好好看看linux中的daemon与service！<a id="more"></a></p>
 <h1 id="什么是daemon与服务"><a href="#什么是daemon与服务" class="headerlink" title="什么是daemon与服务"></a>什么是daemon与服务</h1><p>系统为了某些功能必须要提供一些服务，这个服务就称为<strong>service</strong>。但是service的提供总是需要进程的运行，所以实现这个service的程序我们就称它为<strong>daemon</strong>。</p>
@@ -278,15 +523,20 @@
 </ol>
 <p>在启动Linux系统时，可以进入不同的模式，这模式我们称为执行等级(run level)，不同执行等级有不同的功能与服务。图型界面为run level5，纯文本界面为run level3。当我们想要知道哪些服务默认可以启动，这就需要下面的命令来查询:</p>
 <ol>
-<li>chkconfig：管理系统服务<strong>默认开机启动与否</strong>，范例如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 1. 列出目前系统上面所有被chkconfig管理的服务</div><div class="line">chkconfig --list | more // 分为两个块，分别为两种启动方式的daemon</div><div class="line"></div><div class="line">// 2. 显示目前在run level 3 启动的服务</div><div class="line">chkconfig --list | grep &apos;2:on&apos;</div><div class="line"></div><div class="line">// 3. 让atd这个服务在run level 3，4，5时启动</div><div class="line">chkconfig --level 345 atd on</div><div class="line"></div><div class="line">// 4. 查看httpd，再查看默认有无启动，之后以chkconfig设置为默认启动</div><div class="line">/etc/init.d/httpd status // 查看本身</div><div class="line">chkconfig --list httpd // 查看是否默认启动</div><div class="line">chconfig httpd on; //设置为开机启动</div></pre></td></tr></table></figure>
-</li>
-</ol>
+<li><p>chkconfig：管理系统服务<strong>默认开机启动与否</strong>，范例如下：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 1. 列出目前系统上面所有被chkconfig管理的服务</div><div class="line">chkconfig --list | more // 分为两个块，分别为两种启动方式的daemon</div><div class="line"></div><div class="line">// 2. 显示目前在run level 3 启动的服务</div><div class="line">chkconfig --list | grep &apos;2:on&apos;</div><div class="line"></div><div class="line">// 3. 让atd这个服务在run level 3，4，5时启动</div><div class="line">chkconfig --level 345 atd on</div><div class="line"></div><div class="line">// 4. 查看httpd，再查看默认有无启动，之后以chkconfig设置为默认启动</div><div class="line">/etc/init.d/httpd status // 查看本身</div><div class="line">chkconfig --list httpd // 查看是否默认启动</div><div class="line">chconfig httpd on; //设置为开机启动</div></pre></td></tr></table></figure>
 <ol>
-<li>chkconfig：设置自己的系统服务 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chkconfig [--add|--del] [服务名称] // 该服务必须在/etc/init.d/内</div></pre></td></tr></table></figure>
+<li>chkconfig：设置自己的系统服务<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chkconfig [--add|--del] [服务名称] // 该服务必须在/etc/init.d/内</div></pre></td></tr></table></figure>
 </li>
 </ol>
+</li>
+</ol>
+<h1 id="RHEL7的sytemctl（代替service和chkconfig）"><a href="#RHEL7的sytemctl（代替service和chkconfig）" class="headerlink" title="RHEL7的sytemctl（代替service和chkconfig）"></a>RHEL7的sytemctl（代替service和chkconfig）</h1><p>centos7版本中使用了systemd，systemd同时兼容service,对应的命令就是systemctl 。systemctl是RHEL 7 的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体。可以使用它永久性或只在当前会话中启用/禁用服务。</p>
+<p>systemd把不同的资源称为Unit<br>每一个 Unit 都有一个配置文件，告诉 Systemd 怎么启动这个 Unit<br>存放目录：/etc/systemd/system和/usr/lib/systemd/system。</p>
+<p>使用范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">// 1. 以树形列出正在运行的进程，它可以递归显示控制组内容</div><div class="line">systemd-cgls</div><div class="line"></div><div class="line">// 2. 启动一个服务</div><div class="line">systemctl start firewalld.service</div><div class="line"></div><div class="line">// 3. 关闭一个服务</div><div class="line">systemctl stop firewalld.service</div><div class="line"></div><div class="line">// 4. 重启一个服务</div><div class="line">systemctl restart firewalld.service</div><div class="line"></div><div class="line">// 5. 显示一个服务的状态</div><div class="line">systemctl status firewalld.service</div><div class="line"></div><div class="line">// 6. 在开机时启动一个服务</div><div class="line">systemctl enable firewalld.service</div><div class="line"></div><div class="line">// 7. 在开机时禁用一个服务</div><div class="line">systemctl disable firewalld.service</div><div class="line"></div><div class="line">// 8. 查看服务是否开机启动</div><div class="line">systemctl is-enabled  firewalld.service</div><div class="line"></div><div class="line">// 9. 查看已启动的服务列表</div><div class="line">systemctl list-unit-files | grep enabled</div><div class="line"></div><div class="line">// 10. 查看启动失败的服务列表</div><div class="line">systemctl --failed</div><div class="line"></div><div class="line">PS：</div><div class="line">1. 使用命令 systemctl is-enabled firewalld.service 得到的值可以是enable、disable或static，</div><div class="line">     这里的 static 它是指对应的 Unit 文件中没有定义[Install]区域，因此无法配置为开机启动服务。</div><div class="line">2. 启用服务就是在当前“runlevel”的配置文件目录/etc/systemd/system/multi-user.target.wants/里，建立/usr/lib/systemd/system里面对应服务配置文件的软链接；</div><div class="line">  禁用服务就是删除此软链接，添加服务就是添加软连接。</div></pre></td></tr></table></figure></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《鸟哥的Linux私房菜》</li>
+<li><a href="https://blog.csdn.net/catoop/article/details/47318225" target="_blank" rel="external">RHEL7的sytemctl（代替service和chkconfig）</a></li>
 </ol>
 ]]></content>
     
@@ -296,7 +546,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -304,11 +554,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_认识你的进程</title>
-    <link href="http://bestlixiang.site/2018/04/02/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E7%A8%8B%E5%BA%8F%E7%AE%A1%E7%90%86/"/>
-    <id>http://bestlixiang.site/2018/04/02/Linux私房菜-程序管理/</id>
+    <title>走进Linux_认识你的进程</title>
+    <link href="http://bestlixiang.site/2018/04/02/%E8%B5%B0%E8%BF%9BLinux_%E8%AE%A4%E8%AF%86%E4%BD%A0%E7%9A%84%E8%BF%9B%E7%A8%8B/"/>
+    <id>http://bestlixiang.site/2018/04/02/走进Linux_认识你的进程/</id>
     <published>2018-04-02T04:58:22.000Z</published>
-    <updated>2018-04-02T05:02:08.000Z</updated>
+    <updated>2018-04-09T04:33:50.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：linux服务器上可以跑很多很多的程序，当然也会遇到很多的问题，所以我们需要学会去管理好它。尤其像ps，top这些命令，你一定会很想去了解它吧！<a id="more"></a></p>
 <h1 id="理解进程"><a href="#理解进程" class="headerlink" title="理解进程"></a>理解进程</h1><h2 id="什么是进程"><a href="#什么是进程" class="headerlink" title="什么是进程"></a>什么是进程</h2><p><strong>进程：</strong> 一个程序被加载到内存当中运行，那么在内存中的那个数据就被称为进程。</p>
@@ -377,7 +627,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -385,11 +635,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_例行性工作(crontab)</title>
-    <link href="http://bestlixiang.site/2018/03/31/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E4%BE%8B%E8%A1%8C%E6%80%A7%E5%B7%A5%E4%BD%9C-crontab/"/>
-    <id>http://bestlixiang.site/2018/03/31/Linux私房菜-例行性工作-crontab/</id>
+    <title>走进Linux_例行性工作(crontab)</title>
+    <link href="http://bestlixiang.site/2018/03/31/%E8%B5%B0%E8%BF%9BLinux_%E4%BE%8B%E8%A1%8C%E6%80%A7%E5%B7%A5%E4%BD%9C(crontab)/"/>
+    <id>http://bestlixiang.site/2018/03/31/走进Linux_例行性工作(crontab)/</id>
     <published>2018-03-31T12:35:07.000Z</published>
-    <updated>2018-03-31T12:35:30.000Z</updated>
+    <updated>2018-04-09T04:32:33.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。<a id="more"></a></p>
 <h1 id="什么是例行性工作（定时任务crontab）"><a href="#什么是例行性工作（定时任务crontab）" class="headerlink" title="什么是例行性工作（定时任务crontab）"></a>什么是例行性工作（定时任务crontab）</h1><p>根据单词crontab（定时任务）就可以知道 <strong>例行性工作</strong> 其实就是每天都会干的事。</p>
@@ -440,7 +690,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -448,11 +698,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_账号管理</title>
-    <link href="http://bestlixiang.site/2018/03/31/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E8%B4%A6%E5%8F%B7%E7%AE%A1%E7%90%86/"/>
-    <id>http://bestlixiang.site/2018/03/31/Linux私房菜-账号管理/</id>
+    <title>走进Linux_账号管理</title>
+    <link href="http://bestlixiang.site/2018/03/31/%E8%B5%B0%E8%BF%9BLinux_%E8%B4%A6%E5%8F%B7%E7%AE%A1%E7%90%86/"/>
+    <id>http://bestlixiang.site/2018/03/31/走进Linux_账号管理/</id>
     <published>2018-03-31T05:15:52.000Z</published>
-    <updated>2018-03-31T05:23:07.000Z</updated>
+    <updated>2018-04-09T04:34:01.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：管理员的工作中，相对重要的一环就是“账号管理”。因为整个系统都是你在管理，并且所有的一般用户的账号申请必须要通过你的协助才行。所以我们必须要知道如果管理好一个服务器主机的账号！<a id="more"></a></p>
 <h1 id="账号与用户组"><a href="#账号与用户组" class="headerlink" title="账号与用户组"></a>账号与用户组</h1><p>在管理Linux账号时，我们必须要先了解一下Linux到底是如何辨别每一个用户的。</p>
@@ -710,7 +960,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -718,11 +968,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_shell script 入门</title>
-    <link href="http://bestlixiang.site/2018/03/30/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-shell-script-%E5%85%A5%E9%97%A8/"/>
-    <id>http://bestlixiang.site/2018/03/30/Linux私房菜-shell-script-入门/</id>
+    <title>走进Linux_shell script 入门</title>
+    <link href="http://bestlixiang.site/2018/03/30/%E8%B5%B0%E8%BF%9BLinux_shell%20script%20%E5%85%A5%E9%97%A8/"/>
+    <id>http://bestlixiang.site/2018/03/30/走进Linux_shell script 入门/</id>
     <published>2018-03-30T10:01:49.000Z</published>
-    <updated>2018-03-31T05:07:22.000Z</updated>
+    <updated>2018-04-09T04:32:24.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：要想管理好自己的主机，自动化管理系统的好工具——shell script，这个家伙是真的需要好好学习学习的！<a id="more"></a></p>
 <h1 id="什么是shell-script"><a href="#什么是shell-script" class="headerlink" title="什么是shell script"></a>什么是shell script</h1><p><strong>shell script</strong> 是利用shell的功能所写的一个“程序”，这个程序是使用纯文本文件，将一些shell的语法与命令（含外部命令）写在里面，搭配正则表达式，管道命令与数据重定向等功能，以达到我们所想要的处理目的。</p>
@@ -795,7 +1045,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -803,11 +1053,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_深入bash数据操作</title>
-    <link href="http://bestlixiang.site/2018/03/30/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E6%B7%B1%E5%85%A5bash%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"/>
-    <id>http://bestlixiang.site/2018/03/30/Linux私房菜-深入bash数据操作/</id>
+    <title>走进Linux_深入bash数据操作</title>
+    <link href="http://bestlixiang.site/2018/03/30/%E8%B5%B0%E8%BF%9BLinux_%E6%B7%B1%E5%85%A5bash%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"/>
+    <id>http://bestlixiang.site/2018/03/30/走进Linux_深入bash数据操作/</id>
     <published>2018-03-30T07:12:54.000Z</published>
-    <updated>2018-03-31T05:08:21.000Z</updated>
+    <updated>2018-04-09T04:32:55.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：在这里有一切你想要的bash数据操作知识，比如数据流重定向，管道命令，正则表达式的使用，大家可以快快进来！<a id="more"></a></p>
 <h1 id="数据流的重定向"><a href="#数据流的重定向" class="headerlink" title="数据流的重定向"></a>数据流的重定向</h1><h2 id="什么是数据流重定向"><a href="#什么是数据流重定向" class="headerlink" title="什么是数据流重定向"></a>什么是数据流重定向</h2><p>一般来说，如果你要执行一个命令，通常它会是这样的：</p>
@@ -1002,7 +1252,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -1010,11 +1260,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_初探shell步入bash</title>
-    <link href="http://bestlixiang.site/2018/03/28/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E5%88%9D%E6%8E%A2shell%E6%AD%A5%E5%85%A5bash/"/>
-    <id>http://bestlixiang.site/2018/03/28/Linux私房菜-初探shell步入bash/</id>
+    <title>走进Linux_初探shell步入bash</title>
+    <link href="http://bestlixiang.site/2018/03/28/%E8%B5%B0%E8%BF%9BLinux_%E5%88%9D%E6%8E%A2shell%E6%AD%A5%E5%85%A5bash/"/>
+    <id>http://bestlixiang.site/2018/03/28/走进Linux_初探shell步入bash/</id>
     <published>2018-03-28T05:44:19.000Z</published>
-    <updated>2018-03-28T05:52:24.000Z</updated>
+    <updated>2018-04-09T04:32:41.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：在Linux的环境下，如果你不懂bash是什么，那么其他的东西就不用学了！<a id="more"></a></p>
 <h1 id="认识bash这个shell"><a href="#认识bash这个shell" class="headerlink" title="认识bash这个shell"></a>认识bash这个shell</h1><p>管理整个计算机硬件的其实是操作系统的内核，这个内核是需要保护的，所以我们一般用户就只能通过shell来跟内核通信，以让内核达到我们所想要达到的工作，那么系统。</p>
@@ -1268,7 +1518,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -1276,11 +1526,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_学会使用vim程序编辑器</title>
-    <link href="http://bestlixiang.site/2018/03/26/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E5%AD%A6%E4%BC%9A%E4%BD%BF%E7%94%A8vim%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%BE%91%E5%99%A8/"/>
-    <id>http://bestlixiang.site/2018/03/26/Linux私房菜-学会使用vim程序编辑器/</id>
+    <title>走进Linux_学会使用vim程序编辑器</title>
+    <link href="http://bestlixiang.site/2018/03/26/%E8%B5%B0%E8%BF%9BLinux_%E5%AD%A6%E4%BC%9A%E4%BD%BF%E7%94%A8vim%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%BE%91%E5%99%A8/"/>
+    <id>http://bestlixiang.site/2018/03/26/走进Linux_学会使用vim程序编辑器/</id>
     <published>2018-03-26T09:06:33.000Z</published>
-    <updated>2018-03-26T09:46:51.000Z</updated>
+    <updated>2018-04-09T04:32:47.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：系统管理员的重要工作就是修改与设置某些重要软件的配置文件，因此至少得到学会一种以上的命令行界面的文本编辑器。在所有的Linux发行版中都具有vi这款编辑器，我们这次学的它的高级版vim。<a id="more"></a></p>
 <h1 id="vi与vim"><a href="#vi与vim" class="headerlink" title="vi与vim"></a>vi与vim</h1><p>虽然在Linux在命令行界面下的文本编辑器有很多，比如Emacs，pico，nano，joe与vim等。但是我们却一定要学会vi或者说vim，vim相当于vi的高级版。</p>
@@ -1541,7 +1791,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -1549,11 +1799,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_Linux磁盘与文件系统管理</title>
-    <link href="http://bestlixiang.site/2018/03/25/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E7%A3%81%E7%9B%98%E4%B8%8E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
-    <id>http://bestlixiang.site/2018/03/25/Linux私房菜-Linux磁盘与文件系统管理/</id>
+    <title>走进Linux_Linux磁盘与文件系统管理</title>
+    <link href="http://bestlixiang.site/2018/03/25/%E8%B5%B0%E8%BF%9BLinux_Linux%E7%A3%81%E7%9B%98%E4%B8%8E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
+    <id>http://bestlixiang.site/2018/03/25/走进Linux_Linux磁盘与文件系统管理/</id>
     <published>2018-03-25T12:02:04.000Z</published>
-    <updated>2018-03-25T12:02:36.000Z</updated>
+    <updated>2018-04-09T04:32:11.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：系统管理员最重要的任务之一就是管理好自己的磁盘文件系统，所以本文的知识对于那些需要规划自己磁盘文件系统的人群特别重要，有些内容可能不太详细，所以日后自己亲身实践过后，希望能再开一篇详细的文章。<a id="more"></a></p>
 <h1 id="认识文件系统"><a href="#认识文件系统" class="headerlink" title="认识文件系统"></a>认识文件系统</h1><p>Linux最传统的磁盘文件系统使用的是EXT2（索引式文件系统）。所以要了解文件系统就得要又认识EXT2开始。</p>
@@ -1653,7 +1903,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -1661,11 +1911,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_Linux文件与目录管理大全解</title>
-    <link href="http://bestlixiang.site/2018/03/25/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%E5%A4%A7%E5%85%A8%E8%A7%A3/"/>
-    <id>http://bestlixiang.site/2018/03/25/Linux私房菜-Linux文件与目录管理大全解/</id>
+    <title>走进Linux_Linux文件与目录管理大全解</title>
+    <link href="http://bestlixiang.site/2018/03/25/%E8%B5%B0%E8%BF%9BLinux_Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%E5%A4%A7%E5%85%A8%E8%A7%A3/"/>
+    <id>http://bestlixiang.site/2018/03/25/走进Linux_Linux文件与目录管理大全解/</id>
     <published>2018-03-25T01:40:30.000Z</published>
-    <updated>2018-03-25T03:20:17.000Z</updated>
+    <updated>2018-04-09T04:31:51.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：在使用Linux的过程中，最多的命令莫过于在操作文件与目录，所以通过本文，能让你大概率熟悉所有关于文件与目录的命令与知识，但是参数方面就需要自己去查询了。<a id="more"></a></p>
 <h1 id="目录与路径"><a href="#目录与路径" class="headerlink" title="目录与路径"></a>目录与路径</h1><h2 id="绝对路径和相对路径"><a href="#绝对路径和相对路径" class="headerlink" title="绝对路径和相对路径"></a>绝对路径和相对路径</h2><ol>
@@ -1873,7 +2123,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -1881,11 +2131,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_Linux的文件权限与目录配置</title>
-    <link href="http://bestlixiang.site/2018/03/22/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E7%9A%84%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/"/>
-    <id>http://bestlixiang.site/2018/03/22/Linux私房菜-Linux的文件权限与目录配置/</id>
+    <title>走进Linux_Linux的文件权限与目录配置</title>
+    <link href="http://bestlixiang.site/2018/03/22/%E8%B5%B0%E8%BF%9BLinux_Linux%E7%9A%84%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE/"/>
+    <id>http://bestlixiang.site/2018/03/22/走进Linux_Linux的文件权限与目录配置/</id>
     <published>2018-03-22T09:03:13.000Z</published>
-    <updated>2018-03-22T09:06:25.000Z</updated>
+    <updated>2018-04-09T04:31:59.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：了解好文件权限和目录的具体含义才能更好的操作Linux，所以理解好文件权限与目录配置才至关重要。<a id="more"></a></p>
 <h1 id="用户与用户组"><a href="#用户与用户组" class="headerlink" title="用户与用户组"></a>用户与用户组</h1><h2 id="用户（User）"><a href="#用户（User）" class="headerlink" title="用户（User）"></a>用户（User）</h2><ol>
@@ -2142,7 +2392,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -2150,11 +2400,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_Linux基本命令使用与查询</title>
-    <link href="http://bestlixiang.site/2018/03/21/Linux%E7%A7%81%E6%88%BF%E8%8F%9C_Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%E4%B8%8E%E6%9F%A5%E8%AF%A2/"/>
-    <id>http://bestlixiang.site/2018/03/21/Linux私房菜_Linux基本命令使用与查询/</id>
+    <title>走进Linux_Linux命令使用与查询</title>
+    <link href="http://bestlixiang.site/2018/03/21/%E8%B5%B0%E8%BF%9BLinux_Linux%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%E4%B8%8E%E6%9F%A5%E8%AF%A2/"/>
+    <id>http://bestlixiang.site/2018/03/21/走进Linux_Linux命令使用与查询/</id>
     <published>2018-03-21T08:55:52.000Z</published>
-    <updated>2018-03-25T01:44:20.000Z</updated>
+    <updated>2018-04-09T04:31:05.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。<br><a id="more"></a></p>
 <h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><h2 id="开始执行命令"><a href="#开始执行命令" class="headerlink" title="开始执行命令"></a>开始执行命令</h2><p>首先我们要了解命令的格式：</p>
@@ -2364,7 +2614,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -2372,11 +2622,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_Linux磁盘分区</title>
-    <link href="http://bestlixiang.site/2018/03/21/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA/"/>
-    <id>http://bestlixiang.site/2018/03/21/Linux私房菜-Linux磁盘分区/</id>
+    <title>走进Linux_Linux磁盘分区</title>
+    <link href="http://bestlixiang.site/2018/03/21/%E8%B5%B0%E8%BF%9BLinux_Linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA/"/>
+    <id>http://bestlixiang.site/2018/03/21/走进Linux_Linux磁盘分区/</id>
     <published>2018-03-21T05:49:21.000Z</published>
-    <updated>2018-03-21T05:49:52.000Z</updated>
+    <updated>2018-04-09T04:32:18.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：Linux在我印象中最大的特点就是它把所有的硬件都当做一个文件，然后还是以/为根节点的目录树，简洁明了，相信大家一定会爱上它的。因为涉及到文件的存储，所以我们要重视磁盘分区。<a id="more"></a></p>
 <h1 id="硬件设备在linux中的文件名"><a href="#硬件设备在linux中的文件名" class="headerlink" title="硬件设备在linux中的文件名"></a>硬件设备在linux中的文件名</h1><p>Linux中每一个设备都被当成文件，所有的设备文件都在/dev这个目录下。下面列出几个常见设备与其在Linux当中的文件名，如下表：</p>
@@ -2495,7 +2745,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -2503,11 +2753,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_Linux基础学习</title>
-    <link href="http://bestlixiang.site/2018/03/20/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-Linux%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/"/>
-    <id>http://bestlixiang.site/2018/03/20/Linux私房菜-Linux基础学习/</id>
+    <title>走进Linux_初识Linux</title>
+    <link href="http://bestlixiang.site/2018/03/20/%E8%B5%B0%E8%BF%9BLinux_%E5%88%9D%E8%AF%86Linux/"/>
+    <id>http://bestlixiang.site/2018/03/20/走进Linux_初识Linux/</id>
     <published>2018-03-20T12:13:05.000Z</published>
-    <updated>2018-03-20T12:13:32.000Z</updated>
+    <updated>2018-04-09T04:31:42.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：了解Linux，学习Linux，深入Linux。<a id="more"></a></p>
 <h1 id="Linux是什么"><a href="#Linux是什么" class="headerlink" title="Linux是什么"></a>Linux是什么</h1><p><strong>Linux就是一套操作系统，它的内核是Linux Torvalds在1991年开发出来的。</strong></p>
@@ -2571,7 +2821,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -2579,11 +2829,11 @@
   </entry>
   
   <entry>
-    <title>Linux私房菜_计算机基础</title>
-    <link href="http://bestlixiang.site/2018/03/20/Linux%E7%A7%81%E6%88%BF%E8%8F%9C-%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/"/>
-    <id>http://bestlixiang.site/2018/03/20/Linux私房菜-计算机基础/</id>
+    <title>走进Linux_计算机基础</title>
+    <link href="http://bestlixiang.site/2018/03/20/%E8%B5%B0%E8%BF%9BLinux_%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/"/>
+    <id>http://bestlixiang.site/2018/03/20/走进Linux_计算机基础/</id>
     <published>2018-03-20T10:29:00.000Z</published>
-    <updated>2018-03-20T10:38:03.000Z</updated>
+    <updated>2018-04-09T04:33:13.000Z</updated>
     
     <content type="html"><![CDATA[<p>引：我也算是从通信专业转到计算机的，所以当然对计算机专业课知识不太了解，所以也想简单掌握以下计算机基础知识。<a id="more"></a></p>
 <p>计算机其实是：<strong>接收用户输入指令和数据，经过中央处理器的数据欲逻辑单元运算处理后，以产生或存储成有用的信息。</strong></p>
@@ -2705,7 +2955,7 @@
     
     </summary>
     
-      <category term="Linux私房菜" scheme="http://bestlixiang.site/categories/Linux%E7%A7%81%E6%88%BF%E8%8F%9C/"/>
+      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
     
     
       <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
@@ -2806,57 +3056,6 @@
     <summary type="html">
     
       &lt;p&gt;引：对象多了，而且还都是处于有用状态，那一定会出现内存溢出的问题，我们可以通过&lt;strong&gt;享元模式&lt;/strong&gt;来实现对象的复用，以达到减少的目的，从而解决内存溢出的问题。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——解释器模式</title>
-    <link href="http://bestlixiang.site/2018/03/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/18/设计模式之禅——解释器模式/</id>
-    <published>2018-03-18T05:46:46.000Z</published>
-    <updated>2018-03-18T05:48:41.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：无论是编译原理，还是解释型语言，都会涉及到解释，其思想也都和<strong>解释器模式</strong>类似。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>给定一门语言，定义它的文法的一组表示，并定义一个解释器，该解释器使用该表示来解释语言中的句子。——行为类</strong></p>
-<p>解释器模式的通用类图如下：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/interpreter.png" alt="interpreter"></p>
-<p>这里解释一下类图中的角色:</p>
-<ol>
-<li>AbstractExpression抽象解释器：具体的即时任务又各个实现类完成，具体的解释器分别由TerminalExpression（值）和NotermianlExpression（符号）完成。</li>
-<li>TerminalExpression终结符表达式：实现与文法中的元素相关联的解释操作，通常一个解释器模式中只有一个终结符表达式，但是有多个实例，对应不同的终结符。</li>
-<li>NotermianlExpression非终结符表达式：文法中的每条规则对应于一个非终结表达式。</li>
-<li>Context环境角色：存放数据</li>
-</ol>
-<p>解释器是一个比较少用的模式，以下为其通用源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象表达式</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Expression</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个表达式必须有一个解释任务</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Object <span class="title">interpreter</span><span class="params">(Context ctx)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 终结符表达式</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TerminalExpression</span> <span class="keyword">extends</span> <span class="title">Expression</span> </span>&#123;</div><div class="line">    <span class="comment">// 通常终结符表达式只有一个，但是有多个对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">interpreter</span><span class="params">(Context ctx)</span> </span>&#123;</div><div class="line">        <span class="comment">// 主要处理场景元素和数据的转换</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 非终结符表达式</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotermianlExpression</span> <span class="keyword">extends</span> <span class="title">Expression</span> </span>&#123;</div><div class="line">    <span class="comment">// 每个非终结符表达式都会对其他表达式产生依赖</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NotermianlExpression</span><span class="params">(Expression... expression)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">interpreter</span><span class="params">(Context ctx)</span> </span>&#123;</div><div class="line">        <span class="comment">// 进行文法处理</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Context ctx = <span class="keyword">new</span> Context();</div><div class="line">        <span class="comment">// 通常定一个语法容器，容纳一个具体的表达式，通常为ListArray、LinkedList、Stack等容器</span></div><div class="line">        Stack&lt;Expression&gt; stack = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">for</span>(;;) &#123;</div><div class="line">            <span class="comment">// 进行语法判断，并产生递归调用</span></div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 产生一个完整的语法树，由各个具体的语法分析进行解析</span></div><div class="line">        Expression exp = stack.pop();</div><div class="line">        <span class="comment">// 具体元素进入场景</span></div><div class="line">        exp.interpreter(ctx);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>通常Client是一个封装类，封装的结果就是传递进来的规范语法文件，解释器分析后产生结果并返回，避免了调用者与语法解析器的耦合关系。</p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>解释器是一个简单语法分析工具，它最显著的有点就是扩展性，修改语法规则只要修改相应的非终结符表达式就可以了，若扩展语法，则只要增加非终结符类就可以了。</p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
-<li>解释器模式会引起类膨胀（显而易见）</li>
-<li>解释器采用递归调用方法，调试复杂，且影响效率。</li>
-</ol>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>重复发生的问题可以使用解释器模式，如对不同的日志文件进行不同的分析。</li>
-<li>一个简单语法需要解释的场景。</li>
-</ol>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>尽量不要在重要的模块中使用解释器模式，否则维护回事一个很大的问题。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>解释器模式在实际的系统开发中使用得非常少，因为它会引起效率问题、性能以及维护等问题，一般在大中型的框架型项目能够找到它的身影，如一些数据分析工具、报表设计工具、科学计算工具等，若你确实遇到“一种特定类型的问题发生的频率足够高”的情况下，准备使用解释器模式时，可以考虑一下Expression4J、MESP、Jep等开元的解析工具包。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：无论是编译原理，还是解释型语言，都会涉及到解释，其思想也都和&lt;strong&gt;解释器模式&lt;/strong&gt;类似。
     
     </summary>
     

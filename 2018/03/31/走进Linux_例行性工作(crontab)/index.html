@@ -1,0 +1,1012 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="走进Linux_例行性工作(crontab)">
+<meta property="og:url" content="http://bestlixiang.site/2018/03/31/走进Linux_例行性工作(crontab)/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。">
+<meta property="og:updated_time" content="2018-04-09T04:32:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="走进Linux_例行性工作(crontab)">
+<meta name="twitter:description" content="引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/31/走进Linux_例行性工作(crontab)/"/>
+
+
+
+
+
+  <title> 走进Linux_例行性工作(crontab) | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/31/走进Linux_例行性工作(crontab)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                走进Linux_例行性工作(crontab)
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-31T20:35:07+08:00">
+                2018-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/走进Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">走进Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。<a id="more"></a></p>
+<h1 id="什么是例行性工作（定时任务crontab）"><a href="#什么是例行性工作（定时任务crontab）" class="headerlink" title="什么是例行性工作（定时任务crontab）"></a>什么是例行性工作（定时任务crontab）</h1><p>根据单词crontab（定时任务）就可以知道 <strong>例行性工作</strong> 其实就是每天都会干的事。</p>
+<h2 id="Linux工作调度的种类"><a href="#Linux工作调度的种类" class="headerlink" title="Linux工作调度的种类"></a>Linux工作调度的种类</h2><ol>
+<li>例行性的，就是每隔一定的周期要来办的事，利用crontab实现，这个命令所设置的工作将会循环一直进行下去，可循环的时间为分钟，小时，每周，每月或每年等，crontab除了可以使用命令执行外，也可编辑/etc/crontab来支持。至于让crontab可以生效的后台服务是crond这个服务。</li>
+<li>突发性的，就是这次做完以后就没有的事，利用at实现，但是这个必须要有atd后台服务支持才行。</li>
+</ol>
+<h2 id="Linux上常见的例行性工作"><a href="#Linux上常见的例行性工作" class="headerlink" title="Linux上常见的例行性工作"></a>Linux上常见的例行性工作</h2><ol>
+<li>进行日志文件的轮替，让旧的数据和新的数据分开存放</li>
+<li>日志文件分析logwatch的任务</li>
+<li>新建locate的数据库，系统会主动进行updatedb</li>
+<li>whatis数据库的建立</li>
+<li>删除临时文件</li>
+</ol>
+<h1 id="仅执行一次的工作调度：at"><a href="#仅执行一次的工作调度：at" class="headerlink" title="仅执行一次的工作调度：at"></a>仅执行一次的工作调度：at</h1><h2 id="at的运行方式"><a href="#at的运行方式" class="headerlink" title="at的运行方式"></a>at的运行方式</h2><p>我们使用at这个命令来生成所要进行的工作，并将这个工作以文本文件的方式写入/var/spool/at目录中，该工作便能等待atd这个服务的取用与执行了。但是并不是所有的人都可以进行at工作调度工作的，因为安全。我们可以利用/etc/at.allow与/etc/at.deny这两个文件进行at的使用限制，加上这两个文件后，at的工作情况其实是这样的：</p>
+<ol>
+<li>先寻找/etc/at.allow这个文件，写在这个文件中的用户才能使用at，没有在这个文件中的用户则不能使用at(即时没有写在at.deny当中)</li>
+<li>如果/etc/at.allow不存在，就寻找/etc/at.deny这个文件，若卸载这个at.deny的用户则不能使用at，而没有在这个文件中的用户就可以使用at了</li>
+<li>如果这两个文件都不存在，那么就只有root可以使用at这个命令</li>
+</ol>
+<h2 id="实际运行单一工作调度"><a href="#实际运行单一工作调度" class="headerlink" title="实际运行单一工作调度"></a>实际运行单一工作调度</h2><p>单一工作调度的进行就使用at这个命令，这个命令的运行十分简单！将at加上一个时间即可！范例入下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 1. at [-mldv] TIME</div><div class="line">at noe + 5 minutes // 再过五分钟执行，接下来输入执行的命令，使用ctrl  + d 结束。</div><div class="line"></div><div class="line">// 2. at -c 工作号码 // 将第几号工作调出来查看</div><div class="line">at -c 1 // 将第一号工作调出来</div></pre></td></tr></table></figure></p>
+<p>事实上，当我们使用at时会进入一个at shell的环境来让用户执行工作命令，此时，建议你最好使用绝对路径来执行你的命令，比较不会有问题。</p>
+<p>at还有一个很棒的优点就是<strong>后台执行的功能</strong>，和nohup类似。</p>
+<p><strong>at的工作管理</strong> 主要是利用下面的命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 查询目前主机上面有多少的at工作调度</div><div class="line">atq</div><div class="line"></div><div class="line"># 将第3个工作删除</div><div class="line">atrm 3</div></pre></td></tr></table></figure></p>
+<h1 id="循环执行的例行性工作调度"><a href="#循环执行的例行性工作调度" class="headerlink" title="循环执行的例行性工作调度"></a>循环执行的例行性工作调度</h1><p>相对于at是仅执行一次的工作，循环执行的例行性工作调度室友crond这个系统服务来控制的，由于Linux系统上原本就有很多的例行性工作，所以这个系统服务是默认开启的。另外，由于用户自己也可以进行例行性工作调度，所以，Linux可提供用户控制例行性工作调度的命令（crontab）。</p>
+<h2 id="用户的设置与使用"><a href="#用户的设置与使用" class="headerlink" title="用户的设置与使用"></a>用户的设置与使用</h2><p>为了安全性的问题，与at类似，我们可以限制使用crontab的用户账号。使用的限制数据有：</p>
+<ul>
+<li>/etc/cron.allow：将可以使用crontab的账号写入其中，若不在这个文件内的用户则不可使用crontab。</li>
+<li>/etc/cron.deny：将不可以使用crontab的账号写入其中，若为记录到这个文件中的用户，就可以使用crontab。</li>
+</ul>
+<p>以优先级来说，/etc/cron.allow比/etc/cron.deny要优先，而判断上面，两个文件只选择一个来限制而已，因此，建议你只要保留一个即可。</p>
+<p>当用户使用crontab这个命令来新建工作调度之后，该项工作就会被记录/var/spool/cron/里面，而且是以账号来区分的。另外，cron执行的每一项工作都会被记录到/var/log/cron这个日志文件中，所以，如果你的Linux不知道是否被植入密码，也可以查询一下这个日志文件。</p>
+<p>下面是它的使用范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 1. 用root的身份在每天的12:00和14:00查看主文件夹目录ß</div><div class="line"># 编辑crontab的工作内容</div><div class="line">crontab -e</div><div class="line"># 进入vi界面，每项工作都是一行</div><div class="line">0 12,14 * * * ls /  // 解释各列含义：</div><div class="line">// 1. 分；2. 小时；3. 日期；4. 月份; 5. 周； 6. 命令</div><div class="line">// 其中“,”表示分割时段，“-”表示一段时间范围，/n 表示每隔n单位间隔</div><div class="line"></div><div class="line">// 2. 查询crontab任务</div><div class="line">crontab -l</div><div class="line"></div><div class="line">// 3. 若要删除一项工作，必须要用crontab -e去编辑，如果想要删除全部工作，如下：</div><div class="line">crontab -r</div></pre></td></tr></table></figure></p>
+<h2 id="系统的配置文件：-etc-crontab"><a href="#系统的配置文件：-etc-crontab" class="headerlink" title="系统的配置文件：/etc/crontab"></a>系统的配置文件：/etc/crontab</h2><p>crontab -e是针对用户的例行性工作来设计的，如果我们要修改系统的例行性任务，就需要编辑/etc/crontab了。</p>
+<p>基本上，cron这个服务的最低检测限制是“分钟”，所以cron会每分钟去读取一次/etc/crontab与/var/spool/cron里面的数据内容。</p>
+<h1 id="可唤醒停机期间的工作任务"><a href="#可唤醒停机期间的工作任务" class="headerlink" title="可唤醒停机期间的工作任务"></a>可唤醒停机期间的工作任务</h1><p>如果例行性工作是在凌晨4点运行的，但是刚好关机了， 你7点开机了，你总不能不管它吧，这就需要用到anacron。</p>
+<h2 id="什么是anacron"><a href="#什么是anacron" class="headerlink" title="什么是anacron"></a>什么是anacron</h2><p><strong>anacron存在的目的</strong> 是处理非24小时一直启动的linux系统的crontab的执行。</p>
+<p>anacron也是通过crontab来运行的，因此anacron的运行的时间通常有两个，一是系统开机期间运行，一个是写入crontab的调度中。</p>
+<h2 id="anacron使用"><a href="#anacron使用" class="headerlink" title="anacron使用"></a>anacron使用</h2><p>anacron的语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">anacron [-sfn] [job]</div></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《鸟哥的Linux私房菜》</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/31/走进Linux_账号管理/" rel="next" title="走进Linux_账号管理">
+                <i class="fa fa-chevron-left"></i> 走进Linux_账号管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/02/走进Linux_认识你的进程/" rel="prev" title="走进Linux_认识你的进程">
+                走进Linux_认识你的进程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是例行性工作（定时任务crontab）"><span class="nav-number">1.</span> <span class="nav-text">什么是例行性工作（定时任务crontab）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux工作调度的种类"><span class="nav-number">1.1.</span> <span class="nav-text">Linux工作调度的种类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux上常见的例行性工作"><span class="nav-number">1.2.</span> <span class="nav-text">Linux上常见的例行性工作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#仅执行一次的工作调度：at"><span class="nav-number">2.</span> <span class="nav-text">仅执行一次的工作调度：at</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#at的运行方式"><span class="nav-number">2.1.</span> <span class="nav-text">at的运行方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际运行单一工作调度"><span class="nav-number">2.2.</span> <span class="nav-text">实际运行单一工作调度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#循环执行的例行性工作调度"><span class="nav-number">3.</span> <span class="nav-text">循环执行的例行性工作调度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户的设置与使用"><span class="nav-number">3.1.</span> <span class="nav-text">用户的设置与使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统的配置文件：-etc-crontab"><span class="nav-number">3.2.</span> <span class="nav-text">系统的配置文件：/etc/crontab</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可唤醒停机期间的工作任务"><span class="nav-number">4.</span> <span class="nav-text">可唤醒停机期间的工作任务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是anacron"><span class="nav-number">4.1.</span> <span class="nav-text">什么是anacron</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#anacron使用"><span class="nav-number">4.2.</span> <span class="nav-text">anacron使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
