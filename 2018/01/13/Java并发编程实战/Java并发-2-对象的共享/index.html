@@ -1,0 +1,1044 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="并发," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：为了能够安全地由多个线程同时访问某个对象，我们就需要学会在共享和发布对象时，构建一个线程安全类或者通过java.util.concurrent类库来构建。">
+<meta name="keywords" content="并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发_2_对象的共享">
+<meta property="og:url" content="http://bestlixiang.site/2018/01/13/Java并发编程实战/Java并发-2-对象的共享/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：为了能够安全地由多个线程同时访问某个对象，我们就需要学会在共享和发布对象时，构建一个线程安全类或者通过java.util.concurrent类库来构建。">
+<meta property="og:updated_time" content="2018-01-13T09:58:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发_2_对象的共享">
+<meta name="twitter:description" content="引：为了能够安全地由多个线程同时访问某个对象，我们就需要学会在共享和发布对象时，构建一个线程安全类或者通过java.util.concurrent类库来构建。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/01/13/Java并发编程实战/Java并发-2-对象的共享/"/>
+
+
+
+
+
+  <title> Java并发_2_对象的共享 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/01/13/Java并发编程实战/Java并发-2-对象的共享/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java并发_2_对象的共享
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-13T17:58:17+08:00">
+                2018-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java并发编程实战/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程实战</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：为了能够安全地由多个线程同时访问某个对象，我们就需要学会在共享和发布对象时，构建一个线程安全类或者通过java.util.concurrent类库来构建。<a id="more"></a></p>
+<h1 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h1><p>在读操作和写操作在不同线程执行时，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，所谓“不可见”。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。</p>
+<p>先看下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NoVisibility</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> ready;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> number;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ReaderThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">while</span>(!ready) &#123;</div><div class="line">                Thread.yield();</div><div class="line">            &#125;</div><div class="line">            System.out.println(number);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">new</span> ReaderThread().start();</div><div class="line">        number = <span class="number">42</span>;</div><div class="line">        ready = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这段代码不能保证输出42，可能输出0，因为读线程可能看到了写入ready的值，但却没有看到之后写入的number的值，这种现象称为“重排序”，它的意思是代码的顺序可能因为优化而发生重排序。</p>
+<h2 id="失效数据"><a href="#失效数据" class="headerlink" title="失效数据"></a>失效数据</h2><p>失效数据：当读线程查看一个变量是，可能会得到一个已经失效的值。除非在每次访问变量时都使用同步，否则很可能获得该变量的一个失效值。更糟糕的是，失效值可能不会同时出现：一个线程可能得到某个变量的最新值，而获得另一个变量的失效值。</p>
+<p>下面的代码不是线程安全的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@NonThreadSafe</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MutableInteger</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> value;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.value = value;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>get和set都是在没有同步的情况下访问value，所以失效值问题很容易出现：如果某个线程在调用了get，那么另一个正在调用get的线程可能会看到更新后的value值，也可能看不到。要使MutableInteger成为一个线程安全的类，必须对set和get都进行同步。</p>
+<h2 id="非原子的64位操作"><a href="#非原子的64位操作" class="headerlink" title="非原子的64位操作"></a>非原子的64位操作</h2><p>最低安全性（out-of-thin-air-safety）:当线程在没有同步的情况下读取变量时，可能会得到一个失效值，但至少这个值是由之前某个线程设置的值，而不是一个随机值。</p>
+<p>例外：对于非volatile类型的long和double变量，JVM允许64位的读操作和写操作分解为两个32位的操作。那么很有可能会读到某个值的高32位和另一个值的低32位。所以在多线程程序中使用共享且可变的long和double等类型的变量是不安全的，除非使用关键字volatile来声明他们，或者用锁保护起来。</p>
+<h2 id="volatile变量"><a href="#volatile变量" class="headerlink" title="volatile变量"></a>volatile变量</h2><p>volatile变量可以确保将变量的更新操作通知到其他线程。并且会禁止重排序，因此在读取volatile类型的变量时总会返回最新写入的值。volatile通常用作某个操作完成。发生中断或者状态的标志。它只能保证可见性，但是不能保证原子性。</p>
+<p>当且仅当满足所有条件时，才应该使用volatile变量：</p>
+<ol>
+<li>对变量的写入操作不依赖变量的当前值（比读到的还要新的值），或者你能保证只有当个线程更新变量的值。</li>
+<li>该变量不会与其他状态变量一起纳入不变性条件中。</li>
+<li>在访问变量时不需要加锁。</li>
+</ol>
+<h1 id="发布和逸出"><a href="#发布和逸出" class="headerlink" title="发布和逸出"></a>发布和逸出</h1><p><strong>“发布（Publish）”对象</strong>：使对象能够在当前作用域之外的代码中使用。例如：将一个指向该对象的引用保存到其他代码可以访问的地方（公有的静态变量中）</p>
+<p><strong>“逸出（Escape）”</strong>：当某个不应该发布的对象被发布。例如：在对象构造完成之前就发布对象</p>
+<p>发布对象的最简单方法是将对象的引用保存到一个公有的静态变量中，以便任何类和线程都能看见该对象，如下面代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Set&lt;Secret&gt; knownSecrets;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;</div><div class="line">    knownSecrets = <span class="keyword">new</span> HashSet&lt;Secret&gt;();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当发布某个对象时，可能会间接地发布其他对象。如果将一个Secret对象添加到集合knownSecrets中，那么同样会发布这个对象，因为任何代码都可以遍历这个集合，并获得对这个新Secret对象的引用。同样，如果从非私有方法中返回一个引用，那么同样会发布返回的对象。如下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnsafeStates</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String[] states = <span class="keyword">new</span> String[] &#123;<span class="string">"AK"</span>,<span class="string">"AL"</span>...&#125;;</div><div class="line">    <span class="keyword">public</span> String[] getStates() &#123;</div><div class="line">        <span class="keyword">return</span> states;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>另一种将一个对象或者它内部的状态publish出去的方式就是publish这个对象所在类的内部类，如下例子,但是会将this对象的引用escape出去。因为当ThisEscape将EventListener　publish出去，它就显示地将外部类ThisEscape实例对象也公布出去了，因为内部类实例保存了外部类实例的隐藏引用。所以会把this　escape出去。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThisEscape</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">public</span> <span class="title">ThisEscape</span><span class="params">(EventSource source)</span> </span>&#123;</div><div class="line">        source.registerListener(  </div><div class="line">                <span class="keyword">new</span> EventListener() &#123;</div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(Event o)</span> </span>&#123;</div><div class="line">                        doSomething(o);<span class="comment">// 由于这个线程是异步的，所有EventSource可能还没有构造完</span></div><div class="line">                    &#125;</div><div class="line">                &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当内部EventListener实例发布时，在外部封装的ThisEscape实例也逸出了，当且仅当对象的构造函数返回时，对象才处于可预测的和一致的状态。一个常见的使this引用在构造过程中逸出的错误是在构造函数中启动一个线程。如果想在构造函数中注册一个事件监听器或启动线程，可以使用一个私有的构造函数和一个公共的工厂方法，从而避免不正确的构造过程：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SafeListener</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> EventListener listener;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SafeListener</span><span class="params">()</span> </span>&#123;</div><div class="line">        listener = <span class="keyword">new</span> EventListener() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(Event o)</span> </span>&#123;</div><div class="line">                doSomething(o);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SafeListener <span class="title">newInstance</span><span class="params">(EventSource source)</span> </span>&#123;</div><div class="line">        SafeListener safeListener = <span class="keyword">new</span> SafeListener();</div><div class="line">        source.registerListener(safeListener);</div><div class="line">        <span class="keyword">return</span> safeListener;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="线程封闭"><a href="#线程封闭" class="headerlink" title="线程封闭"></a>线程封闭</h1><p>当访问共享的可变数据时，通常需要同步。一种避免使用同步的方式就是不共享数据。如果仅在单线程内访问数据，就不需要同步。这种技术被称为线程封闭。</p>
+<p>线程封闭的一个常见应用是从池中拿JDBC Connection。在典型的服务器应用中，一个线程从池中获取connection对象，用它来处理一个单独的请求，处理完后归还该connection，又放入池中。Connection池是不会把相同的connection对象分配给不同的线程的，这种模式就显式地将那个connection封闭在一个线程中。</p>
+<p>局部变量和ThreadLocal类就是用来维护线程封闭特性的，但即便有这些现成的特性，程序员仍有义务去保证封闭在线程中的对象不会从线程中逸出</p>
+<h2 id="Ad-hoc线程封闭"><a href="#Ad-hoc线程封闭" class="headerlink" title="Ad-hoc线程封闭"></a>Ad-hoc线程封闭</h2><p>这种线程封闭是指，维护线程封闭性的职责完全由程序实现来承担。这种技术很脆弱，因此程序中尽量少用它。</p>
+<h2 id="栈封闭"><a href="#栈封闭" class="headerlink" title="栈封闭"></a>栈封闭</h2><p>栈封闭式线程封闭的一种特例，在栈封闭中，只能通过局部变量才能访问对象。局部变量的固有属性之一就是封闭在执行线程中，它们位于执行线程的栈中，其他线程无法访问这个栈。栈封闭比Ad-hoc线程封闭更易于维护，也更加健壮。可以看看下面的例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">loadTheArk</span><span class="params">(Collections&lt;Animal&gt; candidates)</span> </span>&#123;</div><div class="line">        SortedSet&lt;Animal&gt; animals;</div><div class="line">        <span class="keyword">int</span> numPairs = <span class="number">0</span>;</div><div class="line">        Animals candidate = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">        animals = <span class="keyword">new</span> TreeSet&lt;Animal&gt;(<span class="keyword">new</span> SpeciesGenderComparator());</div><div class="line">        animals.addAll(candidates);</div><div class="line">        <span class="keyword">for</span>(animals a : animals) &#123;</div><div class="line">            <span class="keyword">if</span> (candidate == <span class="keyword">null</span> || !candidate.isPotentialMate(a)) &#123;</div><div class="line">                candidate = a;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                ark.load(<span class="keyword">new</span> AnimalPair(candidate, a));</div><div class="line">                ++numPairs;</div><div class="line">                candidate = <span class="keyword">null</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> numPairs;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>上面代码中的numPairs不会破坏线程封闭性，因为任何方法都无法获得对基本类型的引用，所以基本类型的局部变量始终封闭在线程内。但是对于对象引用的线程封闭，就需要一些额外的工作确保对象引用不会逸出。在上例中实例化了一个TreeSet,并用animals引用指向它，因为只有一个引用指向这个Set，而且这个引用是局部变量，所以这个对象引用也被封闭在线程中。但是如果把这个animals公布（publish）出去，线程封闭性就会破化。</p>
+<h2 id="ThreadLocal类"><a href="#ThreadLocal类" class="headerlink" title="ThreadLocal类"></a>ThreadLocal类</h2><p>维护线程封闭性的一种更规范的方式是使用ThreadLocal. ThreadLocal提供了get和set方法，这些方法为每个使用该变量的线程都存有一份独立的副本，因此get总是返回由当前执行线程在调用set时设置的最新值。</p>
+<p>例如，在单线程应用程序中可能会维持一个全局的数据库连接，并在程序启动时初始化这个连接对象，从而避免在调用每个方法时都要传递一个Connection对象。由于JDBC的连接对象不一定是线程安全的，因此，当多线程应用程序在没有协同的情况下使用全局变量时，就不是线程安全的。通过将JDBC的连接保存到ThreadLocal对象中，每个线程都会拥有属于自己的连接，如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;Connection&gt; connectionHolder = <span class="keyword">new</span> ThreadLocal&lt;&gt;()&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> Connection <span class="title">initialValue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> DriverManager.getConnection(DB_URL);</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Connection <span class="title">getConnection</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> connectionHolder.get();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p> 当某个线程初次调用ThreadLocal.get方法时，会调用initialValue()方法来获取初始值。从概念上讲，可以将ThreadLocal<t>视为包含了Map<thread, t="">对象，其中保存了只属于该线程的值。当线程终止后，这些值就会作为垃圾被回收掉。</thread,></t></p>
+<h1 id="不变性"><a href="#不变性" class="headerlink" title="不变性"></a>不变性</h1><p>如果某个对象在创建之后状态就不能被修改，那这个对象就被称为<strong>不可变对象</strong>。不可变对象一定是线程安全的。不可变对象只有一种状态，而且这种状态由构造函数来控制。</p>
+<p>当满足一下条件的时候，对象才是不可变的：</p>
+<ul>
+<li>对象创建以后其状态就不能修改</li>
+<li>对象的所有域都是final类型</li>
+<li>对象是正确创建的（在对象的创建过程中，this引用没有逸出）</li>
+</ul>
+<p>不可变对象仍然可以在内部使用可变对象来管理它们的状态。如下例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Immutable</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreeStooges</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;String&gt; stooges = <span class="keyword">new</span> HashSet&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ThreeStooges</span><span class="params">()</span> </span>&#123;</div><div class="line">        stooges.add(<span class="string">"Moe"</span>);</div><div class="line">        stooges.add(<span class="string">"Larry"</span>);</div><div class="line">        stooges.add(<span class="string">"Curly"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isStooge</span><span class="params">(String name)</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> stooges.contains(name);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Final域"><a href="#Final域" class="headerlink" title="Final域"></a>Final域</h2><p>正如“除非需要更高的可见性，否则应将所有的域都声明为私有域”一样，“除非需要某个域是可变的，否则应将其声明为final域”也是一个良好的编程习惯。</p>
+<h2 id="使用Volatile类型来发布不可变对象"><a href="#使用Volatile类型来发布不可变对象" class="headerlink" title="使用Volatile类型来发布不可变对象"></a>使用Volatile类型来发布不可变对象</h2><p>为了保证操作的原子性，可以将多个状态转化为包含多个状态的不可变对象，然后使用volatile来保持可见性，从而保证了线程安全。如下面的例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileCachedFactorizer</span> <span class="keyword">implements</span> <span class="title">Servlet</span></span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> OneValueCache cache = <span class="keyword">new</span> OneValueCache(<span class="keyword">null</span>, <span class="keyword">null</span>);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(ServletRequest req, ServletResponse resp)</span> </span>&#123;</div><div class="line">        BigInteger i = extractFromRequest(req);</div><div class="line">        BigInteger[] factors = cache.getFactors(i);</div><div class="line">        <span class="keyword">if</span> (factors == <span class="keyword">null</span>) &#123;</div><div class="line">            factors = factor(i);</div><div class="line">            cache = <span class="keyword">new</span> OneValueCache(i, factors);</div><div class="line">        &#125;</div><div class="line">        encodeIntoResponse(resp, factors);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">OneValueCache</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BigInteger lastNumber;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BigInteger[] lastFactos;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OneValueCache</span><span class="params">(BigInteger i, BigInteger[] factors)</span> </span>&#123;</div><div class="line">        lastNumber = i;</div><div class="line">        lastFactos = Arrays.copyOf(factors, factors.length);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> BigInteger[] getFactors(BigInteger i) &#123;</div><div class="line">        <span class="keyword">if</span> (lastNumber == <span class="keyword">null</span> || !lastNumber.equals(i)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> Arrays.copyOf(lastFactos, lastFactos.length);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="安全发布"><a href="#安全发布" class="headerlink" title="安全发布"></a>安全发布</h1><p>在某些情况下我们希望在多个线程间共享对象，此时必须确保安全地进行共享。</p>
+<h2 id="不正确的发布：可见性出现问题"><a href="#不正确的发布：可见性出现问题" class="headerlink" title="不正确的发布：可见性出现问题"></a>不正确的发布：可见性出现问题</h2><p>例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> Holder hoder;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;</div><div class="line">    holder = <span class="keyword">new</span> Holder(<span class="number">42</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Holder</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> n;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Holder</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.n = n;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">assertSanity</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span>(n != n) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> AssertionError(<span class="string">"This statement is false"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>因为除了发布对象的线程外，其他线程可以看到的Holder域可能是一个失效值。</p>
+<h2 id="不可变对象与初始化安全性"><a href="#不可变对象与初始化安全性" class="headerlink" title="不可变对象与初始化安全性"></a>不可变对象与初始化安全性</h2><p>任何线程都可以在不需要额外同步的情况下安全地访问不可变对象，即使在发布这些对象时没有使用同步。</p>
+<h2 id="安全发布的常用模式"><a href="#安全发布的常用模式" class="headerlink" title="安全发布的常用模式"></a>安全发布的常用模式</h2><p>要安全地发布一个对象，那它的引用和状态必须同时对其他线程可见。一个正确构造的对象可以通过以下方式安全地发布：</p>
+<ul>
+<li>在静态初始化函数中初始化对象的引用</li>
+<li>把对象的引用保存在volatile类型的域或者AtomicReference对象中</li>
+<li>将对象的引用保存到某个正确构造的final对象的域中</li>
+<li>将对象的引用保存到一个由锁保护的域中</li>
+</ul>
+<p>使用静态初始化函数通常是最简单最安全的发布方式:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Holder holder = <span class="keyword">new</span> Holder(<span class="number">42</span>);</div></pre></td></tr></table></figure></p>
+<p>静态初始化器由JVM在类的初始化阶段执行，由于JVM内部存在在同步机制，因此通过这种方式初始化的任何对象都哦可以被安全发布。</p>
+<h2 id="事实不可变对象"><a href="#事实不可变对象" class="headerlink" title="事实不可变对象"></a>事实不可变对象</h2><p>如果对象在技术上来看是可变的，但其状态在发布之后不会再改变，那么这种对象成为“实际不可变对象”，在这些对象发布之后，程序之需要将它们视为不可变对象即可。所以如果确认某些对象是实际不可变对象，就可以简化开发减少同步从而提升性能。</p>
+<h2 id="可变对象"><a href="#可变对象" class="headerlink" title="可变对象"></a>可变对象</h2><p>如果对象在构造后可以被修改，那么安全发布只能确保这个对象在发布当时状态的可见性，为了保证线程安全，就需要在每次对象访问时也使用同步来确保后续修改操作的可见性。对象的发布方式取决于它的可变性：</p>
+<ul>
+<li>不可变对象可以通过任何机制来发布；</li>
+<li>事实不可变对象必须通过安全方式来发布</li>
+<li>可变对象必须通过安全方式来发布，并且必须是线程安全的或由某个锁保护起</li>
+</ul>
+<h2 id="安全的共享对象"><a href="#安全的共享对象" class="headerlink" title="安全的共享对象"></a>安全的共享对象</h2><p>在并发程序中使用共享对象是，可以使用一些实用的策略：</p>
+<ul>
+<li>线程封闭。线程封闭的对象只能由一个线程拥有，对象被封闭在该线程中，并且只能由这个线程修改。</li>
+<li>只读共享。在没有额外同步的情况下，共享的只读对象可以由多个线程并发访问，但任何线程都不能修改它。共享的只读对象包括不可变对象和实际不可变对象。</li>
+<li>线程安全共享。线程安全的对象在其内部实现同步，因此多个线程可以通过对象的公有接口来进行访问而不需要进一步的同步。</li>
+<li>保护对象。被保护的对象只能通过持有特定的锁来访问。保护对象包括封装在其他线程安全对象中的对象，以及已发布的并且由某个特定锁保护的对象。</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>由于对象需要共享，所以要注意发布的安全性，以及对不可以变对象的合理应用。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《Java并发编程实战》</li>
+<li><a href="https://www.2cto.com/kf/201405/298701.html" target="_blank" rel="external">java并发编程实践学习（四）对象的发布和逸出之this逃逸</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/12/Java并发编程实战/Java并发-1-线程安全性/" rel="next" title="Java并发_1_线程安全性">
+                <i class="fa fa-chevron-left"></i> Java并发_1_线程安全性
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/13/Java并发编程实战/Java并发-3-对象的组合/" rel="prev" title="Java并发_3_对象的组合">
+                Java并发_3_对象的组合 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">100</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#可见性"><span class="nav-number">1.</span> <span class="nav-text">可见性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#失效数据"><span class="nav-number">1.1.</span> <span class="nav-text">失效数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非原子的64位操作"><span class="nav-number">1.2.</span> <span class="nav-text">非原子的64位操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile变量"><span class="nav-number">1.3.</span> <span class="nav-text">volatile变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发布和逸出"><span class="nav-number">2.</span> <span class="nav-text">发布和逸出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程封闭"><span class="nav-number">3.</span> <span class="nav-text">线程封闭</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ad-hoc线程封闭"><span class="nav-number">3.1.</span> <span class="nav-text">Ad-hoc线程封闭</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#栈封闭"><span class="nav-number">3.2.</span> <span class="nav-text">栈封闭</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocal类"><span class="nav-number">3.3.</span> <span class="nav-text">ThreadLocal类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不变性"><span class="nav-number">4.</span> <span class="nav-text">不变性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Final域"><span class="nav-number">4.1.</span> <span class="nav-text">Final域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Volatile类型来发布不可变对象"><span class="nav-number">4.2.</span> <span class="nav-text">使用Volatile类型来发布不可变对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安全发布"><span class="nav-number">5.</span> <span class="nav-text">安全发布</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#不正确的发布：可见性出现问题"><span class="nav-number">5.1.</span> <span class="nav-text">不正确的发布：可见性出现问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不可变对象与初始化安全性"><span class="nav-number">5.2.</span> <span class="nav-text">不可变对象与初始化安全性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全发布的常用模式"><span class="nav-number">5.3.</span> <span class="nav-text">安全发布的常用模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事实不可变对象"><span class="nav-number">5.4.</span> <span class="nav-text">事实不可变对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可变对象"><span class="nav-number">5.5.</span> <span class="nav-text">可变对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全的共享对象"><span class="nav-number">5.6.</span> <span class="nav-text">安全的共享对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
