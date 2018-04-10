@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-04-09T04:42:10.000Z</updated>
+  <updated>2018-04-10T11:34:13.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,82 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>揭秘Spring(一)_Spring架构</title>
+    <link href="http://bestlixiang.site/2018/04/10/%E6%8F%AD%E7%A7%98Spring-%E4%B8%80-Spring%E6%9E%B6%E6%9E%84/"/>
+    <id>http://bestlixiang.site/2018/04/10/揭秘Spring-一-Spring架构/</id>
+    <published>2018-04-10T11:31:40.000Z</published>
+    <updated>2018-04-10T11:34:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。<a id="more"></a></p>
+<h1 id="Spring的骨骼架构"><a href="#Spring的骨骼架构" class="headerlink" title="Spring的骨骼架构"></a>Spring的骨骼架构</h1><p>Spring总共有十几个组件，但是真正核心的组件只有几个，如下图为Spring框架开始以来拥有的总体架构图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/spring.gif" alt="spring"></p>
+<p>从上图可以看出，在Spring框架中的 <strong>核心组件</strong> 只有三个：core、context、bean。他们构建起整个Spring的骨骼架构，没有他们就不可能有AOP、Web等上层的 <strong>特性功能</strong> 。</p>
+<h2 id="Spring的设计理念"><a href="#Spring的设计理念" class="headerlink" title="Spring的设计理念"></a>Spring的设计理念</h2><p>上面说了三个核心组件，但是最重要就是Bean组件了，用过Spring的人都知道，我们所有的类基本上都会交给Spring托管，也就是说Spring就是面向Bean的编程。Bean在Spring中的作用就像Object对OOP的意义一样，没有对象的概念就没有面向对象的概念，在Spring中没有Bean也就没有Spring存在的意义。</p>
+<p><strong>使用Spring最大的原因：</strong> 是他解决了一个非常关键的问题，它可以让你把对象之间的依赖关系解耦，其中的关系交由<strong>IOC容器</strong>（Bean关系的集合）来管理，核心就是<strong>依赖注入机制</strong>。Spring也正是通过把对象包装在Bean中达到管理这些对象及做一些列额外操作的目的。</p>
+<p><strong>一般框架设计理念：</strong> 先构建一个数据结构，然后根据这个数据结构设计它的生存环境，并让它在这个环境中按照一定的规律不停的运动，在他不停运动的过程中设计它们与环境或者与其他个体完成信息交换。</p>
+<h2 id="核心组件如何协同工作"><a href="#核心组件如何协同工作" class="headerlink" title="核心组件如何协同工作"></a>核心组件如何协同工作</h2><p>参考《深入分析Java Web技术内幕》一书中有个形象的比喻：Spring框架就像一场演出，Bean相当于演员，Context相当于演出的舞台背景、Core相当于演出的道具（把演员联系起来）。如果想演出足够新颖，就需要Spring提供的其他特色功能了。</p>
+<p>回到Spring：Bean包装的是Object，而Object必然有数据，如何给这些数据提供生成环境就是Context要解决的事情，对于Context来说就是要发现每个Bean之间的关系，为他们建立这种关系并且维护好这种关系，而发现、建立和维护每个Bean之间的关系维护这种关系就需要Core组件了，Core组件其实就是发现、建立和维护每个Bean之间的关系所需要的一些列工具。最后我们发现Context就是一个Bean关系的集合，这个关系集合就叫<strong>IOC容器</strong>，当建立起IOC容器，Spring就可以工作了。他们的关系可以用下图来描述：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/ccb.gif" alt="ccb"></p>
+<h1 id="核心组件解析"><a href="#核心组件解析" class="headerlink" title="核心组件解析"></a>核心组件解析</h1><h2 id="Bean组件"><a href="#Bean组件" class="headerlink" title="Bean组件"></a>Bean组件</h2><p>Bean 组件在 Spring 的 org.springframework.beans 包下。这个包下的所有类主要解决了三件事：<strong>Bean 的定义、 Bean 的解析以及对Bean 的创建</strong>。对 Spring 的使用者来说唯一需要关心的就是 Bean 的创建，其他两个由 Spring 在内部帮你完成了，对你来说是透明的。</p>
+<h3 id="Bean的定义"><a href="#Bean的定义" class="headerlink" title="Bean的定义"></a>Bean的定义</h3><p>Bean 的定义主要有 BeanDefinition 描述，如下图（RootBeanDefinition类图）说明了这些类的层次关系：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/rootBeanDefinition.png" alt="rootBeanDefinition"></p>
+<p>Bean 的定义就是完整的描述了在 Spring 的配置的Bean中所有的信息。当 Spring 成功解析你定义的一个Bean后，在 Spring 的内部他就被转化成 BeanDefinition 对象，它可以定义为SINGLETON还是PROTOTYPE。以后所有的操作都是对这个对象完成的。</p>
+<h3 id="Bean的解析"><a href="#Bean的解析" class="headerlink" title="Bean的解析"></a>Bean的解析</h3><p>Bean 的解析过程非常复杂，功能被分的很细，因为这里需要被扩展的地方很多，必须保证有足够的灵活性，以应对可能的变化。Bean 的解析方式有很多种，这也就导致配置方式有很多种（之后会介绍各种Bean的配置方法，如xml，扫描，注解、java配置）。这里就介绍一下最早的解析XML配置，它的过程主要通过下图中的类(XmlBeanDefinitionReader)完成：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/XmlBeanDefinitionReader.png" alt="XmlBeanDefinitionReader"></p>
+<h3 id="Bean的创建"><a href="#Bean的创建" class="headerlink" title="Bean的创建"></a>Bean的创建</h3><p>Spring Bean 的创建是典型的工厂模式，我们可以通过DefaultListableBeanFactory这个类来了解Spring的工厂模式，工厂模式的顶级接口是 BeanFactory，下图是这个工厂的继承层次关系：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/defaultListableBeanFactory.png" alt="image"></p>
+<p>BeanFactory 有三个子类：ListableBeanFactory、HierarchicalBeanFactory 和 AutowireCapableBeanFactory。但是从上图中我们可以发现最终的默认实现类是 DefaultListableBeanFactory，他实现了所有的接口。</p>
+<p>框架核心：那为何要定义这么多层次的接口呢？</p>
+<p>查阅这些接口的源码和说明发现，每个接口都有他使用的场合，它主要是为了区分在 Spring 内部在操作过程中对象的传递和转化过程中，对对象的数据访问所做的限制，具体如下：</p>
+<ul>
+<li>ListableBeanFactory 接口表示这些 Bean 是可列表的</li>
+<li>HierarchicalBeanFactory 表示的是这些 Bean是有继承关系的，也就是每个 Bean有可能有父 Bean。</li>
+<li>AutowireCapableBeanFactory 接口定义Bean的自动装配规则。</li>
+</ul>
+<p>这四个接口共同定义了 Bean 的集合、Bean 之间的关系、以及 Bean 行为。</p>
+<h2 id="Context组件"><a href="#Context组件" class="headerlink" title="Context组件"></a>Context组件</h2><p>Context 在 Spring 的 org.springframework.context 包下，<strong>Context 组件在 Spring 中的作用实际上就是给Spring提供一个运行时的环境，用以保存各个对象的状态</strong> 。下面看一下这个环境是如何构建的。</p>
+<p>ApplicationContext 是 Context 的顶级父类，他除了能标识一个应用环境的基本信息外，他还继承了六个接口，这六个接口主要是扩展了 Context 的功能。下面是 Context 相关的类结构图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/AbstractRefreshableWebApplicationContext.png" alt="Context"></p>
+<p>从上图中可以看出 ApplicationContext 继承了BeanFactory，这也说明了 Spring 容器中运行的主体对象是 Bean，另外 ApplicationContext 继承了 ResourceLoader 接口，使得 ApplicationContext 可以访问到任何外部资源（就是Core里面的工具了，这将在 Core 中详细说明）。</p>
+<p>ApplicationContext 的子类主要包含两个方面：</p>
+<ul>
+<li>ConfigurableApplicationContext：表示该Context是可修改的，也就是在构建 Context 中用户可以动态添加或修改已有的配置信息，它下面又有多个子类，其中最经常使用的是可更新的 Context，即 AbstractRefreshableApplicationContext 类。</li>
+<li>WebApplicationContext ：看到web就知道这为 web 准备的 Context 他可以直接访问到 ServletContext，通常情况下，这个接口使用的少。<br>再往下分就是按照构建 Context 的文件类型（没列出，感兴趣的可以自己去看），接着就是访问 Context 的方式。这样一级一级构成了完整的 Context 等级层次。</li>
+</ul>
+<p>总体来说 ApplicationContext 必须要完成以下几件事：</p>
+<ul>
+<li>标识一个应用环境</li>
+<li>利用 BeanFactory 创建 Bean 对象</li>
+<li>保存对象关系表</li>
+<li>能够捕获各种事件</li>
+</ul>
+<p>Context 作为 Spring 的 <strong>IOC 容器</strong>，基本上整合了 Spring 的大部分功能，或者说是大部分功能的基础。</p>
+<h2 id="Core组件"><a href="#Core组件" class="headerlink" title="Core组件"></a>Core组件</h2><p>Core 组件在Spring 的org.springframework.core包下，它作为 Spring的核心组件，他其中包含了很多的关键类，其中一个重要组成部分就是定义了资源（Resource）的访问方式。这种<strong>把所有资源都抽象成一个接口的方式</strong>很值得在以后的设计中拿来学习。下面就重要看一下这个部分在 Spring 的作用。我们通过下图（ Resource 相关的类结构图）来理解：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/resource.png" alt="resource"></p>
+<p>从上图可以看出 Resource 接口封装了各种可能的资源类型，也就是对使用者来说屏蔽了文件类型的不同。对资源的提供者来说，如何把资源包装起来交给其他人用这也是一个问题(所以产生了很多方式)，我们看到 Resource 接口继承了 InputStreamSource 接口，这个接口中有个 getInputStream 方法，返回的是 InputStream 类。这样所有的资源都被可以通过 InputStream 这个类来获取，所以也屏蔽了资源的提供者。另外还有一个问题就是加载资源的问题，也就是资源的加载者要统一，从上图中可以看出这个任务是由 ResourceLoader 接口完成，他屏蔽了所有的资源加载者的差异，只需要实现这个接口就可以加载所有的资源，他的默认实现是 DefaultResourceLoader。</p>
+<p>那Context 和 Resource 是如何建立关系的？下面是他们的类关系图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/cc.png" alt="cc"></p>
+<p>从上图可以看出，Context 是把资源的加载、解析和描述工作委托给了 ResourcePatternResolver 类来完成，他相当于一个接头人，他把资源的加载、解析和资源的定义整合在一起便于其他组件使用。Core 组件中还有很多类似的方式。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入分析Java Web技术内幕》</li>
+<li><a href="http://www.jb51.net/article/112039.htm" target="_blank" rel="external">Spring多种加载Bean方式解析</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。
+    
+    </summary>
+    
+      <category term="深入SSM" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5SSM/"/>
+    
+    
+      <category term="Spring" scheme="http://bestlixiang.site/tags/Spring/"/>
+    
+  </entry>
   
   <entry>
     <title>走进Linux_防火墙配置</title>
@@ -3002,60 +3078,6 @@
     <summary type="html">
     
       &lt;p&gt;引：不变的部分用继承来实现，变得部分放在外部，并通过&lt;strong&gt;桥梁模式&lt;/strong&gt;抽象耦合进来，这样就解决了继承的弊端。
-    
-    </summary>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-    
-      <category term="java" scheme="http://bestlixiang.site/tags/java/"/>
-    
-      <category term="设计模式" scheme="http://bestlixiang.site/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式之禅——享元模式</title>
-    <link href="http://bestlixiang.site/2018/03/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://bestlixiang.site/2018/03/18/设计模式之禅——享元模式/</id>
-    <published>2018-03-18T12:03:02.000Z</published>
-    <updated>2018-03-18T12:03:32.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：对象多了，而且还都是处于有用状态，那一定会出现内存溢出的问题，我们可以通过<strong>享元模式</strong>来实现对象的复用，以达到减少的目的，从而解决内存溢出的问题。<a id="more"></a></p>
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p>享元模式是<strong>池技术</strong>的重要实现方式，其定义如下：</p>
-<p><strong>使用”共享对象”可有效地支持大量的”细粒度的对象”。——结构类</strong></p>
-<p>享元模式的定义为我们提出了两个要求：细粒度对象和共享对象。我们知道分配太多的对象到应用程序中将有损程序的性能，同时还容易造成内存溢出，那怎么避免呢？就是享元模式提到的共享技术。我们先来了解一下对象的内部状态和外部状态：</p>
-<ul>
-<li>内部状态：内部状态是对象可共享出来的信息，存储在享元对象并且不会随环境改变而改变，不必存储在具体某个对象中，属于可以共享的部分。</li>
-<li>外部状态：外部状态是对象得以依赖的一个标记，是随环境改变而改变的，不可以共享的状态，他是一批对象的统一标识，是唯一的索引值。</li>
-</ul>
-<p>下面是享元模式的通用类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/flyweight.png" alt="flyweight"></p>
-<p>简单介绍类图中的角色：</p>
-<ol>
-<li>Flyweight抽象享元角色：产品的抽象类，同时定义出对象的外部状态和内部状态的接口或实现。</li>
-<li>ConcreteFlyWeight具体享元角色：具体的一个产品类，实现抽象角色定义的业务。该角色中需要注意的是内部状态处理应该与环境无关，不应该出现一个操作改变了内部状态，同时修改了外部状态，这是绝对不允许的。</li>
-<li>UnsharedConcreteFlyWeight不可共享的享元角色：不存在外部状态或者安全要求（如线程安全）不能够使用共享技术的对象，该对象一般不会出现享元工厂中。（有点不太理解）</li>
-<li>FlyWeightFactory享元工厂：职责非常简单，就是构造一个池容器，同时提供从池中获取对象的方法。</li>
-</ol>
-<p>享元模式的目的在于运用共享技术，使得一些细粒度的对象可以共享，多使用细粒度的对象，便于重构或重用，下面是它的通用代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//  抽象享元角色</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Flyweight</span> </span>&#123;</div><div class="line">    <span class="comment">// 内部状态</span></div><div class="line">    <span class="keyword">private</span> String intrinsic;</div><div class="line">    <span class="comment">// 外部状态 注意final</span></div><div class="line">    <span class="keyword">protected</span> <span class="keyword">final</span> String extrinsic;</div><div class="line">    <span class="comment">// 要求享元角色必须接受外部状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Flyweight</span><span class="params">(String _extrinsic)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.extrinsic = _extrinsic;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 定义业务操作</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> vid <span class="title">operate</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 内部状态的getter/setter</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getIntrinsic</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> intrinsic;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setIntrinsic</span><span class="params">(String intrinsic)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.intrinsic = intrinsic;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体享元角色</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFlyweight1</span> <span class="keyword">extends</span> <span class="title">Flyweight</span> </span>&#123;</div><div class="line">    <span class="comment">// 接受外部状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteFlyweight1</span><span class="params">(String _extrinsic)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(_extrinsic)</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 根据外部状态进行逻辑处理</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteFlyweight2</span> <span class="keyword">extends</span> <span class="title">Flyweight</span> </span>&#123;</div><div class="line">    <span class="comment">// 接受外部状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteFlyweight2</span><span class="params">(String _extrinsic)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(_extrinsic)</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 根据外部状态进行逻辑处理</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 业务逻辑</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 享元工厂</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlyweightFactory</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义一个池容器</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> HashMap&lt;String,Flyweight&gt; pool = <span class="keyword">new</span> HashMap&lt;String,Flyweight&gt;();</div><div class="line">    <span class="comment">// 享元工厂</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Flyweight <span class="title">getFlyweight</span><span class="params">(String extrinsic)</span> </span>&#123;</div><div class="line">        <span class="comment">// 需要返回的对象</span></div><div class="line">        Flyweight flyweight = <span class="keyword">null</span>;</div><div class="line">        <span class="comment">// 在池中没有该对象</span></div><div class="line">        <span class="keyword">if</span>(pool.containKey(extrinsic)) &#123;</div><div class="line">            flyweight = pool.get(extrinsic);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 根据外部状态创建享元对象</span></div><div class="line">            flyweight = <span class="keyword">new</span> ConcreteFlyweight1(extrinsic);</div><div class="line">            <span class="comment">// 放置到池中</span></div><div class="line">            pool.put(extrinsic,flyweight);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> flyweight;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>可以大大减少应用程序创建的对象，降低程序内存的占用，增强程序对的性能。</p>
-<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><p>提高了系统的复杂性，需要分离出外部状态和内部状态，而且外部状态具有固化特性（加fianl关键字），不应该随内部改变而改变，否则导致系统的逻辑混乱。</p>
-<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><ol>
-<li>系统中存在大量的相似对象。</li>
-<li>细粒度的对象都具有较接近的外部状态，而且内部状态与环境无关，也就是说对象没有特定身份。</li>
-<li>需要缓冲池的场景。</li>
-</ol>
-<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>当对象池的对象太少时，会出现线程不安全的现象。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>享元模式在Java API中也是随处可见的，比如String类的intern方法就是利用了String的对象池。当然对象池主要解决复用，而享元模式主要解决对象的共享问题，如果建立多个可共享的细粒度对象是其关注的重点。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《设计模式之禅》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：对象多了，而且还都是处于有用状态，那一定会出现内存溢出的问题，我们可以通过&lt;strong&gt;享元模式&lt;/strong&gt;来实现对象的复用，以达到减少的目的，从而解决内存溢出的问题。
     
     </summary>
     

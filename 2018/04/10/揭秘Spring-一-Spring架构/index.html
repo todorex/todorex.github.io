@@ -1,0 +1,1030 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spring," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="揭秘Spring(一)_Spring架构">
+<meta property="og:url" content="http://bestlixiang.site/2018/04/10/揭秘Spring-一-Spring架构/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/spring.gif">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/ccb.gif">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/rootBeanDefinition.png">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/XmlBeanDefinitionReader.png">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/defaultListableBeanFactory.png">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/AbstractRefreshableWebApplicationContext.png">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/resource.png">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/cc.png">
+<meta property="og:updated_time" content="2018-04-10T11:34:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="揭秘Spring(一)_Spring架构">
+<meta name="twitter:description" content="引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/spring.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/04/10/揭秘Spring-一-Spring架构/"/>
+
+
+
+
+
+  <title> 揭秘Spring(一)_Spring架构 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/10/揭秘Spring-一-Spring架构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                揭秘Spring(一)_Spring架构
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-10T19:31:40+08:00">
+                2018-04-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深入SSM/" itemprop="url" rel="index">
+                    <span itemprop="name">深入SSM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。<a id="more"></a></p>
+<h1 id="Spring的骨骼架构"><a href="#Spring的骨骼架构" class="headerlink" title="Spring的骨骼架构"></a>Spring的骨骼架构</h1><p>Spring总共有十几个组件，但是真正核心的组件只有几个，如下图为Spring框架开始以来拥有的总体架构图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/spring.gif" alt="spring"></p>
+<p>从上图可以看出，在Spring框架中的 <strong>核心组件</strong> 只有三个：core、context、bean。他们构建起整个Spring的骨骼架构，没有他们就不可能有AOP、Web等上层的 <strong>特性功能</strong> 。</p>
+<h2 id="Spring的设计理念"><a href="#Spring的设计理念" class="headerlink" title="Spring的设计理念"></a>Spring的设计理念</h2><p>上面说了三个核心组件，但是最重要就是Bean组件了，用过Spring的人都知道，我们所有的类基本上都会交给Spring托管，也就是说Spring就是面向Bean的编程。Bean在Spring中的作用就像Object对OOP的意义一样，没有对象的概念就没有面向对象的概念，在Spring中没有Bean也就没有Spring存在的意义。</p>
+<p><strong>使用Spring最大的原因：</strong> 是他解决了一个非常关键的问题，它可以让你把对象之间的依赖关系解耦，其中的关系交由<strong>IOC容器</strong>（Bean关系的集合）来管理，核心就是<strong>依赖注入机制</strong>。Spring也正是通过把对象包装在Bean中达到管理这些对象及做一些列额外操作的目的。</p>
+<p><strong>一般框架设计理念：</strong> 先构建一个数据结构，然后根据这个数据结构设计它的生存环境，并让它在这个环境中按照一定的规律不停的运动，在他不停运动的过程中设计它们与环境或者与其他个体完成信息交换。</p>
+<h2 id="核心组件如何协同工作"><a href="#核心组件如何协同工作" class="headerlink" title="核心组件如何协同工作"></a>核心组件如何协同工作</h2><p>参考《深入分析Java Web技术内幕》一书中有个形象的比喻：Spring框架就像一场演出，Bean相当于演员，Context相当于演出的舞台背景、Core相当于演出的道具（把演员联系起来）。如果想演出足够新颖，就需要Spring提供的其他特色功能了。</p>
+<p>回到Spring：Bean包装的是Object，而Object必然有数据，如何给这些数据提供生成环境就是Context要解决的事情，对于Context来说就是要发现每个Bean之间的关系，为他们建立这种关系并且维护好这种关系，而发现、建立和维护每个Bean之间的关系维护这种关系就需要Core组件了，Core组件其实就是发现、建立和维护每个Bean之间的关系所需要的一些列工具。最后我们发现Context就是一个Bean关系的集合，这个关系集合就叫<strong>IOC容器</strong>，当建立起IOC容器，Spring就可以工作了。他们的关系可以用下图来描述：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/ccb.gif" alt="ccb"></p>
+<h1 id="核心组件解析"><a href="#核心组件解析" class="headerlink" title="核心组件解析"></a>核心组件解析</h1><h2 id="Bean组件"><a href="#Bean组件" class="headerlink" title="Bean组件"></a>Bean组件</h2><p>Bean 组件在 Spring 的 org.springframework.beans 包下。这个包下的所有类主要解决了三件事：<strong>Bean 的定义、 Bean 的解析以及对Bean 的创建</strong>。对 Spring 的使用者来说唯一需要关心的就是 Bean 的创建，其他两个由 Spring 在内部帮你完成了，对你来说是透明的。</p>
+<h3 id="Bean的定义"><a href="#Bean的定义" class="headerlink" title="Bean的定义"></a>Bean的定义</h3><p>Bean 的定义主要有 BeanDefinition 描述，如下图（RootBeanDefinition类图）说明了这些类的层次关系：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/rootBeanDefinition.png" alt="rootBeanDefinition"></p>
+<p>Bean 的定义就是完整的描述了在 Spring 的配置的Bean中所有的信息。当 Spring 成功解析你定义的一个Bean后，在 Spring 的内部他就被转化成 BeanDefinition 对象，它可以定义为SINGLETON还是PROTOTYPE。以后所有的操作都是对这个对象完成的。</p>
+<h3 id="Bean的解析"><a href="#Bean的解析" class="headerlink" title="Bean的解析"></a>Bean的解析</h3><p>Bean 的解析过程非常复杂，功能被分的很细，因为这里需要被扩展的地方很多，必须保证有足够的灵活性，以应对可能的变化。Bean 的解析方式有很多种，这也就导致配置方式有很多种（之后会介绍各种Bean的配置方法，如xml，扫描，注解、java配置）。这里就介绍一下最早的解析XML配置，它的过程主要通过下图中的类(XmlBeanDefinitionReader)完成：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/XmlBeanDefinitionReader.png" alt="XmlBeanDefinitionReader"></p>
+<h3 id="Bean的创建"><a href="#Bean的创建" class="headerlink" title="Bean的创建"></a>Bean的创建</h3><p>Spring Bean 的创建是典型的工厂模式，我们可以通过DefaultListableBeanFactory这个类来了解Spring的工厂模式，工厂模式的顶级接口是 BeanFactory，下图是这个工厂的继承层次关系：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/defaultListableBeanFactory.png" alt="image"></p>
+<p>BeanFactory 有三个子类：ListableBeanFactory、HierarchicalBeanFactory 和 AutowireCapableBeanFactory。但是从上图中我们可以发现最终的默认实现类是 DefaultListableBeanFactory，他实现了所有的接口。</p>
+<p>框架核心：那为何要定义这么多层次的接口呢？</p>
+<p>查阅这些接口的源码和说明发现，每个接口都有他使用的场合，它主要是为了区分在 Spring 内部在操作过程中对象的传递和转化过程中，对对象的数据访问所做的限制，具体如下：</p>
+<ul>
+<li>ListableBeanFactory 接口表示这些 Bean 是可列表的</li>
+<li>HierarchicalBeanFactory 表示的是这些 Bean是有继承关系的，也就是每个 Bean有可能有父 Bean。</li>
+<li>AutowireCapableBeanFactory 接口定义Bean的自动装配规则。</li>
+</ul>
+<p>这四个接口共同定义了 Bean 的集合、Bean 之间的关系、以及 Bean 行为。</p>
+<h2 id="Context组件"><a href="#Context组件" class="headerlink" title="Context组件"></a>Context组件</h2><p>Context 在 Spring 的 org.springframework.context 包下，<strong>Context 组件在 Spring 中的作用实际上就是给Spring提供一个运行时的环境，用以保存各个对象的状态</strong> 。下面看一下这个环境是如何构建的。</p>
+<p>ApplicationContext 是 Context 的顶级父类，他除了能标识一个应用环境的基本信息外，他还继承了六个接口，这六个接口主要是扩展了 Context 的功能。下面是 Context 相关的类结构图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/AbstractRefreshableWebApplicationContext.png" alt="Context"></p>
+<p>从上图中可以看出 ApplicationContext 继承了BeanFactory，这也说明了 Spring 容器中运行的主体对象是 Bean，另外 ApplicationContext 继承了 ResourceLoader 接口，使得 ApplicationContext 可以访问到任何外部资源（就是Core里面的工具了，这将在 Core 中详细说明）。</p>
+<p>ApplicationContext 的子类主要包含两个方面：</p>
+<ul>
+<li>ConfigurableApplicationContext：表示该Context是可修改的，也就是在构建 Context 中用户可以动态添加或修改已有的配置信息，它下面又有多个子类，其中最经常使用的是可更新的 Context，即 AbstractRefreshableApplicationContext 类。</li>
+<li>WebApplicationContext ：看到web就知道这为 web 准备的 Context 他可以直接访问到 ServletContext，通常情况下，这个接口使用的少。<br>再往下分就是按照构建 Context 的文件类型（没列出，感兴趣的可以自己去看），接着就是访问 Context 的方式。这样一级一级构成了完整的 Context 等级层次。</li>
+</ul>
+<p>总体来说 ApplicationContext 必须要完成以下几件事：</p>
+<ul>
+<li>标识一个应用环境</li>
+<li>利用 BeanFactory 创建 Bean 对象</li>
+<li>保存对象关系表</li>
+<li>能够捕获各种事件</li>
+</ul>
+<p>Context 作为 Spring 的 <strong>IOC 容器</strong>，基本上整合了 Spring 的大部分功能，或者说是大部分功能的基础。</p>
+<h2 id="Core组件"><a href="#Core组件" class="headerlink" title="Core组件"></a>Core组件</h2><p>Core 组件在Spring 的org.springframework.core包下，它作为 Spring的核心组件，他其中包含了很多的关键类，其中一个重要组成部分就是定义了资源（Resource）的访问方式。这种<strong>把所有资源都抽象成一个接口的方式</strong>很值得在以后的设计中拿来学习。下面就重要看一下这个部分在 Spring 的作用。我们通过下图（ Resource 相关的类结构图）来理解：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/resource.png" alt="resource"></p>
+<p>从上图可以看出 Resource 接口封装了各种可能的资源类型，也就是对使用者来说屏蔽了文件类型的不同。对资源的提供者来说，如何把资源包装起来交给其他人用这也是一个问题(所以产生了很多方式)，我们看到 Resource 接口继承了 InputStreamSource 接口，这个接口中有个 getInputStream 方法，返回的是 InputStream 类。这样所有的资源都被可以通过 InputStream 这个类来获取，所以也屏蔽了资源的提供者。另外还有一个问题就是加载资源的问题，也就是资源的加载者要统一，从上图中可以看出这个任务是由 ResourceLoader 接口完成，他屏蔽了所有的资源加载者的差异，只需要实现这个接口就可以加载所有的资源，他的默认实现是 DefaultResourceLoader。</p>
+<p>那Context 和 Resource 是如何建立关系的？下面是他们的类关系图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/cc.png" alt="cc"></p>
+<p>从上图可以看出，Context 是把资源的加载、解析和描述工作委托给了 ResourcePatternResolver 类来完成，他相当于一个接头人，他把资源的加载、解析和资源的定义整合在一起便于其他组件使用。Core 组件中还有很多类似的方式。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入分析Java Web技术内幕》</li>
+<li><a href="http://www.jb51.net/article/112039.htm" target="_blank" rel="external">Spring多种加载Bean方式解析</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/09/走进Linux-防火墙配置/" rel="next" title="走进Linux_防火墙配置">
+                <i class="fa fa-chevron-left"></i> 走进Linux_防火墙配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">100</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring的骨骼架构"><span class="nav-number">1.</span> <span class="nav-text">Spring的骨骼架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring的设计理念"><span class="nav-number">1.1.</span> <span class="nav-text">Spring的设计理念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心组件如何协同工作"><span class="nav-number">1.2.</span> <span class="nav-text">核心组件如何协同工作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#核心组件解析"><span class="nav-number">2.</span> <span class="nav-text">核心组件解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Bean组件"><span class="nav-number">2.1.</span> <span class="nav-text">Bean组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bean的定义"><span class="nav-number">2.1.1.</span> <span class="nav-text">Bean的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bean的解析"><span class="nav-number">2.1.2.</span> <span class="nav-text">Bean的解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bean的创建"><span class="nav-number">2.1.3.</span> <span class="nav-text">Bean的创建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Context组件"><span class="nav-number">2.2.</span> <span class="nav-text">Context组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Core组件"><span class="nav-number">2.3.</span> <span class="nav-text">Core组件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
