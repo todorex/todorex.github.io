@@ -1,0 +1,1030 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spring," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：前一节讲到Spring的核心概念IOC，那么就不能不提到Spring的另一个核心概念AOP，我们先是先讲一下它的概念与原理实现，然后在讲Spring中AOP的实现。">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="揭秘Spring(三)_Spring之AOP">
+<meta property="og:url" content="http://bestlixiang.site/2018/04/11/深入SSM/揭秘Spring-三-Spring之AOP/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：前一节讲到Spring的核心概念IOC，那么就不能不提到Spring的另一个核心概念AOP，我们先是先讲一下它的概念与原理实现，然后在讲Spring中AOP的实现。">
+<meta property="og:updated_time" content="2018-04-11T13:47:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="揭秘Spring(三)_Spring之AOP">
+<meta name="twitter:description" content="引：前一节讲到Spring的核心概念IOC，那么就不能不提到Spring的另一个核心概念AOP，我们先是先讲一下它的概念与原理实现，然后在讲Spring中AOP的实现。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/04/11/深入SSM/揭秘Spring-三-Spring之AOP/"/>
+
+
+
+
+
+  <title> 揭秘Spring(三)_Spring之AOP | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/11/深入SSM/揭秘Spring-三-Spring之AOP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                揭秘Spring(三)_Spring之AOP
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-11T21:21:34+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深入SSM/" itemprop="url" rel="index">
+                    <span itemprop="name">深入SSM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：前一节讲到Spring的核心概念IOC，那么就不能不提到Spring的另一个核心概念AOP，我们先是先讲一下它的概念与原理实现，然后在讲Spring中AOP的实现。<a id="more"></a></p>
+<h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><h2 id="AOP思想"><a href="#AOP思想" class="headerlink" title="AOP思想"></a>AOP思想</h2><p>AOP（Aspect Oriented Programming的缩写，意为：面向切面编程）是对OOP的一种补充。</p>
+<ul>
+<li>面向对象(OOP)引入了继承、多态、封装，将系统的业务功能按照模块划分，每个模块用一个或多个类来表示。<strong>而对于一些系统功能，无法使用OOP的思想来实现它们。这些系统功能往往穿插在业务功能的各处，和业务代码耦合在一起；而且系统功能往往会被重复使用，这就导致了模块不利于复用，这就是使用OOP实现系统功能的弊端。</strong></li>
+<li>AOP即为面向切面编程，它把系统需求按照功能分门归类，把它们封装在一个个切面中，然后再指定这些系统功能往业务功能，主要应用于权限认证、日志，事务等。</li>
+</ul>
+<p>它的主要是好处如下：</p>
+<ul>
+<li><p>降低模块之间的耦合度</p>
+</li>
+<li><p>使系统容易扩展</p>
+</li>
+<li><p>更好的代码复用。</p>
+</li>
+</ul>
+<h2 id="AOP实现原理"><a href="#AOP实现原理" class="headerlink" title="AOP实现原理"></a>AOP实现原理</h2><p>实现AOP的技术，主要分为两大类：一是采用动态代理技术，利用截取消息的方式，对该消息进行装饰，以取代原有对象行为的执行；二是采用静态织入的方式，引入特定的语法创建“方面”，从而使得编译器可以在编译期间织入有关“方面”的代码。而Spring采用的是动态代理技术，关于动态代理的实现可以参照自己之前的博客 <a href="http://bestlixiang.site/2018/02/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">设计模式之禅——代理模式</a>一文中的动态代理这一节去了解。</p>
+<h1 id="SpringAOP实现"><a href="#SpringAOP实现" class="headerlink" title="SpringAOP实现"></a>SpringAOP实现</h1><p>Spring的AOP实现遵守AOP联盟的约定。同时Spring又扩展了它，增加了Pointcut、Advisor等一些接口使得其更加灵活。</p>
+<h2 id="Spring-AOP的基本概念"><a href="#Spring-AOP的基本概念" class="headerlink" title="Spring AOP的基本概念"></a>Spring AOP的基本概念</h2><ul>
+<li>切面（Aspect）：类似于OOP中的Class，一个Aspect存放一个系统功能的所有逻辑。切面用Spring的 Advisor或拦截器实现。</li>
+<li>连接点（Joinpoint）：程序执行过程中的某一事件，如方法被调用时、抛出异常时。</li>
+<li>切入点（Pointcut）：指定一个通知将被引发的一系列连接点的集合。AOP框架必须允许开发者指定切入点：例如，使用正则表达式。 Spring定义了Pointcut接口，用来组合MethodMatcher和ClassFilter，可以通过名字很清楚的理解， MethodMatcher是用来检查目标类的方法是否可以被应用此通知，而ClassFilter是用来检查Pointcut是否应该应用到目标类上。</li>
+<li>引入（Introduction）: 添加方法或字段到被通知的类。 Spring允许引入新的接口到任何被通知的对象。例如，你可以使用一个引入使任何对象实现 IsModified接口，来简化缓存。Spring中要使用Introduction, 可有通过DelegatingIntroductionInterceptor来实现通知，通过DefaultIntroductionAdvisor来配置Advice和代理类要实现的接口。</li>
+<li>目标对象（Target Object）: 包含连接点的对象。也被称作被通知或被代理对象（POJO）。</li>
+<li>AOP代理（AOP Proxy）: AOP框架创建的对象，包含通知。 在Spring中，AOP代理可以是JDK动态代理或者CGLIB代理。</li>
+<li>织入（Weaving）: 组装方面来创建一个被通知对象。这可以在编译时完成（例如使用AspectJ编译器），也可以在运行时完成。Spring和其他纯Java AOP框架一样，在运行时完成织入。</li>
+<li>通知（Advice）：具体的横切逻辑；Spring中有五种Advice：<ul>
+<li>前置通知（Before Advice）</li>
+<li>后置通知（After Advice）</li>
+<li>返回通知（After Return Advice）</li>
+<li>环绕通知（Around Advice）</li>
+<li>抛出异常后通知（After Throwing Advice）</li>
+</ul>
+</li>
+</ul>
+<h2 id="SpringAOP动态代理"><a href="#SpringAOP动态代理" class="headerlink" title="SpringAOP动态代理"></a>SpringAOP动态代理</h2><p>Spring AOP中使用了两种动态代理，一种是JDK的动态代理，一种CGLIB的动态代理。JDK的动态代理必须指定接口，这些接口都是已经被代理对象实现了的；而CGLIB代理则不需要指定接口。</p>
+<h3 id="JDK动态代理"><a href="#JDK动态代理" class="headerlink" title="JDK动态代理"></a>JDK动态代理</h3><p>如果被代理对象实现了需要被代理的接口，则使用JDK的动态代理。我们一步步来看这个过程：</p>
+<ol>
+<li><p>首先明确我们使要生成一个代理，而Spring的内部机制是由FactoryBean的getObject方法来产生的，所以我们会一步步debug到这个方法行（在FactoryBeanRegistrySupport类的doGetObjectFromFactoryBean中），我们看看这个方法的源代码：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getObject</span><span class="params">()</span> <span class="keyword">throws</span> BeansException </span>&#123;</div><div class="line">    <span class="comment">// 初始化通知器链，为代理对象配置通知器链。</span></div><div class="line">    <span class="keyword">this</span>.initializeAdvisorChain();</div><div class="line">    <span class="comment">//区分SingleTon和ProtoType，生成对应的Proxy</span></div><div class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.isSingleton()) &#123;</div><div class="line">    <span class="comment">// 只有SingleTon的Bean才会一开始就初始化，ProtoType的只有在请求的时候才会初始化，代理也一样</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.getSingletonInstance();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.targetName == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">this</span>.logger.warn(<span class="string">"Using non-singleton proxies with singleton targets is often undesirable. Enable prototype proxies by setting the 'targetName' property."</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.newPrototypeInstance();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>到达getObject方法后，我们需要去看看它是怎么初始化通知链的就是initializeAdvisorChain的代码：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">initializeAdvisorChain</span><span class="params">()</span> <span class="keyword">throws</span> AopConfigException, BeansException </span>&#123;</div><div class="line">    <span class="comment">// 初始化过程的标志位advisorChainInitialized，这个标志用来表示通知器链是否已经初始化。</span></div><div class="line">    <span class="keyword">if</span>(!<span class="keyword">this</span>.advisorChainInitialized) &#123;</div><div class="line">        <span class="keyword">if</span>(!ObjectUtils.isEmpty(<span class="keyword">this</span>.interceptorNames)) &#123;</div><div class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.beanFactory == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"No BeanFactory available anymore (probably due to serialization) - cannot resolve interceptor names "</span> + Arrays.asList(<span class="keyword">this</span>.interceptorNames));</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.interceptorNames[<span class="keyword">this</span>.interceptorNames.length - <span class="number">1</span>].endsWith(<span class="string">"*"</span>) &amp;&amp; <span class="keyword">this</span>.targetName == <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.targetSource == EMPTY_TARGET_SOURCE) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> AopConfigException(<span class="string">"Target required after globals"</span>);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            String[] var1 = <span class="keyword">this</span>.interceptorNames;</div><div class="line">            <span class="keyword">int</span> var2 = var1.length;</div><div class="line"></div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> var3 = <span class="number">0</span>; var3 &lt; var2; ++var3) &#123;</div><div class="line">                String name = var1[var3];</div><div class="line">                <span class="keyword">if</span>(<span class="keyword">this</span>.logger.isTraceEnabled()) &#123;</div><div class="line">                    <span class="keyword">this</span>.logger.trace(<span class="string">"Configuring advisor or advice '"</span> + name + <span class="string">"'"</span>);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span>(name.endsWith(<span class="string">"*"</span>)) &#123;</div><div class="line">                    <span class="keyword">if</span>(!(<span class="keyword">this</span>.beanFactory <span class="keyword">instanceof</span> ListableBeanFactory)) &#123;</div><div class="line">                        <span class="keyword">throw</span> <span class="keyword">new</span> AopConfigException(<span class="string">"Can only use global advisors or interceptors with a ListableBeanFactory"</span>);</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="keyword">this</span>.addGlobalAdvisor((ListableBeanFactory)<span class="keyword">this</span>.beanFactory, name.substring(<span class="number">0</span>, name.length() - <span class="string">"*"</span>.length()));</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    Object advice;</div><div class="line">                    <span class="keyword">if</span>(!<span class="keyword">this</span>.singleton &amp;&amp; !<span class="keyword">this</span>.beanFactory.isSingleton(name)) &#123;</div><div class="line">                        advice = <span class="keyword">new</span> ProxyFactoryBean.PrototypePlaceholderAdvisor(name);</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        advice = <span class="keyword">this</span>.beanFactory.getBean(name);</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="keyword">this</span>.addAdvisorOnChainCreation(advice, name);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.advisorChainInitialized = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>  初始化只是在应用第一次通过ProxyFactoryBean获取代理对象的时候。完成这个初始化之后，接着会读取配置中出现的所有通知器（把通知器的名字交给容器的getBean，IOC容器的回调获取通知器），把通知器加入拦截器链（addAdvisoronChainCreation实现）。</p>
+</li>
+<li><p>生成代理对象，利用ProxyFactoryBean的getSingletonInstance方法，源码如下：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> Object <span class="title">getSingletonInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.singletonInstance == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">//这里会调用getBean，获取被代理对象</span></div><div class="line">        <span class="keyword">this</span>.targetSource = <span class="keyword">this</span>.freshTargetSource();</div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.autodetectInterfaces &amp;&amp; <span class="keyword">this</span>.getProxiedInterfaces().length == <span class="number">0</span> &amp;&amp; !<span class="keyword">this</span>.isProxyTargetClass()) &#123;</div><div class="line">            <span class="comment">// 根据 AOP 框架判断需要代理的接口</span></div><div class="line">            Class&lt;?&gt; targetClass = <span class="keyword">this</span>.getTargetClass();</div><div class="line">            <span class="keyword">if</span>(targetClass == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> FactoryBeanNotInitializedException(<span class="string">"Cannot determine target class for proxy"</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">//这里是设置代理对象的接口</span></div><div class="line">            <span class="keyword">this</span>.setInterfaces(ClassUtils.getAllInterfacesForClass(targetClass, <span class="keyword">this</span>.proxyClassLoader));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">super</span>.setFrozen(<span class="keyword">this</span>.freezeProxy);</div><div class="line">        <span class="comment">//这里方法会使用ProxyFactory生成需要的Proxy</span></div><div class="line">        <span class="keyword">this</span>.singletonInstance = <span class="keyword">this</span>.getProxy(<span class="keyword">this</span>.createAopProxy());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.singletonInstance;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>进入ProxyCreatorSupport的createAopProxy，源码如下：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">synchronized</span> AopProxy <span class="title">createAopProxy</span><span class="params">()</span> </span>&#123;</div><div class="line"><span class="keyword">if</span> (!<span class="keyword">this</span>.active) &#123;</div><div class="line">    activate();</div><div class="line">&#125;</div><div class="line"><span class="comment">//通过AopProxyFactory取得AopProxy，AopProxyFactory是在初始化函数中定义的，使用的是DefaultAopProxyFactory</span></div><div class="line"><span class="keyword">return</span> getAopProxyFactory().createAopProxy(<span class="keyword">this</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>那么DefaultAopProxyFactory如何生成AopProxy了，这里有两种方式，JdkDynamicAopProxy和CglibProxyFactory,DefaultAopProxyFactory的createAopProxy的源码如下：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultAopProxyFactory</span> <span class="keyword">implements</span> <span class="title">AopProxyFactory</span>, <span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AopProxy <span class="title">createAopProxy</span><span class="params">(AdvisedSupport config)</span> <span class="keyword">throws</span> AopConfigException </span>&#123;</div><div class="line">        <span class="keyword">if</span> (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) &#123;</div><div class="line">            <span class="comment">//获取配置的目标对象</span></div><div class="line">            Class&lt;?&gt; targetClass = config.getTargetClass();</div><div class="line">            <span class="keyword">if</span> (targetClass == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="comment">//如果没有目标对象，抛出异常，提醒AOP应用提供正确的目标配置</span></div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> AopConfigException(<span class="string">"TargetSource cannot determine target class: "</span> +</div><div class="line">                        <span class="string">"Either an interface or a target is required for proxy creation."</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 这个判断很重要，通过目标类是否是接口来决定采用什么代理方式</span></div><div class="line">            <span class="keyword">if</span> (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> JdkDynamicAopProxy(config);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">//由于CGLIB是一个第三方类库，所以需要在CLASSPATH中配置</span></div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ObjenesisCglibAopProxy(config);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> JdkDynamicAopProxy(config);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>由于我们这里目标类是接口，所以采用JdkDynamicAopProxy 生成AopProxy代理对象，我们可以看一下JdkDynamicAopProxy的invoke方法源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">       Object oldProxy = <span class="keyword">null</span>;</div><div class="line">       <span class="keyword">boolean</span> setProxyContext = <span class="keyword">false</span>;</div><div class="line">       TargetSource targetSource = <span class="keyword">this</span>.advised.targetSource;</div><div class="line">       Class&lt;?&gt; targetClass = <span class="keyword">null</span>;</div><div class="line">       Object target = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">       Object var13;</div><div class="line">       <span class="keyword">try</span> &#123;</div><div class="line">           <span class="keyword">if</span>(!<span class="keyword">this</span>.equalsDefined &amp;&amp; AopUtils.isEqualsMethod(method)) &#123;</div><div class="line">               Boolean var20 = Boolean.valueOf(<span class="keyword">this</span>.equals(args[<span class="number">0</span>]));</div><div class="line">               <span class="keyword">return</span> var20;</div><div class="line">           &#125;</div><div class="line">           <span class="keyword">if</span>(!<span class="keyword">this</span>.hashCodeDefined &amp;&amp; AopUtils.isHashCodeMethod(method)) &#123;</div><div class="line">               Integer var18 = Integer.valueOf(<span class="keyword">this</span>.hashCode());</div><div class="line">               <span class="keyword">return</span> var18;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           <span class="keyword">if</span>(method.getDeclaringClass() == DecoratingProxy.class) &#123;</div><div class="line">               Class var17 = AopProxyUtils.ultimateTargetClass(<span class="keyword">this</span>.advised);</div><div class="line">               <span class="keyword">return</span> var17;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           Object retVal;</div><div class="line"></div><div class="line">           <span class="comment">// Advised接口或者其父接口中定义的方法,直接反射调用,不应用通知</span></div><div class="line">           <span class="keyword">if</span>(!<span class="keyword">this</span>.advised.opaque &amp;&amp; method.getDeclaringClass().isInterface() &amp;&amp; method.getDeclaringClass().isAssignableFrom(Advised.class)) &#123;</div><div class="line">               retVal = AopUtils.invokeJoinpointUsingReflection(<span class="keyword">this</span>.advised, method, args);</div><div class="line">               <span class="keyword">return</span> retVal;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           <span class="keyword">if</span>(<span class="keyword">this</span>.advised.exposeProxy) &#123;</div><div class="line">               oldProxy = AopContext.setCurrentProxy(proxy);</div><div class="line">               setProxyContext = <span class="keyword">true</span>;</div><div class="line">           &#125;</div><div class="line">           <span class="comment">//获得目标对象的类</span></div><div class="line">           target = targetSource.getTarget();</div><div class="line">           <span class="keyword">if</span>(target != <span class="keyword">null</span>) &#123;</div><div class="line">               targetClass = target.getClass();</div><div class="line">           &#125;</div><div class="line">           <span class="comment">// 获得拦截链</span></div><div class="line">           List&lt;Object&gt; chain = <span class="keyword">this</span>.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);</div><div class="line">           <span class="comment">// 如果没有可以应用到此方法的通知(Interceptor)，此直接反射调用 method.invoke(target, args)</span></div><div class="line">           <span class="keyword">if</span>(chain.isEmpty()) &#123;</div><div class="line">               Object[] argsToUse = AopProxyUtils.adaptArgumentsIfNecessary(method, args);</div><div class="line">               retVal = AopUtils.invokeJoinpointUsingReflection(target, method, argsToUse);</div><div class="line">           &#125; <span class="keyword">else</span> &#123;</div><div class="line">               <span class="comment">//创建MethodInvocation</span></div><div class="line">               MethodInvocation invocation = <span class="keyword">new</span> ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);</div><div class="line">               <span class="comment">// 处理通知</span></div><div class="line">               retVal = invocation.proceed();</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           Class&lt;?&gt; returnType = method.getReturnType();</div><div class="line">           <span class="keyword">if</span>(retVal != <span class="keyword">null</span> &amp;&amp; retVal == target &amp;&amp; returnType != Object.class &amp;&amp; returnType.isInstance(proxy) &amp;&amp; !RawTargetAccess.class.isAssignableFrom(method.getDeclaringClass())) &#123;</div><div class="line">               retVal = proxy;</div><div class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span>(retVal == <span class="keyword">null</span> &amp;&amp; returnType != Void.TYPE &amp;&amp; returnType.isPrimitive()) &#123;</div><div class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> AopInvocationException(<span class="string">"Null return value from advice does not match primitive return type for: "</span> + method);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           var13 = retVal;</div><div class="line">       &#125; <span class="keyword">finally</span> &#123;</div><div class="line">           <span class="keyword">if</span>(target != <span class="keyword">null</span> &amp;&amp; !targetSource.isStatic()) &#123;</div><div class="line">               targetSource.releaseTarget(target);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           <span class="keyword">if</span>(setProxyContext) &#123;</div><div class="line">               AopContext.setCurrentProxy(oldProxy);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="keyword">return</span> var13;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="CGLIB动态代理"><a href="#CGLIB动态代理" class="headerlink" title="CGLIB动态代理"></a>CGLIB动态代理</h3><p>如果被代理对象没有实现需要被代理的接口，则使用CGLIB动态代理，CGLIB动态代理按照前面的分析基本与JDK动态代理一样，由于在Spring AOP中对应的包装类为CglibAopProxy，CglibAopProxy的intercept回调方法的实现和JdkDynamicAopProxy的回调实现是非常类似的，只是在CglibAopProxy中构造的是CglibMethodInvocation对象来完成拦截器链的调用，这里看一下与invoke类似的getCallbacks源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> Callback[] getCallbacks(Class&lt;?&gt; rootClass) <span class="keyword">throws</span> Exception &#123;</div><div class="line">    <span class="keyword">boolean</span> exposeProxy = <span class="keyword">this</span>.advised.isExposeProxy();</div><div class="line">    <span class="keyword">boolean</span> isFrozen = <span class="keyword">this</span>.advised.isFrozen();</div><div class="line">    <span class="keyword">boolean</span> isStatic = <span class="keyword">this</span>.advised.getTargetSource().isStatic();</div><div class="line">    Callback aopInterceptor = <span class="keyword">new</span> CglibAopProxy.DynamicAdvisedInterceptor(<span class="keyword">this</span>.advised);</div><div class="line">    Object targetInterceptor;</div><div class="line">    <span class="keyword">if</span>(exposeProxy) &#123;</div><div class="line">        targetInterceptor = isStatic?<span class="keyword">new</span> CglibAopProxy.StaticUnadvisedExposedInterceptor(<span class="keyword">this</span>.advised.getTargetSource().getTarget()):<span class="keyword">new</span> CglibAopProxy.DynamicUnadvisedExposedInterceptor(<span class="keyword">this</span>.advised.getTargetSource());</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        targetInterceptor = isStatic?<span class="keyword">new</span> CglibAopProxy.StaticUnadvisedInterceptor(<span class="keyword">this</span>.advised.getTargetSource().getTarget()):<span class="keyword">new</span> CglibAopProxy.DynamicUnadvisedInterceptor(<span class="keyword">this</span>.advised.getTargetSource());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Callback targetDispatcher = (Callback)(isStatic?<span class="keyword">new</span> CglibAopProxy.StaticDispatcher(<span class="keyword">this</span>.advised.getTargetSource().getTarget()):<span class="keyword">new</span> CglibAopProxy.SerializableNoOp());</div><div class="line">    Callback[] mainCallbacks = <span class="keyword">new</span> Callback[]&#123;aopInterceptor, (Callback)targetInterceptor, <span class="keyword">new</span> CglibAopProxy.SerializableNoOp(), targetDispatcher, <span class="keyword">this</span>.advisedDispatcher, <span class="keyword">new</span> CglibAopProxy.EqualsInterceptor(<span class="keyword">this</span>.advised), <span class="keyword">new</span> CglibAopProxy.HashCodeInterceptor(<span class="keyword">this</span>.advised)&#125;;</div><div class="line">    Callback[] callbacks;</div><div class="line">    <span class="keyword">if</span>(isStatic &amp;&amp; isFrozen) &#123;</div><div class="line">        Method[] methods = rootClass.getMethods();</div><div class="line">        Callback[] fixedCallbacks = <span class="keyword">new</span> Callback[methods.length];</div><div class="line">        <span class="keyword">this</span>.fixedInterceptorMap = <span class="keyword">new</span> HashMap(methods.length);</div><div class="line"></div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; methods.length; ++x) &#123;</div><div class="line">            <span class="comment">// 获得拦截链</span></div><div class="line">            List&lt;Object&gt; chain = <span class="keyword">this</span>.advised.getInterceptorsAndDynamicInterceptionAdvice(methods[x], rootClass);</div><div class="line">            <span class="comment">// 准备处理通知</span></div><div class="line">            fixedCallbacks[x] = <span class="keyword">new</span> CglibAopProxy.FixedChainStaticTargetInterceptor(chain, <span class="keyword">this</span>.advised.getTargetSource().getTarget(), <span class="keyword">this</span>.advised.getTargetClass());</div><div class="line">            <span class="keyword">this</span>.fixedInterceptorMap.put(methods[x].toString(), Integer.valueOf(x));</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        callbacks = <span class="keyword">new</span> Callback[mainCallbacks.length + fixedCallbacks.length];</div><div class="line">        System.arraycopy(mainCallbacks, <span class="number">0</span>, callbacks, <span class="number">0</span>, mainCallbacks.length);</div><div class="line">        System.arraycopy(fixedCallbacks, <span class="number">0</span>, callbacks, mainCallbacks.length, fixedCallbacks.length);</div><div class="line">        <span class="keyword">this</span>.fixedInterceptorOffset = mainCallbacks.length;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        callbacks = mainCallbacks;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> callbacks;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://blog.csdn.net/u010425776/article/details/59112466" target="_blank" rel="external"> 深入剖析Spring(四)——AOP</a></li>
+<li><a href="https://blog.csdn.net/zly9923218/article/details/51348583" target="_blank" rel="external">Spring AOP源码分析（生成代理对象）</a></li>
+<li><a href="https://blog.csdn.net/zhangliangzi/article/details/52334964" target="_blank" rel="external">Spring AOP四种实现方式Demo详解与相关知识探究</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/11/深入SSM/揭秘Spring(二)_Spring之IOC/" rel="next" title="揭秘Spring(二)_Spring之IOC">
+                <i class="fa fa-chevron-left"></i> 揭秘Spring(二)_Spring之IOC
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">102</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AOP"><span class="nav-number">1.</span> <span class="nav-text">AOP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP思想"><span class="nav-number">1.1.</span> <span class="nav-text">AOP思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP实现原理"><span class="nav-number">1.2.</span> <span class="nav-text">AOP实现原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringAOP实现"><span class="nav-number">2.</span> <span class="nav-text">SpringAOP实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-AOP的基本概念"><span class="nav-number">2.1.</span> <span class="nav-text">Spring AOP的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringAOP动态代理"><span class="nav-number">2.2.</span> <span class="nav-text">SpringAOP动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JDK动态代理"><span class="nav-number">2.2.1.</span> <span class="nav-text">JDK动态代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CGLIB动态代理"><span class="nav-number">2.2.2.</span> <span class="nav-text">CGLIB动态代理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
