@@ -1,0 +1,1004 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spring," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：前一篇文章我们介绍了Spring的整体架构以及核心组件，接下来我们将讲解Spring的核心概念之一IOC，我们将先简单介绍IOC与DI，然后再深入SpringIOC容器的工作流程。">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="揭秘Spring(二)_Spring之IOC">
+<meta property="og:url" content="http://bestlixiang.site/2018/04/11/深入SSM/揭秘Spring(二)_Spring之IOC/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：前一篇文章我们介绍了Spring的整体架构以及核心组件，接下来我们将讲解Spring的核心概念之一IOC，我们将先简单介绍IOC与DI，然后再深入SpringIOC容器的工作流程。">
+<meta property="og:updated_time" content="2018-04-11T02:29:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="揭秘Spring(二)_Spring之IOC">
+<meta name="twitter:description" content="引：前一篇文章我们介绍了Spring的整体架构以及核心组件，接下来我们将讲解Spring的核心概念之一IOC，我们将先简单介绍IOC与DI，然后再深入SpringIOC容器的工作流程。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/04/11/深入SSM/揭秘Spring(二)_Spring之IOC/"/>
+
+
+
+
+
+  <title> 揭秘Spring(二)_Spring之IOC | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/11/深入SSM/揭秘Spring(二)_Spring之IOC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                揭秘Spring(二)_Spring之IOC
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-11T10:26:40+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深入SSM/" itemprop="url" rel="index">
+                    <span itemprop="name">深入SSM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：前一篇文章我们介绍了Spring的整体架构以及核心组件，接下来我们将讲解Spring的核心概念之一IOC，我们将先简单介绍IOC与DI，然后再深入SpringIOC容器的工作流程。<a id="more"></a></p>
+<h1 id="IOC与DI"><a href="#IOC与DI" class="headerlink" title="IOC与DI"></a>IOC与DI</h1><p>IoC和DI是Spring的两个核心概念，很多人都把它们视为相同的东西（之前自己也一直这样认为），<strong>但事实并非如此</strong>。</p>
+<ul>
+<li>IoC(Inversion of Control)：控制反转。</li>
+<li>DI(Dependency Injection)：依赖注入</li>
+</ul>
+<p><strong>开始画重点了：</strong> 控制反转是<strong>目的</strong>，依赖注入是实现控制反转的<strong>手段</strong>。</p>
+<p>控制反转是一种设计模式思想，它是一种宽泛的概念，只要一个类将对它内部状态的控制权交由其他机制去完成即为控制反转。控制反转是为了降低类与类之间的耦合度。而Spring采用依赖注入这一具体的手段来达到控制反转的目的。</p>
+<p>关于依赖注入可以看我之前的文章<a href="http://bestlixiang.site/2018/02/01/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%85%88%E5%90%B9%E5%93%8D%E5%8F%A3%E5%8F%B7-6%E5%A4%A7%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/">先吹响口号_6大设计原则</a>中的依赖倒置原则 DIP一节，这里就不做过多的介绍了。</p>
+<h1 id="IOC容器工作流程"><a href="#IOC容器工作流程" class="headerlink" title="IOC容器工作流程"></a>IOC容器工作流程</h1><p>IOC容器实际上就是 Context 组件结合其他Bean和Core组件共同构建了一个 Bean 关系网，如何构建这个关系网？构建的入口就在 AbstractApplicationContext 类的 refresh 方法中。这个方法的代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</div><div class="line">        Object var1 = <span class="keyword">this</span>.startupShutdownMonitor;</div><div class="line">        <span class="keyword">synchronized</span>(<span class="keyword">this</span>.startupShutdownMonitor) &#123;</div><div class="line">            <span class="comment">// 为刷新准备新的context</span></div><div class="line">            <span class="keyword">this</span>.prepareRefresh();</div><div class="line">            <span class="comment">// **创建BeanFactory**</span></div><div class="line">            ConfigurableListableBeanFactory beanFactory = <span class="keyword">this</span>.obtainFreshBeanFactory();</div><div class="line">            <span class="comment">// 刷新所有BeanFactory子容器</span></div><div class="line">            <span class="keyword">this</span>.prepareBeanFactory(beanFactory);</div><div class="line"></div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="comment">// 注册实现了BeanPostProcessor接口的bean（AOP使用）</span></div><div class="line">                <span class="keyword">this</span>.postProcessBeanFactory(beanFactory);</div><div class="line">                <span class="comment">// 初始化和执行BeanFactoryPostProcessor beans</span></div><div class="line">                <span class="keyword">this</span>.invokeBeanFactoryPostProcessors(beanFactory);</div><div class="line">                <span class="comment">// 初始化和执行BeanPostProcessors beans</span></div><div class="line">                <span class="keyword">this</span>.registerBeanPostProcessors(beanFactory);</div><div class="line">                <span class="comment">// 初始化MessageSource</span></div><div class="line">                <span class="keyword">this</span>.initMessageSource();</div><div class="line">                <span class="comment">// 初始化 event multicaster （多路广播）</span></div><div class="line">                <span class="keyword">this</span>.initApplicationEventMulticaster();</div><div class="line">                <span class="comment">// 刷新由子类实现的方法</span></div><div class="line">                <span class="keyword">this</span>.onRefresh();</div><div class="line">                <span class="comment">// 注册事件</span></div><div class="line">                <span class="keyword">this</span>.registerListeners();</div><div class="line">                <span class="comment">// 初始化单例Bean</span></div><div class="line">                <span class="keyword">this</span>.finishBeanFactoryInitialization(beanFactory);</div><div class="line">                <span class="comment">// 发布相应的事件</span></div><div class="line">                <span class="keyword">this</span>.finishRefresh();</div><div class="line">            &#125; <span class="keyword">catch</span> (BeansException var9) &#123;</div><div class="line">                <span class="keyword">if</span>(<span class="keyword">this</span>.logger.isWarnEnabled()) &#123;</div><div class="line">                    <span class="keyword">this</span>.logger.warn(<span class="string">"Exception encountered during context initialization - cancelling refresh attempt: "</span> + var9);</div><div class="line">                &#125;</div><div class="line">                <span class="comment">// 销毁beans</span></div><div class="line">                <span class="keyword">this</span>.destroyBeans();</div><div class="line">                <span class="keyword">this</span>.cancelRefresh(var9);</div><div class="line">                <span class="keyword">throw</span> var9;</div><div class="line">            &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                <span class="keyword">this</span>.resetCommonCaches();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这个方法就是构建整个IOC容器过程的完整的代码，了解了里面的每一行代码基本上就了解大部分 Spring 的原理和功能了。</p>
+<p>这段代码主要包含这样几个步骤：</p>
+<ul>
+<li>构建 BeanFactory</li>
+<li>注册可能感兴趣的事件</li>
+<li>创建 Bean 实例对象</li>
+<li>触发被监听的事件</li>
+</ul>
+<p>其中我们我们最关心的就是BeanFactory和创建Bean实例对象了，我们下面可以好好看看：</p>
+<h2 id="创建BeanFactory工厂"><a href="#创建BeanFactory工厂" class="headerlink" title="创建BeanFactory工厂"></a>创建BeanFactory工厂</h2><p>我们利用debug可以进入到refresh()方法里面的obtainFreshBeanFactory()方法里面的refreshBeanFactory() <strong>（有点绕，但是自己就不画时序图了）</strong> 去看看他的创建代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">refreshBeanFactory</span><span class="params">()</span> <span class="keyword">throws</span> BeansException </span>&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.hasBeanFactory()) &#123;</div><div class="line">            <span class="keyword">this</span>.destroyBeans();</div><div class="line">            <span class="keyword">this</span>.closeBeanFactory();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 创建一个DefaultListableBeanFactory（上一节说过的很重要的类）</span></div><div class="line">            DefaultListableBeanFactory beanFactory = <span class="keyword">this</span>.createBeanFactory();</div><div class="line">            beanFactory.setSerializationId(<span class="keyword">this</span>.getId());</div><div class="line">            <span class="keyword">this</span>.customizeBeanFactory(beanFactory);</div><div class="line">            <span class="comment">// **这个方法会加载、解析Bean的定义**</span></div><div class="line">            <span class="keyword">this</span>.loadBeanDefinitions(beanFactory);</div><div class="line">            Object var2 = <span class="keyword">this</span>.beanFactoryMonitor;</div><div class="line">            <span class="keyword">synchronized</span>(<span class="keyword">this</span>.beanFactoryMonitor) &#123;</div><div class="line">                <span class="keyword">this</span>.beanFactory = beanFactory;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException var5) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ApplicationContextException(<span class="string">"I/O error parsing bean definition source for "</span> + <span class="keyword">this</span>.getDisplayName(), var5);</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="创建Bean实例并构建Bean的关系网"><a href="#创建Bean实例并构建Bean的关系网" class="headerlink" title="创建Bean实例并构建Bean的关系网"></a>创建Bean实例并构建Bean的关系网</h2><p>我们利用debug可以进入到refresh()方法里面的finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory)方法里面的preInstantiateSingletons() <strong>（有点绕，但是自己就不画时序图了）</strong> 去看看它的创建Bean的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">preInstantiateSingletons</span><span class="params">()</span> <span class="keyword">throws</span> BeansException </span>&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.logger.isDebugEnabled()) &#123;</div><div class="line">            <span class="keyword">this</span>.logger.debug(<span class="string">"Pre-instantiating singletons in "</span> + <span class="keyword">this</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        List&lt;String&gt; beanNames = <span class="keyword">new</span> ArrayList(<span class="keyword">this</span>.beanDefinitionNames);</div><div class="line">        Iterator var2 = beanNames.iterator();</div><div class="line"></div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">            <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">                String beanName;</div><div class="line">                RootBeanDefinition bd;</div><div class="line">                <span class="keyword">do</span> &#123;</div><div class="line">                    <span class="keyword">do</span> &#123;</div><div class="line">                        <span class="keyword">do</span> &#123;</div><div class="line">                            <span class="keyword">if</span>(!var2.hasNext()) &#123;</div><div class="line">                                var2 = beanNames.iterator();</div><div class="line"></div><div class="line">                                <span class="keyword">while</span>(var2.hasNext()) &#123;</div><div class="line">                                    beanName = (String)var2.next();</div><div class="line">                                    Object singletonInstance = <span class="keyword">this</span>.getSingleton(beanName);</div><div class="line">                                    <span class="keyword">if</span>(singletonInstance <span class="keyword">instanceof</span> SmartInitializingSingleton) &#123;</div><div class="line">                                        <span class="keyword">final</span> SmartInitializingSingleton smartSingleton = (SmartInitializingSingleton)singletonInstance;</div><div class="line">                                        <span class="keyword">if</span>(System.getSecurityManager() != <span class="keyword">null</span>) &#123;</div><div class="line">                                            AccessController.doPrivileged(<span class="keyword">new</span> PrivilegedAction&lt;Object&gt;() &#123;</div><div class="line">                                                <span class="function"><span class="keyword">public</span> Object <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                                                    smartSingleton.afterSingletonsInstantiated();</div><div class="line">                                                    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">                                                &#125;</div><div class="line">                                            &#125;, <span class="keyword">this</span>.getAccessControlContext());</div><div class="line">                                        &#125; <span class="keyword">else</span> &#123;</div><div class="line">                                            smartSingleton.afterSingletonsInstantiated();</div><div class="line">                                        &#125;</div><div class="line">                                    &#125;</div><div class="line">                                &#125;</div><div class="line"></div><div class="line">                                <span class="keyword">return</span>;</div><div class="line">                            &#125;</div><div class="line"></div><div class="line">                            beanName = (String)var2.next();</div><div class="line">                            bd = <span class="keyword">this</span>.getMergedLocalBeanDefinition(beanName);</div><div class="line">                        &#125; <span class="keyword">while</span>(bd.isAbstract());</div><div class="line">                    &#125; <span class="keyword">while</span>(!bd.isSingleton());</div><div class="line">                &#125; <span class="keyword">while</span>(bd.isLazyInit());</div><div class="line"></div><div class="line">                <span class="keyword">if</span>(<span class="keyword">this</span>.isFactoryBean(beanName)) &#123;</div><div class="line">                    <span class="comment">// 这个Bean很重要，Spring有一大半扩展功能都与这个Bean有关系，</span></div><div class="line">                    <span class="comment">// 它是个工厂Bean，可以产生Bean实例的Bean，</span></div><div class="line">                    <span class="comment">// Spring获取FactoryBean本身的对象是通过在前面加上&amp;来完成的                    </span></div><div class="line">                    <span class="keyword">final</span> FactoryBean&lt;?&gt; factory = (FactoryBean)<span class="keyword">this</span>.getBean(<span class="string">"&amp;"</span> + beanName);</div><div class="line">                    <span class="keyword">boolean</span> isEagerInit;</div><div class="line">                    <span class="keyword">if</span>(System.getSecurityManager() != <span class="keyword">null</span> &amp;&amp; factory <span class="keyword">instanceof</span> SmartFactoryBean) &#123;</div><div class="line">                        isEagerInit = ((Boolean)AccessController.doPrivileged(<span class="keyword">new</span> PrivilegedAction&lt;Boolean&gt;() &#123;</div><div class="line">                            <span class="function"><span class="keyword">public</span> Boolean <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                                <span class="keyword">return</span> Boolean.valueOf(((SmartFactoryBean)factory).isEagerInit());</div><div class="line">                            &#125;</div><div class="line">                        &#125;, <span class="keyword">this</span>.getAccessControlContext())).booleanValue();</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        isEagerInit = factory <span class="keyword">instanceof</span> SmartFactoryBean &amp;&amp; ((SmartFactoryBean)factory).isEagerInit();</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="keyword">if</span>(isEagerInit) &#123;</div><div class="line">                        <span class="comment">// 普通的Bean只要通过getBean方法直接创建它的实例</span></div><div class="line">                        <span class="comment">// getBean方法里面包含了他们关系的创建</span></div><div class="line">                        <span class="keyword">this</span>.getBean(beanName);</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="keyword">this</span>.getBean(beanName);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="IOC容器的扩展点"><a href="#IOC容器的扩展点" class="headerlink" title="IOC容器的扩展点"></a>IOC容器的扩展点</h2><p>如何让这些 Bean 对象有一定的扩展性（就是可以加入用户的一些操作）也是我们需要思考的！那么有哪些扩展点呢？ Spring 又是如何调用到这些扩展点的？</p>
+<p>对 Spring 的 IOC 容器来说，主要有这么几个扩展点：</p>
+<ul>
+<li>BeanFactoryPostProcessor， BeanPostProcessor：他们分别是在构建 BeanFactory 和构建 Bean 对象时调用。</li>
+<li>InitializingBean 和 DisposableBean ：他们分别是在 Bean 实例创建和销毁时被调用。用户可以实现这些接口中定义的方法，Spring 就会在适当的时候调用他们。</li>
+<li>FactoryBean ：他是个特殊的 Bean，这个 Bean 可以被用户更多的控制。</li>
+</ul>
+<p>这些扩展点通常也是我们使用 Spring 来完成我们特定任务的地方，<strong>是否精通 Spring 就看你有没有掌握好Spring有哪些扩展点，并且如何使用他们。</strong></p>
+<p>要知道如何使用他们就必须了解他们内在的机理。可以用下面一个比喻（优秀）来解释：</p>
+<p>我们把 IOC 容器比作一个箱子，这个箱子里有若干个球的模子，可以用这些模子来造很多种不同的球，还有一个造这些球模的机器，这个机器可以产生球模。那么他们的对应关系就是 BeanFactory 就是那个造球模的机器，球模就是 Bean，而球模造出来的球就是 Bean 的实例。</p>
+<p>那前面所说的几个扩展点又在什么地方呢？ BeanFactoryPostProcessor 对应到当造球模被造出来时，你将有机会可以对其做出设当的修正，也就是他可以帮你修改球模。而 InitializingBean 和 DisposableBean 是在球模造球的开始和结束阶段，你可以完成一些预备和扫尾工作。BeanPostProcessor 就可以让你对球模造出来的球做出适当的修正。最后还有一个 FactoryBean，它可是一个神奇的球模。这个球模不是预先就定型了，而是由你来给他确定它的形状，既然你可以确定这个球模型的形状，当然他造出来的球肯定就是你想要的球了，这样在这个箱子里你可以发现所有你想要的球。</p>
+<h2 id="IOC容器的使用"><a href="#IOC容器的使用" class="headerlink" title="IOC容器的使用"></a>IOC容器的使用</h2><p>我们使用 Spring 必须要首先构建 IOC 容器，没有它 Spring 无法工作，ApplicatonContext.xml 就是 IOC 容器的默认配置文件，Spring 的所有特性功能都是基于这个 IOC 容器工作的，比如后面要介绍的 AOP。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入分析Java Web技术内幕》</li>
+<li><a href="https://blog.csdn.net/u010425776/article/details/55269848" target="_blank" rel="external"> 深入剖析Spring(一)——IoC的基本概念(从面向对象角度介绍)</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/10/深入SSM/揭秘Spring-一-Spring架构/" rel="next" title="揭秘Spring(一)_Spring架构">
+                <i class="fa fa-chevron-left"></i> 揭秘Spring(一)_Spring架构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">101</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#IOC与DI"><span class="nav-number">1.</span> <span class="nav-text">IOC与DI</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IOC容器工作流程"><span class="nav-number">2.</span> <span class="nav-text">IOC容器工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建BeanFactory工厂"><span class="nav-number">2.1.</span> <span class="nav-text">创建BeanFactory工厂</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Bean实例并构建Bean的关系网"><span class="nav-number">2.2.</span> <span class="nav-text">创建Bean实例并构建Bean的关系网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOC容器的扩展点"><span class="nav-number">2.3.</span> <span class="nav-text">IOC容器的扩展点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOC容器的使用"><span class="nav-number">2.4.</span> <span class="nav-text">IOC容器的使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
