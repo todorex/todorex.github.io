@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-04-12T08:54:54.000Z</updated>
+  <updated>2018-04-12T13:10:44.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,54 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>揭秘Spring(四)_Spring设计模式</title>
+    <link href="http://bestlixiang.site/2018/04/12/%E6%B7%B1%E5%85%A5SSM/%E6%8F%AD%E7%A7%98Spring-%E5%9B%9B-Spring%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://bestlixiang.site/2018/04/12/深入SSM/揭秘Spring-四-Spring设计模式/</id>
+    <published>2018-04-12T13:07:10.000Z</published>
+    <updated>2018-04-12T13:10:44.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：说完了IOC和AOP（虽然可能还是不够深入，不够全面，但是对于自己还是有一定的收获，日后有新的领悟再来调整），再来说说Spring这么优秀的框架所使用的的设计模式，可谓遍地都是，我就自己看到写一下。<a id="more"></a></p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>单例模式的的原理可以参照<a href="http://bestlixiang.site/2018/02/06/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">设计模式之禅——单例模式</a>。</p>
+<p>Spring应用到的单例模式可以在org.springframework.beans.factory.config.AbstractFactoryBean类中看到这个逻辑。看看它的getObject方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> T <span class="title">getObject</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// 如果是单例且已经初始化，就直接返回</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.isSingleton()?(<span class="keyword">this</span>.initialized?<span class="keyword">this</span>.singletonInstance:<span class="keyword">this</span>.getEarlySingletonInstance()):<span class="keyword">this</span>.createInstance();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h1><p>工厂方法模式的的原理可以参照<a href="http://bestlixiang.site/2018/02/06/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/">设计模式之禅——工厂方法模式</a>。</p>
+<p>Spring应用到的工厂方法模式可以在org.springframework.beans.factory.BeanFactory类中看到这个逻辑。我们看到下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BeanFactory</span> </span>&#123;</div><div class="line">    <span class="comment">// 根据唯一标识来获得Bean对象</span></div><div class="line">    <span class="function">Object <span class="title">getBean</span><span class="params">(String var1)</span> <span class="keyword">throws</span> BeansException</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h1><p>抽象工厂模式的的原理可以参照<a href="http://bestlixiang.site/2018/02/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">设计模式之禅——抽象工厂模式</a>。</p>
+<p>Spring应用到的抽象工厂模式可以在org.springframework.beans.factory.BeanFactory类中看到这个逻辑。通过它的实现，我们可以从Spring的容器访问bean。根据采用的策略，getBean方法可以返回已创建的对象（共享实例，单例作用域）或初始化新的对象（原型作用域）。在BeanFactory的实现中，我们可以区分：ClassPathXmlApplicationContext，XmlWebApplicationContext，StaticWebApplicationContext，StaticPortletApplicationContext，GenericApplicationContext，StaticApplicationContext，相当于不同的Creator。</p>
+<h1 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h1><p>建造者模式的的原理可以参照<a href="http://bestlixiang.site/2018/02/08/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/">设计模式之禅——建造者模式</a>。</p>
+<p>Spring应用到的建造者模式可以在org.springframework.beans.factory.support.BeanDefinitionBuilder类中检索这个逻辑。这是一个允许我们以编程方式定义bean的类。BeanDefinitionBuilder包含几个方法，它们为AbstractBeanDefinition抽象类的相关实现设置值，比如作用域，工厂方法，属性等。想看看它是如何工作的，请查看以下这些方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanDefinitionBuilder</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">private</span> AbstractBeanDefinition beanDefinition;</div><div class="line"></div><div class="line">  <span class="comment">// 设置Bean的父类名</span></div><div class="line">  <span class="function"><span class="keyword">public</span> BeanDefinitionBuilder <span class="title">setParentName</span><span class="params">(String parentName)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.beanDefinition.setParentName(parentName);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 设置Bean的工厂方法</span></div><div class="line">  <span class="function"><span class="keyword">public</span> BeanDefinitionBuilder <span class="title">setFactoryMethod</span><span class="params">(String factoryMethod)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.beanDefinition.setFactoryMethodName(factoryMethod);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 设置Bean的构造函数参数</span></div><div class="line">  <span class="function"><span class="keyword">public</span> BeanDefinitionBuilder <span class="title">addConstructorArgValue</span><span class="params">(Object value)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.beanDefinition.getConstructorArgumentValues().addIndexedArgumentValue(</div><div class="line">                    <span class="keyword">this</span>.constructorArgIndex++, value);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 添加Bean的属性值</span></div><div class="line">  <span class="function"><span class="keyword">public</span> BeanDefinitionBuilder <span class="title">addPropertyValue</span><span class="params">(String name, Object value)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.beanDefinition.getPropertyValues().add(name, value);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 设置Bean的初始化方法</span></div><div class="line">  <span class="function"><span class="keyword">public</span> BeanDefinitionBuilder <span class="title">setInitMethodName</span><span class="params">(String methodName)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.beanDefinition.setInitMethodName(methodName);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 返回建造好的对象</span></div><div class="line">  <span class="function"><span class="keyword">public</span> AbstractBeanDefinition <span class="title">getBeanDefinition</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.beanDefinition.validate();</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.beanDefinition;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h1><p>原型模式的的原理可以参照<a href="http://bestlixiang.site/2018/02/10/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F/">设计模式之禅——原型模式</a>。</p>
+<p>Spring应用到的原型模式可以在org.springframework.beans.factory.support.AbstractBeanFactory类中看到这个逻辑。它使用一种特定的原型设计模式，它先初始化bean原型作用域(克隆)。新对象基于配置文件中的bean定义。</p>
+<h1 id="模板模式"><a href="#模板模式" class="headerlink" title="模板模式"></a>模板模式</h1><p>模板模式的的原理可以参照<a href="http://bestlixiang.site/2018/02/08/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/">设计模式之禅——模板模式</a>。</p>
+<p>Spring应用到的模板模式可以在org.springframework.context.support.AbstractApplicationContext类以及它的实现类中看到这个逻辑。它的模板方法是refresh方法，而refreshBeanFactory以及getBeanFactory等方法都由子类具体实现。</p>
+<h1 id="访问者模式"><a href="#访问者模式" class="headerlink" title="访问者模式"></a>访问者模式</h1><p>访问者模式模式的的原理可以参照<a href="http://bestlixiang.site/2018/03/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/">设计模式之禅——访问者模式</a>。</p>
+<p>Spring应用到的访问者模式可以在org.springframework.beans.factory.config.BeanDefinitionVisitor类中看到这个逻辑。该对象用于解析bean元数据并将其解析为String（例如：具有作用域或工厂方法名称的XML属性）或Object（例如：构造函数定义中的参数）。已解析的值在与分析的bean关联的BeanDefinition实例中进行判断设置。具体的源码请看BeanDefinitionVisitor的代码片段：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BeanDefinitionVisitor</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitBeanDefinition</span><span class="params">(BeanDefinition beanDefinition)</span> </span>&#123;</div><div class="line">      visitParentName(beanDefinition);</div><div class="line">      visitBeanClassName(beanDefinition);</div><div class="line">      visitFactoryBeanName(beanDefinition);</div><div class="line">      visitFactoryMethodName(beanDefinition);</div><div class="line">      visitScope(beanDefinition);</div><div class="line">      visitPropertyValues(beanDefinition.getPropertyValues());</div><div class="line">      ConstructorArgumentValues cas = beanDefinition.</div><div class="line">        getConstructorArgumentValues();</div><div class="line">      visitIndexedArgumentValues(cas.</div><div class="line">        getIndexedArgumentValues());</div><div class="line">      visitGenericArgumentValues(cas.</div><div class="line">        getGenericArgumentValues());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">visitParentName</span><span class="params">(BeanDefinition beanDefinition)</span> </span>&#123;</div><div class="line">      String parentName = beanDefinition.getParentName();</div><div class="line">      <span class="keyword">if</span> (parentName != <span class="keyword">null</span>) &#123;</div><div class="line">        String resolvedName = resolveStringValue(parentName);</div><div class="line">        <span class="keyword">if</span> (!parentName.equals(resolvedName)) &#123;</div><div class="line">          beanDefinition.setParentName(resolvedName);</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h1><p>代理模式的的原理可以参照<a href="http://bestlixiang.site/2018/02/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">设计模式之禅——代理模式</a>。</p>
+<p>Spring应用到的代理模式可以在org.springframework.aop.framework.ProxyFactoryBean类中看到这个逻辑。详细说明可以参照上一篇文章。</p>
+<h1 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h1><p>策略模式的的原理可以参照<a href="http://bestlixiang.site/2018/03/07/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/">设计模式之禅——策略模式</a>。</p>
+<p>Spring应用到的策略模式可以在org.springframework.aop.framework.DefaultAopProxyFactory类中看到这个逻辑。看一下这个类的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultAopProxyFactory</span> <span class="keyword">implements</span> <span class="title">AopProxyFactory</span>, <span class="title">Serializable</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> AopProxy <span class="title">createAopProxy</span><span class="params">(AdvisedSupport config)</span> <span class="keyword">throws</span> AopConfigException </span>&#123;</div><div class="line">        <span class="keyword">if</span>(!config.isOptimize() &amp;&amp; !config.isProxyTargetClass() &amp;&amp; !<span class="keyword">this</span>.hasNoUserSuppliedProxyInterfaces(config)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> JdkDynamicAopProxy(config);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            Class&lt;?&gt; targetClass = config.getTargetClass();</div><div class="line">            <span class="keyword">if</span>(targetClass == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> AopConfigException(<span class="string">"TargetSource cannot determine target class: Either an interface or a target is required for proxy creation."</span>);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 根据目标类是否有接口而采取不同的策略</span></div><div class="line">                <span class="keyword">return</span> (AopProxy)(!targetClass.isInterface() &amp;&amp; !Proxy.isProxyClass(targetClass)?<span class="keyword">new</span> ObjenesisCglibAopProxy(config):<span class="keyword">new</span> JdkDynamicAopProxy(config));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h1><p>适配器模式的的原理可以参照<a href="http://bestlixiang.site/2018/03/08/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式之禅——适配器模式</a>。</p>
+<p>Spring应用到的适配器模式可以在org.springframework.aop.framework.adapter.DefaultAdvisorAdapterRegistry类中看到这个逻辑，Spring需要将每个Advice（通知）都封装成对应的拦截器类型，返回给容器，所以需要使用适配器模式对Advice进行转换。下面我们看看具体的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Adaptee</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MethodBeforeAdvice</span> <span class="keyword">extends</span> <span class="title">BeforeAdvice</span> </span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">before</span><span class="params">(Method method, Object[] args, Object target)</span> <span class="keyword">throws</span> Throwable</span>;  </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Target</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AdvisorAdapter</span> </span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">supportsAdvice</span><span class="params">(Advice advice)</span></span>;  </div><div class="line"></div><div class="line">    <span class="function">MethodInterceptor <span class="title">getInterceptor</span><span class="params">(Advisor advisor)</span></span>;  </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// Adapter</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MethodBeforeAdviceAdapter</span> <span class="keyword">implements</span> <span class="title">AdvisorAdapter</span>, <span class="title">Serializable</span> </span>&#123;  </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsAdvice</span><span class="params">(Advice advice)</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> (advice <span class="keyword">instanceof</span> MethodBeforeAdvice);  </div><div class="line">    &#125;  </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> MethodInterceptor <span class="title">getInterceptor</span><span class="params">(Advisor advisor)</span> </span>&#123;  </div><div class="line">        MethodBeforeAdvice advice = (MethodBeforeAdvice) advisor.getAdvice();  </div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MethodBeforeAdviceInterceptor(advice);  </div><div class="line">    &#125;  </div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h1><p>观察者模式的的原理可以参照<a href="http://bestlixiang.site/2018/03/12/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">设计模式之禅——观察者模式</a>。</p>
+<p>Spring应用到的观察者模式可以应用程序上下文相关的事件传输看到这个逻辑，具体一点在AbstractApplicationContext与org.springframework.context.ApplicationListener以及org.springframework.context.event.ApplicationEventMulticaster中看到，我们可以看到下面的相关代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractApplicationContext</span> <span class="keyword">extends</span> <span class="title">DefaultResourceLoader</span> <span class="keyword">implements</span> <span class="title">ConfigurableApplicationContext</span>, <span class="title">DisposableBean</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义传播者，用来传播消息</span></div><div class="line">    <span class="keyword">private</span> ApplicationEventMulticaster applicationEventMulticaster;</div><div class="line">    <span class="comment">// 注册监听者</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">registerListeners</span><span class="params">()</span> </span>&#123;</div><div class="line">    ...</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ApplicationEventMulticaster</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addApplicationListener</span><span class="params">(ApplicationListener&lt;?&gt; var1)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addApplicationListenerBean</span><span class="params">(String var1)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">removeApplicationListener</span><span class="params">(ApplicationListener&lt;?&gt; var1)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">removeApplicationListenerBean</span><span class="params">(String var1)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">removeAllListeners</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">multicastEvent</span><span class="params">(ApplicationEvent var1)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">multicastEvent</span><span class="params">(ApplicationEvent var1, ResolvableType var2)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="解释器模式"><a href="#解释器模式" class="headerlink" title="解释器模式"></a>解释器模式</h1><p>解释器模式的的原理可以参照<a href="http://bestlixiang.site/2018/03/18/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%A6%85%E2%80%94%E2%80%94%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/">设计模式之禅——解释器模式</a>。</p>
+<p>Spring应用到的解释器模式主要以Spring Expression Language（SpEL）为例。SpEL是一种由Spring的org.springframework.expression.ExpressionParser实现分析和执行的语言。这些实现使用作为字符串给出的Spel表达式，并将它们转换为org.springframework.expression.Expression的实例。上下文组件由org.springframework.expression.EvaluationContext实现表示，例如：StandardEvaluationContext。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>参考了超级多，都快忘了，各位大佬不要介意！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：说完了IOC和AOP（虽然可能还是不够深入，不够全面，但是对于自己还是有一定的收获，日后有新的领悟再来调整），再来说说Spring这么优秀的框架所使用的的设计模式，可谓遍地都是，我就自己看到写一下。
+    
+    </summary>
+    
+      <category term="深入SSM" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5SSM/"/>
+    
+    
+      <category term="Spring" scheme="http://bestlixiang.site/tags/Spring/"/>
+    
+  </entry>
   
   <entry>
     <title>Centos7利用Nginx配置HTTPS</title>
@@ -2888,137 +2936,6 @@
     <summary type="html">
     
       &lt;p&gt;引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走进Linux_Linux磁盘分区</title>
-    <link href="http://bestlixiang.site/2018/03/21/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_Linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA/"/>
-    <id>http://bestlixiang.site/2018/03/21/走进Linux/走进Linux_Linux磁盘分区/</id>
-    <published>2018-03-21T05:49:21.000Z</published>
-    <updated>2018-04-09T04:32:18.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：Linux在我印象中最大的特点就是它把所有的硬件都当做一个文件，然后还是以/为根节点的目录树，简洁明了，相信大家一定会爱上它的。因为涉及到文件的存储，所以我们要重视磁盘分区。<a id="more"></a></p>
-<h1 id="硬件设备在linux中的文件名"><a href="#硬件设备在linux中的文件名" class="headerlink" title="硬件设备在linux中的文件名"></a>硬件设备在linux中的文件名</h1><p>Linux中每一个设备都被当成文件，所有的设备文件都在/dev这个目录下。下面列出几个常见设备与其在Linux当中的文件名，如下表：</p>
-<table>
-<thead>
-<tr>
-<th>设备</th>
-<th>设备在Linux内的文件名</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IDE硬盘</td>
-<td>/dev/hd[a-d]</td>
-</tr>
-<tr>
-<td>SATA/USB/SCSI硬盘</td>
-<td>/dev/sd[a-p]</td>
-</tr>
-<tr>
-<td>U盘</td>
-<td>/dev/sd[a-p]（与SATA相同）</td>
-</tr>
-<tr>
-<td>软驱</td>
-<td>/dev/fd[0－1]</td>
-</tr>
-<tr>
-<td>打印机</td>
-<td>25针：/dev/lp[0－2] usb：/dev/usb/lp[0-15]</td>
-</tr>
-<tr>
-<td>鼠标</td>
-<td>usb:/dev/usb/mouse[0－15] ps2:/dev/psaux</td>
-</tr>
-<tr>
-<td>当前CD/DVD ROM</td>
-<td>/dev/cdrom</td>
-</tr>
-<tr>
-<td>当前鼠标</td>
-<td>/dev/mouse</td>
-</tr>
-<tr>
-<td>磁带机</td>
-<td>IDE:/dev/ht0 SCSI:/dev/st0</td>
-</tr>
-</tbody>
-</table>
-<h1 id="硬盘分区"><a href="#硬盘分区" class="headerlink" title="硬盘分区"></a>硬盘分区</h1><h2 id="磁盘的文件命名规则"><a href="#磁盘的文件命名规则" class="headerlink" title="磁盘的文件命名规则"></a>磁盘的文件命名规则</h2><p>磁盘的接口有两种，分别是IDE接口、SATA接口。目前主流的接口是SATA接口。<br>使用IDE接口的设备我们称为IDE设备。</p>
-<ol>
-<li>IDE设备：一个IDE接口可以连接两个IDE设备，主机中一般用两个IDE接口，因此最多可以连接四个IDE设备。这两个IDE接口通常被称为IDE1、IDE2，而每个IDE接口连接的两个IDE设备又被分为主设备和从设备。这四个IDE设备的文件名如下表：</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>IDE接口</th>
-<th>主设备</th>
-<th>从设备</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IDE1</td>
-<td>/dev/hda</td>
-<td>/dev/hdb</td>
-</tr>
-<tr>
-<td>IDE2</td>
-<td>/dev/hdc</td>
-<td>/dev/hdd</td>
-</tr>
-</tbody>
-</table>
-<ol>
-<li>SATA设备：以SATA/USB/SCSI为接口的磁盘使用的都是SCSI模块来驱动的，因此他们的设备文件名都是/dev/sd[a-p]。但是与IDE设备不同的是，他们的文件名没有一定的顺序，谁先插上去，谁就是a，以此类推。</li>
-</ol>
-<h2 id="磁盘的组成"><a href="#磁盘的组成" class="headerlink" title="磁盘的组成"></a>磁盘的组成</h2><p>整个磁盘的第一个扇区非常重要，因为他记录了下面的重要的信息：</p>
-<ol>
-<li>主引导分区Master Boot Record,MBR：可以安装“引导加载程序”的地方。有446bytes。</li>
-<li>分区表：记录整块硬盘的分区状况，有64bytes。</li>
-</ol>
-<h2 id="磁盘分区表"><a href="#磁盘分区表" class="headerlink" title="磁盘分区表"></a>磁盘分区表</h2><p>对磁盘进行分区时，采用柱面作为基本单位。分区表有64bytes，被分成四个区域，每个区域记录当前磁盘的所有分区的起始和结束柱面号。例如：一块IDE硬盘被分成四个区域： P1：/dev/hda1 ，P2：/dev/hda2 ，P3：/dev/hda3 ，P4：/dev/hda4。每个磁盘的分区表只能被分成四个区域，这四个区域被称为<strong>主分区或扩展分区</strong>。当系统进行数据的读写时，一定要参考分区表才能进行。</p>
-<h3 id="分区的原因"><a href="#分区的原因" class="headerlink" title="分区的原因"></a>分区的原因</h3><p>保证数据的安全性（分区不会影响）；提升系统的性能（只在自己的分区查找）。</p>
-<h3 id="扩展分区"><a href="#扩展分区" class="headerlink" title="扩展分区"></a>扩展分区</h3><p>主分区和扩展分区都是分区表中的一条记录，主分区中存放通过直接索引就能到达的分区的开始和结束的柱面号；而扩展分区中存放的是逻辑分区表的开始和结束柱面号，这张逻辑分区表中才存放分区的开始和结束柱面号。</p>
-<p>由于一张分区表只能存放四条记录，也就是四个分区，当我们想要多一些分区的时候就必须要通过扩展分区来实现。 分区表中的四条记录对应的设备文件名是不会变的。如上面的四个名字，所以逻辑分区的文件名一定是从5开始的。如：/dev/hda5。</p>
-<h3 id="提醒"><a href="#提醒" class="headerlink" title="提醒"></a>提醒</h3><ol>
-<li>扩展分区最多只能有1个。</li>
-<li>Linux中，IDE硬盘最多有59个逻辑分区，5号－63号；SATA硬盘最多有11个逻辑分区，5号－15号。</li>
-<li>在Windows中若D、E盘都是扩展分区中的逻辑分区，那么他们可以整合成一个分区；若两个盘一个是逻辑分区，一个是主分区，那他们是不能合并的。</li>
-<li>一块硬盘的第一个扇区记录了MBR和分区表，非常的重要，如果第一个扇区坏了，那么整个硬盘就报废了。</li>
-</ol>
-<h1 id="开机流程"><a href="#开机流程" class="headerlink" title="开机流程"></a>开机流程</h1><p>整个开机流程到操作系统之前的动作应该是这样的：</p>
-<ol>
-<li>BIOS：开机主动执行的韧体，会认识第一个可开机的对象。</li>
-<li>MBR：第一个可开机设备的第一个扇区的主引导分区块，内包含引导加载程序。</li>
-<li>引导加载程序：一支可读取内核文件来执行的软件。（可多个不同系统的加载程序对应了不同的操作系统）</li>
-<li>内核文件：开始操作系统的功能。</li>
-</ol>
-<p>PS：为什么如果安装多重引导，最好先安装Windows在安装Linux？——因为Linux在安装的时候可以选择将引导加载程序安装在MBR或个别分区的启动扇区，而且在linnux的loader可以手动设置菜单，所以你可以在Linux的boot loader里面加入Windows开机的选项。Windows在安装的时候，它的安装程序会主动覆盖掉MBR以及自己所在分区的启动扇区，你没有选择的机会，而且没有让我们选择菜单的功能。</p>
-<h1 id="挂载"><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h1><h2 id="目录树"><a href="#目录树" class="headerlink" title="目录树"></a>目录树</h2><p>在Linux中，整个文件系统呈一棵以/为根目录的树。</p>
-<h2 id="文件系统与目录树的关系（挂载）"><a href="#文件系统与目录树的关系（挂载）" class="headerlink" title="文件系统与目录树的关系（挂载）"></a>文件系统与目录树的关系（挂载）</h2><p><strong>挂载</strong>就是把一个目录当作磁盘中某一个分区的进入点，也就是说，进入了这个目录，就进入了这个磁盘的这个分区。这个进入的目录我们就称为挂载点。<br>根目录一定要挂载到某个分区。</p>
-<p>如何寻找挂载点（判断某个在文件在哪个分区下）？答：通过反向追踪即可，当我们想要知道/home/rex/test文件在那个分区时，只要逆向寻找第一个挂载点就是这个文件的挂载点。 可以使用下面的命令：</p>
-<blockquote>
-<p>df /home/rex/test</p>
-</blockquote>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>了解分区，了解开机流程，了解挂载，ok，就这些！</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《鸟哥的Linux私房菜》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：Linux在我印象中最大的特点就是它把所有的硬件都当做一个文件，然后还是以/为根节点的目录树，简洁明了，相信大家一定会爱上它的。因为涉及到文件的存储，所以我们要重视磁盘分区。
     
     </summary>
     
