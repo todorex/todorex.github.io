@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-04-12T13:10:44.000Z</updated>
+  <updated>2018-04-15T08:56:20.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,92 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>揭秘SpringMVC(一)_.SpringMVC大全解</title>
+    <link href="http://bestlixiang.site/2018/04/15/%E6%B7%B1%E5%85%A5SSM/%E6%8F%AD%E7%A7%98SpringMVC-%E4%B8%80-SpringMVC%E5%A4%A7%E5%85%A8%E8%A7%A3/"/>
+    <id>http://bestlixiang.site/2018/04/15/深入SSM/揭秘SpringMVC-一-SpringMVC大全解/</id>
+    <published>2018-04-15T08:55:34.000Z</published>
+    <updated>2018-04-15T08:56:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：现在基于所有的Web应用都离不开Spring，用了Spring，你自然会去用他家的MVC框架——SpringMVC！所以掌握SpringMVC也是非常重要的。<a id="more"></a></p>
+<h1 id="SpringMVC请求处理流程总览"><a href="#SpringMVC请求处理流程总览" class="headerlink" title="SpringMVC请求处理流程总览"></a>SpringMVC请求处理流程总览</h1><p>我们可以用下面一张图来介绍SpringMVC的核心组件和请求处理流程：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/springmvc.png" alt="springmvc"></p>
+<p>流程中出现的核心组件如下：</p>
+<ol>
+<li>DispatcherServlet是springmvc中的前端控制器，负责接收request并将request转发给对应的处理组件.</li>
+<li>HanlerMapping是springmvc中完成url到controller映射的组件.DispatcherServlet接收request,然后从HandlerMapping查找处理request的controller.</li>
+<li>Controller（HandlerAdapter）处理request,并返回ModelAndView对象,Controller是springmvc中负责处理request的组件(类似于struts2中的Action)</li>
+<li>ModelAndView是封装Model对象和View对象的组件</li>
+<li>ViewResolver是视图解析器，负责解析ModelAndView对象生成对应的View对象</li>
+<li>View视图组件，复制渲染页面</li>
+</ol>
+<p>整个流程的大致流程如下：</p>
+<ol>
+<li>当request到来时，DispatcherServlet对request进行捕获，并执行doService方法，继而执行doDispatch方法。</li>
+<li>HandlerMapping解析请求，并且返回HandlerExecutionChain（其中包含对应的controller和interceptors）</li>
+<li>通过HandlerExecutionChain得到Handler相关类，Handler先执行拦截器的pre相关方法，接着执行handler方法，最后调用拦截器的post相关方法</li>
+<li>解析handler方法返回的ModelAndView</li>
+<li>根据ViewResolver（可以在配置文件中配置，也就是视图解析器）生成View对象</li>
+<li>View对象渲染页面并response给客户端</li>
+</ol>
+<h1 id="SpringMVC请求处理初始化源码分析"><a href="#SpringMVC请求处理初始化源码分析" class="headerlink" title="SpringMVC请求处理初始化源码分析"></a>SpringMVC请求处理初始化源码分析</h1><ol>
+<li><p>首先，Tomcat每次启动时都会加载并解析/WEB-INF/web.xml文件，所以可以先从web.xml找突破口（DispatcherServlet的配置），主要代码如下（我们每次都会这样配置）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;servlet &gt;</div><div class="line">    &lt;servlet-name &gt;spring-mvc&lt;/servlet-name&gt;</div><div class="line">    &lt;!-- DispatcherServlet类，这个类在spring-mvc的包下面 --&gt;</div><div class="line">    &lt;servlet-class &gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</div><div class="line">    &lt;!-- 初始化参数，这里主要是读取SpringMVC的一些配置信息，比如：</div><div class="line">    配置注解驱动，静态资源映射，视图解析器，自动扫描装配等相关信息。</div><div class="line">    --&gt;</div><div class="line">    &lt;init-param &gt;</div><div class="line">      &lt;param-name &gt;contextConfigLocation&lt;/param-name&gt;</div><div class="line">      &lt;param-value &gt;classpath:/spring-mvc.xml&lt;/param-value&gt;</div><div class="line">    &lt;/init-param&gt;</div><div class="line">    &lt;!-- 启动时加载 --&gt;</div><div class="line">    &lt;load-on-startup &gt;1&lt;/load-on-startup&gt;</div><div class="line">  &lt;/servlet&gt;</div><div class="line">  &lt;servlet-mapping &gt;</div><div class="line">    &lt;servlet-name &gt;spring-mvc&lt;/servlet-name&gt;</div><div class="line">    &lt;url-pattern &gt;/&lt;/url-pattern&gt;</div><div class="line">  &lt;/servlet-mapping&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>进入DispatchServlet的分析，先看它的类图：</p>
+<p> <img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/DispatcherServlet.png" alt="DispatchServlet"></p>
+<p> 它是一个Servlet的子类，那么我们就要专注于它的init、service（后续分析）、doGet、doPost等相关方法，在它的父类HttpServeltBean，我们找到了init方法，如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> ServletException </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// 获取Servlet中的init参数，并创建了一个BeanWapper对象，由子类真正执行BeanWrapper的初始化工作</span></div><div class="line">        <span class="comment">// 但是HttpServeltBean的子类并没有覆盖其initBeanWrapper方法，所以创建的BeanWrapper没有用</span></div><div class="line">        PropertyValues pvs = <span class="keyword">new</span> HttpServletBean.ServletConfigPropertyValues(<span class="keyword">this</span>.getServletConfig(), <span class="keyword">this</span>.requiredProperties);</div><div class="line">        BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(<span class="keyword">this</span>);</div><div class="line">        ResourceLoader resourceLoader = <span class="keyword">new</span> ServletContextResourceLoader(<span class="keyword">this</span>.getServletContext());</div><div class="line">        bw.registerCustomEditor(Resource.class, <span class="keyword">new</span> ResourceEditor(resourceLoader, <span class="keyword">this</span>.getEnvironment()));</div><div class="line">        <span class="keyword">this</span>.initBeanWrapper(bw);</div><div class="line">        bw.setPropertyValues(pvs, <span class="keyword">true</span>);</div><div class="line">    &#125; <span class="keyword">catch</span> (BeansException var4) &#123;</div><div class="line">        <span class="keyword">this</span>.logger.error(<span class="string">"Failed to set bean properties on servlet '"</span> + <span class="keyword">this</span>.getServletName() + <span class="string">"'"</span>, var4);</div><div class="line">        <span class="keyword">throw</span> var4;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 这里进要进入到Framework的initServletBean方法了</span></div><div class="line">    <span class="keyword">this</span>.initServletBean();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 从上面的init方法中，我们由它的initServletBean方法进入到FrameworkServlet的initServletBean方法，如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">initServletBean</span><span class="params">()</span> <span class="keyword">throws</span> ServletException </span>&#123;</div><div class="line">    <span class="keyword">long</span> startTime = System.currentTimeMillis();</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// 创建Spring容器，并调用onRefresh方法来完成配置文件的加载</span></div><div class="line">        <span class="keyword">this</span>.webApplicationContext = <span class="keyword">this</span>.initWebApplicationContext();</div><div class="line">        <span class="keyword">this</span>.initFrameworkServlet();</div><div class="line">    &#125; <span class="keyword">catch</span> (ServletException var5) &#123;</div><div class="line">        <span class="keyword">this</span>.logger.error(<span class="string">"Context initialization failed"</span>, var5);</div><div class="line">        <span class="keyword">throw</span> var5;</div><div class="line">    &#125; <span class="keyword">catch</span> (RuntimeException var6) &#123;</div><div class="line">        <span class="keyword">this</span>.logger.error(<span class="string">"Context initialization failed"</span>, var6);</div><div class="line">        <span class="keyword">throw</span> var6;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 在容器加载的过程中会调用DispatchServlet的initStrategies方法来完成Dispatchservlet中定义的初始化工作，看DispatchServlet的源码：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onRefresh</span><span class="params">(ApplicationContext context)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.initStrategies(context);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 初始化SpringMVC框架需要的8个组件，这8个组件对应8个bean对象保存在DispatchServlet类中</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initStrategies</span><span class="params">(ApplicationContext context)</span> </span>&#123;</div><div class="line">    <span class="comment">// 用于处理文件上传服务，将Request包装成DefaultMultipartHttpServletRequest</span></div><div class="line">    <span class="keyword">this</span>.initMultipartResolver(context);</div><div class="line">    <span class="comment">// 用于处理应用的国际化问题，控制应用中的字符编码问题</span></div><div class="line">    <span class="keyword">this</span>.initLocaleResolver(context);</div><div class="line">    <span class="comment">// 用于定义一个主题</span></div><div class="line">    <span class="keyword">this</span>.initThemeResolver(context);</div><div class="line">    <span class="comment">// 用于定义用户设置的请求映射关系，将用户请求的URL映射后才能一个个Handler实例</span></div><div class="line">    <span class="comment">// 如果没有定义HandlerMapping，将获取默认的BeanNameURLHandlerMapping和DefaultAnnotaionHandlerMapping</span></div><div class="line">    <span class="keyword">this</span>.initHandlerMappings(context);</div><div class="line">    <span class="comment">// 用于根据Handler的类型定义不同的处理规则（调用Controller实例），默认的为：</span></div><div class="line">    <span class="comment">// HttpRequestHandlerAdapter、SimpleControllerHandlerAdapter、ThrowawayControllerAdapter、AnnotationMethodHandlerAdapter</span></div><div class="line">    <span class="keyword">this</span>.initHandlerAdapters(context);</div><div class="line">    <span class="comment">// 当Handle处理出错时，会通过这个Handler来统一处理，默认为SimpleMappingExceptionResolver，</span></div><div class="line">    <span class="comment">// 将错误日志记录在日志文件中，并且跳转到默认的错误页面</span></div><div class="line">    <span class="keyword">this</span>.initHandlerExceptionResolvers(context);</div><div class="line">    <span class="comment">// 将指定的ViewName按照定义的requestToViewNameTranslator替换成想要的格式，如加上前缀或者后缀。</span></div><div class="line">    <span class="keyword">this</span>.initRequestToViewNameTranslator(context);</div><div class="line">    <span class="comment">// 用于将View解析成页面，在ViewResolvers中可以设置多个解析策略，默认的解析策略为InternalResourceViewResolver，按照JSP页面来解析</span></div><div class="line">    <span class="keyword">this</span>.initViewResolvers(context);</div><div class="line">    <span class="comment">// 为一个请求存储意图为另外一个请求所使用的属性提供了一条途径(通常存储在session)</span></div><div class="line">    <span class="keyword">this</span>.initFlashMapManager(context);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="SpringMVC请求处理流程源码分析"><a href="#SpringMVC请求处理流程源码分析" class="headerlink" title="SpringMVC请求处理流程源码分析"></a>SpringMVC请求处理流程源码分析</h1><p>关注完初始化init方法，我们要进入正式的流程分析了，其实就是在sevice方法里面(在其父类FrameworkServlet里)，我们看看下面的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> ServletException, IOException </span>&#123;</div><div class="line">    <span class="keyword">if</span>(HttpMethod.PATCH.matches(request.getMethod())) &#123;</div><div class="line">        <span class="keyword">this</span>.processRequest(request, response);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">super</span>.service(request, response);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>根据service方法，我们一步步调试进入service –&gt; processRequest –&gt; doService（将ApplicationContext、localeResolver、themeResolver等对象添加到request中以便后面使用） –&gt; doDispatch，我们最终将目光定位在doDispatch，因为从它的方法体就可以看出它是整个SpringMVC的核心方法。我们看看DispatchServlet里面的doDispatch方法源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doDispatch</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        HttpServletRequest processedRequest = request;</div><div class="line">        HandlerExecutionChain mappedHandler = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">boolean</span> multipartRequestParsed = <span class="keyword">false</span>;</div><div class="line">        WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                ModelAndView mv = <span class="keyword">null</span>;</div><div class="line">                Exception dispatchException = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    <span class="comment">// //处理文件上传请求</span></div><div class="line">                    processedRequest = <span class="keyword">this</span>.checkMultipart(request);</div><div class="line">                    multipartRequestParsed = processedRequest != request;</div><div class="line">                    <span class="comment">// 解析请求（匹配URL），获取HandlerExecutionChain对象</span></div><div class="line">                    mappedHandler = <span class="keyword">this</span>.getHandler(processedRequest);</div><div class="line">                    <span class="keyword">if</span>(mappedHandler == <span class="keyword">null</span> || mappedHandler.getHandler() == <span class="keyword">null</span>) &#123;</div><div class="line">                        <span class="keyword">this</span>.noHandlerFound(processedRequest, response);</div><div class="line">                        <span class="keyword">return</span>;</div><div class="line">                    &#125;</div><div class="line">                    <span class="comment">// 从HandlerExecutionChain对象获取HandlerAdapter对象，实际上是从HandlerMapping对象中获取</span></div><div class="line">                    HandlerAdapter ha = <span class="keyword">this</span>.getHandlerAdapter(mappedHandler.getHandler());</div><div class="line">                    String method = request.getMethod();</div><div class="line">                    <span class="keyword">boolean</span> isGet = <span class="string">"GET"</span>.equals(method);</div><div class="line">                    <span class="keyword">if</span>(isGet || <span class="string">"HEAD"</span>.equals(method)) &#123;</div><div class="line">                        <span class="keyword">long</span> lastModified = ha.getLastModified(request, mappedHandler.getHandler());</div><div class="line">                        <span class="keyword">if</span>(<span class="keyword">this</span>.logger.isDebugEnabled()) &#123;</div><div class="line">                            <span class="keyword">this</span>.logger.debug(<span class="string">"Last-Modified value for ["</span> + getRequestUri(request) + <span class="string">"] is: "</span> + lastModified);</div><div class="line">                        &#125;</div><div class="line"></div><div class="line">                        <span class="keyword">if</span>((<span class="keyword">new</span> ServletWebRequest(request, response)).checkNotModified(lastModified) &amp;&amp; isGet) &#123;</div><div class="line">                            <span class="keyword">return</span>;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                   <span class="comment">// 在controller方法执行前，执行拦截器的相关方法（pre） if(!mappedHandler.applyPreHandle(processedRequest, response)) &#123;</span></div><div class="line">                        <span class="keyword">return</span>;</div><div class="line">                    &#125;</div><div class="line">                    <span class="comment">// 执行HandlerAdapter对象的handle方法，返回ModelAndView</span></div><div class="line">                    mv = ha.handle(processedRequest, response, mappedHandler.getHandler());</div><div class="line">                    <span class="keyword">if</span>(asyncManager.isConcurrentHandlingStarted()) &#123;</div><div class="line">                        <span class="keyword">return</span>;</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="keyword">this</span>.applyDefaultViewName(processedRequest, mv);</div><div class="line">                   <span class="comment">// 在controller方法执行后，执行拦截器的相关方法（post）</span></div><div class="line">                   mappedHandler.applyPostHandle(processedRequest, response, mv);</div><div class="line">                &#125; <span class="keyword">catch</span> (Exception var19) &#123;</div><div class="line">                    dispatchException = var19;</div><div class="line">                &#125;</div><div class="line">               <span class="comment">// 进行视图解析</span></div><div class="line">               <span class="keyword">this</span>.processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);</div><div class="line">            &#125; <span class="keyword">catch</span> (Exception var20) &#123;</div><div class="line">                <span class="keyword">this</span>.triggerAfterCompletion(processedRequest, response, mappedHandler, var20);</div><div class="line">            &#125; <span class="keyword">catch</span> (Error var21) &#123;</div><div class="line">                <span class="keyword">this</span>.triggerAfterCompletionWithError(processedRequest, response, mappedHandler, var21);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">if</span>(asyncManager.isConcurrentHandlingStarted()) &#123;</div><div class="line">                <span class="keyword">if</span>(mappedHandler != <span class="keyword">null</span>) &#123;</div><div class="line">                    mappedHandler.applyAfterConcurrentHandlingStarted(processedRequest, response);</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span>(multipartRequestParsed) &#123;</div><div class="line">                <span class="keyword">this</span>.cleanupMultipart(processedRequest);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>上面是整体的流程，下面我们具体到对MVC架构的三个模块的分析：</p>
+<h2 id="Control（C）"><a href="#Control（C）" class="headerlink" title="Control（C）"></a>Control（C）</h2><p>Spring MVC的Control主要由HandlerMapping和HandlerAdapters两个组件提供。</p>
+<p>HandlerMapping并没有规定这个URL与应用的处理类如何映射，在这个接口中只定义了根据URL必须返回一个由HandlerExecutionChain代理的处理链，我们可以在这里处理链中添加任意的HandlerAdapters实例来处理这个URL对应的请求。这个和Servlet规范中的filter处理是类似的。</p>
+<h3 id="HandlerMapping的初始化"><a href="#HandlerMapping的初始化" class="headerlink" title="HandlerMapping的初始化"></a>HandlerMapping的初始化</h3><p><strong>（可以参照HandlerMapping的子类SimpleUrlHandlerMapping里面的initApplicationContext方法代码）</strong></p>
+<p>HandlerMapping的初始化工作完成的两个最重要的工作就是将URL与Handler的对应关系保存在handlerMap集合中，并将所有的<strong>interceptors</strong>对象保存在adaptedInterceptors数组中，等到请求到来时执行所有的adaptedInterceptors数组中的Interceptor对象，所有的Interceptor对象必须实现HandlerInterceptor接口。</p>
+<h3 id="HandlerAdapter-可以看成Controller-的初始化"><a href="#HandlerAdapter-可以看成Controller-的初始化" class="headerlink" title="HandlerAdapter(可以看成Controller)的初始化"></a>HandlerAdapter(可以看成Controller)的初始化</h3><p><strong>（可以参照HandlerAdapter的子类SimpleControllerHandlerAdapter里面的代码）</strong></p>
+<p>HandlerAdapter的初始化工作主要是创建一个HandlerAdapter对象，将这个HandlerAdapter对象保存在DispatcherServlet的HandlerAdapters集合中。当SpringMVC将某个URL对应到某个Handler时，在HandlerAdapters集合中查询那个HandlerAdapters对象supports这个Handler，那么HandlerAdapters就会被返回（设计模式），并调用这个HandlerAdapters接口对应的方法。如果这个HandlerAdapters对象是SimpleControllerHandlerAdapter，则将调用其ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)方法。如果用户没有定义HandlerAdapter的实现类，默认的为：HttpRequestHandlerAdapter、SimpleControllerHandlerAdapter、ThrowawayControllerAdapter、AnnotationMethodHandlerAdapter。</p>
+<h3 id="Control的调用逻辑"><a href="#Control的调用逻辑" class="headerlink" title="Control的调用逻辑"></a>Control的调用逻辑</h3><p>根据DispatcherServlet的doDispath方法我们可以看到通过getHandler方法匹配到某个Handler并返回这个Handler的处理链HandlerExecutionChain对象，而这个HandlerExecutionChain对象将会包含一个匹配上的HandlerAdapter以及用户自定义的多个HandlerInterceptor对象。我们先看HandlerInterceptor接口，在HandlerInterceptor接口中有三个方法如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">HandlerInterceptor</span> </span>&#123;</div><div class="line">    <span class="comment">// 在Handler执行前</span></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(HttpServletRequest var1, HttpServletResponse var2, Object var3)</span> <span class="keyword">throws</span> Exception</span>;</div><div class="line">    <span class="comment">// 在Handler执行后</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">postHandle</span><span class="params">(HttpServletRequest var1, HttpServletResponse var2, Object var3, ModelAndView var4)</span> <span class="keyword">throws</span> Exception</span>;</div><div class="line">    <span class="comment">// 在View渲染完成后，DispatchServlet返回之前执行。</span></div><div class="line">    <span class="comment">// PS：当preHandler返回false时，当前的请求将在执行完该方法后直接返回，Handler不再执行</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">afterCompletion</span><span class="params">(HttpServletRequest var1, HttpServletResponse var2, Object var3, Exception var4)</span> <span class="keyword">throws</span> Exception</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们然后看看HandlerExecutionChain类的getHandler方法，你会发现返回的是Object对象，所以在这里Handler对象是没有类型的，Handler的类型是由HandlerAdapter（匹配到的）决定的。接下里执行Handler对象的具体方法，如果Handler对象的相应方法返回一个ModelAndView对象，接下去就去执行View渲染。</p>
+<h2 id="Model（M）"><a href="#Model（M）" class="headerlink" title="Model（M）"></a>Model（M）</h2><p>Model实例既在业务逻辑层被使用，也在渲染页面中被使用，我们这里主要讲一下在页面模板渲染中的使用。</p>
+<p>如果Handler返回了ModelAndView对象，那么说明Handler需要传一个Model实例给View去渲染模板。可以说ModelAndView对象就是连接业务逻辑层与View视图层的桥梁，对SpringMVC来说它也是连接Handler与View的桥梁。</p>
+<p>ModelAndView对象会持有一个ModelMap对象和一个View对象（可以查看ModelAndView的源码），ModelMap对象就是执行模板渲染时所需要的变量对应的实例（对应到Struts2的值栈），如JSP通过request.getAttribute(String)获得JSTL标签名对应的对象。ModelMap其实也是个Map，在Handler中将模板需要的对象存在这个Map中，然后传递到View对应的ViewResolvers中。</p>
+<h2 id="View（V）"><a href="#View（V）" class="headerlink" title="View（V）"></a>View（V）</h2><p>Spring MVC的View主要由RequestToViewNameTranslator和ViewResolver两个组件提供。</p>
+<ul>
+<li>RequestToViewNameTranslator支持用户自定义对ViewName的解析，如加上前缀或者后缀等。</li>
+<li>ViewResolver会根据用户的请求的ViewName创建合适的模板引擎（解析器）来渲染最终的页面。ViewResolver会根据ViewName创建一个View对象，调用View对象的render方法渲染页面。</li>
+</ul>
+<p>我们重点关注这个ViewResolver，先看他的类图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/viewResolver.png" alt="ViewResolver"></p>
+<p>我们从UrlBaseViewResolver对象的loadView方法-&gt;buildView方法可以看到如下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> AbstractUrlBasedView <span class="title">buildView</span><span class="params">(String viewName)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    AbstractUrlBasedView view = (AbstractUrlBasedView)BeanUtils.instantiateClass(<span class="keyword">this</span>.getViewClass());</div><div class="line">    view.setUrl(<span class="keyword">this</span>.getPrefix() + viewName + <span class="keyword">this</span>.getSuffix());</div><div class="line">    String contentType = <span class="keyword">this</span>.getContentType();</div><div class="line">    <span class="keyword">if</span>(contentType != <span class="keyword">null</span>) &#123;</div><div class="line">        view.setContentType(contentType);</div><div class="line">    &#125;</div><div class="line">    ... 省略</div><div class="line">    <span class="keyword">return</span> view;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结合类图可以发现不同的解析器生成的View对象是不一样的。</p>
+<p>获得View对象之后就可以调用View对象的render方法渲染页面。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《深入分析Java Web技术内幕》</li>
+<li><a href="https://blog.csdn.net/lang_programmer/article/details/71598042" target="_blank" rel="external">一步步分析SpringMVC源码</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：现在基于所有的Web应用都离不开Spring，用了Spring，你自然会去用他家的MVC框架——SpringMVC！所以掌握SpringMVC也是非常重要的。
+    
+    </summary>
+    
+      <category term="深入SSM" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5SSM/"/>
+    
+    
+      <category term="SpringMVC" scheme="http://bestlixiang.site/tags/SpringMVC/"/>
+    
+  </entry>
   
   <entry>
     <title>揭秘Spring(四)_Spring设计模式</title>
@@ -2714,228 +2800,6 @@
     <summary type="html">
     
       &lt;p&gt;引：了解好文件权限和目录的具体含义才能更好的操作Linux，所以理解好文件权限与目录配置才至关重要。
-    
-    </summary>
-    
-      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走进Linux_Linux命令使用与查询</title>
-    <link href="http://bestlixiang.site/2018/03/21/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_Linux%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%E4%B8%8E%E6%9F%A5%E8%AF%A2/"/>
-    <id>http://bestlixiang.site/2018/03/21/走进Linux/走进Linux_Linux命令使用与查询/</id>
-    <published>2018-03-21T08:55:52.000Z</published>
-    <updated>2018-04-09T04:31:05.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。<br><a id="more"></a></p>
-<h1 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h1><h2 id="开始执行命令"><a href="#开始执行命令" class="headerlink" title="开始执行命令"></a>开始执行命令</h2><p>首先我们要了解命令的格式：</p>
-<blockquote>
-<p>command(命令或可执行文件) <a href="选项">-options</a> parameter1(参数1) parameter2(参数2)</p>
-</blockquote>
-<p>如果命令太长，我们可以使用反斜杠(\)来转义[enter符号]，注意反斜杠必须立刻接特殊字符，才能转义。</p>
-<p>在linux下面是区分大小写的。</p>
-<h2 id="基础命令的操作"><a href="#基础命令的操作" class="headerlink" title="基础命令的操作"></a>基础命令的操作</h2><ol>
-<li>显示日期与时间的命令：date</li>
-<li>显示日历的命令：cal</li>
-<li>简单好用的计算器：bc，使用quit停止</li>
-</ol>
-<h2 id="重要的热键"><a href="#重要的热键" class="headerlink" title="重要的热键"></a>重要的热键</h2><ol>
-<li>Tab按键：具有命令补全，文件补齐的功能</li>
-<li>ctrl + c：可以让程序立刻停下来</li>
-<li>ctrl + d：通常代码键盘输入结束，相当于exit</li>
-</ol>
-<h1 id="在线求助man-page-与info-page"><a href="#在线求助man-page-与info-page" class="headerlink" title="在线求助man page 与info page"></a>在线求助man page 与info page</h1><h2 id="man-page"><a href="#man-page" class="headerlink" title="man page"></a>man page</h2><p>man其实是manual（操作说明）的简写，只要通过（man + 命令） 就会有详细的说明出现。</p>
-<p>如 man date可以得到下面的文本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">DATE(1)                                  User Commands                                  DATE(1)</div><div class="line"></div><div class="line">NAME</div><div class="line">       date - print or set the system date and time</div><div class="line"></div><div class="line">SYNOPSIS</div><div class="line">       date [OPTION]... [+FORMAT]</div><div class="line">       date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]</div><div class="line"></div><div class="line">DESCRIPTION</div><div class="line">       Display the current time in the given FORMAT, or set the system date.</div><div class="line"></div><div class="line">       Mandatory arguments to long options are mandatory for short options too.</div><div class="line"></div><div class="line">       -d, --date=STRING</div><div class="line">              display time described by STRING, not &apos;now&apos;</div><div class="line"></div><div class="line">        ...省略其他参数</div><div class="line"></div><div class="line">ENVIRONMENT</div><div class="line"></div><div class="line">EXAMPLES</div><div class="line"></div><div class="line">DATE STRING</div><div class="line"></div><div class="line">AUTHOR</div><div class="line">       Written by David MacKenzie.</div><div class="line"></div><div class="line">COPYRIGHT</div><div class="line"></div><div class="line">SEE ALSO</div><div class="line"></div><div class="line">GNU coreutils 8.22                       November 2016                                  DATE(1)</div></pre></td></tr></table></figure></p>
-<p>我们首先看到的是“DATE(1)”，这个(1)是有特殊含义的，如下表：</p>
-<table>
-<thead>
-<tr>
-<th>代号</th>
-<th>代表内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>用户在shell环境中可以操作的命令或可执行的文件</td>
-</tr>
-<tr>
-<td>2</td>
-<td>系统内核可调用的函数与工具等</td>
-</tr>
-<tr>
-<td>3</td>
-<td>一些常用的函数与函数库，大部分为C的函数库</td>
-</tr>
-<tr>
-<td>4</td>
-<td>设备文件的说明，通常在/dev的文件</td>
-</tr>
-<tr>
-<td>5</td>
-<td>配置文件或者某些文件的格式</td>
-</tr>
-<tr>
-<td>6</td>
-<td>游戏</td>
-</tr>
-<tr>
-<td>7</td>
-<td>惯例与协议等，例如Linux文件系统，网络协议、ASCII code等说明</td>
-</tr>
-<tr>
-<td>8</td>
-<td>系统管理员与可用的管理命令</td>
-</tr>
-<tr>
-<td>9</td>
-<td>跟kernel有关的文件</td>
-</tr>
-</tbody>
-</table>
-<p>我们要特别注意1，5，8这三个号码，尽量背下来。</p>
-<p>在上面的man page中，以NAME作为开始介绍，最后还有个SEE ALSO来作为结束。基本上，man page大致分为以下几个部分：</p>
-<table>
-<thead>
-<tr>
-<th>代号</th>
-<th>内容说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NAME</td>
-<td>简短的命令、数据名称说明</td>
-</tr>
-<tr>
-<td>SYNOPSIS</td>
-<td>简短的命令执行语法（syntax）简介</td>
-</tr>
-<tr>
-<td>DESCRIPTION</td>
-<td>较为完整的说明，最好仔细看看</td>
-</tr>
-<tr>
-<td>OPTIONS</td>
-<td>针对SYNNPSIS部分中，有列举的所有可用的选项说明</td>
-</tr>
-<tr>
-<td>COMMANDS</td>
-<td>在这个程序在执行的时候，可以在此程序中执行的命令</td>
-</tr>
-<tr>
-<td>FILES</td>
-<td>这个程序或数据所使用或参考或连接到的某些文件</td>
-</tr>
-<tr>
-<td>SEE ALSO</td>
-<td>这个命令或数据有相关的其他说明</td>
-</tr>
-<tr>
-<td>EXAMPLES</td>
-<td>一些可以参考的范例</td>
-</tr>
-<tr>
-<td>BUGS</td>
-<td>是否有相关的错误</td>
-</tr>
-</tbody>
-</table>
-<p>通常在查询某些数据是这样来查阅的：</p>
-<ol>
-<li>先看NAME的项目，略微看一下数据的意思</li>
-<li>再仔细看一下DESCRIPTION，这个部分会提到很多相关的资料和用法。</li>
-<li>如果这个命令其实很熟悉了，那么主要就是查询OPTIONS的部分了。</li>
-<li>最后会看一下和这个资料有关的还有哪些东西可以使用。</li>
-<li>某些说明内容还会列举有关的文件（FILES）来提供我们参考。</li>
-</ol>
-<p>man page 常用的按键：</p>
-<table>
-<thead>
-<tr>
-<th>按键</th>
-<th>进行工作</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>空格键</td>
-<td>向下翻一页</td>
-</tr>
-<tr>
-<td>Page Down</td>
-<td>向下翻一页</td>
-</tr>
-<tr>
-<td>Page Up</td>
-<td>向上翻一页</td>
-</tr>
-<tr>
-<td>Home</td>
-<td>去到第一页</td>
-</tr>
-<tr>
-<td>End</td>
-<td>在去到最后一页</td>
-</tr>
-<tr>
-<td>/string</td>
-<td>向下查询string字符串</td>
-</tr>
-<tr>
-<td>?string</td>
-<td>向上查询string字符串</td>
-</tr>
-<tr>
-<td>n,N</td>
-<td>利用/或？来查询字符串时，可以用n来继续查询下一个查询，可以利用N来进行反向查询</td>
-</tr>
-<tr>
-<td>q</td>
-<td>结束这次man page</td>
-</tr>
-</tbody>
-</table>
-<p>下面还有两个man的用途：</p>
-<ol>
-<li>man -f command （= whatis）：查询和command这个命令有关的说明文件</li>
-<li>man -k data（= apropos）：查询包含data这个数据有关的文件</li>
-</ol>
-<h2 id="info-page"><a href="#info-page" class="headerlink" title="info page"></a>info page</h2><p>info与man的用途差不多，都是用来查询命令的用法或者文件的格式，但是与man page一下子输出一堆信息不同的是，info page则是将文件数据拆成一个一个段落，每个段落用自己的页面来撰写，并且在各个页面中还有类似网页的“超链接”来调到各个页面，每个独立的页面也被称为一个节点（node）。</p>
-<p>这里这里不多说，有兴趣者可以自己去看看使用。</p>
-<h2 id="其他有用的文件"><a href="#其他有用的文件" class="headerlink" title="其他有用的文件"></a>其他有用的文件</h2><p>一般而言，命令或者软件开发者都会将自己的命令或者是软件的说明制作成“在线帮助文件”，但是毕竟不是什么都需要做成在线帮助文件的，在/usr/share/doc中我们会发现会有很多说明文件文档，这些会告诉我们怎么做，以及一些相关的原理。</p>
-<h1 id="开机与关机"><a href="#开机与关机" class="headerlink" title="开机与关机"></a>开机与关机</h1><h2 id="开机与登录"><a href="#开机与登录" class="headerlink" title="开机与登录"></a>开机与登录</h2><p>一般服务器都不怎么重启，我们在登录服务器的时候，基本上都是使用ssh来登录，我们可以使用下面的命令：</p>
-<blockquote>
-<p>ssh ip</p>
-</blockquote>
-<p>在这个命令之后会要求与你输入密码即可成功。</p>
-<h2 id="关机"><a href="#关机" class="headerlink" title="关机"></a>关机</h2><p>在Linux中，由于每个程序都是在后台运行的，因此你看不到屏幕后面其实可能有很多人同时在你的主机上面工作，所以我们不能随意关机。所以在正常情况下，要关机时要注意下面几件事：</p>
-<ol>
-<li>查看系统的使用状态<ul>
-<li>如果要看目前有谁在线：执行“who”这个命令</li>
-<li>如果要看网络的联机状态：执行“netstat -a”这个命令</li>
-<li>如果要看后台执行的程序：执行“ps -aux”这个命令</li>
-</ul>
-</li>
-<li>通知在线用户关机的时刻</li>
-<li>正确地关机命令使用：shutdown与reboot</li>
-<li>将数据同步写入硬盘的命令：sync</li>
-<li>惯用的关机命令：shutdown</li>
-<li>重启、关机：reboot,halt,poweroff</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这一章最为基础，灰常重要，就像地基，只有有了地基，我们才能好好造下面的房子。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《鸟哥的Linux私房菜》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：从浅入深，我们也从基础命令开始。学会基本命令的使用，学会怎么去查命令的使用，最后学会一丢丢维护（开关机）。&lt;br&gt;
     
     </summary>
     
