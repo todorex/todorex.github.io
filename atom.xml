@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-04-16T07:38:41.000Z</updated>
+  <updated>2018-04-17T11:01:03.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,65 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HelloWorld_SSMLogin</title>
+    <link href="http://bestlixiang.site/2018/04/17/HelloWorld/HelloWorld-SSMLogin/"/>
+    <id>http://bestlixiang.site/2018/04/17/HelloWorld/HelloWorld-SSMLogin/</id>
+    <published>2018-04-17T10:55:22.000Z</published>
+    <updated>2018-04-17T11:01:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：想着怎么教一个人快速入门SSM，讲原理是真的太费时间，还是以搭建具体流程加上源码比较好吧，先模仿，后创新嘛！<a id="more"></a></p>
+<h1 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h1><p><strong><a href="https://github.com/todorex/SSM_LoginDemo" target="_blank" rel="external">项目仓库地址</a></strong></p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/helloworld/png/ssm.png" alt="ssm"></p>
+<p>我们先把文件夹创建好，当然也可以先直接从我<a href="https://github.com/todorex/SSM_LoginDemo" target="_blank" rel="external">仓库地址</a>把它克隆下来，删除其中部分的代码文件。</p>
+<h1 id="配置文件解析"><a href="#配置文件解析" class="headerlink" title="配置文件解析"></a>配置文件解析</h1><p><strong>配置文件里面都有注释，大家可以对照着看：</strong></p>
+<h2 id="pom-xml文件"><a href="#pom-xml文件" class="headerlink" title="pom.xml文件"></a>pom.xml文件</h2><p>pom文件作为Maven工程的核心，主要是用来引入jar包的，在我的pom文件中也详细列出了我们需要哪些包，以及哪些包是用来干什么的。</p>
+<h2 id="web-xml文件"><a href="#web-xml文件" class="headerlink" title="web.xml文件"></a>web.xml文件</h2><p>web.xml作为Web功能的核心，主要是设置了如何接受请求，这里会结合SpringMVC的前端控制器类DispatcherServlet作为请求分发的核心Servlet，以及在第一次加载过程中，后台服务需要加载哪些配置文件。</p>
+<h2 id="ssm配置文件（依靠Spring整合）"><a href="#ssm配置文件（依靠Spring整合）" class="headerlink" title="ssm配置文件（依靠Spring整合）"></a>ssm配置文件（依靠Spring整合）</h2><p>我们看到spring文件夹下有三个文件，分别对应了dao，service，web三层的Bean配置。</p>
+<h3 id="spring-dao-config-xml文件"><a href="#spring-dao-config-xml文件" class="headerlink" title="spring-dao-config.xml文件"></a>spring-dao-config.xml文件</h3><p>这里主要是配置数据库连接池（数据源），以及注入SqlSessionFactory和所有在com.todorex.dao下得所有Dao接口。</p>
+<h3 id="spring-service-config-xml文件"><a href="#spring-service-config-xml文件" class="headerlink" title="spring-service-config.xml文件"></a>spring-service-config.xml文件</h3><p>这里主要配置扫描并注入com.todorex.service包下所有Service注解类，以及配置事务管理器。</p>
+<h3 id="spring-web-config-xml文件"><a href="#spring-web-config-xml文件" class="headerlink" title="spring-web-config.xml文件"></a>spring-web-config.xml文件</h3><p>这里主要配置扫描并注入com.todorex.controller包下所有Controller注解类，以及配置视图解析器。这里还有一个超级重要的就是配置处理静态资源的方式。</p>
+<h2 id="mybatis-config-xml文件"><a href="#mybatis-config-xml文件" class="headerlink" title="mybatis-config.xml文件"></a>mybatis-config.xml文件</h2><p>这里主要是设置mybatis的全局属性。</p>
+<h2 id="jdbc-properties文件"><a href="#jdbc-properties文件" class="headerlink" title="jdbc.properties文件"></a>jdbc.properties文件</h2><p>这里主要配置数据库连接的相关信息。</p>
+<h2 id="log4j-properties文件"><a href="#log4j-properties文件" class="headerlink" title="log4j.properties文件"></a>log4j.properties文件</h2><p>这里主要配置日志记录的相关信息。</p>
+<p>配置文件都配置完了，我们终于可以开始写代码了!</p>
+<h1 id="SSM代码"><a href="#SSM代码" class="headerlink" title="SSM代码"></a>SSM代码</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>实现用户的登录与注销。</p>
+<h2 id="上帝视角开发（我需要什么就造什么）"><a href="#上帝视角开发（我需要什么就造什么）" class="headerlink" title="上帝视角开发（我需要什么就造什么）"></a>上帝视角开发（我需要什么就造什么）</h2><h3 id="我需要一个能处理我的请求（URL）的Controller"><a href="#我需要一个能处理我的请求（URL）的Controller" class="headerlink" title="我需要一个能处理我的请求（URL）的Controller"></a>我需要一个能处理我的请求（URL）的Controller</h3><p>知道要controller，我们就造一个，我们在com.todorex.controller包下新建一个LoginController类。</p>
+<p>Controller的作用主要是根据你请求的URL来做不同的事（对应的方法），结果是返回一个ModelAndView（当然View和Model也可以分开），如果方法的逻辑只是页面间的跳转和简单数据处理，我们就用不到Service了，如过我们需要进行业务处理以及操作数据库，那么我们就需要用到Service了。</p>
+<p>PS：这里需要注意请求转发和请求重定向的区别（注释中有）</p>
+<h3 id="我需要一个能处理业务的Service"><a href="#我需要一个能处理业务的Service" class="headerlink" title="我需要一个能处理业务的Service"></a>我需要一个能处理业务的Service</h3><p>在service层设计一个好的接口是至关重要的（我们还是HelloWorld，以后有经验了自然能设计得好一些），如果实现类有多个的话 ，可以用@Service(“userService1”)来注入，@Resource(name=”userService1”) 来对应获取。在处理业务逻辑的时候，一般都会涉及到数据库操作，这个时候我们就需要用到Dao了。</p>
+<h3 id="我需要一个能处理数据的Dao"><a href="#我需要一个能处理数据的Dao" class="headerlink" title="我需要一个能处理数据的Dao"></a>我需要一个能处理数据的Dao</h3><p>这里我们要明确一点：一个Dao接口对应一个Mapper文件，Dao定义接口方法，Mapper文件实现该方法的sql语句。</p>
+<h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><p>这里我们举一个例子，就是记录登录用户的名字和时间，看下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> </span>&#123;</div><div class="line">    <span class="comment">// 获得日志对象</span></div><div class="line">    Logger logger = Logger.getLogger(LoginController.class);</div><div class="line"></div><div class="line">    <span class="meta">@RequestMapping</span>(value = <span class="string">"/checkLogin"</span>,method = RequestMethod.POST)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">checkLogin</span><span class="params">(User user, Model model)</span> </span>&#123;</div><div class="line">        user = userService.checkLogin(user.getUsername(),user.getPassword());</div><div class="line">        <span class="keyword">if</span> (user != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="comment">// 日志记录用户登录</span></div><div class="line">            logger.info(user.getUsername()+<span class="string">"在"</span>+<span class="keyword">new</span> Date() + <span class="string">"登录过!"</span>);</div><div class="line">            model.addAttribute(<span class="string">"user"</span>,user);</div><div class="line">            <span class="keyword">return</span> <span class="string">"redirect:/success"</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"redirect:/fail"</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><ol>
+<li><p>配置一个基类（用于加载配置文件）</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RunWith</span>(SpringJUnit4ClassRunner.class) <span class="comment">//使用junit4进行测试</span></div><div class="line"><span class="comment">// 导入多个配置文件</span></div><div class="line"><span class="meta">@ContextConfiguration</span>(locations=&#123;<span class="string">"classpath:spring/spring-*.xml"</span>,<span class="string">"classpath:mybatis-config.xml"</span>&#125;) <span class="comment">//加载配置文件</span></div><div class="line"><span class="comment">//所有继承该类的测试类都会遵循该配置</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseJunit4Test</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>在各个对应的包下建立单元测试，如;</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoTest</span> <span class="keyword">extends</span> <span class="title">BaseJunit4Test</span> </span>&#123;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> UserDao userDao;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span>  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestFindByUsername</span><span class="params">()</span> </span>&#123;</div><div class="line">        User user = userDao.findByUsername(<span class="string">"rex"</span>);</div><div class="line">        System.out.println(user);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="页面编写"><a href="#页面编写" class="headerlink" title="页面编写"></a>页面编写</h1><p>这里只举一个例子（其实主要就是jsp的用法）,success.jsp:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot;</div><div class="line">         pageEncoding=&quot;UTF-8&quot;%&gt;</div><div class="line">&lt;%--引入jstl标签库，很重要--%&gt;</div><div class="line">&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot;%&gt;</div><div class="line"> &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;</div><div class="line">    &lt;title&gt;Insert title here&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;!--添加背景图片--&gt;</div><div class="line">&lt;body background=&quot;image/success.jpg&quot;&gt;</div><div class="line"></div><div class="line">&lt;div style=&quot;margin: auto&quot;&gt;</div><div class="line">&lt;div&gt;</div><div class="line">    &lt;%--利用jstl标签获取session中的user的值--%&gt;</div><div class="line">    &lt;strong style=&quot;font-size: 100px;color: red&quot;&gt; $&#123;sessionScope.user.username&#125;!&lt;/strong&gt;</div><div class="line">    &lt;strong style=&quot;font-size: 100px;color: blue&quot;&gt; ，你他妈登录成功了&lt;/strong&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">&lt;form action=&quot;/LoginDemo/outLogin&quot; &gt;</div><div class="line">    &lt;button type=&quot;submit&quot; class=&quot;btn btn-success col-lg-12&quot; style=&quot;font-size: 100px;text-align: center&quot;&gt;退出登录&lt;/button&gt;</div><div class="line">&lt;/form&gt;</div><div class="line"></div><div class="line">&lt;/div&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
+<p><strong>终于大功告成！！！</strong></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://blog.csdn.net/s740556472/article/details/71247285" target="_blank" rel="external">SSM搭建(整合)+用户模块(登录和注销)实现</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：想着怎么教一个人快速入门SSM，讲原理是真的太费时间，还是以搭建具体流程加上源码比较好吧，先模仿，后创新嘛！
+    
+    </summary>
+    
+      <category term="HelloWorld" scheme="http://bestlixiang.site/categories/HelloWorld/"/>
+    
+    
+      <category term="Spring" scheme="http://bestlixiang.site/tags/Spring/"/>
+    
+      <category term="SpringMVC" scheme="http://bestlixiang.site/tags/SpringMVC/"/>
+    
+      <category term="Mybatis" scheme="http://bestlixiang.site/tags/Mybatis/"/>
+    
+  </entry>
   
   <entry>
     <title>揭秘Mybatis(二)_Mybatis工作原理</title>
@@ -2375,118 +2434,6 @@
     <summary type="html">
     
       &lt;p&gt;引：系统管理员的重要工作就是修改与设置某些重要软件的配置文件，因此至少得到学会一种以上的命令行界面的文本编辑器。在所有的Linux发行版中都具有vi这款编辑器，我们这次学的它的高级版vim。
-    
-    </summary>
-    
-      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走进Linux_Linux磁盘与文件系统管理</title>
-    <link href="http://bestlixiang.site/2018/03/25/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_Linux%E7%A3%81%E7%9B%98%E4%B8%8E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86/"/>
-    <id>http://bestlixiang.site/2018/03/25/走进Linux/走进Linux_Linux磁盘与文件系统管理/</id>
-    <published>2018-03-25T12:02:04.000Z</published>
-    <updated>2018-04-09T04:32:11.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：系统管理员最重要的任务之一就是管理好自己的磁盘文件系统，所以本文的知识对于那些需要规划自己磁盘文件系统的人群特别重要，有些内容可能不太详细，所以日后自己亲身实践过后，希望能再开一篇详细的文章。<a id="more"></a></p>
-<h1 id="认识文件系统"><a href="#认识文件系统" class="headerlink" title="认识文件系统"></a>认识文件系统</h1><p>Linux最传统的磁盘文件系统使用的是EXT2（索引式文件系统）。所以要了解文件系统就得要又认识EXT2开始。</p>
-<p>在Linux中，需要记录文件权限与文件属性，所以文件系统通常会将这两部分的数据分别存放在不同的块，权限和属性放置到inode中，至于实际数据则放置到data block块中，另外还有一个超级块（superblock）会记录整体文件系统的整体信息。<br>每个inode，block都有编号，下面简略说明上面三个数据的意义：</p>
-<ol>
-<li>super block：记录此文件系统的整体信息，包括inode/block的总量、使用量、以及文件系统的格式与相关信息。</li>
-<li>inode：记录文件的属性，一个文件占用一个inode，同时记录此文件的数据所在的block号码。</li>
-<li>block：实际记录文件的内容，若文件太大时，会占用多个block。</li>
-</ol>
-<h1 id="Linux的Ext2文件系统"><a href="#Linux的Ext2文件系统" class="headerlink" title="Linux的Ext2文件系统"></a>Linux的Ext2文件系统</h1><ol>
-<li>Ext2文件系统主要有boot sector，superblock，inode bitmap，block bitmap，inode table，data block六大部分。</li>
-<li>data block是用来放置文件内容数据的地方，在Ext2文件系统中所支持的block大小有1KB、2KB及4KB三种。</li>
-<li>inode记录文件的属性/权限等数据，每个inode大小均固定为128bytes；每个文件都仅占有一个inode而已；因此文件系统能够新建的文件数量，与inode数量有关。</li>
-<li>文件的block记录文件的实际数据，目录的block则记录该目录下面文件名与其inode号码的对照表。</li>
-<li>日志文件系统会多出一块记录区，随时记载文件系统的主要活动，可加快恢复时间。</li>
-<li>Linux文件系统为增加其性能，会让主存储器作为大量的磁盘高速缓存。</li>
-</ol>
-<h1 id="文件系统的简单操作"><a href="#文件系统的简单操作" class="headerlink" title="文件系统的简单操作"></a>文件系统的简单操作</h1><h2 id="磁盘与目录的容量：df，du"><a href="#磁盘与目录的容量：df，du" class="headerlink" title="磁盘与目录的容量：df，du"></a>磁盘与目录的容量：df，du</h2><ol>
-<li><p>df：列出文件系统的整体磁盘使用量</p>
-<p> 在执行df命令之后，会出现如下信息：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">文件系统          1K-块    已用     可用 已用% 挂载点</div><div class="line">/dev/vda1      51474044 6759800 42092876   14% /</div><div class="line">devtmpfs         932632       0   932632    0% /dev</div><div class="line">tmpfs            941920      24   941896    1% /dev/shm</div><div class="line">tmpfs            941920     316   941604    1% /run</div><div class="line">tmpfs            941920       0   941920    0% /sys/fs/cgroup</div><div class="line">tmpfs            188388       0   188388    0% /run/user/0</div></pre></td></tr></table></figure>
-</li>
-<li><p>du：评估文件系统的磁盘使用量（常用于评估目录所占容量）</p>
-<p> 可以看看下面的案例：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 1. 列出目前目录下的所有文件容量</div><div class="line">du</div><div class="line">// 2. 同范例一，但是将文件的容量也列出来</div><div class="line">du -a</div><div class="line">// 3. 检查根目录下面每个目录所占用的容量</div><div class="line">du -sm /*</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="连接文件"><a href="#连接文件" class="headerlink" title="连接文件"></a>连接文件</h2><ol>
-<li><p>hard link (硬连接或实际连接)</p>
-<p> hard link只是在某个目录下新建一条文件名连接到某inode号码的管理记录。它的命令如下：</p>
-<blockquote>
-<p>ln</p>
-</blockquote>
-<p> hard link是有如下限制的：</p>
-<ul>
-<li>不能跨文件系统</li>
-<li>不能连接到目录</li>
-</ul>
-</li>
-<li><p>symbolic link (符号连接，也即是快捷方式)</p>
-<p> symbolic link就是在创建一个独立的文件，而这个文件会让数据的读取指向它连接的按个文件的文件名。它的命令如下：</p>
-<blockquote>
-<p>ls -s</p>
-</blockquote>
-<p> symbolic link与Windows的快捷方式可以画上等号，如果原文件被删除了，那symbolic link也就不能用了。</p>
-</li>
-</ol>
-<h1 id="磁盘的分区、格式化、校验与挂载"><a href="#磁盘的分区、格式化、校验与挂载" class="headerlink" title="磁盘的分区、格式化、校验与挂载"></a>磁盘的分区、格式化、校验与挂载</h1><p>对于一个系统管理者(root)而言，磁盘的管理是相对重要的一环，如果我们想要在系统里面新增一块硬盘，应该有哪些动作需要做？</p>
-<ol>
-<li>对磁盘进行分区，以新建可用的分区</li>
-<li>对该分区进行格式化，以创建系统可用的文件系统</li>
-<li>若想要仔细一点，则可对刚才新建好的文件系统进行校验</li>
-<li>在Linux系统上，需要创建挂载点（也即是目录），并将它挂载上来</li>
-</ol>
-<h2 id="磁盘分区：fdisk"><a href="#磁盘分区：fdisk" class="headerlink" title="磁盘分区：fdisk"></a>磁盘分区：fdisk</h2><p>输入如下命令，进入磁盘分区操作：</p>
-<blockquote>
-<p>fdisk /dev/hdc(磁盘名)</p>
-</blockquote>
-<p>接下来就是按照提示新增或者删除分区了。</p>
-<h2 id="磁盘格式化：mkfs"><a href="#磁盘格式化：mkfs" class="headerlink" title="磁盘格式化：mkfs"></a>磁盘格式化：mkfs</h2><p>分区完毕之后就要进行格式化，格式化非常简单，使用mkfs（make file system）即可。命令如下：</p>
-<blockquote>
-<p>mkfs [-t 文件系统格式] 磁盘设备的文件名</p>
-</blockquote>
-<p>-t后的文件系统格式就是让你指定将文件系统格式化成哪种文件系统。如ext2、ext3、vfat等。</p>
-<h2 id="磁盘检验：fsck"><a href="#磁盘检验：fsck" class="headerlink" title="磁盘检验：fsck"></a>磁盘检验：fsck</h2><p>当系统运行出现问题导致文件系统发生错乱，此时就需要磁盘的检验。命令如下：</p>
-<blockquote>
-<p>fsck [-t 文件系统] [-ACay] 设备名称</p>
-</blockquote>
-<p>通常只有root用户，而且在文件系统有问题的时候才能进行这个操作，因为在正常情况下使用这个命令会对系统伤害很大。 此外，fsck在扫描的时候，有问题的数据会被放在lost＋found这个文件夹中。所以正常情况下这个文件夹中是不应该有数据的。</p>
-<h2 id="磁盘挂载与卸载：mount，umount"><a href="#磁盘挂载与卸载：mount，umount" class="headerlink" title="磁盘挂载与卸载：mount，umount"></a>磁盘挂载与卸载：mount，umount</h2><p>在挂载前需要确定下面几件事：</p>
-<ol>
-<li>单一文件系统不应该被重复挂载在不同的挂载点（目录）中</li>
-<li>单一目录不应该重复挂载多个文件系统</li>
-<li>作为挂载带你的目录理论上应该都是空目录</li>
-</ol>
-<p>具体命令如下</p>
-<ul>
-<li><p>挂载：</p>
-<blockquote>
-<p>mount [-t 文件系统] [-L 文件系统的卷标名称] [-o 额外选项] [-n] 设备文件名 挂载点  </p>
-</blockquote>
-</li>
-<li><p>卸载</p>
-<blockquote>
-<p>umount [-fn] 设备文件名或挂载点</p>
-</blockquote>
-</li>
-</ul>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《鸟哥的Linux私房菜》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：系统管理员最重要的任务之一就是管理好自己的磁盘文件系统，所以本文的知识对于那些需要规划自己磁盘文件系统的人群特别重要，有些内容可能不太详细，所以日后自己亲身实践过后，希望能再开一篇详细的文章。
     
     </summary>
     
