@@ -1,0 +1,1025 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="SpringBoot," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：可能你早已开始使用SpringBoot，但是你却不知道SpringBoot是个什么东西，他又是怎么运行的，这里给你答案！">
+<meta name="keywords" content="SpringBoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="揭秘SpringBoot(一)_SpringBoot运行原理">
+<meta property="og:url" content="http://bestlixiang.site/2018/04/21/深入SSM/揭秘SpringBoot-一-SpringBoot运行原理/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：可能你早已开始使用SpringBoot，但是你却不知道SpringBoot是个什么东西，他又是怎么运行的，这里给你答案！">
+<meta property="og:updated_time" content="2018-04-21T05:12:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="揭秘SpringBoot(一)_SpringBoot运行原理">
+<meta name="twitter:description" content="引：可能你早已开始使用SpringBoot，但是你却不知道SpringBoot是个什么东西，他又是怎么运行的，这里给你答案！">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/04/21/深入SSM/揭秘SpringBoot-一-SpringBoot运行原理/"/>
+
+
+
+
+
+  <title> 揭秘SpringBoot(一)_SpringBoot运行原理 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/21/深入SSM/揭秘SpringBoot-一-SpringBoot运行原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                揭秘SpringBoot(一)_SpringBoot运行原理
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-21T13:11:48+08:00">
+                2018-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/深入SSM/" itemprop="url" rel="index">
+                    <span itemprop="name">深入SSM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：可能你早已开始使用SpringBoot，但是你却不知道SpringBoot是个什么东西，他又是怎么运行的，这里给你答案！<a id="more"></a></p>
+<h1 id="SpringBoot是什么"><a href="#SpringBoot是什么" class="headerlink" title="SpringBoot是什么"></a>SpringBoot是什么</h1><p>用过Spring的人都知道，你肯定需要些很多很多的XML来用配置复杂的依赖关系，你肯定厌倦了。这个时候SpringBoot出现了，<br><strong>SpringBoot</strong>是由Pivotal团队提供的全新框架，其<strong>设计目的是用来简化新Spring应用的初始搭建以及开发过程</strong>。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置（想想肯定会很开心）。</p>
+<h2 id="核心理念"><a href="#核心理念" class="headerlink" title="核心理念"></a>核心理念</h2><p><strong>习惯优于配置</strong></p>
+<h2 id="SpringBoot与Spring-Framework的区别"><a href="#SpringBoot与Spring-Framework的区别" class="headerlink" title="SpringBoot与Spring Framework的区别"></a>SpringBoot与Spring Framework的区别</h2><p>做个下面的<strong>比喻</strong>：</p>
+<p><strong>SpringFramework</strong> 就像一个大型电子器件生产公司，它生产的电子器件（比如zookeeper，redis等整合包）都很优秀，当其他小公司（开发者）生产机器人（项目）需要使用到它的电子器件时，就发现需要大量的焊接工作（配置XML）来连接自己的电子器件（zookeeper，redis），这样真的太耗时了，而<strong>SpringBoot</strong> 就像这个电子器件生产公司在原来电子器件的基础上包装出来的许多统一的插口（各种starter），这些插头可以与小公司的电子器件可以直接连接，不需要焊接工作就可以直接使用。</p>
+<p>通过上面的比喻我们可以了解到他们两者的区别，也发现其实SpringBoot并不是什么新东西，它只是原来Spring的基础上重新包装过，从而简化了Spring的相关配置。</p>
+<h2 id="SpringBoot的核心功能"><a href="#SpringBoot的核心功能" class="headerlink" title="SpringBoot的核心功能"></a>SpringBoot的核心功能</h2><ol>
+<li>SpringBoot可以以jar包的形式<strong>独立运行</strong>，因为SpringBoot内嵌Servlet容器，如Tomcat、Jetty。</li>
+<li>Spring会根据类路径中的jar包、类，为jar包里的类自动配置Bean，极大减少了我们要使用的配置。</li>
+<li>提供starter(起动机)简化了Maven配置(依赖加载)，一个starter依赖抵了好几个依赖。</li>
+</ol>
+<h1 id="SpringBoot运行原理"><a href="#SpringBoot运行原理" class="headerlink" title="SpringBoot运行原理"></a>SpringBoot运行原理</h1><ol>
+<li><p>对于SpringBoot工程我们总是先看到它的启动类，如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringbootLoginApplication</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SpringApplication.run(SpringbootLoginApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>对于SpringBoot的运作原理，我们应该先从启动类的@SpringBootApplication注解来分析，这个注解是一个组合注解，我们进入它的源码看看：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Inherited</span></div><div class="line"><span class="meta">@SpringBootConfiguration</span></div><div class="line"><span class="meta">@EnableAutoConfiguration</span></div><div class="line"><span class="meta">@ComponentScan</span>(</div><div class="line">    excludeFilters = &#123;<span class="meta">@Filter</span>(</div><div class="line">    type = FilterType.CUSTOM,</div><div class="line">    classes = &#123;TypeExcludeFilter.class&#125;</div><div class="line">), <span class="meta">@Filter</span>(</div><div class="line">    type = FilterType.CUSTOM,</div><div class="line">    classes = &#123;AutoConfigurationExcludeFilter.class&#125;</div><div class="line">)&#125;</div><div class="line">)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringBootApplication &#123;</div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = EnableAutoConfiguration.class</div><div class="line">    )</div><div class="line">    Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = EnableAutoConfiguration.class</div><div class="line">    )</div><div class="line">    String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = ComponentScan.class,</div><div class="line">        attribute = <span class="string">"basePackages"</span></div><div class="line">    )</div><div class="line">    String[] scanBasePackages() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = ComponentScan.class,</div><div class="line">        attribute = <span class="string">"basePackageClasses"</span></div><div class="line">    )</div><div class="line">    Class&lt;?&gt;[] scanBasePackageClasses() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 总得来说最重要的就是@SpringBootConfiguration，@EnableAutoConfiguration，@ComponentScan这三个注解，我们一个个分析：</p>
+<ol>
+<li><p>@SpringBootConfiguration</p>
+<p> 我们进入该注解，我发现它的代码如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringBootConfiguration &#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 你会发现其核心注解就是@Configuration，它对于我们来说应该不陌生，因为它就是Java配置形式的Spring Ioc容器的配置类使用的那个@Configuration（相当于XML配置文件的一个Bean），SpringBoot社区推荐使用基于JavaConfig的配置形式，所以，这里的启动类标注了@Configuration之后，本身其实也是一个IoC容器的配置类。</p>
+</li>
+<li><p>@ComponentScan</p>
+<p> 这个注解很简单，很常见，但是也很<strong>重要</strong>。它主要的作用就是自动扫描并加载符合条件的组件（比如@Controller和@Service等）或者bean定义，最终将这些bean定义加载到IoC容器中。我们看看它的源码：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Repeatable</span>(ComponentScans.class)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ComponentScan &#123;</div><div class="line"><span class="comment">// 设置默认路径</span></div><div class="line"><span class="meta">@AliasFor</span>(<span class="string">"basePackages"</span>)</div><div class="line">String[] value() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"><span class="comment">// 如果不指定，则默认Spring框架实现会从声明@ComponentScan所在类的package进行扫描。</span></div><div class="line"><span class="comment">// 所以SpringBoot的启动类最好是放在root package下，因为默认不指定basePackages。</span></div><div class="line"><span class="meta">@AliasFor</span>(<span class="string">"value"</span>)</div><div class="line">String[] basePackages() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">Class&lt;?&gt;[] basePackageClasses() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">Class&lt;? extends BeanNameGenerator&gt; nameGenerator() <span class="keyword">default</span> BeanNameGenerator.class;</div><div class="line">Class&lt;? extends ScopeMetadataResolver&gt; scopeResolver() <span class="keyword">default</span> AnnotationScopeMetadataResolver.class;</div><div class="line"><span class="function">ScopedProxyMode <span class="title">scopedProxy</span><span class="params">()</span> <span class="keyword">default</span> ScopedProxyMode.DEFAULT</span>;</div><div class="line"><span class="comment">// 扫描类型</span></div><div class="line"><span class="function">String <span class="title">resourcePattern</span><span class="params">()</span> <span class="keyword">default</span> "**<span class="comment">/*.class";</span></span></div><div class="line">// 可设置过滤器</div><div class="line">boolean useDefaultFilters() default true;</div><div class="line">ComponentScan.Filter[] includeFilters() default &#123;&#125;;</div><div class="line">ComponentScan.Filter[] excludeFilters() default &#123;&#125;;</div><div class="line">// 配置懒加载，如果没被使用，就先不生成Bean</div><div class="line">boolean lazyInit() default false;</div><div class="line"></div><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">@Target(&#123;&#125;)</div><div class="line">public @interface Filter &#123;</div><div class="line">    FilterType type() default FilterType.ANNOTATION;</div><div class="line"></div><div class="line">    @AliasFor("classes")</div><div class="line">    Class&lt;?&gt;[] value() default &#123;&#125;;</div><div class="line"></div><div class="line">    @AliasFor("value")</div><div class="line">    Class&lt;?&gt;[] classes() default &#123;&#125;;</div><div class="line"></div><div class="line">    String[] pattern() default &#123;&#125;;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>@EnableAutoConfiguration</p>
+<p> 这个注解可以说是SpringBoot自动配置的核心了，<strong>灰常重要</strong>。我们进去看一下它的源码：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Inherited</span></div><div class="line"><span class="meta">@AutoConfigurationPackage</span></div><div class="line"><span class="comment">// 借助@Import的帮助，将所有符合自动配置条件的bean定义加载到IoC容器</span></div><div class="line"><span class="meta">@Import</span>(&#123;AutoConfigurationImportSelector.class&#125;)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAutoConfiguration &#123;</div><div class="line">    String ENABLED_OVERRIDE_PROPERTY = <span class="string">"spring.boot.enableautoconfiguration"</span>;</div><div class="line"></div><div class="line">    Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 我们需要好好看看AutoConfigurationImportSelector，它利用SpringFactoriesLoader.loadFactoryNames方法来扫描具有META-INF/spring.factories 文件的jar包，代码如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> List&lt;String&gt; <span class="title">getCandidateConfigurations</span><span class="params">(AnnotationMetadata metadata, AnnotationAttributes attributes)</span> </span>&#123;</div><div class="line">List&lt;String&gt; configurations = SpringFactoriesLoader.loadFactoryNames(<span class="keyword">this</span>.getSpringFactoriesLoaderFactoryClass(), <span class="keyword">this</span>.getBeanClassLoader());</div><div class="line"><span class="keyword">return</span> configurations;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 配合@EnableAutoConfiguration使用的话，它更多是提供一种配置查找的功能支持，即根据@EnableAutoConfiguration的完整类名如org.springframework.boot.autoconfigure.EnableAutoConfiguration作为查找的Key,<strong>获取对应的一组@Configuration类</strong>，并将其中org.springframework.boot.autoconfigure.EnableAutoConfiguration对应的配置项实例化为对应的标注了@Configuration的JavaConfig形式的IoC容器配置类，然后汇总为一个（相当于一个XML文件）并加载到IoC容器（和Spring一样）。</p>
+<p> 我们可以看看spring-boot-autoconfigure.jar 里就有一个spring.factories 文件，此文件中声明了有哪些自动配置。我们看一点点：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># Auto Configure</div><div class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\</div><div class="line">org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration,\</div><div class="line"># 配置AOP对象</div><div class="line">org.springframework.boot.autoconfigure.aop.AopAutoConfiguration,\</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>看完@SpringBootApplication注解，我们再看看SpringApplication的run方法。</p>
+<ol>
+<li><p>我们通过debug发现将进入这个方法：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ConfigurableApplicationContext <span class="title">run</span><span class="params">(Class&lt;?&gt;[] primarySources, String[] args)</span> </span>&#123;</div><div class="line">    <span class="comment">// 会先创建SpringApplication对象实例，然后调用它的实例run方法</span></div><div class="line">    <span class="keyword">return</span> (<span class="keyword">new</span> SpringApplication(primarySources)).run(args);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>我们看看在实例初始化的过程中他做了什么：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">SpringApplication</span><span class="params">(ResourceLoader resourceLoader, Class... primarySources)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.sources = <span class="keyword">new</span> LinkedHashSet();</div><div class="line">    <span class="comment">// banner的打印模式，此时是控制台模式</span></div><div class="line">    <span class="keyword">this</span>.bannerMode = Mode.CONSOLE;</div><div class="line">    <span class="comment">// 开启日志</span></div><div class="line">    <span class="keyword">this</span>.logStartupInfo = <span class="keyword">true</span>;</div><div class="line">    <span class="comment">// 启用CommandLineProperties</span></div><div class="line">    <span class="keyword">this</span>.addCommandLineProperties = <span class="keyword">true</span>;</div><div class="line">    <span class="comment">// 开启headless模式支持，Headless模式是在缺少显示屏、键盘或者鼠标时的系统配置（自行了解）</span></div><div class="line">    <span class="keyword">this</span>.headless = <span class="keyword">true</span></div><div class="line">    <span class="comment">// 启用注册ShutdownHook，用于在非Web应用中关闭IoC容器和资源</span></div><div class="line">    <span class="keyword">this</span>.registerShutdownHook = <span class="keyword">true</span>;</div><div class="line">    <span class="keyword">this</span>.additionalProfiles = <span class="keyword">new</span> HashSet();</div><div class="line">    <span class="keyword">this</span>.resourceLoader = resourceLoader;</div><div class="line">    <span class="keyword">this</span>.primarySources = <span class="keyword">new</span> LinkedHashSet(Arrays.asList(primarySources));</div><div class="line">    <span class="comment">// 判断是否是web运行环境(Servlet)</span></div><div class="line">    <span class="keyword">this</span>.webApplicationType = <span class="keyword">this</span>.deduceWebApplicationType();</div><div class="line">    <span class="comment">// 设置初始化器(在META-INF/spring.factories 文件里，可扩展)</span></div><div class="line">    <span class="keyword">this</span>.setInitializers(<span class="keyword">this</span>.getSpringFactoriesInstances(ApplicationContextInitializer.class));</div><div class="line">    <span class="comment">// 设置监听器(在META-INF/spring.factories 文件里，可扩展)</span></div><div class="line">    <span class="keyword">this</span>.setListeners(<span class="keyword">this</span>.getSpringFactoriesInstances(ApplicationListener.class));</div><div class="line">    <span class="comment">// 推断并设置main方法的定义类</span></div><div class="line">    <span class="keyword">this</span>.mainApplicationClass = <span class="keyword">this</span>.deduceMainApplicationClass();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>SpringApplication实例初始化完成并且完成设置后，就开始执行run方法的逻辑，如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> ConfigurableApplicationContext <span class="title">run</span><span class="params">(String... args)</span> </span>&#123;</div><div class="line">    <span class="comment">// 开启任务执行时间监听器</span></div><div class="line">    StopWatch stopWatch = <span class="keyword">new</span> StopWatch();</div><div class="line">    stopWatch.start();</div><div class="line">    ConfigurableApplicationContext context = <span class="keyword">null</span>;</div><div class="line">    Collection&lt;SpringBootExceptionReporter&gt; exceptionReporters = <span class="keyword">new</span> ArrayList();</div><div class="line">    <span class="comment">// 设置系统属性</span></div><div class="line">    <span class="keyword">this</span>.configureHeadlessProperty();</div><div class="line">    <span class="comment">//开启广播，宣告SpringBoot要开始执行了</span></div><div class="line">    SpringApplicationRunListeners listeners = <span class="keyword">this</span>.getRunListeners(args);</div><div class="line">    listeners.starting();</div><div class="line"></div><div class="line">    Collection exceptionReporters;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        ApplicationArguments applicationArguments = <span class="keyword">new</span> DefaultApplicationArguments(args);</div><div class="line">        <span class="comment">// 创建并配置当前Spring Boot应用将要使用的Environment（包括配置要使用的PropertySource以及Profile）。</span></div><div class="line">        ConfigurableEnvironment environment = <span class="keyword">this</span>.prepareEnvironment(listeners, applicationArguments);</div><div class="line">        <span class="comment">// 宣告SpringBoot应用使用的Environment准备好了。</span></div><div class="line">        <span class="keyword">this</span>.configureIgnoreBeanInfo(environment);</div><div class="line">        <span class="comment">// 决定是否打印Banner</span></div><div class="line">        Banner printedBanner = <span class="keyword">this</span>.printBanner(environment);</div><div class="line">        <span class="comment">// 根据用户是否明确设置了applicationContextClass类型，决定该为当前SpringBoot应用创建什么类型的ApplicationContext</span></div><div class="line">        <span class="comment">// 然后根据条件决定是否添加ShutdownHook，决定是否使用自定义的BeanNameGenerator，决定是否使用自定义的ResourceLoader，</span></div><div class="line">        <span class="comment">// 最重要的是将之前准备好的Environment设置给创建好的ApplicationContext使用。</span></div><div class="line">        context = <span class="keyword">this</span>.createApplicationContext();</div><div class="line">        <span class="comment">// 得到异常报告者</span></div><div class="line">        exceptionReporters = <span class="keyword">this</span>.getSpringFactoriesInstances(SpringBootExceptionReporter.class, <span class="keyword">new</span> Class[]&#123;ConfigurableApplicationContext.class&#125;, <span class="keyword">new</span> Object[]&#123;context&#125;);</div><div class="line">        <span class="comment">// ApplicationContext创建好之后，遍历调用ApplicationContextInitializer的initialize（applicationContext）方法来对已经创建好的ApplicationContext进行进一步的处理。</span></div><div class="line">        <span class="comment">// 遍历调用所有SpringApplicationRunListener的contextPrepared()方法。</span></div><div class="line">        <span class="comment">// 将之前通过@EnableAutoConfiguration获取的所有配置以及其他形式的IoC容器配置加载到已经准备完毕的ApplicationContext</span></div><div class="line">        <span class="comment">// (很重要，可以进入看看)</span></div><div class="line">        <span class="keyword">this</span>.prepareContext(context, environment, listeners, applicationArguments, printedBanner);</div><div class="line">        <span class="comment">// 初始化所有自动配置类，调用ApplicationContext的refresh()方法</span></div><div class="line">        <span class="keyword">this</span>.refreshContext(context);</div><div class="line">        <span class="comment">// 调用所有的SpringApplicationRunListener的finished()方法，宣告SpringBoot已经完成了ApplicationContext初始化的全部过程。</span></div><div class="line">        <span class="keyword">this</span>.afterRefresh(context, applicationArguments);</div><div class="line">        <span class="comment">//关闭任务执行时间监听器</span></div><div class="line">        stopWatch.stop();</div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.logStartupInfo) &#123;</div><div class="line">            <span class="comment">// //如果开启日志，则打印执行的时间</span></div><div class="line">            (<span class="keyword">new</span> StartupInfoLogger(<span class="keyword">this</span>.mainApplicationClass)).logStarted(<span class="keyword">this</span>.getApplicationLog(), stopWatch);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        listeners.started(context);</div><div class="line">        <span class="keyword">this</span>.callRunners(context, applicationArguments);</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable var10) &#123;</div><div class="line">        <span class="comment">// //调用异常分析器打印报告，调用所有的SpringApplicationRunListener的finished()方法将异常信息发布出去</span></div><div class="line">        <span class="keyword">this</span>.handleRunFailure(context, var10, exceptionReporters, listeners);</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(var10);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        listeners.running(context);</div><div class="line">        <span class="keyword">return</span> context;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable var9) &#123;</div><div class="line">        <span class="keyword">this</span>.handleRunFailure(context, var9, exceptionReporters, (SpringApplicationRunListeners)<span class="keyword">null</span>);</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(var9);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.cnblogs.com/zheting/p/6707035.html" target="_blank" rel="external">Spring Boot干货系列：（三）启动原理解析</a></li>
+<li><a href="https://www.jianshu.com/p/cb5cb5937686" target="_blank" rel="external">Spring Boot学习笔记03–深入了解SpringBoot的启动过程</a></li>
+<li><a href="https://blog.csdn.net/hengyunabc/article/details/50120001" target="_blank" rel="external">spring boot应用启动原理分析</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/17/HelloWorld/HelloWorld-SSMLogin/" rel="next" title="HelloWorld_SSMLogin">
+                <i class="fa fa-chevron-left"></i> HelloWorld_SSMLogin
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">109</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot是什么"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心理念"><span class="nav-number">1.1.</span> <span class="nav-text">核心理念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot与Spring-Framework的区别"><span class="nav-number">1.2.</span> <span class="nav-text">SpringBoot与Spring Framework的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot的核心功能"><span class="nav-number">1.3.</span> <span class="nav-text">SpringBoot的核心功能</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot运行原理"><span class="nav-number">2.</span> <span class="nav-text">SpringBoot运行原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

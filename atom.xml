@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-04-17T11:01:03.000Z</updated>
+  <updated>2018-04-21T05:12:44.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,86 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>揭秘SpringBoot(一)_SpringBoot运行原理</title>
+    <link href="http://bestlixiang.site/2018/04/21/%E6%B7%B1%E5%85%A5SSM/%E6%8F%AD%E7%A7%98SpringBoot-%E4%B8%80-SpringBoot%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/"/>
+    <id>http://bestlixiang.site/2018/04/21/深入SSM/揭秘SpringBoot-一-SpringBoot运行原理/</id>
+    <published>2018-04-21T05:11:48.000Z</published>
+    <updated>2018-04-21T05:12:44.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：可能你早已开始使用SpringBoot，但是你却不知道SpringBoot是个什么东西，他又是怎么运行的，这里给你答案！<a id="more"></a></p>
+<h1 id="SpringBoot是什么"><a href="#SpringBoot是什么" class="headerlink" title="SpringBoot是什么"></a>SpringBoot是什么</h1><p>用过Spring的人都知道，你肯定需要些很多很多的XML来用配置复杂的依赖关系，你肯定厌倦了。这个时候SpringBoot出现了，<br><strong>SpringBoot</strong>是由Pivotal团队提供的全新框架，其<strong>设计目的是用来简化新Spring应用的初始搭建以及开发过程</strong>。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置（想想肯定会很开心）。</p>
+<h2 id="核心理念"><a href="#核心理念" class="headerlink" title="核心理念"></a>核心理念</h2><p><strong>习惯优于配置</strong></p>
+<h2 id="SpringBoot与Spring-Framework的区别"><a href="#SpringBoot与Spring-Framework的区别" class="headerlink" title="SpringBoot与Spring Framework的区别"></a>SpringBoot与Spring Framework的区别</h2><p>做个下面的<strong>比喻</strong>：</p>
+<p><strong>SpringFramework</strong> 就像一个大型电子器件生产公司，它生产的电子器件（比如zookeeper，redis等整合包）都很优秀，当其他小公司（开发者）生产机器人（项目）需要使用到它的电子器件时，就发现需要大量的焊接工作（配置XML）来连接自己的电子器件（zookeeper，redis），这样真的太耗时了，而<strong>SpringBoot</strong> 就像这个电子器件生产公司在原来电子器件的基础上包装出来的许多统一的插口（各种starter），这些插头可以与小公司的电子器件可以直接连接，不需要焊接工作就可以直接使用。</p>
+<p>通过上面的比喻我们可以了解到他们两者的区别，也发现其实SpringBoot并不是什么新东西，它只是原来Spring的基础上重新包装过，从而简化了Spring的相关配置。</p>
+<h2 id="SpringBoot的核心功能"><a href="#SpringBoot的核心功能" class="headerlink" title="SpringBoot的核心功能"></a>SpringBoot的核心功能</h2><ol>
+<li>SpringBoot可以以jar包的形式<strong>独立运行</strong>，因为SpringBoot内嵌Servlet容器，如Tomcat、Jetty。</li>
+<li>Spring会根据类路径中的jar包、类，为jar包里的类自动配置Bean，极大减少了我们要使用的配置。</li>
+<li>提供starter(起动机)简化了Maven配置(依赖加载)，一个starter依赖抵了好几个依赖。</li>
+</ol>
+<h1 id="SpringBoot运行原理"><a href="#SpringBoot运行原理" class="headerlink" title="SpringBoot运行原理"></a>SpringBoot运行原理</h1><ol>
+<li><p>对于SpringBoot工程我们总是先看到它的启动类，如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringbootLoginApplication</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SpringApplication.run(SpringbootLoginApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>对于SpringBoot的运作原理，我们应该先从启动类的@SpringBootApplication注解来分析，这个注解是一个组合注解，我们进入它的源码看看：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Inherited</span></div><div class="line"><span class="meta">@SpringBootConfiguration</span></div><div class="line"><span class="meta">@EnableAutoConfiguration</span></div><div class="line"><span class="meta">@ComponentScan</span>(</div><div class="line">    excludeFilters = &#123;<span class="meta">@Filter</span>(</div><div class="line">    type = FilterType.CUSTOM,</div><div class="line">    classes = &#123;TypeExcludeFilter.class&#125;</div><div class="line">), <span class="meta">@Filter</span>(</div><div class="line">    type = FilterType.CUSTOM,</div><div class="line">    classes = &#123;AutoConfigurationExcludeFilter.class&#125;</div><div class="line">)&#125;</div><div class="line">)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringBootApplication &#123;</div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = EnableAutoConfiguration.class</div><div class="line">    )</div><div class="line">    Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = EnableAutoConfiguration.class</div><div class="line">    )</div><div class="line">    String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = ComponentScan.class,</div><div class="line">        attribute = <span class="string">"basePackages"</span></div><div class="line">    )</div><div class="line">    String[] scanBasePackages() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    <span class="meta">@AliasFor</span>(</div><div class="line">        annotation = ComponentScan.class,</div><div class="line">        attribute = <span class="string">"basePackageClasses"</span></div><div class="line">    )</div><div class="line">    Class&lt;?&gt;[] scanBasePackageClasses() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 总得来说最重要的就是@SpringBootConfiguration，@EnableAutoConfiguration，@ComponentScan这三个注解，我们一个个分析：</p>
+<ol>
+<li><p>@SpringBootConfiguration</p>
+<p> 我们进入该注解，我发现它的代码如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringBootConfiguration &#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 你会发现其核心注解就是@Configuration，它对于我们来说应该不陌生，因为它就是Java配置形式的Spring Ioc容器的配置类使用的那个@Configuration（相当于XML配置文件的一个Bean），SpringBoot社区推荐使用基于JavaConfig的配置形式，所以，这里的启动类标注了@Configuration之后，本身其实也是一个IoC容器的配置类。</p>
+</li>
+<li><p>@ComponentScan</p>
+<p> 这个注解很简单，很常见，但是也很<strong>重要</strong>。它主要的作用就是自动扫描并加载符合条件的组件（比如@Controller和@Service等）或者bean定义，最终将这些bean定义加载到IoC容器中。我们看看它的源码：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Repeatable</span>(ComponentScans.class)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ComponentScan &#123;</div><div class="line"><span class="comment">// 设置默认路径</span></div><div class="line"><span class="meta">@AliasFor</span>(<span class="string">"basePackages"</span>)</div><div class="line">String[] value() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"><span class="comment">// 如果不指定，则默认Spring框架实现会从声明@ComponentScan所在类的package进行扫描。</span></div><div class="line"><span class="comment">// 所以SpringBoot的启动类最好是放在root package下，因为默认不指定basePackages。</span></div><div class="line"><span class="meta">@AliasFor</span>(<span class="string">"value"</span>)</div><div class="line">String[] basePackages() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">Class&lt;?&gt;[] basePackageClasses() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">Class&lt;? extends BeanNameGenerator&gt; nameGenerator() <span class="keyword">default</span> BeanNameGenerator.class;</div><div class="line">Class&lt;? extends ScopeMetadataResolver&gt; scopeResolver() <span class="keyword">default</span> AnnotationScopeMetadataResolver.class;</div><div class="line"><span class="function">ScopedProxyMode <span class="title">scopedProxy</span><span class="params">()</span> <span class="keyword">default</span> ScopedProxyMode.DEFAULT</span>;</div><div class="line"><span class="comment">// 扫描类型</span></div><div class="line"><span class="function">String <span class="title">resourcePattern</span><span class="params">()</span> <span class="keyword">default</span> "**<span class="comment">/*.class";</span></span></div><div class="line">// 可设置过滤器</div><div class="line">boolean useDefaultFilters() default true;</div><div class="line">ComponentScan.Filter[] includeFilters() default &#123;&#125;;</div><div class="line">ComponentScan.Filter[] excludeFilters() default &#123;&#125;;</div><div class="line">// 配置懒加载，如果没被使用，就先不生成Bean</div><div class="line">boolean lazyInit() default false;</div><div class="line"></div><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">@Target(&#123;&#125;)</div><div class="line">public @interface Filter &#123;</div><div class="line">    FilterType type() default FilterType.ANNOTATION;</div><div class="line"></div><div class="line">    @AliasFor("classes")</div><div class="line">    Class&lt;?&gt;[] value() default &#123;&#125;;</div><div class="line"></div><div class="line">    @AliasFor("value")</div><div class="line">    Class&lt;?&gt;[] classes() default &#123;&#125;;</div><div class="line"></div><div class="line">    String[] pattern() default &#123;&#125;;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>@EnableAutoConfiguration</p>
+<p> 这个注解可以说是SpringBoot自动配置的核心了，<strong>灰常重要</strong>。我们进去看一下它的源码：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="meta">@Inherited</span></div><div class="line"><span class="meta">@AutoConfigurationPackage</span></div><div class="line"><span class="comment">// 借助@Import的帮助，将所有符合自动配置条件的bean定义加载到IoC容器</span></div><div class="line"><span class="meta">@Import</span>(&#123;AutoConfigurationImportSelector.class&#125;)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAutoConfiguration &#123;</div><div class="line">    String ENABLED_OVERRIDE_PROPERTY = <span class="string">"spring.boot.enableautoconfiguration"</span>;</div><div class="line"></div><div class="line">    Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</div><div class="line"></div><div class="line">    String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 我们需要好好看看AutoConfigurationImportSelector，它利用SpringFactoriesLoader.loadFactoryNames方法来扫描具有META-INF/spring.factories 文件的jar包，代码如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> List&lt;String&gt; <span class="title">getCandidateConfigurations</span><span class="params">(AnnotationMetadata metadata, AnnotationAttributes attributes)</span> </span>&#123;</div><div class="line">List&lt;String&gt; configurations = SpringFactoriesLoader.loadFactoryNames(<span class="keyword">this</span>.getSpringFactoriesLoaderFactoryClass(), <span class="keyword">this</span>.getBeanClassLoader());</div><div class="line"><span class="keyword">return</span> configurations;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 配合@EnableAutoConfiguration使用的话，它更多是提供一种配置查找的功能支持，即根据@EnableAutoConfiguration的完整类名如org.springframework.boot.autoconfigure.EnableAutoConfiguration作为查找的Key,<strong>获取对应的一组@Configuration类</strong>，并将其中org.springframework.boot.autoconfigure.EnableAutoConfiguration对应的配置项实例化为对应的标注了@Configuration的JavaConfig形式的IoC容器配置类，然后汇总为一个（相当于一个XML文件）并加载到IoC容器（和Spring一样）。</p>
+<p> 我们可以看看spring-boot-autoconfigure.jar 里就有一个spring.factories 文件，此文件中声明了有哪些自动配置。我们看一点点：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># Auto Configure</div><div class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\</div><div class="line">org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration,\</div><div class="line"># 配置AOP对象</div><div class="line">org.springframework.boot.autoconfigure.aop.AopAutoConfiguration,\</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>看完@SpringBootApplication注解，我们再看看SpringApplication的run方法。</p>
+<ol>
+<li><p>我们通过debug发现将进入这个方法：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ConfigurableApplicationContext <span class="title">run</span><span class="params">(Class&lt;?&gt;[] primarySources, String[] args)</span> </span>&#123;</div><div class="line">    <span class="comment">// 会先创建SpringApplication对象实例，然后调用它的实例run方法</span></div><div class="line">    <span class="keyword">return</span> (<span class="keyword">new</span> SpringApplication(primarySources)).run(args);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>我们看看在实例初始化的过程中他做了什么：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">SpringApplication</span><span class="params">(ResourceLoader resourceLoader, Class... primarySources)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.sources = <span class="keyword">new</span> LinkedHashSet();</div><div class="line">    <span class="comment">// banner的打印模式，此时是控制台模式</span></div><div class="line">    <span class="keyword">this</span>.bannerMode = Mode.CONSOLE;</div><div class="line">    <span class="comment">// 开启日志</span></div><div class="line">    <span class="keyword">this</span>.logStartupInfo = <span class="keyword">true</span>;</div><div class="line">    <span class="comment">// 启用CommandLineProperties</span></div><div class="line">    <span class="keyword">this</span>.addCommandLineProperties = <span class="keyword">true</span>;</div><div class="line">    <span class="comment">// 开启headless模式支持，Headless模式是在缺少显示屏、键盘或者鼠标时的系统配置（自行了解）</span></div><div class="line">    <span class="keyword">this</span>.headless = <span class="keyword">true</span></div><div class="line">    <span class="comment">// 启用注册ShutdownHook，用于在非Web应用中关闭IoC容器和资源</span></div><div class="line">    <span class="keyword">this</span>.registerShutdownHook = <span class="keyword">true</span>;</div><div class="line">    <span class="keyword">this</span>.additionalProfiles = <span class="keyword">new</span> HashSet();</div><div class="line">    <span class="keyword">this</span>.resourceLoader = resourceLoader;</div><div class="line">    <span class="keyword">this</span>.primarySources = <span class="keyword">new</span> LinkedHashSet(Arrays.asList(primarySources));</div><div class="line">    <span class="comment">// 判断是否是web运行环境(Servlet)</span></div><div class="line">    <span class="keyword">this</span>.webApplicationType = <span class="keyword">this</span>.deduceWebApplicationType();</div><div class="line">    <span class="comment">// 设置初始化器(在META-INF/spring.factories 文件里，可扩展)</span></div><div class="line">    <span class="keyword">this</span>.setInitializers(<span class="keyword">this</span>.getSpringFactoriesInstances(ApplicationContextInitializer.class));</div><div class="line">    <span class="comment">// 设置监听器(在META-INF/spring.factories 文件里，可扩展)</span></div><div class="line">    <span class="keyword">this</span>.setListeners(<span class="keyword">this</span>.getSpringFactoriesInstances(ApplicationListener.class));</div><div class="line">    <span class="comment">// 推断并设置main方法的定义类</span></div><div class="line">    <span class="keyword">this</span>.mainApplicationClass = <span class="keyword">this</span>.deduceMainApplicationClass();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>SpringApplication实例初始化完成并且完成设置后，就开始执行run方法的逻辑，如下：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> ConfigurableApplicationContext <span class="title">run</span><span class="params">(String... args)</span> </span>&#123;</div><div class="line">    <span class="comment">// 开启任务执行时间监听器</span></div><div class="line">    StopWatch stopWatch = <span class="keyword">new</span> StopWatch();</div><div class="line">    stopWatch.start();</div><div class="line">    ConfigurableApplicationContext context = <span class="keyword">null</span>;</div><div class="line">    Collection&lt;SpringBootExceptionReporter&gt; exceptionReporters = <span class="keyword">new</span> ArrayList();</div><div class="line">    <span class="comment">// 设置系统属性</span></div><div class="line">    <span class="keyword">this</span>.configureHeadlessProperty();</div><div class="line">    <span class="comment">//开启广播，宣告SpringBoot要开始执行了</span></div><div class="line">    SpringApplicationRunListeners listeners = <span class="keyword">this</span>.getRunListeners(args);</div><div class="line">    listeners.starting();</div><div class="line"></div><div class="line">    Collection exceptionReporters;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        ApplicationArguments applicationArguments = <span class="keyword">new</span> DefaultApplicationArguments(args);</div><div class="line">        <span class="comment">// 创建并配置当前Spring Boot应用将要使用的Environment（包括配置要使用的PropertySource以及Profile）。</span></div><div class="line">        ConfigurableEnvironment environment = <span class="keyword">this</span>.prepareEnvironment(listeners, applicationArguments);</div><div class="line">        <span class="comment">// 宣告SpringBoot应用使用的Environment准备好了。</span></div><div class="line">        <span class="keyword">this</span>.configureIgnoreBeanInfo(environment);</div><div class="line">        <span class="comment">// 决定是否打印Banner</span></div><div class="line">        Banner printedBanner = <span class="keyword">this</span>.printBanner(environment);</div><div class="line">        <span class="comment">// 根据用户是否明确设置了applicationContextClass类型，决定该为当前SpringBoot应用创建什么类型的ApplicationContext</span></div><div class="line">        <span class="comment">// 然后根据条件决定是否添加ShutdownHook，决定是否使用自定义的BeanNameGenerator，决定是否使用自定义的ResourceLoader，</span></div><div class="line">        <span class="comment">// 最重要的是将之前准备好的Environment设置给创建好的ApplicationContext使用。</span></div><div class="line">        context = <span class="keyword">this</span>.createApplicationContext();</div><div class="line">        <span class="comment">// 得到异常报告者</span></div><div class="line">        exceptionReporters = <span class="keyword">this</span>.getSpringFactoriesInstances(SpringBootExceptionReporter.class, <span class="keyword">new</span> Class[]&#123;ConfigurableApplicationContext.class&#125;, <span class="keyword">new</span> Object[]&#123;context&#125;);</div><div class="line">        <span class="comment">// ApplicationContext创建好之后，遍历调用ApplicationContextInitializer的initialize（applicationContext）方法来对已经创建好的ApplicationContext进行进一步的处理。</span></div><div class="line">        <span class="comment">// 遍历调用所有SpringApplicationRunListener的contextPrepared()方法。</span></div><div class="line">        <span class="comment">// 将之前通过@EnableAutoConfiguration获取的所有配置以及其他形式的IoC容器配置加载到已经准备完毕的ApplicationContext</span></div><div class="line">        <span class="comment">// (很重要，可以进入看看)</span></div><div class="line">        <span class="keyword">this</span>.prepareContext(context, environment, listeners, applicationArguments, printedBanner);</div><div class="line">        <span class="comment">// 初始化所有自动配置类，调用ApplicationContext的refresh()方法</span></div><div class="line">        <span class="keyword">this</span>.refreshContext(context);</div><div class="line">        <span class="comment">// 调用所有的SpringApplicationRunListener的finished()方法，宣告SpringBoot已经完成了ApplicationContext初始化的全部过程。</span></div><div class="line">        <span class="keyword">this</span>.afterRefresh(context, applicationArguments);</div><div class="line">        <span class="comment">//关闭任务执行时间监听器</span></div><div class="line">        stopWatch.stop();</div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.logStartupInfo) &#123;</div><div class="line">            <span class="comment">// //如果开启日志，则打印执行的时间</span></div><div class="line">            (<span class="keyword">new</span> StartupInfoLogger(<span class="keyword">this</span>.mainApplicationClass)).logStarted(<span class="keyword">this</span>.getApplicationLog(), stopWatch);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        listeners.started(context);</div><div class="line">        <span class="keyword">this</span>.callRunners(context, applicationArguments);</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable var10) &#123;</div><div class="line">        <span class="comment">// //调用异常分析器打印报告，调用所有的SpringApplicationRunListener的finished()方法将异常信息发布出去</span></div><div class="line">        <span class="keyword">this</span>.handleRunFailure(context, var10, exceptionReporters, listeners);</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(var10);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        listeners.running(context);</div><div class="line">        <span class="keyword">return</span> context;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable var9) &#123;</div><div class="line">        <span class="keyword">this</span>.handleRunFailure(context, var9, exceptionReporters, (SpringApplicationRunListeners)<span class="keyword">null</span>);</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(var9);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.cnblogs.com/zheting/p/6707035.html" target="_blank" rel="external">Spring Boot干货系列：（三）启动原理解析</a></li>
+<li><a href="https://www.jianshu.com/p/cb5cb5937686" target="_blank" rel="external">Spring Boot学习笔记03–深入了解SpringBoot的启动过程</a></li>
+<li><a href="https://blog.csdn.net/hengyunabc/article/details/50120001" target="_blank" rel="external">spring boot应用启动原理分析</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：可能你早已开始使用SpringBoot，但是你却不知道SpringBoot是个什么东西，他又是怎么运行的，这里给你答案！
+    
+    </summary>
+    
+      <category term="深入SSM" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5SSM/"/>
+    
+    
+      <category term="SpringBoot" scheme="http://bestlixiang.site/tags/SpringBoot/"/>
+    
+  </entry>
   
   <entry>
     <title>HelloWorld_SSMLogin</title>
@@ -66,11 +146,11 @@
       <category term="HelloWorld" scheme="http://bestlixiang.site/categories/HelloWorld/"/>
     
     
+      <category term="Mybatis" scheme="http://bestlixiang.site/tags/Mybatis/"/>
+    
       <category term="Spring" scheme="http://bestlixiang.site/tags/Spring/"/>
     
       <category term="SpringMVC" scheme="http://bestlixiang.site/tags/SpringMVC/"/>
-    
-      <category term="Mybatis" scheme="http://bestlixiang.site/tags/Mybatis/"/>
     
   </entry>
   
@@ -2161,279 +2241,6 @@
     <summary type="html">
     
       &lt;p&gt;引：在Linux的环境下，如果你不懂bash是什么，那么其他的东西就不用学了！
-    
-    </summary>
-    
-      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走进Linux_学会使用vim程序编辑器</title>
-    <link href="http://bestlixiang.site/2018/03/26/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_%E5%AD%A6%E4%BC%9A%E4%BD%BF%E7%94%A8vim%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%BE%91%E5%99%A8/"/>
-    <id>http://bestlixiang.site/2018/03/26/走进Linux/走进Linux_学会使用vim程序编辑器/</id>
-    <published>2018-03-26T09:06:33.000Z</published>
-    <updated>2018-04-09T04:32:47.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：系统管理员的重要工作就是修改与设置某些重要软件的配置文件，因此至少得到学会一种以上的命令行界面的文本编辑器。在所有的Linux发行版中都具有vi这款编辑器，我们这次学的它的高级版vim。<a id="more"></a></p>
-<h1 id="vi与vim"><a href="#vi与vim" class="headerlink" title="vi与vim"></a>vi与vim</h1><p>虽然在Linux在命令行界面下的文本编辑器有很多，比如Emacs，pico，nano，joe与vim等。但是我们却一定要学会vi或者说vim，vim相当于vi的高级版。</p>
-<h2 id="为什么要学vim"><a href="#为什么要学vim" class="headerlink" title="为什么要学vim"></a>为什么要学vim</h2><ol>
-<li>所有的UNIX Like系统都会内置vi文本编辑器，其他文本编辑器不一定存在。</li>
-<li>所有软件的编辑结构都会主动调用vi（例如crontab，visudo,edquota等）<strong>很重要</strong></li>
-<li>vim具有程序编辑能力，可以主动以字体颜色辨别语法的正确性，方便程序设计。</li>
-<li>程序简单，编辑速度相当快速。</li>
-</ol>
-<h1 id="vi的使用"><a href="#vi的使用" class="headerlink" title="vi的使用"></a>vi的使用</h1><p>vi分为3种模式，分别是一般模式、编辑模式与命令行模式。它们的作用如下：</p>
-<ol>
-<li>一般模式：以vi打开一个文件就直接进入一般模式了。在这个模式中，你可以使用左右按键来移动光标，你可以删除字符或删除整行，也可以复制，粘贴你的文件数据。</li>
-<li>编辑模式：在一般模式中是无法编辑文件内容的。要等到你按下“i,l,o,O,a,A,r,R”等任何一个字母之后才会进入编辑模式。通常在Linux中，按下这些按键时，在界面的左下方会出现INSERT或REPLACE的字样，此时才可以编辑，如果要回到一般模式，必须要按下ESC才可以退出编辑模式。</li>
-<li>命令行模式：在一般模式中，输入“:、/、?”3个中的任何一个按钮，就可以将光标移动到最下面的那一行。在这个模式当中，可以提供你查找数据的操作，而读取、保存、大量替换字符、离开vi、显示行号等操作就是在此模式中完成的。</li>
-</ol>
-<h2 id="vi按键说明"><a href="#vi按键说明" class="headerlink" title="vi按键说明"></a>vi按键说明</h2><p>这个按键说明大部分人都会有总结，所以这里也就不再做无用功了，所以贴出下面的链接，遇到问题去查就好了，但是需要保证所有按键都亲自去试一遍！</p>
-<p><strong><a href="https://blog.csdn.net/zyq522376829/article/details/47321739" target="_blank" rel="external">Linux - vim按键说明</a></strong></p>
-<p>但是这里我还是想把<strong>常用的命令</strong>在这里再贴出来，希望能够记住：</p>
-<ol>
-<li>一般模式可用的按钮说明，光标移动、复制粘贴、查找替换等</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>按键</th>
-<th>按键说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Ctrl + f</td>
-<td>屏幕『向下』移动一页，相当于 [Page Down]按键</td>
-</tr>
-<tr>
-<td>Ctrl + b</td>
-<td>屏幕『向上』移动一页，相当于 [Page Up] 按键</td>
-</tr>
-<tr>
-<td>0 或功能键Home</td>
-<td>这是数字『 0 』：移动到这一行的最前面字符处 (常用)</td>
-</tr>
-<tr>
-<td>$ 或功能键End</td>
-<td>移动到这一行的最后面字符处(常用)</td>
-</tr>
-<tr>
-<td>G</td>
-<td>移动到这个档案的最后一行(常用)</td>
-</tr>
-<tr>
-<td>gg</td>
-<td>移动到这个档案的第一行，相当于 1G 啊！ (常用)</td>
-</tr>
-<tr>
-<td>nEnter</td>
-<td>n为数字。光标向下移动 n 行(常用)</td>
-</tr>
-<tr>
-<td>/word</td>
-<td>向光标之下寻找一个名称为 word 的字符串。例如要在档案内搜寻 server这个字符串，就输入 /vbird 即可！ (常用)</td>
-</tr>
-<tr>
-<td>:n1,n2s/word1/word2/g</td>
-<td>n1 与 n2 为数字。在第 n1 与 n2 行之间寻找 word1 这个字符串，并将该字符串取代为 word2</td>
-</tr>
-<tr>
-<td>:1,$s/word1/word2/g</td>
-<td>从第一行到最后一行寻找 word1 字符串，并将该字符串取代为 word2</td>
-</tr>
-<tr>
-<td>:1,$s/word1/word2/gc</td>
-<td>从第一行到最后一行寻找 word1 字符串，并将该字符串取代为 word2 ！且在取代前显示提示字符给用户确认 (confirm) 是否需要取代</td>
-</tr>
-<tr>
-<td>x, X</td>
-<td>在一行字当中，x 为向后删除一个字符 (相当于 [del] 按键)， X 为向前删除一个字符(相当于 [backspace] 亦即是退格键)</td>
-</tr>
-<tr>
-<td>dd</td>
-<td>删除游标所在的那一整列</td>
-</tr>
-<tr>
-<td>ndd</td>
-<td>n 为数字。删除光标所在的向下 n 列，例如 20dd 则是删除 20 列</td>
-</tr>
-<tr>
-<td>yy</td>
-<td>复制游标所在的那一行</td>
-</tr>
-<tr>
-<td>nyy</td>
-<td>n 为数字。复制光标所在的向下 n 列，例如 20yy 则是复制 20 列</td>
-</tr>
-<tr>
-<td>p, P</td>
-<td>p 为将已复制的数据在光标下一行贴上，P 则为贴在游标上一行！ 举例来说，我目前光标在第 20 行，且已经复制了 10 行数据。则按下 p 后， 那 10 行数据会贴在原本的 20 行之后，亦即由 21 行开始贴。但如果是按下 P 呢？ 那么原本的第 20 行会被推到变成 30 行。</td>
-</tr>
-<tr>
-<td>u</td>
-<td>复原前一个动作</td>
-</tr>
-<tr>
-<td>Ctrl+r</td>
-<td>重做上一个动作</td>
-</tr>
-<tr>
-<td>.</td>
-<td>不要怀疑！这就是小数点！意思是重复前一个动作的意思。 如果你想要重复删除、重复贴上等等动作，按下小数点“.”就好了！</td>
-</tr>
-</tbody>
-</table>
-<ol>
-<li>一般模式切换到编辑模式的可用的按钮说明</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>按键</th>
-<th>按键说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>i, I</td>
-<td>进入插入模式(Insert mode)：i 为从目前光标所在处插入， I 为在目前所在行的第一个非空格符处开始插入。</td>
-</tr>
-<tr>
-<td>a, A</td>
-<td>进入插入模式(Insert mode)：a为从目前光标所在的下一个字符处开始插入， A 为从光标所在行的最后一个字符处开始插入。</td>
-</tr>
-<tr>
-<td>o, O</td>
-<td>进入插入模式(Insert mode)：这是英文字母 o 的大小写。o 为在目前光标所在的下一行处插入新的一』； O 为在目前光标所在处的上一行插入新的一行！</td>
-</tr>
-<tr>
-<td>r, R</td>
-<td>进入取代模式(Replace mode)：r 只会取代光标所在的那一个字符一次；R会一直取代光标所在的文字，直到按下 ESC 为止。</td>
-</tr>
-<tr>
-<td>Esc</td>
-<td>退出编辑模式，回到一般模式中</td>
-</tr>
-</tbody>
-</table>
-<ol>
-<li>一般模式切换到指令列模式的可用的按钮说明</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>按键</th>
-<th>按键说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:w</td>
-<td>将编辑的数据写入硬盘档案中</td>
-</tr>
-<tr>
-<td>:q</td>
-<td>离开 vi</td>
-</tr>
-<tr>
-<td>:wq</td>
-<td>储存后离开，若为 :wq! 则为强制储存后离开</td>
-</tr>
-</tbody>
-</table>
-<h1 id="vim的功能"><a href="#vim的功能" class="headerlink" title="vim的功能"></a>vim的功能</h1><p>目前大部分的发行版都以vim替代vi的功能了，如果你使用vi后，却看到界面的右下角有显示目前光标的行列号码，那么你的vi已经被vim替代了，vim相比于vi有许多新的功能。</p>
-<h2 id="块操作"><a href="#块操作" class="headerlink" title="块操作"></a>块操作</h2><p>vi的操作基本上都是以行为单位的操作，但是vim具有块操作的功能，具体的按键说明如下：</p>
-<table>
-<thead>
-<tr>
-<th>按键</th>
-<th>按键说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>v</td>
-<td>字符选择，将光标经过的地方反白选择</td>
-</tr>
-<tr>
-<td>V</td>
-<td>行选择，将光标经过的行反白选择</td>
-</tr>
-<tr>
-<td>Ctrl + v</td>
-<td>块选择，可以用长方形选择数据</td>
-</tr>
-<tr>
-<td>y</td>
-<td>将反白的地方复制</td>
-</tr>
-<tr>
-<td>d</td>
-<td>删除反白的地方</td>
-</tr>
-</tbody>
-</table>
-<h2 id="多文件编辑"><a href="#多文件编辑" class="headerlink" title="多文件编辑"></a>多文件编辑</h2><p>有事我们需要在一个vim内编辑多个文件，这个时候我们就需要多文件编辑功能，具体按键如下：</p>
-<table>
-<thead>
-<tr>
-<th>按键</th>
-<th>按键说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>:n</td>
-<td>编辑下一个文件</td>
-</tr>
-<tr>
-<td>:N</td>
-<td>编辑上一个文件</td>
-</tr>
-<tr>
-<td>:files</td>
-<td>列出目前这个vim打开的所有文件</td>
-</tr>
-</tbody>
-</table>
-<h2 id="多窗口功能"><a href="#多窗口功能" class="headerlink" title="多窗口功能"></a>多窗口功能</h2><p>很多时候我们需要对比文件，但是情况是在同一个vim窗口，这时候也就需要用到多窗口功能，具体按键如下：</p>
-<table>
-<thead>
-<tr>
-<th>按键</th>
-<th>按键说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>：sp filename</td>
-<td>打开新窗口，如果有加filename,新窗口打开新文件，否则打开相同文件</td>
-</tr>
-<tr>
-<td>Ctrl + w + j/↓</td>
-<td>按键的按法是：先按下Ctrl不放，再按下w后放开所有的按键，然后再按下j或箭头，则光标可移动到下方的窗口</td>
-</tr>
-<tr>
-<td>Ctrl + w + k/↑</td>
-<td>同上，但是光标移动到上面的窗口</td>
-</tr>
-</tbody>
-</table>
-<h2 id="vim常用命令示意图"><a href="#vim常用命令示意图" class="headerlink" title="vim常用命令示意图"></a>vim常用命令示意图</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/linux/jpg/vim.jpg" alt="vim"></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《鸟哥的Linux私房菜》</li>
-<li><a href="https://blog.csdn.net/zyq522376829/article/details/47321739" target="_blank" rel="external">Linux - vim按键说明</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：系统管理员的重要工作就是修改与设置某些重要软件的配置文件，因此至少得到学会一种以上的命令行界面的文本编辑器。在所有的Linux发行版中都具有vi这款编辑器，我们这次学的它的高级版vim。
     
     </summary>
     
