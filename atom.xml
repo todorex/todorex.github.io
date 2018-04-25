@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-04-21T05:12:44.000Z</updated>
+  <updated>2018-04-25T07:40:20.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,65 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>揭秘SpringSecurity(一)_请求认证过程</title>
+    <link href="http://bestlixiang.site/2018/04/25/%E6%B7%B1%E5%85%A5SSM/%E6%8F%AD%E7%A7%98SpringSecurity-%E4%B8%80-%E8%AF%B7%E6%B1%82%E8%AE%A4%E8%AF%81%E8%BF%87%E7%A8%8B/"/>
+    <id>http://bestlixiang.site/2018/04/25/深入SSM/揭秘SpringSecurity-一-请求认证过程/</id>
+    <published>2018-04-25T07:39:06.000Z</published>
+    <updated>2018-04-25T07:40:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：有了Spring作为基础，Spring家族的很多框架都显得那么棒，尤其是Springboot的出现，简化了配置，家族框架就显得更棒了，我们这次分析一下其中的SpringSecurity，我们会由请求认证过程，来分析其中的各个组件！<a id="more"></a></p>
+<h1 id="一次认证过程"><a href="#一次认证过程" class="headerlink" title="一次认证过程"></a>一次认证过程</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/springSecurity.png" alt="SpringSecurity"></p>
+<p>大家可以找到一个工程，这里也可以看看我的<a href="https://github.com/todorex/SpringBoot_Angular_HeroesLogin" target="_blank" rel="external">SpringBoot+Angular2工程</a>debug验证我画的流程图。</p>
+<h1 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a>核心组件</h1><h2 id="Filter"><a href="#Filter" class="headerlink" title="Filter"></a>Filter</h2><p>在最开始debug的过程中我们会发现pring Security使用了springSecurityFillterChian作为了安全过滤的入口，我只介绍几个比较常用的过滤器。</p>
+<h3 id="SecurityContextPersistenceFilter"><a href="#SecurityContextPersistenceFilter" class="headerlink" title="SecurityContextPersistenceFilter"></a>SecurityContextPersistenceFilter</h3><p>两个主要职责：</p>
+<ol>
+<li>请求来临时，创建SecurityContext安全上下文信息</li>
+<li>请求结束时清空SecurityContextHolder（可获得当前操作的用户是谁，该用户是否已经被认证，他拥有哪些角色权限等信息）。</li>
+</ol>
+<p>我们看看它的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SecurityContextPersistenceFilter</span> <span class="keyword">extends</span> <span class="title">GenericFilterBean</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> String FILTER_APPLIED = <span class="string">"__spring_security_scpf_applied"</span>;</div><div class="line">    <span class="comment">// 安全上下文存储的仓库</span></div><div class="line">    <span class="keyword">private</span> SecurityContextRepository repo;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SecurityContextPersistenceFilter</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// HttpSessionSecurityContextRepository是SecurityContextRepository接口的一个实现类</span></div><div class="line">        <span class="comment">// 使用HttpSession来存储SecurityContext</span></div><div class="line">        <span class="keyword">this</span>(<span class="keyword">new</span> HttpSessionSecurityContextRepository());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest req, ServletResponse res, FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</div><div class="line">        HttpServletRequest request = (HttpServletRequest)req;</div><div class="line">        HttpServletResponse response = (HttpServletResponse)res;</div><div class="line">        <span class="keyword">if</span>(request.getAttribute(<span class="string">"__spring_security_scpf_applied"</span>) != <span class="keyword">null</span>) &#123;</div><div class="line">            chain.doFilter(request, response);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">boolean</span> debug = <span class="keyword">this</span>.logger.isDebugEnabled();</div><div class="line">            request.setAttribute(<span class="string">"__spring_security_scpf_applied"</span>, Boolean.TRUE);</div><div class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.forceEagerSessionCreation) &#123;</div><div class="line">                HttpSession session = request.getSession();</div><div class="line">                <span class="keyword">if</span>(debug &amp;&amp; session.isNew()) &#123;</div><div class="line">                    <span class="keyword">this</span>.logger.debug(<span class="string">"Eagerly created session: "</span> + session.getId());</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 包装request，response</span></div><div class="line">            HttpRequestResponseHolder holder = <span class="keyword">new</span> HttpRequestResponseHolder(request, response);</div><div class="line">            <span class="comment">// 从Session中获取安全上下文信息</span></div><div class="line">            SecurityContext contextBeforeChainExecution = <span class="keyword">this</span>.repo.loadContext(holder);</div><div class="line">            <span class="keyword">boolean</span> var13 = <span class="keyword">false</span>;</div><div class="line"></div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                var13 = <span class="keyword">true</span>;</div><div class="line">                <span class="comment">// 请求开始时，设置安全上下文信息，这样就避免了用户直接从Session中获取安全上下文信息</span></div><div class="line">                SecurityContextHolder.setContext(contextBeforeChainExecution);</div><div class="line">                chain.doFilter(holder.getRequest(), holder.getResponse());</div><div class="line">                var13 = <span class="keyword">false</span>;</div><div class="line">            &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                <span class="keyword">if</span>(var13) &#123;</div><div class="line">                    SecurityContext contextAfterChainExecution = SecurityContextHolder.getContext();\</div><div class="line">                    <span class="comment">//请求结束后，清空安全上下文信息</span></div><div class="line">                    SecurityContextHolder.clearContext();</div><div class="line">                    <span class="keyword">this</span>.repo.saveContext(contextAfterChainExecution, holder.getRequest(), holder.getResponse());</div><div class="line">                    request.removeAttribute(<span class="string">"__spring_security_scpf_applied"</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            ...</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="UsernamePasswordAuthenticationFilter"><a href="#UsernamePasswordAuthenticationFilter" class="headerlink" title="UsernamePasswordAuthenticationFilter"></a>UsernamePasswordAuthenticationFilter</h2><p>这个可能是我们遇见最多的过滤器了，一个最直观的业务场景便是允许用户在表单中输入用户名和密码进行登录，而这背后用到的就是UsernamePasswordAuthenticationFilter。这个过滤器也可以见证我们之前画的时序图，我们看看它的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Authentication <span class="title">attemptAuthentication</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.postOnly &amp;&amp; !request.getMethod().equals(<span class="string">"POST"</span>)) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> AuthenticationServiceException(<span class="string">"Authentication method not supported: "</span> + request.getMethod());</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 获取用户名，密码</span></div><div class="line">            String username = <span class="keyword">this</span>.obtainUsername(request);</div><div class="line">            String password = <span class="keyword">this</span>.obtainPassword(request);</div><div class="line">            <span class="keyword">if</span>(username == <span class="keyword">null</span>) &#123;</div><div class="line">                username = <span class="string">""</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span>(password == <span class="keyword">null</span>) &#123;</div><div class="line">                password = <span class="string">""</span>;</div><div class="line">            &#125;</div><div class="line">            username = username.trim();</div><div class="line">            <span class="comment">// 生成Authentication，下面会介绍</span></div><div class="line">            UsernamePasswordAuthenticationToken authRequest = <span class="keyword">new</span> UsernamePasswordAuthenticationToken(username, password);</div><div class="line">            <span class="keyword">this</span>.setDetails(request, authRequest);</div><div class="line">            <span class="comment">// 讲Authentication交给AuthenticationManager认证</span></div><div class="line">            <span class="keyword">return</span>  <span class="keyword">this</span>.getAuthenticationManager().authenticate(authRequest);</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="自定义Filter"><a href="#自定义Filter" class="headerlink" title="自定义Filter"></a>自定义Filter</h3><p>当自带的Filter不能满足你的要求时（例如我们要先对token进行认证），我们可以自定义过滤器，只要继承各种Filter接口，并实现其中方法即可。</p>
+<h2 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a>Authentication</h2><p>先看他的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Authentication</span> <span class="keyword">extends</span> <span class="title">Principal</span>, <span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="comment">// 权限信息列表</span></div><div class="line">    Collection&lt;? extends GrantedAuthority&gt; getAuthorities();</div><div class="line">    <span class="comment">// 密码信息，用户输入的密码字符串，在认证过后通常会被移除，用于保障安全</span></div><div class="line">    <span class="function">Object <span class="title">getCredentials</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 细节信息，它记录了访问者的ip地址和sessionId的值。</span></div><div class="line">    <span class="function">Object <span class="title">getDetails</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 最重要的身份信息，大部分情况下返回的是UserDetails接口的实现类</span></div><div class="line">    <span class="function">Object <span class="title">getPrincipal</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 是否已认证</span></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isAuthenticated</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setAuthenticated</span><span class="params">(<span class="keyword">boolean</span> var1)</span> <span class="keyword">throws</span> IllegalArgumentException</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>从它的源码可以知道它拥有的权限信息列表，密码，用户细节信息，用户身份信息，认证信息。</p>
+<p>它有很多实现类，比如流程图中的<strong>UsernamePasswordAuthenticationToken</strong>，以及AnonymousAuthenticationToken等。</p>
+<h2 id="AuthenticationManager"><a href="#AuthenticationManager" class="headerlink" title="AuthenticationManager"></a>AuthenticationManager</h2><p>先看看它的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AuthenticationManager</span> </span>&#123;</div><div class="line">    <span class="comment">// 主要是认证传进来的Authentication</span></div><div class="line">    <span class="function">Authentication <span class="title">authenticate</span><span class="params">(Authentication var1)</span> <span class="keyword">throws</span> AuthenticationException</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>它最有用的实现类就是流程图中的ProviderManager，我们可以看看它的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProviderManager</span> <span class="keyword">implements</span> <span class="title">AuthenticationManager</span>, <span class="title">MessageSourceAware</span>, <span class="title">InitializingBean</span> </span>&#123;</div><div class="line">    <span class="comment">// 维护一个AuthenticationProvider列表</span></div><div class="line">    <span class="keyword">private</span> List&lt;AuthenticationProvider&gt; providers;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> eraseCredentialsAfterAuthentication;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Authentication <span class="title">authenticate</span><span class="params">(Authentication authentication)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line">        Class&lt;? extends Authentication&gt; toTest = authentication.getClass();</div><div class="line">        AuthenticationException lastException = <span class="keyword">null</span>;</div><div class="line">        <span class="comment">// 要从新返回的Authentication</span></div><div class="line">        Authentication result = <span class="keyword">null</span>;</div><div class="line">        <span class="comment">// 遍历AuthenticationProvider列表</span></div><div class="line">        Iterator var6 = <span class="keyword">this</span>.getProviders().iterator();</div><div class="line"></div><div class="line">        <span class="keyword">while</span>(var6.hasNext()) &#123;</div><div class="line">            AuthenticationProvider provider = (AuthenticationProvider)var6.next();</div><div class="line">            <span class="keyword">if</span>(provider.supports(toTest)) &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    <span class="comment">// 对传进来的authentication进行认证</span></div><div class="line">                    result = provider.authenticate(authentication);</div><div class="line">                    <span class="keyword">if</span>(result != <span class="keyword">null</span>) &#123;</div><div class="line">                        <span class="comment">// 将属性复制给result</span></div><div class="line">                        <span class="keyword">this</span>.copyDetails(authentication, result);</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">catch</span> (AccountStatusException var11) &#123;</div><div class="line">                    ...</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span>(result == <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.parent != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="comment">// 如果列表里的Provider都不支持该authentication，则到父类查找</span></div><div class="line">                result = <span class="keyword">this</span>.parent.authenticate(authentication);</div><div class="line">            &#125; <span class="keyword">catch</span> (ProviderNotFoundException var9) &#123;</div><div class="line">                ;</div><div class="line">            &#125; <span class="keyword">catch</span> (AuthenticationException var10) &#123;</div><div class="line">                lastException = var10;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span>(result != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.eraseCredentialsAfterAuthentication &amp;&amp; result <span class="keyword">instanceof</span> CredentialsContainer) &#123;</div><div class="line">                <span class="comment">// 擦除密码信息</span></div><div class="line">                ((CredentialsContainer)result).eraseCredentials();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">this</span>.eventPublisher.publishAuthenticationSuccess(result);</div><div class="line">            <span class="keyword">return</span> result;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            ...</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="AuthenticationProvider"><a href="#AuthenticationProvider" class="headerlink" title="AuthenticationProvider"></a>AuthenticationProvider</h2><p>看看它的源码先：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AuthenticationProvider</span> </span>&#123;</div><div class="line">    <span class="comment">// 认证</span></div><div class="line">    <span class="function">Authentication <span class="title">authenticate</span><span class="params">(Authentication var1)</span> <span class="keyword">throws</span> AuthenticationException</span>;</div><div class="line">    <span class="comment">// 判断是否支持传进来的Authentication</span></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class&lt;?&gt; var1)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们接着看看它最常用的一个实现DaoAuthenticationProvider。也看看它的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DaoAuthenticationProvider</span> <span class="keyword">extends</span> <span class="title">AbstractUserDetailsAuthenticationProvider</span> </span>&#123;</div><div class="line">    <span class="comment">// 密码加密器</span></div><div class="line">    <span class="keyword">private</span> PasswordEncoder passwordEncoder;</div><div class="line">    <span class="comment">// 加载用户的UserDetailsService</span></div><div class="line">    <span class="keyword">private</span> UserDetailsService userDetailsService;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">additionalAuthenticationChecks</span><span class="params">(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line">        <span class="keyword">if</span>(authentication.getCredentials() == <span class="keyword">null</span>) &#123;</div><div class="line">            ...</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 验证密码</span></div><div class="line">            String presentedPassword = authentication.getCredentials().toString();</div><div class="line">            <span class="keyword">if</span>(!<span class="keyword">this</span>.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) &#123;</div><div class="line">                ...</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 最核心的方法</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> UserDetails <span class="title">retrieveUser</span><span class="params">(String username, UsernamePasswordAuthenticationToken authentication)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line">        <span class="keyword">this</span>.prepareTimingAttackProtection();</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 获得UserDetails</span></div><div class="line">            UserDetails loadedUser = <span class="keyword">this</span>.getUserDetailsService().loadUserByUsername(username);</div><div class="line">            <span class="keyword">if</span>(loadedUser == <span class="keyword">null</span>) &#123;</div><div class="line">                ...</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> loadedUser;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (UsernameNotFoundException var4) &#123;</div><div class="line">            ...</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="UserDetailsService"><a href="#UserDetailsService" class="headerlink" title="UserDetailsService"></a>UserDetailsService</h2><p>先看看它的源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDetailsService</span> </span>&#123;</div><div class="line">    <span class="function">UserDetails <span class="title">loadUserByUsername</span><span class="params">(String var1)</span> <span class="keyword">throws</span> UsernameNotFoundException</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个接口的实现类有JdbcDaoImpl（负责从数据库加载用户）等，当然我们也可以自己实现这个接口。只要实现loadUserByUsername方法即可。</p>
+<p>再看看<strong>UserDetails</strong>是个什么东西？</p>
+<p>看看它源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserDetails</span> <span class="keyword">extends</span> <span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="comment">// 权限属性</span></div><div class="line">    Collection&lt;? extends GrantedAuthority&gt; getAuthorities();</div><div class="line">    <span class="comment">// 密码属性</span></div><div class="line">    <span class="function">String <span class="title">getPassword</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 用户名属性</span></div><div class="line">    <span class="function">String <span class="title">getUsername</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 账户是否过期</span></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isAccountNonExpired</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 账户是否被锁</span></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isAccountNonLocked</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 密码是否过期</span></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isCredentialsNonExpired</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 是否启用</span></div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isEnabled</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>它代表了最详细的用户信息，这个接口涵盖了一些必要的用户信息字段，具体的实现类对它进行了扩展。这里我们普通的User类也可以实现这个接口。</p>
+<h1 id="核心配置"><a href="#核心配置" class="headerlink" title="核心配置"></a>核心配置</h1><p>通过我们上面对核心组件的解读再结合流程流就应该可以理解SpringSecurity的请求认证过程。但是不可能我们对所有的路径都需要认证，或者说它总要提供一个东西让我们配置它的细节，那就是WebSecurityConfigurerAdapter接口，它主要使用了适配器模式。我们主要看看我们需要覆盖它的方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSecurityConfigurerAdapter</span> <span class="keyword">implements</span> <span class="title">WebSecurityConfigurer</span>&lt;<span class="title">WebSecurity</span>&gt; </span>&#123;</div><div class="line">    <span class="comment">// 配置AuthenticationManagerBuilder</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="keyword">this</span>.disableLocalConfigureAuthenticationBldr = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 配置WebSecurity</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(WebSecurity web)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 配置HttpSecurity</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        ((HttpSecurity)((HttpSecurity)((AuthorizedUrl)http.authorizeRequests().anyRequest()).authenticated().and()).formLogin().and()).httpBasic();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="配置AuthenticationManagerBuilder"><a href="#配置AuthenticationManagerBuilder" class="headerlink" title="配置AuthenticationManagerBuilder"></a>配置AuthenticationManagerBuilder</h2><p>我们可以看看它的使用案例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSecurityConfig</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        auth</div><div class="line">            .inMemoryAuthentication()</div><div class="line">            .withUser(<span class="string">"admin"</span>).password(<span class="string">"admin"</span>).roles(<span class="string">"USER"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>想要在WebSecurityConfigurerAdapter中进行认证相关的配置，可以使用configure(AuthenticationManagerBuilder auth)暴露一个AuthenticationManager的建造器：AuthenticationManagerBuilder 。如上所示，我们便完成了内存中用户的配置，也可以在这里讲自己定义的UserDetailService注入。</p>
+<h2 id="配置WebSecurity"><a href="#配置WebSecurity" class="headerlink" title="配置WebSecurity"></a>配置WebSecurity</h2><p>我们可以看看它的使用案例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSecurityConfig</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        http</div><div class="line">            <span class="comment">// 配置路径拦截，表明路径访问所对应的权限，角色，认证信息。</span></div><div class="line">            .authorizeRequests()</div><div class="line">                .antMatchers(<span class="string">"/resources/**"</span>, <span class="string">"/signup"</span>, <span class="string">"/about"</span>).permitAll()</div><div class="line">                .antMatchers(<span class="string">"/admin/**"</span>).hasRole(<span class="string">"ADMIN"</span>)</div><div class="line">                .antMatchers(<span class="string">"/db/**"</span>).access(<span class="string">"hasRole('ADMIN') and hasRole('DBA')"</span>)</div><div class="line">                .anyRequest().authenticated()</div><div class="line">                .and()</div><div class="line">            <span class="comment">// 配置表单认证</span></div><div class="line">            .formLogin()</div><div class="line">                .usernameParameter(<span class="string">"username"</span>)</div><div class="line">                .passwordParameter(<span class="string">"password"</span>)</div><div class="line">                .failureForwardUrl(<span class="string">"/login?error"</span>)</div><div class="line">                .loginPage(<span class="string">"/login"</span>)</div><div class="line">                .permitAll()</div><div class="line">                .and()</div><div class="line">            <span class="comment">// 配置注销</span></div><div class="line">            .logout()</div><div class="line">                .logoutUrl(<span class="string">"/logout"</span>)</div><div class="line">                .logoutSuccessUrl(<span class="string">"/index"</span>)</div><div class="line">                .permitAll()</div><div class="line">                .and()</div><div class="line">            <span class="comment">// 配置basic登录</span></div><div class="line">            .httpBasic()</div><div class="line">                .disable();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>方法里的各项配置分别代表了http请求相关的安全配置，这些配置项无一例外的返回了Configurer类，而所有的http相关配置可以通过查看HttpSecurity的主要方法得知。</p>
+<h2 id="WebSecurityBuilder"><a href="#WebSecurityBuilder" class="headerlink" title="WebSecurityBuilder"></a>WebSecurityBuilder</h2><p>我们可以看看它的使用案例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSecurityConfig</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(WebSecurity web)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        web</div><div class="line">            .ignoring()</div><div class="line">            .antMatchers(<span class="string">"/resources/**"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个配置中并不会出现太多的配置信息。</p>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><p><img src="http://ov0zuistv.bkt.clouddn.com/spring%20security%20architecture.png" alt="image"></p>
+<p>将这个架构图结合流程图我们会可以大致总结出核心组件之间的关系，有利于我们我们更好的理解SpringSecurity的架构以及请求认证过程。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.cnkirito.moe/2017/09/19/spring-security-1/" target="_blank" rel="external">Spring Security(一)–Architecture Overview</a></li>
+<li><a href="https://blog.csdn.net/dandandeshangni/article/details/78959131" target="_blank" rel="external">Spring Security源码分析一：Spring Security认证过程</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：有了Spring作为基础，Spring家族的很多框架都显得那么棒，尤其是Springboot的出现，简化了配置，家族框架就显得更棒了，我们这次分析一下其中的SpringSecurity，我们会由请求认证过程，来分析其中的各个组件！
+    
+    </summary>
+    
+      <category term="深入SSM" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5SSM/"/>
+    
+    
+      <category term="SpringSecurity" scheme="http://bestlixiang.site/tags/SpringSecurity/"/>
+    
+  </entry>
   
   <entry>
     <title>揭秘SpringBoot(一)_SpringBoot运行原理</title>
@@ -146,11 +205,11 @@
       <category term="HelloWorld" scheme="http://bestlixiang.site/categories/HelloWorld/"/>
     
     
-      <category term="Mybatis" scheme="http://bestlixiang.site/tags/Mybatis/"/>
-    
       <category term="Spring" scheme="http://bestlixiang.site/tags/Spring/"/>
     
       <category term="SpringMVC" scheme="http://bestlixiang.site/tags/SpringMVC/"/>
+    
+      <category term="Mybatis" scheme="http://bestlixiang.site/tags/Mybatis/"/>
     
   </entry>
   
@@ -1975,272 +2034,6 @@
     <summary type="html">
     
       &lt;p&gt;引：在这里有一切你想要的bash数据操作知识，比如数据流重定向，管道命令，正则表达式的使用，大家可以快快进来！
-    
-    </summary>
-    
-      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走进Linux_初探shell步入bash</title>
-    <link href="http://bestlixiang.site/2018/03/28/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_%E5%88%9D%E6%8E%A2shell%E6%AD%A5%E5%85%A5bash/"/>
-    <id>http://bestlixiang.site/2018/03/28/走进Linux/走进Linux_初探shell步入bash/</id>
-    <published>2018-03-28T05:44:19.000Z</published>
-    <updated>2018-04-09T04:32:41.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：在Linux的环境下，如果你不懂bash是什么，那么其他的东西就不用学了！<a id="more"></a></p>
-<h1 id="认识bash这个shell"><a href="#认识bash这个shell" class="headerlink" title="认识bash这个shell"></a>认识bash这个shell</h1><p>管理整个计算机硬件的其实是操作系统的内核，这个内核是需要保护的，所以我们一般用户就只能通过shell来跟内核通信，以让内核达到我们所想要达到的工作，那么系统。</p>
-<h2 id="硬件、内核与shell"><a href="#硬件、内核与shell" class="headerlink" title="硬件、内核与shell"></a>硬件、内核与shell</h2><p>下面是硬件、内核与shell的关系：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/linux/png/relation_shell.png" alt="shell"></p>
-<p>我们必须要通过“shell”将我们输入的命令与内核通信，好让内核可以控制硬件来正确无误地工作。</p>
-<p>其实shell的功能只是提供用户操作系统的一个接口，因此这个shell需要可以调用其他软件才好。<strong>只要能够操作应用程序的接口都能够称为shell。</strong> <strong>狭义的shell</strong>指的是命令行方面的软件，包括bash等。<strong>广义的shell</strong>包括图形界面的软件，因为图形界面也能够操作各种应用程序来调用内核工作。</p>
-<h2 id="为什么要学命令行界面的shell"><a href="#为什么要学命令行界面的shell" class="headerlink" title="为什么要学命令行界面的shell"></a>为什么要学命令行界面的shell</h2><ol>
-<li>命令行界面的shell：大家（几乎所有发行版）都一样</li>
-<li>远程管理：命令行界面就是比较快，而且较不容易出现断线或者信息外流的问题。</li>
-<li>Linux的任督二脉：shell是也。因为要想将自己的主机管理好，良好的shell程序编写是必须的。</li>
-</ol>
-<h2 id="系统合法与-etc-shells功能"><a href="#系统合法与-etc-shells功能" class="headerlink" title="系统合法与/etc/shells功能"></a>系统合法与/etc/shells功能</h2><p>目前我们的Linux有下面几个可以用的shell，我们可以通过查看/etc/shells这个文件，可以看到如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/bin/sh   (已经被/bin/bash所替代)</div><div class="line">/bin/bash  (Linux默认的shell)</div><div class="line">/sbin/nologin</div><div class="line">/usr/bin/sh</div><div class="line">/usr/bin/bash</div><div class="line">/usr/sbin/nologin</div><div class="line">/bin/tcsh   (整合C shell，提供了更多的功能)</div><div class="line">/bin/csh  (已经被/bin/tcsh所替代)</div></pre></td></tr></table></figure></p>
-<p>Linux默认的就是bash。系统上合法的shell都要写入/etc/shells这个文件中，因为系统某些服务在运行过程中，会去检查用户能够使用的shells，而这些shell的查询就是借助/etc/shells这个文件。</p>
-<p>用户默认取得的shell可以通过查看/etc/passwd文件，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">root:x:0:0:root:/root:/bin/bash</div><div class="line">bin:x:1:1:bin:/bin:/sbin/nologin</div><div class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</div></pre></td></tr></table></figure></p>
-<h2 id="bash-shell的功能"><a href="#bash-shell的功能" class="headerlink" title="bash shell的功能"></a>bash shell的功能</h2><p>bash的优点如下：</p>
-<ol>
-<li>命令记忆能力，~/.bash_history里面会记录前一次登录所执行过的命令，而这一次登录都被暂存在临时内存中，成功注销后，本次执行的命令会记录到文件中。最大的好处就是可以查询曾经做过的操作，利于排错。</li>
-<li>命令与文件补全功能（Tab键的好处）</li>
-<li>命令别名设置功能（alias）执行如下得命令：<blockquote>
-<p>alias 简化命令=’实际命令’ （设置别名）; unalias 简化命令（解除别名）</p>
-</blockquote>
-</li>
-<li>作业控制、前台、后台控制</li>
-<li>程序脚本</li>
-<li>通配符（*）</li>
-</ol>
-<h1 id="shell的变量功能"><a href="#shell的变量功能" class="headerlink" title="shell的变量功能"></a>shell的变量功能</h1><p>变量是bash环境中非常重要的一个玩意儿。</p>
-<h2 id="什么是变量"><a href="#什么是变量" class="headerlink" title="什么是变量"></a>什么是变量</h2><p><strong>变量：</strong> 就是以一组文字或符号等，来替代一些设置或者一串保留的数据。</p>
-<p>变量的方便性在于：</p>
-<ol>
-<li>变量的可变性与方便性</li>
-<li>简化bash环境操作</li>
-<li>脚本程序设计的好帮手</li>
-</ol>
-<h2 id="变量的分类"><a href="#变量的分类" class="headerlink" title="变量的分类"></a>变量的分类</h2><p>在Linux中，变量分为环境变量(全局变量) 和 局部变量。<br>环境变量能被子进程继承，而局部变量只能在当前进程中使用。</p>
-<p>不论是环境变量还是局部变量。他们又都可以分为系统变量 和 自定义变量。系统变量是系统启动时自动创建的变量，往往为系统运行提供支持；而自定义变量是用户自己定义的。一般而言，系统变量全为大写，自定义变量全为小写。</p>
-<h2 id="变量的显示与设置：echo，unset"><a href="#变量的显示与设置：echo，unset" class="headerlink" title="变量的显示与设置：echo，unset"></a>变量的显示与设置：echo，unset</h2><ol>
-<li><p>变量的显示：echo</p>
-<p> 读变量，只需要在变量名称前面加上$，或者是以${变量}的方式来显示就可以。</p>
-</li>
-<li><p>变量的修改：“=”</p>
-<p> 只需要用等号连接变量与它的内容就好了。它具有如下设置规则：</p>
-<ul>
-<li>等号两边不能直接接空格符</li>
-<li>变量名称只能是英文字母与数字，但是开头字符不能是数字</li>
-<li>变量内容若有空格可使用双引号或单引号将变量的内容结合起来</li>
-<li>可以用转义字符”\”将特殊符号（如enter、$、\、空格符、！等）变成一般字符。</li>
-<li>在一串命令中，还需要其他的命令提供的信息，可以使用反单引号“`命令`”或“$(命令)”</li>
-<li>若该变量为了增加变量内容时，则可用“$变量名称”或${变量}累加内容，后用冒号连接。</li>
-<li>若该变量需要在其他自进程执行，则需要以export来使变量变成环境变量。</li>
-<li>通常大写字符为系统默认变量，自行设置变量可以使用小写字符，方便判断。</li>
-<li><p>取消变量的方法为使用“unset 变量名称”</p>
-<p>什么是<strong>子进程：</strong> 在一个bash中开启一个新的bash，那么原本的bash称为父进程，新的bash称为子进程。 子进程会继承父进程的所有环境变量，而父进程的局部变量只能在父进程中使用。</p>
-</li>
-</ul>
-</li>
-</ol>
-<h2 id="环境变量的功能"><a href="#环境变量的功能" class="headerlink" title="环境变量的功能"></a>环境变量的功能</h2><p><strong>环境变量</strong>可以帮我们达到很多功能，包括主文件夹的变换、提示符的显示、执行文件查找的路径等。在shell环境下，可以通过env与export查看环境变量。下面主要介绍一下主要的环境变量：</p>
-<ul>
-<li>HOME：用户主目录，当我们使用cd 或cd ~时就会调用这个环境变量找到用户主目录</li>
-<li>SHELL：当前使用的SHELL，默认使用/bin/bash</li>
-<li>HISTSIZE：历史命令的最大条数</li>
-<li>PATH：可执行文件的查找路径。这是一个非常重要的环境变量，当我们直接写一个命令时，系统就会在PATH路径中寻找这个命令，这样我们在执行命令的时候就不用输命令完整的路径了。多个路径之间用:分隔</li>
-<li>LANG：当前系统的语言</li>
-<li>RANDOM：随机数生成器的路径。该路径默认指向/dev/random这个文件，这个文件是一个随机数生成器，当我们使用$RANDOM时就能获得一个0-32767之间的随机整数</li>
-</ul>
-<p>当然我们还可以通过set来查看所有变量（含环境变量和自定义变量）：这里也解释几个比较重要的变量：</p>
-<ul>
-<li>PS1：命令提示符，在命令输入光标前有一串用中括号括起来的信息，这就是命令提示符。命令提示符究竟需要显示哪些信息，这就是由PS1这个局部变量决定的。由于它是局部变量，因此子进程中无法继承这个变量，子进程拥有自己的PS1。</li>
-<li><p>$：当前shell的PID，可以通过如下命令查看当前shell的PID：</p>
-<blockquote>
-<p>echo $$</p>
-</blockquote>
-</li>
-<li><p>?：上个命令的执行结果,上个命令若执行成功，则echo $?就会返回0；若上个命令执行失败，则该值为一个非0整数。</p>
-</li>
-</ul>
-<h2 id="变量内容的删除与替换"><a href="#变量内容的删除与替换" class="headerlink" title="变量内容的删除与替换"></a>变量内容的删除与替换</h2><table>
-<thead>
-<tr>
-<th>操作方式</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>${变量名#关键词}</td>
-<td>从变量值的头部开始，依次向后删除到关键词第一次出现的位置为止</td>
-</tr>
-<tr>
-<td>${变量名##关键词}</td>
-<td>从变量值的头部开始，依次向后删除到关键词最后一次出现的位置为止</td>
-</tr>
-<tr>
-<td>${变量名%关键词}</td>
-<td>从变量值的尾部开始，依次向前删除到关键词第一次出现的位置为止</td>
-</tr>
-<tr>
-<td>${变量名%%关键词}</td>
-<td>从变量值的尾部开始，依次向前删除到关键词最后一次出现的位置为止</td>
-</tr>
-<tr>
-<td>${变量名/旧字符串/新字符串}</td>
-<td>从变量值的头部开始，依次向后找到第一个旧字符串，并将其替换</td>
-</tr>
-<tr>
-<td>${变量名//旧字符串/新字符串}</td>
-<td>将变量值中所有的旧字符串替换成新字符串</td>
-</tr>
-</tbody>
-</table>
-<h1 id="Bash-Shell的操作环境"><a href="#Bash-Shell的操作环境" class="headerlink" title="Bash Shell的操作环境"></a>Bash Shell的操作环境</h1><h2 id="路径与命令的查找顺序"><a href="#路径与命令的查找顺序" class="headerlink" title="路径与命令的查找顺序"></a>路径与命令的查找顺序</h2><p>基本上，命令运行的顺序可以这样看：</p>
-<ol>
-<li>以相对/绝对路径执行命令，例如：“/bin/ls”或“./ls”</li>
-<li>由alias找到该命令来执行</li>
-<li>有bash内置的(builtin)命令来执行</li>
-<li>通过$PATH这个变量的顺序找到的第一个命令来执行</li>
-</ol>
-<h2 id="bash的登录与欢迎环境：-etc-issue-etc-motd"><a href="#bash的登录与欢迎环境：-etc-issue-etc-motd" class="headerlink" title="bash的登录与欢迎环境：/etc/issue,/etc/motd"></a>bash的登录与欢迎环境：/etc/issue,/etc/motd</h2><ol>
-<li>/etc/issue：放置终端机接口登录成功的界面提示的字符。</li>
-<li>/etc/issue.net：放置telnet远程登录成功的界面提示的字符。</li>
-<li>/etc/motd：如果你想让用户登录后取得一些信息，可以将信息加入其中。比如告知登录者系统将在什么时候维护。</li>
-</ol>
-<h2 id="bash的环境配置文件"><a href="#bash的环境配置文件" class="headerlink" title="bash的环境配置文件"></a>bash的环境配置文件</h2><p>由于系统有一些环境配置文件的存在，让bash在启动时直接读取这些配置文件，所有已进入bash就能够取得一堆有用的变量。而这些配置文件又可以分为全体系统的配置文件以及用户个人偏好配置文件。要注意的是，之前我们说的命令别名、自定义的变量在你注销bash后就会失效。所以你想要保留你的设置，就得要讲这些设置写入配置文件才行。，下面就看看这些东西：</p>
-<ol>
-<li><p>login shell与non-login shell</p>
-<p> login shell和non-login shell是两种shell登录的方式，它们登录后加载的环境配置文件有所不同。</p>
-<ul>
-<li>login shell在获取bash前需要进行一套完整的登录过程，这个登录过程就称为login shell。所谓“完整的登录过程”指需要输入用户名和密码。login shell其实只会读取这两个配置文件：/etc/profile和(~/.bash_profile或 ~/.bash\_login或~/.profile)</li>
-<li>non-login shell获取bash不需要输入密码的登录过程称为non-login shell。如在bash中直接输入bash，从而打开一个子bash，这个过程不需要输入密码，因此称为non-login shell。比如在图形界面中。</li>
-</ul>
-</li>
-<li>/etc/profile：系统级的环境变量(login shell才会读) 。<br>该文件存放系统级环境变量，所有的用户都会拥有，一般不建议修改这个文件。</li>
-<li>~/.bash_profile：用户个人的环境变量(login shell才会读)<br>当/etc/profile中的环境变量加载完毕后就会加载本文件，本文件中定义了当前用户的环境变量。</li>
-<li>~/.bashrc：non-login shell会读取的环境配置文件<br>当用户以non-login方式登录后，只会加载这个文件，该文件会对一些操作加上安全询问。这个文件不管哪种登录方式都会被加载，因此这里可以存放别名。</li>
-<li>/etc/man.conf：设置man的存放路径<br>如果使用源码安装软件的话(非rpm、yum)，一般软件会安装在自定义的目录中(一般为/usr/local/软件名)。那么软件中的man文件就无法被系统找到，从而无法通过“man+命令”找到这个软件的命令帮助文档。我们需要手动将该软件的man目录添加到/etc/man.conf中去，从而执行“man+命令”就能找到这个目录的帮助文档。</li>
-<li>~/.bash_history：存储用户历史命令</li>
-<li>~/.bash_logout：记录注销后系统执行的操作</li>
-</ol>
-<h2 id="通配符和特殊字符"><a href="#通配符和特殊字符" class="headerlink" title="通配符和特殊字符"></a>通配符和特殊字符</h2><h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h3><p>在bash的操作环境中还有一个非常有用的功能，那就是通配符。下面是一些常用的通配符：</p>
-<table>
-<thead>
-<tr>
-<th>符号</th>
-<th>意义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>*</td>
-<td>代表任意多个字符</td>
-</tr>
-<tr>
-<td>?</td>
-<td>代表一个字符</td>
-</tr>
-<tr>
-<td>[]</td>
-<td>[abcd]：代表该范围内的一个字符</td>
-</tr>
-<tr>
-<td>[-]</td>
-<td>[a-z]：代表a-z之间的一个字符</td>
-</tr>
-<tr>
-<td>[^]</td>
-<td>[^a-z]：代表除了a-z以外的所有字符</td>
-</tr>
-</tbody>
-</table>
-<h3 id="特殊字符"><a href="#特殊字符" class="headerlink" title="特殊字符"></a>特殊字符</h3><p>下面是bash环境中的特殊符号：</p>
-<table>
-<thead>
-<tr>
-<th>符号</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>#</td>
-<td>注释</td>
-</tr>
-<tr>
-<td>\</td>
-<td>转移字符，将特殊字符转为普通字符</td>
-</tr>
-<tr>
-<td>;</td>
-<td>分隔多个目录，使得依次执行</td>
-</tr>
-<tr>
-<td>~</td>
-<td>用户主目录</td>
-</tr>
-<tr>
-<td>$</td>
-<td>变量的起始符</td>
-</tr>
-<tr>
-<td>&amp;</td>
-<td>将目录置于后台执行</td>
-</tr>
-<tr>
-<td>!</td>
-<td>非</td>
-</tr>
-<tr>
-<td>/</td>
-<td>目录分隔符</td>
-</tr>
-<tr>
-<td>&gt;,&gt;&gt;</td>
-<td>数据流重定向，输出导向</td>
-</tr>
-<tr>
-<td>&lt;,&lt;&lt;</td>
-<td>数据流重定向，输入导向</td>
-</tr>
-<tr>
-<td>‘’</td>
-<td>不含变量置换功能</td>
-</tr>
-<tr>
-<td>“”</td>
-<td>含有变量置换功能</td>
-</tr>
-<tr>
-<td>``</td>
-<td>中间为待执行的命令，和$()一致</td>
-</tr>
-<tr>
-<td>()</td>
-<td>中间为子shell的起始和结束</td>
-</tr>
-<tr>
-<td>{}</td>
-<td>中间为命令块</td>
-</tr>
-</tbody>
-</table>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《鸟哥的Linux私房菜》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：在Linux的环境下，如果你不懂bash是什么，那么其他的东西就不用学了！
     
     </summary>
     
