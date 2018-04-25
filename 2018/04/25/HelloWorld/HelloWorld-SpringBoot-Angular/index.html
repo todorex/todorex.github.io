@@ -1,0 +1,1002 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="SpringBoot,SpringSecurity,JWT," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：前段时间写了个前后台不分离的SSMLogin，大家可能会觉得前后台不分离太low，所以这次我们使用SpringBoot+Angular搭建了一个利用Token来进行身份验证的前后台分离登录Demo项目。">
+<meta name="keywords" content="SpringBoot,SpringSecurity,JWT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HelloWorld_SpringBoot Angular">
+<meta property="og:url" content="http://bestlixiang.site/2018/04/25/HelloWorld/HelloWorld-SpringBoot-Angular/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：前段时间写了个前后台不分离的SSMLogin，大家可能会觉得前后台不分离太low，所以这次我们使用SpringBoot+Angular搭建了一个利用Token来进行身份验证的前后台分离登录Demo项目。">
+<meta property="og:updated_time" content="2018-04-25T11:32:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HelloWorld_SpringBoot Angular">
+<meta name="twitter:description" content="引：前段时间写了个前后台不分离的SSMLogin，大家可能会觉得前后台不分离太low，所以这次我们使用SpringBoot+Angular搭建了一个利用Token来进行身份验证的前后台分离登录Demo项目。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/04/25/HelloWorld/HelloWorld-SpringBoot-Angular/"/>
+
+
+
+
+
+  <title> HelloWorld_SpringBoot Angular | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/25/HelloWorld/HelloWorld-SpringBoot-Angular/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                HelloWorld_SpringBoot Angular
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-25T19:31:14+08:00">
+                2018-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/HelloWorld/" itemprop="url" rel="index">
+                    <span itemprop="name">HelloWorld</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：前段时间写了个前后台不分离的<a href="http://todorex.com/2018/04/17/HelloWorld/HelloWorld-SSMLogin/" target="_blank" rel="external">SSMLogin</a>，大家可能会觉得前后台不分离太low，所以这次我们使用SpringBoot+Angular搭建了一个利用Token来进行身份验证的前后台分离登录Demo项目。<a id="more"></a></p>
+<h1 id="项目源码"><a href="#项目源码" class="headerlink" title="项目源码"></a>项目源码</h1><p><a href="https://github.com/todorex/SpringBoot_Angular_HeroesLogin/" target="_blank" rel="external">SpringBoot+Angular</a></p>
+<h1 id="Angular前端"><a href="#Angular前端" class="headerlink" title="Angular前端"></a>Angular前端</h1><p>本文前端基于Angular官方样例Tour of Heroes，请先到<a href="https://angular.io/tutorial" target="_blank" rel="external">官网下载</a>，也可以拷贝自己的项目源码（不过最好还是一步步来，先去官网下载源码），这次前端不是主要讲解的地方，所以官网源码部分就不说了，自己去看。我只说增加的核心部分。</p>
+<h2 id="login组件"><a href="#login组件" class="headerlink" title="login组件"></a>login组件</h2><p>下面是登录的ts代码：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">class</span> LoginComponent <span class="keyword">implements</span> OnInit &#123;</div><div class="line">  <span class="comment">// 用来接收后台的数据</span></div><div class="line">  model: <span class="built_in">any</span> = &#123;&#125;;</div><div class="line"></div><div class="line">  <span class="comment">//注入依赖对象</span></div><div class="line">  <span class="keyword">constructor</span>(<span class="params"></span></div><div class="line">    <span class="keyword">private</span> router: Router,</div><div class="line">    <span class="keyword">private</span> authenticationService: AuthenticationService,</div><div class="line">  ) &#123; &#125;</div><div class="line"></div><div class="line">  ngOnInit() &#123;</div><div class="line">    <span class="comment">// 重置登录状态</span></div><div class="line">    <span class="keyword">this</span>.authenticationService.logout();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  login() &#123;</div><div class="line">    <span class="comment">// 利用authenticationService获取对象</span></div><div class="line">    <span class="keyword">this</span>.authenticationService.login(<span class="keyword">this</span>.model.username, <span class="keyword">this</span>.model.password).subscribe(</div><div class="line">      <span class="function"><span class="params">result</span> =&gt;</span> &#123;</div><div class="line">        <span class="keyword">if</span> (result) &#123;</div><div class="line">          <span class="comment">// 登录成功，调制路由</span></div><div class="line">          <span class="keyword">this</span>.router.navigate([<span class="string">'dashboard'</span>]);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          <span class="keyword">this</span>.log(<span class="string">'Username or Password is incorrect'</span>);</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="AuthenticationService服务"><a href="#AuthenticationService服务" class="headerlink" title="AuthenticationService服务"></a>AuthenticationService服务</h2><p>看看它的代码：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// http头，使用json传递数据</span></div><div class="line"><span class="keyword">const</span> httpOptions = &#123;</div><div class="line">  headers: <span class="keyword">new</span> HttpHeaders(&#123;<span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>&#125;)</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">@Injectable</span>()</div><div class="line"><span class="keyword">export</span> <span class="keyword">class</span> AuthenticationService &#123;</div><div class="line">  <span class="comment">// 认证的url</span></div><div class="line">  <span class="keyword">private</span> url: <span class="built_in">string</span> = <span class="string">`<span class="subst">$&#123;environment.apiURL&#125;</span>/auth`</span>;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(<span class="params"><span class="keyword">private</span> http: HttpClient</span>) &#123;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  login(username: <span class="built_in">string</span>, password: <span class="built_in">string</span>): Observable&lt;<span class="built_in">boolean</span>&gt; &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.http.post&lt;<span class="built_in">any</span>&gt;(<span class="keyword">this</span>.url,<span class="built_in">JSON</span>.stringify(&#123;username: username, password: password&#125;),httpOptions).pipe(</div><div class="line">      tap(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</div><div class="line">        <span class="comment">// 获得token认证</span></div><div class="line">        <span class="keyword">let</span> token = response.token;</div><div class="line">        <span class="keyword">if</span> (token) &#123;</div><div class="line">          <span class="comment">// 存储token到浏览器localStorage中，以后每次都带着它去请求数据</span></div><div class="line">          localStorage.setItem(<span class="string">'currentUser'</span>,token);</div><div class="line">        &#125;</div><div class="line">      &#125;),</div><div class="line">      catchError(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</div><div class="line">        <span class="built_in">console</span>.error(err);</div><div class="line">        <span class="keyword">return</span> of (<span class="literal">false</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">      )</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 从localStorage获得token</span></div><div class="line">  getToken(): <span class="built_in">String</span> &#123;</div><div class="line">    <span class="keyword">return</span> localStorage.getItem(<span class="string">'currentUser'</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  logout(): <span class="built_in">void</span> &#123;</div><div class="line">    <span class="comment">// 清空token，那么没有Token也就不能刷新页面了</span></div><div class="line">    localStorage.removeItem(<span class="string">'currentUser'</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  isLoggedIn(): <span class="built_in">boolean</span> &#123;</div><div class="line">    <span class="keyword">var</span> token: <span class="built_in">String</span> = <span class="keyword">this</span>.getToken();</div><div class="line">    <span class="keyword">return</span> token &amp;&amp; token.length &gt; <span class="number">0</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="AuthenticationInterceptor拦截器"><a href="#AuthenticationInterceptor拦截器" class="headerlink" title="AuthenticationInterceptor拦截器"></a>AuthenticationInterceptor拦截器</h1><p>有了这个拦截器，以后所有的请求都过经过这里，看看它的代码：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Injectable</span>()</div><div class="line"><span class="keyword">export</span> <span class="keyword">class</span> AuthenticationInterceptor <span class="keyword">implements</span> HttpInterceptor &#123;</div><div class="line"></div><div class="line">  <span class="comment">// next 相当于Java Filter 的chain</span></div><div class="line">  intercept(req: HttpRequest&lt;<span class="built_in">any</span>&gt;, next: HttpHandler): Observable&lt;HttpEvent&lt;<span class="built_in">any</span>&gt;&gt; &#123;</div><div class="line">    <span class="keyword">const</span> idToken = localStorage.getItem(<span class="string">'currentUser'</span>);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (idToken) &#123;</div><div class="line">      <span class="comment">// 将原来的请求加上token包装成新的请求发送</span></div><div class="line">      <span class="keyword">const</span> cloned = req.clone(&#123;</div><div class="line">        headers: req.headers.set(<span class="string">'Authorization'</span>, <span class="string">'Bearer '</span> + idToken)</div><div class="line">      &#125;);</div><div class="line"></div><div class="line">      <span class="keyword">return</span> next.handle(cloned);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">return</span> next.handle(req);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="CanActivateAuthGuard保卫"><a href="#CanActivateAuthGuard保卫" class="headerlink" title="CanActivateAuthGuard保卫"></a>CanActivateAuthGuard保卫</h2><p>有了CanActivateAuthGuard就能够防止未登录用户访问其他页面，看看它的代码：<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Injectable</span>()</div><div class="line"><span class="keyword">export</span> <span class="keyword">class</span> CanActivateAuthGuard <span class="keyword">implements</span> CanActivate &#123;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(<span class="params"></span></div><div class="line">    <span class="keyword">public</span> router: Router,</div><div class="line">    <span class="keyword">private</span> authService: AuthenticationService</div><div class="line">  ) &#123;&#125;</div><div class="line"></div><div class="line">  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.authService.isLoggedIn()) &#123;</div><div class="line">      <span class="comment">// 可以通过</span></div><div class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 不能通过，跳转到登录页面</span></div><div class="line">    <span class="keyword">this</span>.router.navigate([<span class="string">'/login'</span>]);</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Springboot后台"><a href="#Springboot后台" class="headerlink" title="Springboot后台"></a>Springboot后台</h1><p>我们首先要对SpringBoot的项目结构有个熟悉的认识，如果不知道的可以先稍微了解一下他，他太棒了。这次开发也是上帝模式。</p>
+<h2 id="SpringSecurity权限控制"><a href="#SpringSecurity权限控制" class="headerlink" title="SpringSecurity权限控制"></a>SpringSecurity权限控制</h2><p>首先我们要对前台的请求进行认证，利用配置文件设置一些值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"># 控制跨域访问</div><div class="line">cors:</div><div class="line">  allowedOrigins: &quot;*&quot;</div><div class="line">  allowedMethods: GET,POST,DELETE,PUT,OPTIONS</div><div class="line">  allowedHeaders: Origin,X-Requested-With,Content-Type,Accept,Accept-Encoding,Accept-Language,Host,Referer,Connection,User-Agent,Authorization</div><div class="line"></div><div class="line"># token配置</div><div class="line">jwt:</div><div class="line">  header: Authorization</div><div class="line">  secret: mySecret</div><div class="line">  expiration: 7200</div><div class="line">  issuer: IATA</div><div class="line">  authenticationPath: /auth</div></pre></td></tr></table></figure></p>
+<h3 id="SpringSecurity配置类"><a href="#SpringSecurity配置类" class="headerlink" title="SpringSecurity配置类"></a>SpringSecurity配置类</h3><p>在com.todorex.config.WebSecurityConfig类中，在这个类中，我们主要是配置认证路径、跨域访问以及过滤器等设置。</p>
+<h3 id="SpringSecurity自定义过滤器"><a href="#SpringSecurity自定义过滤器" class="headerlink" title="SpringSecurity自定义过滤器"></a>SpringSecurity自定义过滤器</h3><p>在com.todorex.config.AuthenticationTokenFilter类中，主要是验证token，但不重新计算token。</p>
+<h3 id="token生成方法"><a href="#token生成方法" class="headerlink" title="token生成方法"></a>token生成方法</h3><p>在com.todorex.util.JwtTokenUtil类中，主要有生成token以及验证token的方法。</p>
+<h2 id="Contoller"><a href="#Contoller" class="headerlink" title="Contoller"></a>Contoller</h2><p>主要是控制处理URL，其中比较重要的就是com.todorex.controller.AuthenticationController类，它是用来进行权限认证的，我们看看它的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="meta">@RequestMapping</span>(produces = MediaType.APPLICATION_JSON_VALUE)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AuthenticationController</span> </span>&#123;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> AuthenticationManager authenticationManager;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> JwtTokenUtil jwtTokenUtil;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> UserDetailsService userDetailsService;</div><div class="line"></div><div class="line">    <span class="comment">// 请求路径(/auth)</span></div><div class="line">    <span class="meta">@PostMapping</span>(value = <span class="string">"$&#123;jwt.authenticationPath&#125;"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> AuthenticationResponse <span class="title">login</span><span class="params">(@RequestBody AuthenticationRequest request)</span> <span class="keyword">throws</span> AuthenticationException </span>&#123;</div><div class="line">        <span class="comment">// 对包装过后的UsernamePasswordAuthenticationToken精心再包装成Authentication</span></div><div class="line">        <span class="keyword">final</span> Authentication authentication = authenticationManager.authenticate(<span class="keyword">new</span> UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));</div><div class="line">        <span class="comment">// 将该认证添加到上下文中（避免多次验证）</span></div><div class="line">        <span class="comment">// SecurityContextHolder用于存储安全上下文（security context）的信息</span></div><div class="line">        SecurityContextHolder.getContext().setAuthentication(authentication);</div><div class="line"></div><div class="line"></div><div class="line">        <span class="keyword">final</span> UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());</div><div class="line">        <span class="comment">// 实际应用中，生成token时可能会用到更多的参数</span></div><div class="line">        <span class="keyword">final</span> String token = jwtTokenUtil.generate(userDetails.getUsername());</div><div class="line">        <span class="comment">// 返回Token</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AuthenticationResponse(token);</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其他都是普通的Controller，但是对于URL的设计我们需要注意，我们主要是用Restful风格的URL，这种风格是怎么样的呢？我们可以参考下面的博文：<a href="https://blog.csdn.net/chenxiaochan/article/details/73716617" target="_blank" rel="external">【Restful】三分钟彻底了解Restful最佳实践</a>。</p>
+<h2 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h2><p>主要是处理业务的，这里我们需要注意的这个类：com.todorex.service.UserDetailsServiceImpl，我们需要实现UserDetailsService接口，因为SpringSecurity方法会用到，看看下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Service</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDetailsServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserDetailsService</span></span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> UserRepository userRepository;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> UserDetails <span class="title">loadUserByUsername</span><span class="params">(String s)</span> <span class="keyword">throws</span> UsernameNotFoundException </span>&#123;</div><div class="line">        User user = userRepository.findByUsername(s);</div><div class="line">        <span class="keyword">if</span> (user == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> UsernameNotFoundException(String.format(<span class="string">"No user found with username '%s'."</span>, s));</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> create(user);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 包装成SpringSecurity需要的User</div><div class="line">     * <span class="doctag">@param</span> user</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.security.core.userdetails.<span class="function">User <span class="title">create</span><span class="params">(User user)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapToGrantedAuthorities(user.getAuthorities()));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 包装权限</div><div class="line">     * <span class="doctag">@param</span> authorities</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> List&lt;GrantedAuthority&gt; <span class="title">mapToGrantedAuthorities</span><span class="params">(List&lt;Authority&gt; authorities)</span> </span>&#123;</div><div class="line">        <span class="comment">// Java8语法</span></div><div class="line">        <span class="keyword">return</span> authorities.stream()</div><div class="line">                .map(authority -&gt; <span class="keyword">new</span> SimpleGrantedAuthority(authority.getName().name()))</div><div class="line">                .collect(Collectors.toList());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Dao"><a href="#Dao" class="headerlink" title="Dao"></a>Dao</h2><p>这里我们使用的JPA，它内部实现是Hibernate，我们只要先定义Entity再定义Dao类就可以了。</p>
+<h3 id="Entity"><a href="#Entity" class="headerlink" title="Entity"></a>Entity</h3><p>Entity定义之后可以根据实体自动建表（可在配置文件中配置），如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># jpa配置</div><div class="line">  jpa:</div><div class="line">    database: MYSQL</div><div class="line">    show-sql: true</div><div class="line">    hibernate:</div><div class="line">    # 表不存在就自动建表</div><div class="line">      ddl-auto: create</div></pre></td></tr></table></figure></p>
+<h3 id="Dao-1"><a href="#Dao-1" class="headerlink" title="Dao"></a>Dao</h3><p>Dao接口只要继承JpaRepository<t, id="">就会有很多内置方法，如果要自己写SQL也可以参照com.todorex.HeroRepository的写法。</t,></p>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><p>我们可以先定义总的接口：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RunWith</span>(SpringRunner.class)</div><div class="line"><span class="meta">@SpringBootTest</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringBootTestAbstract</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后每个要测试的类继承他就可以了，避免了重复配置，IDEA还有很多技巧，自己可以去baidu、google，这里也举个例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DataSourceTest</span> <span class="keyword">extends</span> <span class="title">SpringBootTestAbstract</span></span>&#123;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    ApplicationContext applicationContext;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    DataSourceProperties dataSourceProperties;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testDataSource</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="comment">// 获取配置的数据源</span></div><div class="line">        DataSource dataSource = applicationContext.getBean(DataSource.class);</div><div class="line">        <span class="comment">// 查看配置数据源信息</span></div><div class="line">        System.out.println(dataSource);</div><div class="line">        System.out.println(dataSource.getClass().getName());</div><div class="line">        System.out.println(dataSourceProperties);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><p>SpringBoot默认使用logback作为日志框架，我们可以做如下配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 日志配置</div><div class="line">logging:</div><div class="line">  level:</div><div class="line">    # 配置包以及输出等级</div><div class="line">    com.todorex: debug</div><div class="line">  pattern:</div><div class="line">    console: &quot;%d - %msg%n&quot;</div><div class="line">  path: /var/localLog/</div><div class="line">  file: /var/localLog/springbootdemo.log</div></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://blog.51cto.com/7308310/2072364" target="_blank" rel="external">Angular 5集成Spring Boot,Spring Security,JWT和CORS</a></li>
+<li><a href="https://angular.io/tutorial" target="_blank" rel="external">Angular_Heroes教程</a></li>
+<li><a href="http://todorex.com/2018/04/25/%E6%B7%B1%E5%85%A5SSM/%E6%8F%AD%E7%A7%98SpringSecurity-%E4%B8%80-%E8%AF%B7%E6%B1%82%E8%AE%A4%E8%AF%81%E8%BF%87%E7%A8%8B/" target="_blank" rel="external">揭秘SpringSecurity(一)_请求认证过程</a></li>
+<li><a href="http://todorex.com/2018/04/21/%E6%B7%B1%E5%85%A5SSM/%E6%8F%AD%E7%A7%98SpringBoot-%E4%B8%80-SpringBoot%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/" target="_blank" rel="external">揭秘SpringBoot(一)_SpringBoot运行原理</a></li>
+<li><a href="https://blog.csdn.net/chenxiaochan/article/details/73716617" target="_blank" rel="external">【Restful】三分钟彻底了解Restful最佳实践</a></li>
+<li><a href="https://www.jianshu.com/p/576dbf44b2ae" target="_blank" rel="external">什么是 JWT – JSON WEB TOKEN</a></li>
+<li><a href="https://blog.csdn.net/cabbges/article/details/53378516" target="_blank" rel="external">ajax 跨域 CROS</a></li>
+<li><a href="https://blog.csdn.net/inke88/article/details/75007649" target="_blank" rel="external">Spring Boot 日志配置(超详细)</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          
+            <a href="/tags/SpringSecurity/" rel="tag"># SpringSecurity</a>
+          
+            <a href="/tags/JWT/" rel="tag"># JWT</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/25/深入SSM/揭秘SpringSecurity-一-请求认证过程/" rel="next" title="揭秘SpringSecurity(一)_请求认证过程">
+                <i class="fa fa-chevron-left"></i> 揭秘SpringSecurity(一)_请求认证过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">108</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#项目源码"><span class="nav-number">1.</span> <span class="nav-text">项目源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Angular前端"><span class="nav-number">2.</span> <span class="nav-text">Angular前端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#login组件"><span class="nav-number">2.1.</span> <span class="nav-text">login组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AuthenticationService服务"><span class="nav-number">2.2.</span> <span class="nav-text">AuthenticationService服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AuthenticationInterceptor拦截器"><span class="nav-number">3.</span> <span class="nav-text">AuthenticationInterceptor拦截器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CanActivateAuthGuard保卫"><span class="nav-number">3.1.</span> <span class="nav-text">CanActivateAuthGuard保卫</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Springboot后台"><span class="nav-number">4.</span> <span class="nav-text">Springboot后台</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringSecurity权限控制"><span class="nav-number">4.1.</span> <span class="nav-text">SpringSecurity权限控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringSecurity配置类"><span class="nav-number">4.1.1.</span> <span class="nav-text">SpringSecurity配置类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringSecurity自定义过滤器"><span class="nav-number">4.1.2.</span> <span class="nav-text">SpringSecurity自定义过滤器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#token生成方法"><span class="nav-number">4.1.3.</span> <span class="nav-text">token生成方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Contoller"><span class="nav-number">4.2.</span> <span class="nav-text">Contoller</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Service"><span class="nav-number">4.3.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dao"><span class="nav-number">4.4.</span> <span class="nav-text">Dao</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Entity"><span class="nav-number">4.4.1.</span> <span class="nav-text">Entity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dao-1"><span class="nav-number">4.4.2.</span> <span class="nav-text">Dao</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单元测试"><span class="nav-number">4.5.</span> <span class="nav-text">单元测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志"><span class="nav-number">4.6.</span> <span class="nav-text">日志</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
