@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-05-03T06:09:29.000Z</updated>
+  <updated>2018-05-07T11:12:09.000Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,333 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySQL必知必会</title>
+    <link href="http://bestlixiang.site/2018/05/07/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/"/>
+    <id>http://bestlixiang.site/2018/05/07/数据库/MySQL必知必会/</id>
+    <published>2018-05-07T07:46:56.000Z</published>
+    <updated>2018-05-07T11:12:09.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>引:虽然用了这么久的数据库，但是有时候使用起来难免会去查怎么使用，这样下去也不是办法，所以自己就在这里以Mysql为例总结一下经常用到的地方。 <a id="more"></a></p>
+<h1 id="基本注意点"><a href="#基本注意点" class="headerlink" title="基本注意点"></a>基本注意点</h1><ol>
+<li>SQL关键字使用大写，所有列和表名使用小写</li>
+<li>SQL语句由子句构成，一个子句通常由一个关键字和一个数据组成，子句的顺序一般为:<blockquote>
+<p>SELECT 数据 FROM 数据 WHERE 数据 GROUP BY 数据 HAVING 数据 ORDER BY 数据 LIMIT 数据</p>
+</blockquote>
+</li>
+<li>通配符搜索的处理一般要比其他搜索所花时间长，不要过度使用通配符，如果要，就应该将通配符放在搜索集合小的搜索上</li>
+<li>多数DBMS使 +或||来实现拼接，MYSQL则使 Concat函数来实现</li>
+<li>数据库列般称为列，计算字段一般称为字段</li>
+<li>MySQL使用的日期格式必须是yyyy-mm-dd</li>
+<li>WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤</li>
+<li>子查询最常见的使用是在WHERE子句的IN操作符后</li>
+<li>在删除或更新表之前先SELECT出来，防止删错</li>
+<li>利用外键约束，防止删除与其他表相关联的行</li>
+</ol>
+<h1 id="MySQL基本使用"><a href="#MySQL基本使用" class="headerlink" title="MySQL基本使用"></a>MySQL基本使用</h1><ol>
+<li>MySQL帮助<blockquote>
+<p>相关命令 -h/–help</p>
+</blockquote>
+</li>
+<li>MySQL服务启动和关闭<blockquote>
+<p>mysql.server start/stop</p>
+</blockquote>
+</li>
+<li><p>MySQL连接</p>
+<blockquote>
+<p>mysql -u 用户名 -p 密码 -h 主机名 -P 端口  </p>
+</blockquote>
+<p> （默认用户名为使用者名，主机名默认为localhost，端口默认为3306）    </p>
+</li>
+<li>退出命令行<blockquote>
+<p>quit/exit</p>
+</blockquote>
+</li>
+<li>显示所有数据库<blockquote>
+<p>SHOW DATABASES</p>
+</blockquote>
+</li>
+<li>使用数据库<blockquote>
+<p>USE 数据库名</p>
+</blockquote>
+</li>
+<li>显示某库下所有的表<blockquote>
+<p>SHOW TABLES</p>
+</blockquote>
+</li>
+<li>显示某表下面的列<blockquote>
+<p>SHOW COLUMNS FROM 表名 / DISCRIBE 表名</p>
+</blockquote>
+</li>
+<li>显示服务器的状态信息<blockquote>
+<p>SHOW STATUS</p>
+</blockquote>
+</li>
+<li>显示创建特定数据库或表的MySQL语句<blockquote>
+<p>SHOW CREATE DATABASE 数据库名 / TABLE 表名</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="安全管理"><a href="#安全管理" class="headerlink" title="安全管理"></a>安全管理</h1><ol>
+<li><p>用户管理</p>
+<blockquote>
+<p>USE mysql</p>
+<p>SELECT user FROM user</p>
+<p>CREATE USER rex IDENTIFIED BY ‘密码’  //创建用户账号</p>
+<p>RENAME USER rex TO rex1  // 修改用户名</p>
+<p>DROP USER rex  // 删除用户账号</p>
+<p>SHOW GRANTS FOR rex  // 显示rex的权限，USAGE ON <em>.</em>表示没有权限</p>
+<p>GRANT SELECT ON 数据库/表.* TO rex // 给rex对数据库/表的读权限</p>
+<p>REVOKE SELECT ON 数据库/表.* TO rex // 撤销rex对数据库/表的读权限</p>
+</blockquote>
+</li>
+<li><p>更改密码</p>
+<blockquote>
+<p>SET PASSWORD FOR rex = Password ‘新密码’</p>
+<p>SET PASSWORD = Password ‘新密码’  // 修改当前用户的密码</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="数据库维护"><a href="#数据库维护" class="headerlink" title="数据库维护"></a>数据库维护</h1><ol>
+<li>数据库备份<ul>
+<li>使用mysqldump</li>
+<li>使用mysqlhotcopy</li>
+<li>使用BACKUP TABLE或SELECT INTO OUTFILE</li>
+</ul>
+</li>
+<li><p>维护数据库</p>
+<blockquote>
+<p>ANALYZE/CHECK TABLE 表名 // 检查表键是否正确</p>
+<p>OPTIMIZE TABLE 表名 // 回收所用空间  </p>
+</blockquote>
+</li>
+<li>查看日志文件<ul>
+<li>错误日志：通常为/data/hostname.err，可通过–log-error修改文件</li>
+<li>查询日志：通常为/data/hostname.log，可通过–log修改文件   </li>
+<li>二进制文件：通常为/data/hostname-bin</li>
+<li>缓慢查询日志：通常为/data/hostname-slow.log，可通过hostname-slow- queries修改文件  </li>
+</ul>
+</li>
+</ol>
+<h1 id="创建和操纵表"><a href="#创建和操纵表" class="headerlink" title="创建和操纵表"></a>创建和操纵表</h1><ol>
+<li>创建表<blockquote>
+<p>CREATE IF NOT EXISTS TABLE 表名(id int NOT NULL AUTO_INCREMENT          ,…, PRIMARY KEY(id)) ENGINE=InnoDB</p>
+</blockquote>
+</li>
+<li><p>更新表</p>
+<blockquote>
+<p>ALTER TABLE 表名 ADD 类型 // 增加列</p>
+<p>ALTER TABLE  表1 ADD CONSTRAINT fk<em>表1</em>表2 FOREIGN KEY(表2id)  REFERENCES  表2(表2id)</p>
+</blockquote>
+</li>
+<li><p>删除表</p>
+<blockquote>
+<p>DROP TABLE 表名</p>
+</blockquote>
+</li>
+<li>重命名表<blockquote>
+<p>RENAME TABLE 表名1 TO 表名2</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h1><h2 id="基本查询数据"><a href="#基本查询数据" class="headerlink" title="基本查询数据"></a>基本查询数据</h2><ol>
+<li>检索单个列<blockquote>
+<p>SELECT prod_name FROM product</p>
+</blockquote>
+</li>
+<li>检索多个列<blockquote>
+<p>SELECT prod_id, prod_name FROM product</p>
+</blockquote>
+</li>
+<li>检索所有列<blockquote>
+<p>SELECT * FROM product</p>
+</blockquote>
+</li>
+<li>检索不同的行<blockquote>
+<p>SELECT DISTINCT vend_id FROM product</p>
+</blockquote>
+</li>
+<li><p>限制结果的行数为前5条/第二个5条</p>
+<blockquote>
+<p>SELECT * FROM product LIMIT 5 / LIMIT 5(开始位置，第一行其实第0    行),5(要检索的行数)</p>
+<p>SELECT * FROM product LIMIT 5 (偏移量) OFFSET 5 (开始位置)      </p>
+</blockquote>
+</li>
+</ol>
+<h2 id="排序检索数据"><a href="#排序检索数据" class="headerlink" title="排序检索数据"></a>排序检索数据</h2><ol>
+<li>按一个列排序<blockquote>
+<p>SELECT prod_name FROM product ORDER BY prod_name</p>
+</blockquote>
+</li>
+<li>按多个列排序(先按prod_price排序，如果相同，则比较prod_name)<blockquote>
+<p>SELECT prod_id, prod_price, prod_name FROM product ORDER BY prod_price, prod_name</p>
+</blockquote>
+</li>
+<li>指定排序方向(默认升序ASC，降序DESC)<blockquote>
+<p>SELECT prod_id, prod_price, prod_name FROM product ORDER BY prod_price DESC</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="过滤数据"><a href="#过滤数据" class="headerlink" title="过滤数据"></a>过滤数据</h2><ol>
+<li>WHERE子句过滤<blockquote>
+<p>SELECT prod_name, prod_price FROM product WHERE prod_price =<br> 2.50</p>
+</blockquote>
+</li>
+<li><p>WHERE子句操作符</p>
+<p>操作符 | 说明<br>—|—<br>= | 等于<br>&lt;&gt; | 不等于<br>!= | 不等于<br>&lt; | 小于<br>&lt;= | 小于等于<br>> | 大于<br>>= | 大于等于<br>BETWEEN… AND | 在指定的两个值之间(mysql包括两端)<br>NOT BETWEEN… AND | 不在指定的两个值之间(mysql不包括两端)      </p>
+</li>
+<li>空值检查(需要注意null和没有值得区别)<blockquote>
+<p>SELECT prod_name FROM products WHERE prod_price IS NULL</p>
+</blockquote>
+</li>
+<li>数据过滤操作符<br> 操作符 | 说明<br> —|—<br> AND | 且（优先级比OR高）<br> OR | 或<br> IN | 在指定范围内，如WHERE id IN  (1002 1003)<br> NOT IN | 不在指定范围内</li>
+<li>数据过滤通配符(利用LIKE操作符)<br> 操作符 | 说明<br> —|—<br> % | 表示任意字符出现的任意次数<br> _ | 表示单个字符</li>
+<li>用正则表达式进行搜索(正则表达式的使用自行搜索)<blockquote>
+<p>SELECT * FROM product WHERE prod_name REGEXP ‘.000’ OR<br> prod_name REGEXP ‘1000|2000’ OR prod_name REGEXP ‘[123]  Ton’</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="创建计算字段"><a href="#创建计算字段" class="headerlink" title="创建计算字段"></a>创建计算字段</h2><p>计算字符是运行时在SELECT语句内创建的。</p>
+<ol>
+<li>拼接字段(Concat函数)<blockquote>
+<p>SELECT Concat(vend_name,’(‘,vend_country,’)’) FROM vendors</p>
+</blockquote>
+</li>
+<li>使用别名(列名，表名都可以使用，使用关键字AS，也可省略)<blockquote>
+<p>SELECT Concat(RTrim(vend_name),’(‘, RTrim(vend_country),’)’)  AS vend_title FROM vendors</p>
+</blockquote>
+</li>
+<li>执行算术计算(加减乘除)<blockquote>
+<p>SELECT quantity*item_price AS expanded_price FROM orderitems</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="使用数据处理函数"><a href="#使用数据处理函数" class="headerlink" title="使用数据处理函数"></a>使用数据处理函数</h2><ol>
+<li>文本处理函数<br>函数 | 说明<br>—|—<br>Left() | 返回串左边的字符<br>Right() | 返回串右边的字符<br>Length() | 返回串的长度<br>Locate() | 找出一个串的子串<br>Lower() | 将串转化为小写<br>Upper() | 将串转化为大写<br>LRrim() | 去掉串左边的空格<br>RTrim() | 去掉串右边的空格<br>Trim() | 去掉串两边的空格<br>SubString() | 返回子串的字符  </li>
+<li><p>日期和时间处理函数<br> 函数 | 说明<br> —|—<br> AddDate() | 增加一个日期(天、周等)<br> AddTime() | 增加一个时间(时、分等)<br> CurDate() | 返回当前的日期<br> CurTime() | 返回当前的时间<br> Date() | 返回日期时间的日期部分<br> DateDiff() | 计算两个日期之差<br> Date_Format() | 返回一个格式化的日期或时间串<br> Day() | 返回一个日期的天数部分，类推年月日，时分秒<br> Now() | 返回当前日期和时间  </p>
+</li>
+<li><p>数值处理函数<br> 函数 | 说明<br> —|—<br> Abs() | 返回一个数的绝对值<br> Cos() | 返回一个角度的余弦，类推正弦<br> Exp() | 返回一个数的指数值<br> Mod() | 返回除数操作的余数<br> Rand() | 返回一个随机数<br> Sqrt() | 返回一个数的平方根</p>
+</li>
+</ol>
+<h2 id="汇总数据"><a href="#汇总数据" class="headerlink" title="汇总数据"></a>汇总数据</h2><ol>
+<li><p>聚集函数</p>
+<p> 函数 | 说明<br> —|—<br> AVG() | 返回某列的平均值<br> COUNT() | 返回某列的行数<br> MAX() | 返回某列的最大值<br> MIN() | 返回某列的最小值<br> SUM() | 返回某列的总和</p>
+</li>
+</ol>
+<h2 id="分组数据"><a href="#分组数据" class="headerlink" title="分组数据"></a>分组数据</h2><ol>
+<li>创建分组(先分组后聚集)<blockquote>
+<p>SELECT vend_id  COUNT(*) AS num_prods FROM product GROUP BY vend_id</p>
+</blockquote>
+</li>
+<li>过滤分组<blockquote>
+<p>SELECT cust_id  COUNT(<em>) AS orders FROM order GROUP BY cust_id HAVING COUNT(</em>)&gt;=2</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="使用子查询"><a href="#使用子查询" class="headerlink" title="使用子查询"></a>使用子查询</h2><ol>
+<li>利用子查询进行过滤(找出买TNT2的顾客信息)<blockquote>
+<p>SELECT cust_name, cust_contact FROM customers WHERE cust_id IN  (SELECT cust_id FROM order WHERE order_num IN (SELECT order_num FROM orderitem WHERE prod_id=’TNT2’))</p>
+</blockquote>
+</li>
+<li>使用计算字段使用子查询(显示顾客的信息和订单量)<blockquote>
+<p>SELECT cust_name, cust_state, (SELECT COUNT (*)  FROM order WHERE order.cust_id = customer.cust_id)  AS orders FROM customer</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="联结表查询"><a href="#联结表查询" class="headerlink" title="联结表查询"></a>联结表查询</h2><ol>
+<li>联结查询(没有WHERE子句会产生笛卡尔积)<blockquote>
+<p>SELECT vend_name, prod_name FROM vendor, product, WHERE vendor.vend_id = product.vend_id</p>
+</blockquote>
+</li>
+<li>内部联结(等值联结，首选)<blockquote>
+<p>SELECT vend_name, prod_name FROM vendor INNER JOIN product ON vendor.vend_id = product.vend_id</p>
+</blockquote>
+</li>
+<li>多表联结<blockquote>
+<p>SELECT vend_name, prod_name, quantity FROM vendor, product, orderitem WHERE product.vend_id = vendor.vend_id AND orderitem.prod_id = product.prod_id</p>
+</blockquote>
+</li>
+<li>自联结(一般联结查询要比子查询快)<blockquote>
+<p>ELECT p1.prod_id, p1.prod_name FROM product p1, product p2 WHERE<br> p1.vend_id = p2.vend_id AND p2.prod_id = ‘DTNTR’</p>
+</blockquote>
+</li>
+<li>自然联结(排除一个列多次出现，使每个列只返回一次; 大部分内部联结都是自然联结)</li>
+<li>外部联结(联结包括了那些在相关表没有关联行的行，左外联结(左边的所有行必出现)，右外联结(右边的所有行必出现))<blockquote>
+<p>SELECT vend_name, prod_name FROM vendor LEFT OUTER JOIN product ON vendor.vend_id = product.vend_id</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="组合查询"><a href="#组合查询" class="headerlink" title="组合查询"></a>组合查询</h2><ol>
+<li>创建组合查询(大部分使用WHERE子句更快，但是对于多个表使用UNION可能更简单，重复行会被自动取消，如果不取消，使用UNION ALL)<blockquote>
+<p>SELECT vend_id, prod_id, prod_price FROM product WHERE prod_price &lt;=5 UNION SELECT vend_id, prod_id, prod_price FROM product WHERE vend_id IN  (1001, 1002)</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h1><ol>
+<li>插入一行数据(如果是完整的行，可以不写列名，但是要注意值的顺序)<blockquote>
+<p>INSERT INTO customer(列名) VALUES(类名对应的值)        </p>
+</blockquote>
+</li>
+<li>插入多个行<blockquote>
+<p>INSERT INTO customer(列名) VALUES(类名对应的值),VALUES(类名对应的值)</p>
+</blockquote>
+</li>
+<li>插入检索出的数据<blockquote>
+<p>INSERT INTO customer(列名) SELECT (列名) FROM  表名</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h1><ol>
+<li>更新表中特定的列(一定不要忘了WHERE子句)<blockquote>
+<p>UPDATE customer SET 列名 = 值  WHERE 子句</p>
+</blockquote>
+</li>
+<li>更新多列<blockquote>
+<p>UPDATE customer SET 列名 = 值,列名 = 值 WHERE 子句</p>
+</blockquote>
+</li>
+</ol>
+<h1 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h1><ol>
+<li>删除特定的行<blockquote>
+<p>DELETE FROM 表 WHERE 子句   </p>
+</blockquote>
+</li>
+</ol>
+<h1 id="使用视图"><a href="#使用视图" class="headerlink" title="使用视图"></a>使用视图</h1><ol>
+<li>创建视图<blockquote>
+<p>CREATE VIEW 视图名 AS SELECT 语句</p>
+</blockquote>
+</li>
+<li>查看创建视图的语句<blockquote>
+<p>SHOW CREATE VIEW 视图名</p>
+</blockquote>
+</li>
+<li>删除视图<blockquote>
+<p>DROP VIEW 视图名</p>
+</blockquote>
+</li>
+<li>更新视图（先删除原视图，再创建新视图）</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《MySQL必知必会》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引:虽然用了这么久的数据库，但是有时候使用起来难免会去查怎么使用，这样下去也不是办法，所以自己就在这里以Mysql为例总结一下经常用到的地方。
+    
+    </summary>
+    
+      <category term="数据库" scheme="http://bestlixiang.site/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="数据库" scheme="http://bestlixiang.site/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+      <category term="MySQL" scheme="http://bestlixiang.site/tags/MySQL/"/>
+    
+  </entry>
   
   <entry>
     <title>HelloWorld_Shiro Activity</title>
@@ -1590,276 +1917,6 @@
     <summary type="html">
     
       &lt;p&gt;引：系统常常会主动进行一些任务，这依靠的就是设置了例行性工作。
-    
-    </summary>
-    
-      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走进Linux_账号管理</title>
-    <link href="http://bestlixiang.site/2018/03/31/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_%E8%B4%A6%E5%8F%B7%E7%AE%A1%E7%90%86/"/>
-    <id>http://bestlixiang.site/2018/03/31/走进Linux/走进Linux_账号管理/</id>
-    <published>2018-03-31T05:15:52.000Z</published>
-    <updated>2018-04-09T04:34:01.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：管理员的工作中，相对重要的一环就是“账号管理”。因为整个系统都是你在管理，并且所有的一般用户的账号申请必须要通过你的协助才行。所以我们必须要知道如果管理好一个服务器主机的账号！<a id="more"></a></p>
-<h1 id="账号与用户组"><a href="#账号与用户组" class="headerlink" title="账号与用户组"></a>账号与用户组</h1><p>在管理Linux账号时，我们必须要先了解一下Linux到底是如何辨别每一个用户的。</p>
-<h2 id="用户表示符：UID与GID"><a href="#用户表示符：UID与GID" class="headerlink" title="用户表示符：UID与GID"></a>用户表示符：UID与GID</h2><p>虽然我们登录Linux主机的时候，输入的是我们的账号，但是其实Linux主机并不会直接认识你的账号，它仅认识ID，而你的ID域账号的对应关系就在/etc/passwd当中。</p>
-<p>每一个文件都具有<strong>所有者与所属用户组</strong>的属性，所以每个登录的用户至少会取得两个ID，一个是用户ID(UID)，一个是用户组ID(GID)。</p>
-<h2 id="用户账号"><a href="#用户账号" class="headerlink" title="用户账号"></a>用户账号</h2><p>Linyx系统上面的用户如果需要登录主机以取得shell的工作环境，它必须要在计算机前面利用tty1~tty7的终端机提供的login接口，并输入账号与密码后才能登录。当我们输入账号密码后，系统主要做了如下工作：</p>
-<ol>
-<li>先寻找/etc/passwd里面是否有你输入的帐号？如果没有则跳出，如果有的话则将该帐号对应的UID与GID（在/etc/group中）读出来，另外，该帐号的主文件夹与shell设定也一并读出。</li>
-<li>再来则是核对密码表啦！这是Linux会进入/etc/shadow里面找出对应的帐号与UID，然后核对一下你刚刚输入的密码与里面的密码是否相符。</li>
-<li>如果一切都OK的话，就进入Shell控管的阶段咯！</li>
-</ol>
-<ul>
-<li><p>/etc/passwd文件结构如下：</p>
-<p>  这个文件的构造是这样的：每一行代表一个帐号，有几行就代表有几个帐号在你的系统中！不过需要特别留意的是，里头很多帐号本身就是系统正常运作所必须要的，我们可以简称为<strong>系统帐号</strong>，如bin，daemon，adm，nobody等。</p>
-<p>  我们先来看一下每个Linux系统都会有的第一行，就是root这个系统管理员那一行好了，你可以明显的看出来，每一行使用：分隔，共有七个字段，分别是</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>字段号</th>
-<th>字段含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>    1</td>
-<td>账号名称</td>
-</tr>
-<tr>
-<td>    2</td>
-<td>密码，被该放到/etc/shadow文件中，以x代替</td>
-</tr>
-<tr>
-<td>    3</td>
-<td>UID，0为系统管理员，可以多个账号的UID为0，但不建议。1~99为发现版自建系统账号，100~499为用户使用的系统账号，500~*为一般用户可登录账号</td>
-</tr>
-<tr>
-<td>    4</td>
-<td>密码，GID，与/etc/group有关</td>
-</tr>
-<tr>
-<td>    5</td>
-<td>用户信息说明</td>
-</tr>
-<tr>
-<td>    6</td>
-<td>主文件夹</td>
-</tr>
-<tr>
-<td>    7</td>
-<td>shell</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><p>/etc/shadow文件结构如下：</p>
-<p>  文件构造基本与/etc/passwd一样，但是它有9个字段，分别是：</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>字段号</th>
-<th>字段含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>    1</td>
-<td>账号名称，需要与/etc/passwd对应</td>
-</tr>
-<tr>
-<td>    2</td>
-<td>密码，但是被加密过的</td>
-</tr>
-<tr>
-<td>    3</td>
-<td>最近更改密码的日期，以1970年1月1号作为1而累加的日期</td>
-</tr>
-<tr>
-<td>    4</td>
-<td>密码不可被更动的日期</td>
-</tr>
-<tr>
-<td>    5</td>
-<td>密码需要重新更改的天数</td>
-</tr>
-<tr>
-<td>    6</td>
-<td>密码需要更改期限前的警告天数</td>
-</tr>
-<tr>
-<td>    7</td>
-<td>密码过期后的账号宽限时间（密码失效日）</td>
-</tr>
-<tr>
-<td>    8</td>
-<td>账号失效日期</td>
-</tr>
-<tr>
-<td>    9</td>
-<td>保留，用于以后扩展</td>
-</tr>
-</tbody>
-</table>
-<h2 id="有效与初始用户组：groups，newgrp"><a href="#有效与初始用户组：groups，newgrp" class="headerlink" title="有效与初始用户组：groups，newgrp"></a>有效与初始用户组：groups，newgrp</h2><ul>
-<li><p>/etc/group文件结构如下：</p>
-<p>  文件构造基本与/etc/passwd一样，但是它有4个字段，分别是：</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>字段号</th>
-<th>字段含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>    1</td>
-<td>用户组名称</td>
-</tr>
-<tr>
-<td>    2</td>
-<td>用户组密码，以x代替</td>
-</tr>
-<tr>
-<td>    3</td>
-<td>GID，/etc/passwd第四个字段使用的GID对应的用户组名就是由这里来的</td>
-</tr>
-<tr>
-<td>    4</td>
-<td>用户组支持的账号名称，多用户以”,”分割</td>
-</tr>
-</tbody>
-</table>
-<pre><code>我们知道用户可以同时加入多个用户组，那么我们在执行工作时，到底是以哪个用户组为准呢？，这就需要引入有效用户组的概念。    
-</code></pre><ul>
-<li><p>/etc/gshadow文件结构如下：</p>
-<p>  文件构造基本与/etc/group一样，它有4个字段，分别是：</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>字段号</th>
-<th>字段含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>    1</td>
-<td>用户组名称</td>
-</tr>
-<tr>
-<td>    2</td>
-<td>用户组密码,开头为!表示无合法密码，所以无用户组管理员</td>
-</tr>
-<tr>
-<td>    3</td>
-<td>用户组管理员的账号，用户组管理员能够将账号添加到自己管理的用户组中</td>
-</tr>
-<tr>
-<td>    4</td>
-<td>该用户组的所属账号（与/etc/group内容相同）</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>有效用户组与初始用户组<ul>
-<li>初始用户组：就是/etc/passwd里面的第四列的GID，当用户登录系统，立刻就拥有这个用户组的相关权限。</li>
-<li>有效用户组：就是利用groups命令看到的第一个用户组，可以利用newgrp命令更改有效用户组，newgrp命令更改目前用户的有效用户组是以另一个shell来提供这个功能的，如果要回到原来的用户组只要输入exit即可。</li>
-</ul>
-</li>
-</ul>
-<h1 id="账号管理"><a href="#账号管理" class="headerlink" title="账号管理"></a>账号管理</h1><p>管理账号主要是新增、删除与更改用户的相关信息。</p>
-<h2 id="新增与删除用户"><a href="#新增与删除用户" class="headerlink" title="新增与删除用户"></a>新增与删除用户</h2><p>账号可以使用useradd命令来新建用户，密码的给予则是使用passwd命令。下面是范例：（里面有很多参数，自己可以去了解）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> 新增</div><div class="line">useradd leonard</div><div class="line">ll -d /home/leonard/</div><div class="line"><span class="meta">#</span> 默认会创建用户主文件夹，且权限为700，这是重点</div><div class="line"><span class="meta">#</span> drwx------ 2 leonard leonard 4096 3月  31 09:36 /home/leonard/</div><div class="line"></div><div class="line">grep leonard /etc/passwd /etc/shadow /etc/group</div><div class="line"><span class="meta">#</span> /etc/passwd:leonard:x:1001:1001::/home/leonard:/bin/bash</div><div class="line"><span class="meta">#</span> /etc/shadow:leonard:!!:17621:0:99999:7:::</div><div class="line"><span class="meta">#</span> /etc/group:leonard:x:1001:</div><div class="line"><span class="meta"></span></div><div class="line"># 不加账号，默认修改自己的密码</div><div class="line">passwd leonard</div><div class="line"><span class="meta"></span></div><div class="line"># 显示账号的相关信息</div><div class="line">chage leonard</div><div class="line"><span class="meta"></span></div><div class="line"># 修改账号的相关信息</div><div class="line">usermod leonard</div><div class="line"><span class="meta"></span></div><div class="line"># 删除账号，-r：连主文件夹一起删除</div><div class="line">userdel leonard</div></pre></td></tr></table></figure></p>
-<p>其实系统已经帮我们设置好了非常多的默认值，所以我们可以简单的使用“useradd 账号”来创建用户，Centos这些默认值主要会帮我们处理下面几个项目：</p>
-<ul>
-<li>在/etc/passwd 里面创建一行与账号相关的数据，包括创建UID/GID/主文件夹等；</li>
-<li>在/etc/shadow里面将此账号的密码相关参数填入，但是尚未有密码；</li>
-<li>在/etc/group里面加入一个与账号名称一模一样的组名；</li>
-<li>在/home下面创建一个与账号同名的目录作为用户的主文件夹，且权限为700</li>
-</ul>
-<h2 id="用户功能"><a href="#用户功能" class="headerlink" title="用户功能"></a>用户功能</h2><p>不论是useradd、usermod还是userdel，那都是系统管理员能够使用的命令，下面我们就介绍一些一般身份用户常用的账号数据更改与查询命令</p>
-<ul>
-<li><p>finger，可以查阅很多用户相关的信息，大部分都是/etc/passwd这个文件的信息。范例如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 我的linux默认没有装finger，可以利用下面的命令安装</div><div class="line">yum install finger</div><div class="line"></div><div class="line">// 查阅用户信息，若不跟没有用户，则查询当前用户</div><div class="line">finger rex</div></pre></td></tr></table></figure>
-</li>
-<li><p>chfn(change finger)，用于修改一些相关信息,范例如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">chfn rex</div><div class="line">Changing finger information for rex.</div><div class="line">名称 []: rex</div><div class="line">办公 []: 123456</div><div class="line">办公电话 []: 123456</div><div class="line">住宅电话 []: 123456</div></pre></td></tr></table></figure>
-</li>
-<li><p>chsh(change shell)，用于修改shell。</p>
-</li>
-<li>id，用于查询自己或某人的相关UID/GID等信息。</li>
-</ul>
-<h2 id="新增与删除用户组"><a href="#新增与删除用户组" class="headerlink" title="新增与删除用户组"></a>新增与删除用户组</h2><p>基本上，用户组的内容都与这两个文件有关：/etc/group,/etc/gshadow。下面是一些相关命令使用的范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"># 新建一个用户组，名称为hd</div><div class="line">groupadd hd</div><div class="line"></div><div class="line"># 修改用户组的相关参数 -g：修改既有GID，-n：修改既有组名</div><div class="line">groupmod -g 201 -n myhd hd</div><div class="line"></div><div class="line"># 删除用户组名</div><div class="line">groupdel myhd</div><div class="line"></div><div class="line"># 用户组管理员相关命令</div><div class="line"># 给用户组设置一个密码</div><div class="line">gpasswd hd</div><div class="line"># 加入用户组管理员为rex</div><div class="line">gpasswd -A rex hd</div><div class="line"># 让rex登录系统，增加leonard为hd成员</div><div class="line">gpasswd -a leonard hd</div></pre></td></tr></table></figure></p>
-<h1 id="主机的具体权限规划：ACL的使用"><a href="#主机的具体权限规划：ACL的使用" class="headerlink" title="主机的具体权限规划：ACL的使用"></a>主机的具体权限规划：ACL的使用</h1><h2 id="什么是ACL"><a href="#什么是ACL" class="headerlink" title="什么是ACL"></a>什么是ACL</h2><p>ACL是Access Control List的缩写，主要的目的是提供传统的owner、group、others的read、write、execute权限之外的具体权限设置。ACL可以针对单一用户、单一文件或目录进行r、w、x的权限设置，对于需要特殊权限的使用状况非常有帮助。</p>
-<p>ACL主要可以针对下面几方面来设置控制权限：</p>
-<ul>
-<li>用户：可以针对用户来设置权限</li>
-<li>用户组：可以针对用户组来设置权限</li>
-<li>默认属性（mask）：还可以在该目录下新建文件目录设置新数据的权限、</li>
-</ul>
-<h2 id="ACL的设置技巧"><a href="#ACL的设置技巧" class="headerlink" title="ACL的设置技巧"></a>ACL的设置技巧</h2><ol>
-<li>getfacl：取得某个文件/目录的ACL设置项目</li>
-<li>setfacl：设置某个文件/目录的ACL规定</li>
-</ol>
-<p>下面是范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 取得某个文件/目录的ACL设置项目</div><div class="line">getfacl rootfile</div><div class="line"></div><div class="line">// 输出</div><div class="line"># file: rootfile</div><div class="line"># owner: root</div><div class="line"># group: root</div><div class="line">user::rw-</div><div class="line">group::r--</div><div class="line">other::r--</div><div class="line"></div><div class="line">// 设置某个文件/目录的ACL规定</div><div class="line">setfacl -m u:rex:rwx rootfile</div></pre></td></tr></table></figure></p>
-<h1 id="用户身份切换"><a href="#用户身份切换" class="headerlink" title="用户身份切换"></a>用户身份切换</h1><p>在Linux系统中是需要做身份的变换的，主要有以下几个原因：</p>
-<ul>
-<li>使用一般账号：系统平日操作的好习惯（不然你就有机会从删库到跑路了）</li>
-<li>用较低的权限启动系统服务</li>
-<li>软件本身的限制</li>
-</ul>
-<p>根据上面的考虑，我们都是使用一般账号登录系统的，等有需要进行系统维护或软件更新时才转为root身份来操作。从一般用户转变为root主要有下面两种方式：</p>
-<ul>
-<li>“su -”：需要root用户密码</li>
-<li>“sudo命令”：sudo需要输入用户自己的密码</li>
-</ul>
-<h2 id="su"><a href="#su" class="headerlink" title="su"></a>su</h2><p>su是最简单的身份切换命令了，它可以进行任何身份的切换。但是下面有几点比较重要：</p>
-<ol>
-<li>若要完整切换到新用户的环境，必须要使用“su -username” 或 “su -|username”，才会连同PATH/USER/MAIL等变量都转成新用户的环境。如果只是使用“su”切换到root用户，PATH/USER/MAIL等变量都没有变，会导致很多命令执行不了。</li>
-<li>如果仅想执行一次root命令，可以利用“su - -c “命令串””d的方式来处理。</li>
-<li>使用root切换成为任何用户时，并不需要输入新用户的密码。</li>
-</ol>
-<p>虽然使用su很方便，但是会导致root密码外流。所以很多情况下我们通过sudo来处理。</p>
-<h2 id="sudo"><a href="#sudo" class="headerlink" title="sudo"></a>sudo</h2><p>sudo的执行仅需要自己的密码即可！甚至可以设置不需要密码即可执行sudo，由于sudo可以让你以其他用户身份执行命令（通常是使用root的身份来执行命令），因此不是所有人都能够执行sudo，而是仅有/etc/sudoers内的用户才能够执行sudo这个命令。</p>
-<ol>
-<li><p>sudo的命令用法</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo [-u 新用户账号]</div><div class="line"></div><div class="line">// 范例，以sshd的身份在/tmp下面新建一个名为mysshd的文件</div><div class="line">sudo -u sshd touch /tmp/mysshd</div></pre></td></tr></table></figure>
-</li>
-<li><p>sudo的执行流程</p>
-<ul>
-<li>当用户执行sudo时，系统在/etc/sudoers文件中查找该用户是否有执行sudo的权限；</li>
-<li>若用户具有可执行sudo的权限后，便让用户输入用户自己的密码来确认；</li>
-<li>若密码输入成功，便开始进行sudo后面接的命令（root执行sudo不需要输入密码）</li>
-<li>若欲切换的身份与执行者的身份相同，也不需要输入密码</li>
-</ul>
-</li>
-<li><p>visudo与/etc/sudoers</p>
-<p> 我们一般不直接去修改/etc/sudoers文件，而是利用visudo命令去修改，因为这个命令会在结束离开的时候去检验/etc/sudoers的语法，下面是他的用法案例：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">// 1. 单一用户可以执行root的所有命令与sudoers文件语法</div><div class="line">// 四个参数含义为(1).用户账号，(2).登陆者的来源主机，(3).(可切换的身份)，(4).可执行的命令</div><div class="line">root    ALL=(ALL)       ALL //文件中原有</div><div class="line">rex     ALL=(ALL)       ALL //新增</div><div class="line"></div><div class="line">// 2. 利用用户组以及免密码的功能处理visudo</div><div class="line"># %wheel        ALL=(ALL)       NOPASSWD: ALL //文件中原有，需要将#去掉，文件中的%表示后面接一个用户组</div><div class="line">usermod -a -G wheel rex //将rex加入wheel组中</div><div class="line"></div><div class="line">// 3. 有限制的命令操作，通过更改可执行的命令一栏的数据，就可以控制具体操作的安全性</div><div class="line">rex ALL=(ALL) !/usr/bin/passed //不让rex可以修改密码</div><div class="line"></div><div class="line">// 4. 通过别名设置visudo</div><div class="line">User_Alias ADMPW(大写) = rex1,rex2</div><div class="line">Cmnd_Alias ADMPWCOM(大写) = !/usr/bin/passwd, /usr/bin/passed [A-Za-z]</div><div class="line">ADMPW     ALL=(root)       ADMPWCOM</div><div class="line"></div><div class="line">// 5. sudo搭配su的使用方式,让用户用自己的密码变成root</div><div class="line">User_Alias ADMPW(大写) = rex1,rex2</div><div class="line">ADMPW     ALL=(root)       /bin/su -</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《鸟哥的Linux私房菜》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：管理员的工作中，相对重要的一环就是“账号管理”。因为整个系统都是你在管理，并且所有的一般用户的账号申请必须要通过你的协助才行。所以我们必须要知道如果管理好一个服务器主机的账号！
     
     </summary>
     
