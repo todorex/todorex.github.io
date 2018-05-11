@@ -96,7 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/05/11/数据库/数据库事务/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：数据库事务在数据库操作中是十分重要的，因为它要么全部执行，要么全部执行，这样才能保证数据库的数据的完整性与一致性。">
-<meta property="og:updated_time" content="2018-05-11T07:12:05.448Z">
+<meta property="og:updated_time" content="2018-05-11T07:17:04.678Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库事务">
 <meta name="twitter:description" content="引：数据库事务在数据库操作中是十分重要的，因为它要么全部执行，要么全部执行，这样才能保证数据库的数据的完整性与一致性。">
@@ -414,7 +414,7 @@
 <li>第一类丢失更新：A事务撤销时，把已经提交的B事务的更新数据覆盖了。</li>
 <li>第二类丢失更新：A事务覆盖B事务已经提交的数据，造成B事务所做的操作丢失。</li>
 </ol>
-<h1 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h1><p>为了解决上述问题，数据库通过多种<strong>并发控制机制</strong>解决并发访问的问题。但是直接使用并发控制机制是很复杂的，数据库给用户提供了不同的<strong>事务隔离级别</strong>，只要设置了事务隔离级别，数据库就会分析事务中的sql语句然后自动选择合适的并发控制机制。</p>
+<h1 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h1><p>为了解决上述问题，数据库通过多种<strong>并发控制机制</strong>（常用的有两阶段封锁和快照隔离）解决并发访问的问题。但是直接使用并发控制机制是很复杂的，数据库给用户提供了不同的<strong>事务隔离级别</strong>，只要设置了事务隔离级别，数据库就会分析事务中的sql语句然后自动选择合适的并发控制机制。</p>
 <p>四种隔离级别如下：</p>
 <ol>
 <li>可串行化(SERIALIZABLE)：保证可串行化调度，不允许出现任何问题。</li>
