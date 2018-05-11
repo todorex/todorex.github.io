@@ -91,7 +91,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="rex note">
-<meta property="og:url" content="http://bestlixiang.site/tags/javascript/index.html">
+<meta property="og:url" content="http://bestlixiang.site/tags/JavaScript/index.html">
 <meta property="og:site_name" content="rex note">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rex note">
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/tags/javascript/"/>
+  <link rel="canonical" href="http://bestlixiang.site/tags/JavaScript/"/>
 
 
 
 
 
-  <title> 标签: javascript | rex note </title>
+  <title> 标签: JavaScript | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -274,7 +274,7 @@
   <div id="posts" class="posts-collapse">
     <div class="collection-title">
       <h2 >
-        javascript
+        JavaScript
         <small>标签</small>
       </h2>
     </div>
@@ -287,37 +287,9 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2017/07/13/编程/js原型和原型链/" itemprop="url">
+            <a class="post-title-link" href="/2017/05/24/编程/Angular2入门/" itemprop="url">
               
-                <span itemprop="name">js原型和原型链</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-13T08:26:14+08:00"
-              content="2017-07-13" >
-          07-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/12/编程/浅谈js闭包/" itemprop="url">
-              
-                <span itemprop="name">浅谈js闭包</span>
+                <span itemprop="name">Angular2入门</span>
               
             </a>
         
@@ -325,9 +297,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-12T09:21:01+08:00"
-              content="2017-07-12" >
-          07-12
+              datetime="2017-05-24T20:22:59+08:00"
+              content="2017-05-24" >
+          05-24
         </time>
       </div>
 
@@ -381,7 +353,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">112</span>
+                <span class="site-state-item-count">113</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -754,6 +726,46 @@
             str += "</ul>";
             if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
             if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
             $resultContent.innerHTML = str;
           });
           proceedsearch();

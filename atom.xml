@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-05-10T13:13:22.509Z</updated>
+  <updated>2018-05-11T07:12:05.448Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,120 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据库事务</title>
+    <link href="http://bestlixiang.site/2018/05/11/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/"/>
+    <id>http://bestlixiang.site/2018/05/11/数据库/数据库事务/</id>
+    <published>2018-05-11T07:10:33.000Z</published>
+    <updated>2018-05-11T07:12:05.448Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：数据库事务在数据库操作中是十分重要的，因为它要么全部执行，要么全部执行，这样才能保证数据库的数据的完整性与一致性。<a id="more"></a></p>
+<h1 id="什么是事务"><a href="#什么是事务" class="headerlink" title="什么是事务"></a>什么是事务</h1><p>构成单一逻辑工作单元的操作集合。</p>
+<p>事务是访问并可能更新各种数据项的一个程序执行单元，事务通常用形如begin transaction 和 end transaction来界定，事务由它们之间执行的全体操作组成。</p>
+<p><strong>举个例子</strong>：将钱从一个账户转到另一个账户就是一个事务，该事务包括分别对两个账户的更新。</p>
+<h1 id="ACID特性"><a href="#ACID特性" class="headerlink" title="ACID特性"></a>ACID特性</h1><ol>
+<li>原子性（Atomicity）：事务是一个不可分割的操作，要么全都正确执行，要么全都不执行。</li>
+<li>一致性（Consistency）：事务开始前和事务结束后，数据库的完整性约束没有被破坏。比如上面转账例子中，两个账户的总金额就是完整性约束，因为他们的总金额是不变的。但是在并发事务中，一致性很容易被破坏，需要我们特别注意。</li>
+<li>隔离性（Isolation）：事务的执行是相互独立的，它们不会相互干扰，一个事务不会看到另一个正在运行过程中的事务的数据。</li>
+<li>持久性（Durability）：事务结束后，事务的结果必须是永久保存的。即使数据库发生崩溃，在数据库恢复后事务提交的结果仍然不会丢失。</li>
+</ol>
+<p>确保隔离性有可能对系统性能造成较大的不利影响，由于这个原因，一些应用在隔离性上采取一些妥协。</p>
+<h1 id="事务的分类"><a href="#事务的分类" class="headerlink" title="事务的分类"></a>事务的分类</h1><ol>
+<li>扁平事务(Flat Transactions)：它是实际生产环境中最常用、最简单的事务类型。在扁平事务中，所有操作都处于同一层次，其由begin transaction开始，commit或rollback结束，其间的操作是原子的，要么都执行，要么都回滚，因此扁平事务是应用程序称为原子操作的的基本组成模块。但是发生错误时都需要回滚到事务的起始位置，无法回滚部分操作，所以回滚开销太大。</li>
+<li>带有保存点的扁平事务(Flat Transactions with Savepoints)： 除了支持扁平事务支持的操作外，允许在事务执行过程中回滚同一事务中较早的一个状态。这是因为某些事务可能在执行过程中出现的错误并不会导致所有的操作都无效，放弃整个事务不合乎要求，开销太大，保存点用来通知事务系统应该记住事务当前的状态，以便当之后发生错误时，事务能回到保存点当时的状态。</li>
+<li>链事务(Chained Transactions)：在提交一个事务时，释放不需要的数据对象，将必要的处理上下文隐式地传给下一个要开始的事务，提交事务操作和开始下一个事务操作 将合并为一个原子操作，这意味着下一个事务将看到上一个事务的结果，就好像一个事务中进行的一样。和带有保存点的扁平事务不同的是，带有保存点的扁平事务能回滚到任意正确的保存点，而链事务中的回滚仅限当前事务，即只能恢复到最近的一个保存点。</li>
+<li><p>嵌套事务(Nested Transactions)：由一个顶层事务(top-level transaction)控制着各个层次的事务，顶层事务之下嵌套的事务被称为子事务。嵌套事务是由若干事务组成的一棵树，子树既可以是嵌套事务也可以是扁平事务，处在叶节点的事务是扁平事务，但是每个事务从根到叶节点的距离可以说是不同的。子事务既可以提交也可以回滚。但是它的提交操作并不马上生效。除非其父事务已经提交。树中的任意事务回滚会引起它的所有子事务一同回滚，故子事务仅保留ACI特性而不具有D特性。</p>
+</li>
+<li><p>分布式事务(Distributed Transactions)：通常是一个分布式环境下运行的扁平事务，因此需要根据数据所在位置访问网络中的不同节点。</p>
+</li>
+</ol>
+<h1 id="数据库并发访问会出现的问题"><a href="#数据库并发访问会出现的问题" class="headerlink" title="数据库并发访问会出现的问题"></a>数据库并发访问会出现的问题</h1><h2 id="读问题"><a href="#读问题" class="headerlink" title="读问题"></a>读问题</h2><ol>
+<li>脏读：A事务读取B事务尚未提交的更改数据，并在这个数据的基础上进行操作，这时候如果事务B回滚，那么A事务读到的数据是不被承认的。</li>
+<li>虚度（不可重复读）：A事务读取了B事务已经提交的<strong>更改数据</strong>。假如A在取款事务的过程中，B往该账户转账100，A两次读取的余额发生不一致。防止读到更改数据，需要对操作的数据添加行级锁。</li>
+<li>幻读：A事务读取B事务提交的<strong>新增数据</strong>。例如银行系统在同一个事务中两次统计存款账户的总金额，在两次统计中，刚好新增了一个存款账户，存入了100，这时候两次统计的总金额不一致。 防止读到新增数据，需要对操作的数据添加表级锁。</li>
+</ol>
+<h2 id="更新问题"><a href="#更新问题" class="headerlink" title="更新问题"></a>更新问题</h2><ol>
+<li>第一类丢失更新：A事务撤销时，把已经提交的B事务的更新数据覆盖了。</li>
+<li>第二类丢失更新：A事务覆盖B事务已经提交的数据，造成B事务所做的操作丢失。</li>
+</ol>
+<h1 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h1><p>为了解决上述问题，数据库通过多种<strong>并发控制机制</strong>解决并发访问的问题。但是直接使用并发控制机制是很复杂的，数据库给用户提供了不同的<strong>事务隔离级别</strong>，只要设置了事务隔离级别，数据库就会分析事务中的sql语句然后自动选择合适的并发控制机制。</p>
+<p>四种隔离级别如下：</p>
+<ol>
+<li>可串行化(SERIALIZABLE)：保证可串行化调度，不允许出现任何问题。</li>
+<li>可重复读(REPEATABLE READ) ：只允许读取已提交的数据，而且在一个事务两次读取一个数据项期间，其他事务不能更新该数，单不要求该事务与其他事务可串行化。</li>
+<li>已提交读(READ COMMITTED)：只允许读取已提交的数据，但不要求可重复读。</li>
+<li>未提交读(READ UNCOMMITTED)：允许读取未提交的数据，这是SQL允许的最低一致性级别。</li>
+</ol>
+<p>不同的隔离级别对并发问题的解决情况如下图：</p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>虚读</th>
+<th>幻读</th>
+<th>第一列丢值更新</th>
+<th>第二类丢失更新</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可串行化(SERIALIZABLE)</td>
+<td>不允许</td>
+<td>不允许</td>
+<td>不允许</td>
+<td>不允许</td>
+<td>不允许</td>
+</tr>
+<tr>
+<td>可重复读(REPEATABLE READ)</td>
+<td>不允许</td>
+<td>不允许</td>
+<td>允许</td>
+<td>不允许</td>
+<td>不允许</td>
+</tr>
+<tr>
+<td>已提交读(READ COMMITTED)</td>
+<td>不允许</td>
+<td>允许</td>
+<td>允许</td>
+<td>不允许</td>
+<td>允许</td>
+</tr>
+<tr>
+<td>未提交读(READ UNCOMMITTED)</td>
+<td>允许</td>
+<td>允许</td>
+<td>允许</td>
+<td>不允许</td>
+<td>允许</td>
+</tr>
+</tbody>
+</table>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《数据库系统概念》</li>
+<li><a href="https://blog.csdn.net/u010425776/article/details/60968283" target="_blank" rel="external">数据库事务详解</a></li>
+<li><a href="https://blog.csdn.net/starlh35/article/details/76445267" target="_blank" rel="external">数据库并发事务存在的问题（脏读、不可重复读、幻读等）</a></li>
+<li><a href="http://ihenu.iteye.com/blog/2276576" target="_blank" rel="external">数据库的事务与并发控制</a></li>
+<li><a href="http://blog.itpub.net/26736162/viewspace-2144050" target="_blank" rel="external">MySQL中事务的分类</a></li>
+<li><a href="https://www.cnblogs.com/wajika/p/6680200.html" target="_blank" rel="external">数据库隔离级别及其实现原理</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：数据库事务在数据库操作中是十分重要的，因为它要么全部执行，要么全部执行，这样才能保证数据库的数据的完整性与一致性。
+    
+    </summary>
+    
+      <category term="数据库" scheme="http://bestlixiang.site/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="数据库" scheme="http://bestlixiang.site/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
   
   <entry>
     <title>数据库范式</title>
@@ -1790,116 +1904,6 @@
     <summary type="html">
     
       &lt;p&gt;引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。
-    
-    </summary>
-    
-      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走进Linux_daemon为服务(service)保驾护航</title>
-    <link href="http://bestlixiang.site/2018/04/03/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_daemon%E4%B8%BA%E6%9C%8D%E5%8A%A1(service)%E4%BF%9D%E9%A9%BE%E6%8A%A4%E8%88%AA/"/>
-    <id>http://bestlixiang.site/2018/04/03/走进Linux/走进Linux_daemon为服务(service)保驾护航/</id>
-    <published>2018-04-03T08:59:47.000Z</published>
-    <updated>2018-04-09T04:31:03.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：我们进程会听到daemon，但是却不知道其义，其实就是一个守护进程，作用是支持其他服务(service)的运行。我们下面可以好好看看linux中的daemon与service！<a id="more"></a></p>
-<h1 id="什么是daemon与服务"><a href="#什么是daemon与服务" class="headerlink" title="什么是daemon与服务"></a>什么是daemon与服务</h1><p>系统为了某些功能必须要提供一些服务，这个服务就称为<strong>service</strong>。但是service的提供总是需要进程的运行，所以实现这个service的程序我们就称它为<strong>daemon</strong>。</p>
-<h2 id="daemon的分类"><a href="#daemon的分类" class="headerlink" title="daemon的分类"></a>daemon的分类</h2><p>分类方式一：按照“是否可以独立启动”分类</p>
-<ol>
-<li>stand alone类型的daemon：这种类型的daemon可以自行启动，启动之后可以常驻内存，直到手动关闭该daemon才释放资源。如www。</li>
-<li>由super daemon管理的daemon：这种类型的daemon由super daemon统一管理，当请求到来时，由super daemon启动请求的服务，请求完成后便释放内存资源。如telnet。</li>
-</ol>
-<p>分类方式二：按照“请求到来时是否能够立即运行”分类</p>
-<ol>
-<li><p>signal-control类型的daemon<br>这种类型的daemon当有请求到来时便能立即执行。如打印机服务。</p>
-</li>
-<li><p>interval-control类型的daemon<br>这种类型的daemon会周期性地执行某项工作，因此它没有请求一说，它会周期性地读取配置文件，并执行配置文件中要求的功能。如crond、atd都属于interval-control类型的daemon。</p>
-</li>
-</ol>
-<p>通常在服务的名称的之后都会加一个d。</p>
-<h2 id="网络服务与端口的对应"><a href="#网络服务与端口的对应" class="headerlink" title="网络服务与端口的对应"></a>网络服务与端口的对应</h2><p>当系统提供了网络服务，就会涉及到端口的问题，这些服务与端口的定义文件在/etc/services。大家可以自己查看一下。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tcpmux          1/tcp                           # TCP port service multiplexer</div><div class="line">tcpmux          1/udp                           # TCP port service multiplexer</div></pre></td></tr></table></figure></p>
-<p>第一列为daemon的名称，第二列为该daemon所使用的端口号与网络数据包协议。</p>
-<h2 id="daemon的启动脚本与启动方式"><a href="#daemon的启动脚本与启动方式" class="headerlink" title="daemon的启动脚本与启动方式"></a>daemon的启动脚本与启动方式</h2><p>stand-alone类型的daemon和super daemon类型的daemon有各自的启动方式</p>
-<h3 id="stand-alone型Daemon的启动方式"><a href="#stand-alone型Daemon的启动方式" class="headerlink" title="stand alone型Daemon的启动方式"></a>stand alone型Daemon的启动方式</h3><ol>
-<li><p>通过/etc/init.d/xxx启动。启动一个服务是一个繁琐的过程，你需要进行一系列启动前的操作，为了避免这些麻烦，服务提供商把这些繁琐的过程封装在一个shell srcipt中，我们只需执行一个shell script即可启动一个daemon。几乎所有的stand alone型daemon的启动脚本都放在/etc/init.d/下，所以我们只需执行 <strong>/etc/init.d/xxx start</strong> 即可启动xxx服务。</p>
-</li>
-<li><p>通过service命令启动。若每次启动一个命令都要写/etc/init.d/略微有些麻烦，service命令将其进行了封装，我们只要执行 <strong>“service xxx start/status/restart/stop”</strong> 即可开启/查看/重启/关闭xxx服务。</p>
-</li>
-</ol>
-<h3 id="super-daemon型Daemon的启动方式"><a href="#super-daemon型Daemon的启动方式" class="headerlink" title="super daemon型Daemon的启动方式"></a>super daemon型Daemon的启动方式</h3><ol>
-<li><p>设置daemon的配置文件，每一个被super daemon管理的daemon都有一个配置文件，在/etc/xinetd.d/目录下。每个daemon的开启或关闭均在该daemon对应的配置文件中设置。</p>
-</li>
-<li><p>启动super daemon，super daemon是一个stand alone型daemon，因此在daemon的配置文件设置好后可通过<strong>service xinetd start</strong>启动所有由super daemon管理的daemon。</p>
-</li>
-</ol>
-<h1 id="解析super-daemon的配置文件"><a href="#解析super-daemon的配置文件" class="headerlink" title="解析super daemon的配置文件"></a>解析super daemon的配置文件</h1><h2 id="默认值配置文件：xinetd-conf"><a href="#默认值配置文件：xinetd-conf" class="headerlink" title="默认值配置文件：xinetd.conf"></a>默认值配置文件：xinetd.conf</h2><p>高版本的contos可能没有该文件，是因为没有安装，所以要先用“yum install xinetd”安装之后，就可以看见了。</p>
-<p>super daemon的默认配置文件为:/etc/xinetd.conf，它为它所管理的所有daemon做了一些默认的配置。<br>从最后一行的includedir /etc/xinetd.d可以看出，它加载了它所管理的所有daemon的配置。</p>
-<p>下面来看一下具体的某个daemon的配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">service rsync #service后为daemon的名字</div><div class="line">&#123;</div><div class="line">        disable = yes  # yes表示关闭此daemon，no表示开启此daemon</div><div class="line">        socket_type     = stream #stream表示使用TCP、dgram表示使用UDP、raw表示直接与IP交互</div><div class="line">        wait            = no</div><div class="line">        user            = root #以什么用户的身份启动这个daemon</div><div class="line">        server          = /usr/bin/rsync #这个daemon的启动程序</div><div class="line">        server_args     = --daemon #启动时所需的参数</div><div class="line">        log_on_failure  += USERID # 登录失败时需要记录用户</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<ul>
-<li>=：表示将某个参数设为等号右侧的值，若先前设置中已设置过该参数，则直接覆盖</li>
-<li>+=：表示保留先前设置的这个参数，再给这个参数增加个值。</li>
-<li>-和-=的含义同上。</li>
-</ul>
-<h1 id="super-deamon的防火墙管理"><a href="#super-deamon的防火墙管理" class="headerlink" title="super deamon的防火墙管理"></a>super deamon的防火墙管理</h1><p>由于受super daemon管理的daemon的请求都首先需要经过super daemon，因此super daemon可以充当防火墙的角色，拒绝一些不安全的请求。<br>super daemon提供了两种防火墙机制，第一种方式提供较多详细的安全设置，而第二种方式只能阻挡或允许指定的IP，具体见下：</p>
-<ol>
-<li><p>使用受super daemon管理的daemon的配置文件实现防火墙机制</p>
-<p> 在某个具体的daemon配置文件中添加如下参数，即可为daemon配置防火墙：</p>
-<ul>
-<li>instance=数字/UNLIMITED：设置该daemon能够承受的最大连接数。`  </li>
-<li>per_source=数字/UNLIMITED：每个IP的最大连接数。</li>
-<li>Cps=数字1 数字2：该daemon在一秒内的连接数超过数字1，则暂时关闭该da* emon数字2的秒数。</li>
-<li>log_on_success/failure=PID/HOST/USERID/EXIT/DURATION：当登录成功/* 失败时记录的信息。HOST：连接者的IP、EXIT：离开时间、DURATION：为该用户服务的时间。</li>
-<li>redirect=IP：将用户的请求转至指定服务器。</li>
-<li>bind=IP：允许用户用哪个IP访问本服务。<br>only_from=[0.0.0.0,192.168.1.0:24]：只允许指定IP的用户访问。0.0.0.0表示允许所有用户，192.168.1.0:24表示只允许192.168.1.1－192.168.1.255之间的用户访问。<br>access_time=00:00-12:00：只允许该时间段内访问。</li>
-</ul>
-</li>
-<li><p>使用xinetd提供的/etc/hosts.allow和/etc/hosts.deny实现防火墙机制</p>
-<ul>
-<li><p>/etc/hosts.allow ：我们可以在该文件中设置允许访问的IP</p>
-</li>
-<li><p>/etc/hosts.deny ：我们可以在该文件中设置不允许访问的IP</p>
-</li>
-</ul>
-</li>
-</ol>
-<h1 id="系统开启的服务"><a href="#系统开启的服务" class="headerlink" title="系统开启的服务"></a>系统开启的服务</h1><h2 id="查看系统启动的服务"><a href="#查看系统启动的服务" class="headerlink" title="查看系统启动的服务"></a>查看系统启动的服务</h2><p>一般情况下，我们会比较关心网络监听的服务，所以都会使用netstat命令(之前也提到过)，这里再次说明几个范例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 1. 找出目前系统开启的网络服务</div><div class="line">netstat -tulp</div><div class="line"></div><div class="line">// 2. 找出所有有监听网络的服务</div><div class="line">netstat -lnp</div><div class="line"></div><div class="line">// 3. 查看所有的服务状态</div><div class="line"> service --status-all</div></pre></td></tr></table></figure></p>
-<h2 id="设置Daemon开启启动"><a href="#设置Daemon开启启动" class="headerlink" title="设置Daemon开启启动"></a>设置Daemon开启启动</h2><p>在设置Daemon开机启动之前，最好先了解一下Linux主机是怎么开机的？</p>
-<ol>
-<li>打开计算机电源，开始读取BIOS并进行主机的自我测试</li>
-<li>通过BIOS取得第一个可开机设备，读取主要开机区(MBR)取得启动装载程序</li>
-<li>通过启动装载程序的设置，取得kernel并加载内存且检测系统硬件</li>
-<li>内核主动调用init进程</li>
-<li>init进程开始执行系统初始化(/etc/rc.d/rec.sysinit)</li>
-<li>依据init的设置进行daemonstart(/etc/rc.d/rc[0-6].d/*)</li>
-<li>加载本机设置</li>
-</ol>
-<p>在启动Linux系统时，可以进入不同的模式，这模式我们称为执行等级(run level)，不同执行等级有不同的功能与服务。图型界面为run level5，纯文本界面为run level3。当我们想要知道哪些服务默认可以启动，这就需要下面的命令来查询:</p>
-<ol>
-<li><p>chkconfig：管理系统服务<strong>默认开机启动与否</strong>，范例如下：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 1. 列出目前系统上面所有被chkconfig管理的服务</div><div class="line">chkconfig --list | more // 分为两个块，分别为两种启动方式的daemon</div><div class="line"></div><div class="line">// 2. 显示目前在run level 3 启动的服务</div><div class="line">chkconfig --list | grep &apos;2:on&apos;</div><div class="line"></div><div class="line">// 3. 让atd这个服务在run level 3，4，5时启动</div><div class="line">chkconfig --level 345 atd on</div><div class="line"></div><div class="line">// 4. 查看httpd，再查看默认有无启动，之后以chkconfig设置为默认启动</div><div class="line">/etc/init.d/httpd status // 查看本身</div><div class="line">chkconfig --list httpd // 查看是否默认启动</div><div class="line">chconfig httpd on; //设置为开机启动</div></pre></td></tr></table></figure>
-<ol>
-<li>chkconfig：设置自己的系统服务<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chkconfig [--add|--del] [服务名称] // 该服务必须在/etc/init.d/内</div></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-</ol>
-<h1 id="RHEL7的sytemctl（代替service和chkconfig）"><a href="#RHEL7的sytemctl（代替service和chkconfig）" class="headerlink" title="RHEL7的sytemctl（代替service和chkconfig）"></a>RHEL7的sytemctl（代替service和chkconfig）</h1><p>centos7版本中使用了systemd，systemd同时兼容service,对应的命令就是systemctl 。systemctl是RHEL 7 的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体。可以使用它永久性或只在当前会话中启用/禁用服务。</p>
-<p>systemd把不同的资源称为Unit<br>每一个 Unit 都有一个配置文件，告诉 Systemd 怎么启动这个 Unit<br>存放目录：/etc/systemd/system和/usr/lib/systemd/system。</p>
-<p>使用范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">// 1. 以树形列出正在运行的进程，它可以递归显示控制组内容</div><div class="line">systemd-cgls</div><div class="line"></div><div class="line">// 2. 启动一个服务</div><div class="line">systemctl start firewalld.service</div><div class="line"></div><div class="line">// 3. 关闭一个服务</div><div class="line">systemctl stop firewalld.service</div><div class="line"></div><div class="line">// 4. 重启一个服务</div><div class="line">systemctl restart firewalld.service</div><div class="line"></div><div class="line">// 5. 显示一个服务的状态</div><div class="line">systemctl status firewalld.service</div><div class="line"></div><div class="line">// 6. 在开机时启动一个服务</div><div class="line">systemctl enable firewalld.service</div><div class="line"></div><div class="line">// 7. 在开机时禁用一个服务</div><div class="line">systemctl disable firewalld.service</div><div class="line"></div><div class="line">// 8. 查看服务是否开机启动</div><div class="line">systemctl is-enabled  firewalld.service</div><div class="line"></div><div class="line">// 9. 查看已启动的服务列表</div><div class="line">systemctl list-unit-files | grep enabled</div><div class="line"></div><div class="line">// 10. 查看启动失败的服务列表</div><div class="line">systemctl --failed</div><div class="line"></div><div class="line">PS：</div><div class="line">1. 使用命令 systemctl is-enabled firewalld.service 得到的值可以是enable、disable或static，</div><div class="line">     这里的 static 它是指对应的 Unit 文件中没有定义[Install]区域，因此无法配置为开机启动服务。</div><div class="line">2. 启用服务就是在当前“runlevel”的配置文件目录/etc/systemd/system/multi-user.target.wants/里，建立/usr/lib/systemd/system里面对应服务配置文件的软链接；</div><div class="line">  禁用服务就是删除此软链接，添加服务就是添加软连接。</div></pre></td></tr></table></figure></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《鸟哥的Linux私房菜》</li>
-<li><a href="https://blog.csdn.net/catoop/article/details/47318225" target="_blank" rel="external">RHEL7的sytemctl（代替service和chkconfig）</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：我们进程会听到daemon，但是却不知道其义，其实就是一个守护进程，作用是支持其他服务(service)的运行。我们下面可以好好看看linux中的daemon与service！
     
     </summary>
     
