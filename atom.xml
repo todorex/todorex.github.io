@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-05-11T07:17:04.678Z</updated>
+  <updated>2018-05-17T07:05:38.650Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,106 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>UDP协议</title>
+    <link href="http://bestlixiang.site/2018/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/UDP%E5%8D%8F%E8%AE%AE/"/>
+    <id>http://bestlixiang.site/2018/05/17/计算机网络/UDP协议/</id>
+    <published>2018-05-17T07:03:18.000Z</published>
+    <updated>2018-05-17T07:05:38.650Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：UDP作为传输层的一大协议，虽然没有TCP可靠，但是却胜在简单。<a id="more"></a></p>
+<h1 id="UDP认识"><a href="#UDP认识" class="headerlink" title="UDP认识"></a>UDP认识</h1><p><strong>UDP(用户数据包协议)</strong> 是一种简单的面向数据报、无连接、传输层协议，并且保留了信息边界。UDP不提供错误校正，不保证有序，无法去重复，没有流量控制和拥塞控制，不能保证数据一定到达目的地，但是可以通过校验和提供错误侦测。UDP提供的的是不可靠传输，<strong>因此要有应用层来提供这些功能</strong>。</p>
+<h1 id="UDP特点"><a href="#UDP特点" class="headerlink" title="UDP特点"></a>UDP特点</h1><ol>
+<li>UDP只在IP数据报服务的基础上增加了少量的功能：利用端口号是实现分用、对整个报文的差错检测。</li>
+<li>UDP是无连接的，通信前不需要建立连接，通信结束也无需释放连接。</li>
+<li>UDP是不可靠的 它是<strong>尽力而为</strong>交付，不能确保每一个数据报都送达。</li>
+<li>UDP是<strong>面向报文</strong>的，面向报文就是指：UDP数据传输的单位是报文，且不会对数据作任何拆分和拼接 操作。在发送端，应用程序给传输层的UDP什么样的数据，UDP不会对数据进行切分，只增加一个UDP头并交给网络层。在接收端，UDP收到网络层的数据报后，去除IP数据报头部后遍交给应用层，不会作任何拼接操作。</li>
+<li>相比于TCP，UDP没有拥塞控制，UDP始终以恒定的速率发送数据，并不会根据网络拥塞情况对发送速率作调整。这种方式有利有弊。弊端：网络拥塞时有些报文可能会丢失，因此UDP不可靠。优点：有些使用场景允许报文丢失，如：直播、语音通话，但对实时性要求很高，此时UDP还是很有用武之地的。</li>
+<li>UDP支持一对一、一对多、多对多、多对一通信；而TCP只支持一对一通信。</li>
+<li>UDP首部开销小，只有8字节。而TCP头部至少由20字节，相比于TCP要高效很多。</li>
+</ol>
+<h1 id="UDP数据包首部"><a href="#UDP数据包首部" class="headerlink" title="UDP数据包首部"></a>UDP数据包首部</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/udp.png" alt="udp"></p>
+<h2 id="UDP数据包首部解析"><a href="#UDP数据包首部解析" class="headerlink" title="UDP数据包首部解析"></a>UDP数据包首部解析</h2><ol>
+<li>16位源端口号：发送端应用程序使用的端口号，用于区分数据报来自哪个进程，多路复用一个传输层（复用：在发送端，多个应用进程公用一个传输层）。</li>
+<li>16位目的端口号：数据送往接收端哪个应用程序，利用端口号实现多路分用（分用：在接收端，传输层会根据端口号将数据分派给不同的应用进程）。</li>
+<li>16位UDP长度：UDP数据报首部和UDP数据报数据部分总字节数，最小值为8字节(仅有首部)，最大值为65535字节。</li>
+<li>16位UDP检验和：UDP的校验和是可选的，TCP是必需的。UDP的校验和覆盖首部及数据部分。在下一节。</li>
+<li>数据：要发送的数据，可以为空(0字节)。</li>
+</ol>
+<h2 id="UDP检验和"><a href="#UDP检验和" class="headerlink" title="UDP检验和"></a>UDP检验和</h2><p>UDP校验和的内容超出了UDP数据报文本身的范围，实际上，它的值是通过计算UDP数据报及一个伪包头而得到的。校验和的计算方法与通用的一样，都是累加求和。<br>它的校验和的检验范围如下图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/checksum.png" alt="checksum"></p>
+<p>伪首部并非UDP数据报中实际的有效成分。伪首部是一个虚拟的数据结构，其中的信息是从数据报所在IP分组头的分组头中提取的，既不向下传送也不向上递交，而仅仅是为计算校验和。这样的校验和，既校验了UDP用户数据的源端口号和目的端口号以及UDP用户数据报的数据部分，又检验了IP数据报的源IP地址和目的IP<br>地址。<strong>伪报头保证UDP数据单元到达正确的目的地址</strong>。</p>
+<p>校验方式：</p>
+<ol>
+<li><p>《TCP/IP 详解》卷一 第一版中如下计算检验和字段的值：</p>
+<ul>
+<li>发送方计算UDP检验和：<br>首先把检验和字段置为0，把上图中,各部分数据(包括UDP伪首部及填充字段)按每16bit进行二进制反码求和(若最高位产生进位就加到最低位上去)，所求结果就是16bitUDP检验和字段的值。</li>
+<li>接收方计算UDP检验和：<br>对收到的UDP数据报(加上了UDP首部和填充字节)按每16bit进行二进制反码求和(若最高位产生进位就加到最低位上去)，若结果为全1，则UDP数据报在传输过程中没有出现差错，否则数据报有差错。</li>
+</ul>
+</li>
+<li>《TCP/IP 详解》卷一 第二版中如下计算检验和字段的值：<ul>
+<li>发送方计算UDP检验和：<br>首先把检验和字段置为0，把上图中,各部分数据(包括UDP伪首部及填充字段)按每16bit进行二进制反码求和(若最高位产生进位就加到最低位上去)，最后结果再按位取反，所得结果就是16bitUDP检验和字段的值。</li>
+<li>接收方计算UDP检验和：<br>对收到的UDP数据报(加上了UDP首部和填充字节)按每16bit进行二进制反码求和(若最高位产生进位就加到最低位上去)，再按位取反，若结果为全0，则UDP数据报在传输过程中没有出现差错，否则数据报有差错。<strong>因为检验和的值从不为0xFFFF</strong></li>
+</ul>
+</li>
+</ol>
+<h1 id="UDP服务器三类地址绑定"><a href="#UDP服务器三类地址绑定" class="headerlink" title="UDP服务器三类地址绑定"></a>UDP服务器三类地址绑定</h1><table>
+<thead>
+<tr>
+<th>本地地址</th>
+<th>远端地址</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LocalIP:Lport</td>
+<td>ForeignIP:Fport</td>
+<td>只限于一个客户</td>
+</tr>
+<tr>
+<td>LocalIP:Lport</td>
+<td>*:*</td>
+<td>只限于一个本地IP和端口的数据包</td>
+</tr>
+<tr>
+<td>*:port</td>
+<td>*:*</td>
+<td>接收发送到Lport的所有数据包</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>第一行中服务器限定了只从本地Local这个IP地址的Lport端口接收数据报，而且只接收来自IP为Foreign且端口为Fport发来的数据。</li>
+<li>第二行中服务器限定了只从本地LocalIP这个IP地址的Lport端口接收数据报，但可以接收任何主机发送的数据。</li>
+<li>第三行中服务器只限定了接收数据的端口号，因此任何一个本地接口IP都可以接收它，而且数据可以来自任何主机发送的数据。</li>
+</ol>
+<h1 id="UDP的应用"><a href="#UDP的应用" class="headerlink" title="UDP的应用"></a>UDP的应用</h1><p>当对网络通讯质量要求不高的时候，要求网络通讯速度能尽量的快，这时就可以使用UDP。常见的使用UDP协议的应用如下：</p>
+<ul>
+<li>QQ语言和视频</li>
+<li>DNS(域名服务器)</li>
+<li>NFS(网络文件系统)</li>
+<li>TFTP(普通文件传输协议)</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://blog.csdn.net/CorCplusplusorjava/article/details/47164875" target="_blank" rel="external">UDP协议</a></li>
+<li><a href="https://blog.csdn.net/sinat_30270011/article/details/51980160" target="_blank" rel="external">UDP协议的应用</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：UDP作为传输层的一大协议，虽然没有TCP可靠，但是却胜在简单。
+    
+    </summary>
+    
+      <category term="计算机网络" scheme="http://bestlixiang.site/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="UDP" scheme="http://bestlixiang.site/tags/UDP/"/>
+    
+  </entry>
   
   <entry>
     <title>数据库事务</title>
@@ -1757,153 +1857,6 @@
     <summary type="html">
     
       &lt;p&gt;引：Linux的网络功能是相当强大的。所以我们必须要好好了解它，这里我们只是介绍一下常用的命令。
-    
-    </summary>
-    
-      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走进Linux_软件安装</title>
-    <link href="http://bestlixiang.site/2018/04/08/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85-%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/"/>
-    <id>http://bestlixiang.site/2018/04/08/走进Linux/走进Linux_软件安装-软件安装/</id>
-    <published>2018-04-08T09:14:14.000Z</published>
-    <updated>2018-04-09T04:34:08.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。<a id="more"></a></p>
-<h1 id="源码安装"><a href="#源码安装" class="headerlink" title="源码安装"></a>源码安装</h1><h2 id="开放源码的软件安装相关概念"><a href="#开放源码的软件安装相关概念" class="headerlink" title="开放源码的软件安装相关概念"></a>开放源码的软件安装相关概念</h2><p>Linux上几乎所有的软件都经过了GPL授权，因此几乎所有的软件都会提供源码。<br>而一个软件要在Linux上执行，必须是二进制文件，因此当我们拿到软件源码后，需要将它编译成二进制文件才能在Linux上运行。</p>
-<h3 id="开放源码、编译程序、可执行文件"><a href="#开放源码、编译程序、可执行文件" class="headerlink" title="开放源码、编译程序、可执行文件"></a>开放源码、编译程序、可执行文件</h3><ol>
-<li>开放源码：就是程序代码，写给人类看的语言，但机器并不认识，所以无法执行。</li>
-<li>编译程序：将程序代码转译称为机器看得懂的语言。</li>
-<li>可执行文件：经过编译程序变成二进制程序后，机器看得懂所以可执行的文件。</li>
-</ol>
-<h3 id="函式库"><a href="#函式库" class="headerlink" title="函式库"></a>函式库</h3><p>类似子程序的角色，可以被呼叫来执行的一段功能函数。</p>
-<h3 id="make与configure"><a href="#make与configure" class="headerlink" title="make与configure"></a>make与configure</h3><ol>
-<li>configure:侦测用户操作环境，是否支持软件的运行，侦测完毕生成makefile文件<ul>
-<li>是否有适合的编译程序可以编译本软件的程序代码</li>
-<li>是否已经存在本软件所需要的函数库，或其他需要的相依软件</li>
-<li>操作系统平台是否适合本软件，包括 Linux 的核心版本</li>
-<li>核心的头文件定义档 (header include) 是否存在 (驱动程序必须要的侦测)。</li>
-</ul>
-</li>
-<li>make:make是一个程序，会去找makefile文件，然后执行编译。</li>
-</ol>
-<h3 id="tarball软件"><a href="#tarball软件" class="headerlink" title="tarball软件"></a>tarball软件</h3><p>tarball文件其实就是将软件的源码先以tar打包，然后再压缩。其实就是一个<strong>软件包</strong>。通常解压缩之后会存在源代码文件、侦测程序文件（configure）、本软件的简易说明与安装说明（README）。</p>
-<h2 id="Tarball的安装的基本步骤"><a href="#Tarball的安装的基本步骤" class="headerlink" title="Tarball的安装的基本步骤"></a>Tarball的安装的基本步骤</h2><ol>
-<li>取得源文件：将tarball文件在/usr/local/src目录解压缩</li>
-<li>取得步骤流程：进入新建立的目录下面，去查阅INSTALL与README等相关文件内容（很重要）</li>
-<li>相关属性软件安装：根据INSTALL/README的内容查看并安装好一些相关的软件</li>
-<li>建立makefile文件：以自动检测程序（configure）检测操作环境，并建立Makefile文件</li>
-<li>编译：以make这个程序并使用该目录下得Makefile作为它的参数配置文件，来进行make的操作</li>
-<li>安装：以make这个程序，并以Makefile这个参数配置文件，依据install这个目标（在Makefile文件中会有多个操作目标，如clean）的指定来安装到正确地路径。</li>
-</ol>
-<h2 id="Tarball软件安装的建议事项"><a href="#Tarball软件安装的建议事项" class="headerlink" title="Tarball软件安装的建议事项"></a>Tarball软件安装的建议事项</h2><p>在默认情况下，原本的Linux distribution发布安装的软件大多是在/usr里面的，而自行安装的软件则建议放置在/usr/local里面。</p>
-<ul>
-<li>linux distribution默认的安装软件的路径如下，以httpd为例：<ul>
-<li>/etc/httpd（配置文件）</li>
-<li>/usr/lib（函数库）</li>
-<li>/usr/bin（可执行文件）</li>
-<li>/usr/share/man（在线帮助文档）</li>
-</ul>
-</li>
-<li>tarball安装，默认放在/usr/local，如下目录：（升级，删除不方便）<ul>
-<li>/usr/local/etc</li>
-<li>/usr/local/bin</li>
-<li>/usr/local/lib</li>
-<li>/usr/local/man</li>
-</ul>
-</li>
-<li>tarball安装，但是单一软件都在同一个目录下，以apache为例：（利于删除，升级）<ul>
-<li>/usr/local/apache/etc</li>
-<li>/usr/local/apache/bin</li>
-<li>/usr/local/apache/lib</li>
-<li>/usr/local/apache/man</li>
-</ul>
-</li>
-</ul>
-<p>当然，<strong>实际安装的时候还是得视该软件的Makefile里头的install目标信息才能知道安装路径情况。</strong></p>
-<p>为了方便Tarball的管理，这样建议：</p>
-<ol>
-<li>最好将tarball的原始数据解压缩到/usr/local/src当中</li>
-<li>安装时，最好安装到/usr/local这个默认路径下</li>
-<li>考虑将来的删除，最好可以将每个软件<strong>单独</strong>安装在/usr/local下面</li>
-<li>为安装到单独目录的软件的man page加入到man path搜索，即在/etc/man.config增加一行。</li>
-</ol>
-<h2 id="简单安装范例（ntp时间服务器）"><a href="#简单安装范例（ntp时间服务器）" class="headerlink" title="简单安装范例（ntp时间服务器）"></a>简单安装范例（ntp时间服务器）</h2><p>假设这个软件在/opt下，解压到/usr/local/src，并安装到/usr/local/ntp目录下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">cd /usr/local/src //切换目录</div><div class="line"></div><div class="line">tar -zxvf /opt/ntp-4.2.4p7.tar.gz //解压缩到此目录</div><div class="line"></div><div class="line">cd ntp-4.2.4p7/</div><div class="line"></div><div class="line">vi INSTALL // 查阅安装信息</div><div class="line"></div><div class="line">// 检查configure支持参数，并实际生成makefile规则文件(很重要)</div><div class="line">./configure --help | more</div><div class="line"></div><div class="line">./configure --prefix=/usr/local/ntp \</div><div class="line">--enable-all-clocks --enable-parse-clocks //开始建立makefile（设置了安装目录等）</div><div class="line"></div><div class="line"></div><div class="line">// 开始编译并安装</div><div class="line">make clean; make</div><div class="line">make check</div><div class="line">make install</div></pre></td></tr></table></figure></p>
-<h2 id="利用patch更新源码"><a href="#利用patch更新源码" class="headerlink" title="利用patch更新源码"></a>利用patch更新源码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// 基本语法</div><div class="line">1. patch -p 数字 &lt; patch_file  更新</div><div class="line">2. patch -R &lt; patch_file 还原更新</div><div class="line"></div><div class="line">假如patch_file第一行是***/home/guest/example/expatch.old，</div><div class="line">如果执行patch -p0  &lt; patch_file，则更新的文件是/home/guest/example/expatch.old，</div><div class="line">如果执行patch -p4  &lt; patch_file，则更新的文件是expatch.old，</div><div class="line">基本语法中数字是指拿掉第几个下划线之前的东西（包括下划线）。</div><div class="line"></div><div class="line">在更新之后，还是需要重新编辑，这才是最终的正确的软件。</div></pre></td></tr></table></figure>
-<h1 id="RPM安装"><a href="#RPM安装" class="headerlink" title="RPM安装"></a>RPM安装</h1><h2 id="RPM和DPKG"><a href="#RPM和DPKG" class="headerlink" title="RPM和DPKG"></a>RPM和DPKG</h2><p>当前Linux上有两款主流的软件管理程序，分别是：RPM和DPKG。<br>这两款软件均提供在线升级机制。</p>
-<ul>
-<li><p>RPM</p>
-<p>  RPM全称为Red Hat Package Manager，是Red Hat公司研发的Linux软件管理程序。目前CentOS、SuSE、Fedora等操作系统使用它。<br>  RPM使用YUM进行在线升级。</p>
-</li>
-<li><p>DPKG<br>  dpkg由Debian Linux开发，目前使用该软件的操作系统有Ubuntu、B2D等。<br>  dpkg使用apt-get进行在线升级。</p>
-</li>
-</ul>
-<p>PS：什么是“在线升级机制”？<br>一个软件往往会依赖其他软件的一些功能，那么在安装过程中，只有确保一个软件所依赖的所有软件都被安装后，该软件才能被正确安装。<br>而在线升级机制能够在软件安装过程中，若发现该软件的依赖软件尚未安装，则会自动从互联网中下载所依赖的软件。这就是在线升级机制</p>
-<h2 id="RPM默认安装的路径"><a href="#RPM默认安装的路径" class="headerlink" title="RPM默认安装的路径"></a>RPM默认安装的路径</h2><table>
-<thead>
-<tr>
-<th>/etc</th>
-<th>一些设置文件放置的目录，例如/etc/crontab</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>/usr/bin</td>
-<td>一些可执行文件</td>
-</tr>
-<tr>
-<td>/usr/lib</td>
-<td>一些程序使用的动态函数库</td>
-</tr>
-<tr>
-<td>/usr/share/doc</td>
-<td>一些基本的软件使用手册与帮助文档</td>
-</tr>
-<tr>
-<td>/usr/share/man</td>
-<td>一些man page文件</td>
-</tr>
-</tbody>
-</table>
-<h2 id="RPM安装-1"><a href="#RPM安装-1" class="headerlink" title="RPM安装"></a>RPM安装</h2><p>因为安装软件是root的工作，所以你必须是root用户才能使用rpm命令，使用范例如下(例子为安装rp-pppoe-3.5-32.1.i386.rpm)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 安装软件是，显示安装信息与进度</div><div class="line">rpm -ivh rp-pppoe-3.5-32.1.i386.rpm</div></pre></td></tr></table></figure></p>
-<h2 id="RPM的升级与更新"><a href="#RPM的升级与更新" class="headerlink" title="RPM的升级与更新"></a>RPM的升级与更新</h2><p>范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">rpm -Uvh 需要升级的软件名</div><div class="line"></div><div class="line">-Uvh:若待升级的软件尚未安装，则直接安装</div><div class="line"></div><div class="line">rpm -Fvh 需要升级的软件名</div><div class="line"></div><div class="line">-Fvh:若待升级的软件尚未安装，则该软件不会被安装</div></pre></td></tr></table></figure></p>
-<h2 id="RPM查询"><a href="#RPM查询" class="headerlink" title="RPM查询"></a>RPM查询</h2><p>查询的信息分为两类，一类是查询已被安装的软件的信息(由/var/lib/rpm提供)，另一类是查询尚未被安装的软件安装包的信息。 第一类信息通过rpm -q查询，第二类信息通过rpm -qp查询。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">// 1. 找出你的Linux是否安装logrotate这个软件</div><div class="line">rpm -q logrorate</div><div class="line"></div><div class="line">// 2. 列出logrotate这个软件所提供的所有目录与文件</div><div class="line">rpm -ql logrorate</div><div class="line"></div><div class="line">// 3. 列出logrotate这个软件的相关文件说明</div><div class="line">rpm -qi logrorate</div><div class="line"></div><div class="line">// 4. 列出logrotate这个软件的设置文件与帮助文件</div><div class="line">rpm -qc logrorate</div><div class="line">rpm -qd logrorate</div><div class="line"></div><div class="line">// 5. 列出logrotate这个软件所依赖软件的文件</div><div class="line">rpm -qR logrorate</div><div class="line"></div><div class="line">// 6. 列出该文件属于哪一个软件</div><div class="line">rpm -qf /bin/sh</div></pre></td></tr></table></figure></p>
-<h2 id="卸载RPM与重建数据库"><a href="#卸载RPM与重建数据库" class="headerlink" title="卸载RPM与重建数据库"></a>卸载RPM与重建数据库</h2><p>卸载一个软件非常方便，通过-e即可删除。但一个软件所提供的动态函数库被其他软件引用，那么该软件将无法卸载，除非将引用该函数库的所有软件都卸载后才能卸载。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1. 找出与pam有关的软件名称，并尝试删除pam这个软件</div><div class="line">rpm -qa | grep pam</div><div class="line">rpm -e pam（出错，因为你需要先删除依赖它的软件）</div><div class="line"></div><div class="line">2. 删除pam-devel软件</div><div class="line">rpm -e pam-devel (成功)</div></pre></td></tr></table></figure></p>
-<p>当/var/lib/rpm内的文件发生损坏时，可以通过如下命令重建数据库修复：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rpm --rebuilddb</div></pre></td></tr></table></figure></p>
-<h1 id="YUM安装"><a href="#YUM安装" class="headerlink" title="YUM安装"></a>YUM安装</h1><p>RPM虽然省去了编译过程，并且提供数据库存储软件的信息，但仍然需要我们手动下载RPM安装包，而YUM的出现解决了这一问题。较多软件的RPM安装包都存放在了YUM Server上，只要我们的计算机能连互联网，就能使用yum自动下载RPM安装包并安装软件。</p>
-<h2 id="yum功能"><a href="#yum功能" class="headerlink" title="yum功能"></a>yum功能</h2><p>yum的使用非常简单，就是通过yum这个命令，用法范例如下：</p>
-<ol>
-<li><p>查询功能</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 1. 搜索磁盘阵列相关的软件</div><div class="line">yum search raid</div><div class="line"></div><div class="line">// 2. 找出mdadm这个软件的功能如何</div><div class="line">yum info mdadm</div><div class="line"></div><div class="line">// 3. 列出yum服务器上面提供的所有软件名称</div><div class="line">yum list</div><div class="line"></div><div class="line">// 4. 列出目前服务器上可供本机升级的软件有哪些</div><div class="line">yum list updates</div><div class="line"></div><div class="line">// 5. 列出提供passwd这个文件的软件有哪些</div><div class="line">yum provides passwd</div></pre></td></tr></table></figure>
-</li>
-<li><p>安装/升级功能</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 安装/升级pam-devel</div><div class="line">yum install/update pam-devel</div></pre></td></tr></table></figure>
-</li>
-<li><p>删除功能</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 删除pam-devel</div><div class="line">yum remove pam-devel</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h1 id="管理的选择：RPM-or-Tarball"><a href="#管理的选择：RPM-or-Tarball" class="headerlink" title="管理的选择：RPM or Tarball"></a>管理的选择：RPM or Tarball</h1><p>建议如下：</p>
-<ol>
-<li>优先选择原厂的RPM功能</li>
-<li>选择软件官方网站发布的RPM或者是提供的容器网址（yum server）</li>
-<li>利用Tabball安装特殊软件（没有RPM）</li>
-<li>用Tarball测试新版软件</li>
-</ol>
-<p>RPM与Tarball各有优点，但是如果有RPM的话，优先选择RPM。如果无法解决依赖性问题，那就选tarball。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《鸟哥的Linux私房菜》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：当你拿到一台新电脑的第一反应是什么，当然是装软件，然后好好玩呀！服务器也是如此，所以你必须掌握软件的安装。
     
     </summary>
     
