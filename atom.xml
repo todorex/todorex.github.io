@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-05-17T07:09:07.421Z</updated>
+  <updated>2018-05-18T07:31:18.419Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,143 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>TCP协议</title>
+    <link href="http://bestlixiang.site/2018/05/18/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%E5%8D%8F%E8%AE%AE/"/>
+    <id>http://bestlixiang.site/2018/05/18/计算机网络/TCP协议/</id>
+    <published>2018-05-18T06:58:34.000Z</published>
+    <updated>2018-05-18T07:31:18.419Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：TCP作为传输层的一大协议，虽然没有UDP简单，但是胜在可靠。<a id="more"></a></p>
+<h1 id="TCP认识"><a href="#TCP认识" class="headerlink" title="TCP认识"></a>TCP认识</h1><p><strong>TCP(传输控制协议)</strong> 是一种面向连接、可靠的、基于字节流的传输层协议。TCP在传送数据之前会先相互发送一些预备报文段协商一些参数，比如序号等等，TCP将用户数据打包成报文段，发送数据后启动一个定时器，另一端对收到的数据进行确认，对失序的数据重新排序，丢弃重复数据，TCP提供端到端的流量控制，并计算和验证一个强制性的端到端校验和。</p>
+<h1 id="TCP特点"><a href="#TCP特点" class="headerlink" title="TCP特点"></a>TCP特点</h1><ol>
+<li>TCP是面向连接的，通信前需要建立连接，通信结束需要释放连接。</li>
+<li>TCP提供可靠交付服务，可靠指的是：TCP发送的数据无重复、无丢失、无错误、与发送端顺序一致。</li>
+<li>TCP是面向字节流的，面向字节流指的是：TCP以字节为单位。虽然传输的过程中数据被划分成一个个数据报，但这只是为了方便传输，接收端最终接受到的数据将与发送端的数据一模一样。</li>
+<li>TCP提供全双工通信，全双工通信指的是：TCP的两端既可以作为发送端，也可以作为接收端。</li>
+<li>一条TCP连接的两端只能有两个端点，TCP只能提供点到点的通信，而UDP可以任意方式的通信。</li>
+</ol>
+<h1 id="TCP首部"><a href="#TCP首部" class="headerlink" title="TCP首部"></a>TCP首部</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcp.png" alt="tcp"></p>
+<ol>
+<li>16位端口号:包含源端口和目的端口，客户端通常使用系统自动选择的临时端口号，而服务器则使用自主定义端口号.</li>
+<li>32位序号:一次TCP通信过程中一个传输方向上的字节流的每个字节的编号，例如:A发送给B的第一个TCP报文段中，序号值被系统初始化为某个随机值ISN，那么在该传输方向上，后续的TCP报文段中序号值将被系统设置为ISN加上该报文段所携带数据的第一个字节在整个字节流中的偏移。</li>
+<li>32位的确认号: 用作对另外一方发送来的TCP报文段的响应，其值是收到的TCP报文段的序号值加1。</li>
+<li>4位头部长度: 标识TCP头部有多少个32bit(4字节)，最大60字节.</li>
+<li>6位标志位:<ul>
+<li>URG:表示紧急指针是否有效.</li>
+<li>ACK:表示确认号是否有效，我们称携带ACK标志的TCP报文段为确认报文段.</li>
+<li>PSH:提示接收端应用程序应该立即从TCP接收缓冲区中读走数据,为接收数据腾出空间.</li>
+<li>RST:表示要求对方重新建立连接(复位报文段)</li>
+<li>SYN:表示请求建立一个连接(同步报文段);</li>
+<li>FIN:表示通知对方本端要关闭连接了(结束报文段);</li>
+</ul>
+</li>
+<li>16位窗口大小:TCP流量的一个控制手段,,它告知是对方本端的TCP接收缓冲区还能容纳多少字节的数据，这样对方就可以控制发送数据的速度.</li>
+<li>16位校验和:由发送端填充，接收端对TCP报文段执行CRC算法（循环冗余码检验，与UDP一样），检验TCP头部在传输过程中是否损坏，不仅包括TCP头部，也包括数据部分。</li>
+<li>16位紧急指针:是一个正的偏移量.它和序号字段的值相加表示最后一个紧急数据的下一个字节的序号.</li>
+<li>选项字段，上述字段都是每个TCP头部必须要有的，而选项字段是可选的，且长度可变，最长40字节。 最常用的选项字段为MMS：最大报文长度。</li>
+</ol>
+<h1 id="TCP连接建立-三次握手"><a href="#TCP连接建立-三次握手" class="headerlink" title="TCP连接建立(三次握手)"></a>TCP连接建立(三次握手)</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpBuild.png" alt="tcpBuild"></p>
+<p>TCP协议中，主动发起请求的一端称为<strong>客户端</strong>，被动连接的一端称为<strong>服务端</strong>。不管是客户端还是服务端，TCP连接建立完后都能发送和接收数据。</p>
+<ol>
+<li><strong>握手前</strong>：服务器和客户端都为CLOSED状态，在通信开始前，双方都得创建各自的传输控制块（TCB）。服务器创建完TCB后遍进入LISTEN状态，此时准备接收客户端发来的连接请求。</li>
+<li><strong>第一次握手</strong>：客户端向服务端发送连接请求报文段。该报文段的头部中SYN=1，ACK=0，(表示该报文段为连接请求报文) seq=x(x为本次TCP通信的字节流的初始序号)。请求发送后，客户端便进入SYN-SENT状态。</li>
+<li><strong>第二次握手</strong> ：服务端收到连接请求报文段后，如果同意连接，则会发送一个应答：SYN=1，ACK=1，(表示该报文段为连接同意的应答报文) seq=y，(表示服务端作为发送者时，发送字节流的初始序号) ack=x+1(表示服务端希望下一个数据报发送序号从x+1开始的字节)。<br>该应答发送完成后便进入SYN-RCVD状态。</li>
+<li><strong>第三次握手</strong> ：当客户端收到连接同意的应答后，还要向服务端发送一个确认报文段，表示：服务端发来的连接同意应答已经成功收到。<br>该报文段的头部为：ACK=1，seq=x+1，ack=y+1。<br>客户端发完这个报文段后便进入ESTABLISHED状态，服务端收到这个应答后也进入ESTABLISHED状态，此时连接的建立完成！</li>
+</ol>
+<p><strong>PS：为什么连接建立需要三次握手，而不是两次握手？</strong></p>
+<p>防止失效的连接请求报文段被服务端接收，从而产生错误，失效的连接请求指的是：若客户端向服务端发送的连接请求丢失，客户端等待应答超时后就会再次发送连接请求，此时，上一个连接请求就是失效的。</p>
+<p>若建立连接只需两次握手，服务端在收到连接请求后就进入ESTABLISHED状态。此时如果网络拥塞，客户端发送的连接请求迟迟到不了服务端，客户端便超时重发请求，此时，如果那个失效的连接请求抵达了服务端，但此时的客户端早已进入CLOSED状态，服务端将会一直等待下去，这样浪费服务端连接资源。</p>
+<h1 id="TCP连接释放-四次握手"><a href="#TCP连接释放-四次握手" class="headerlink" title="TCP连接释放(四次握手)"></a>TCP连接释放(四次握手)</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpRelease.png" alt="tcpRelease"><br><strong>TCP连接发送数据</strong>是双向的，因此在四次挥手中，前两次挥手用于断开一个方向的连接，后两次挥手用于断开另一方向的连接。</p>
+<ol>
+<li><strong>第一次握手</strong> ：若A认为数据发送完成，则它需要向B发送连接释放请求。该请求只有报文头，头中携带的主要参数为：FIN=1，(表示该报文段是一个连接释放请求) seq=u(u-1是A向B发送的最后一个字节的序号)。此时，A将进入FIN-WAIT-1状态。</li>
+<li><strong>第二次握手</strong> ：B收到连接释放请求后，会通知相应的应用程序，告诉它A向B这个方向的连接已经释放。此时B进入CLOSE-WAIT状态，并向A发送连接释放的应答，其报文头包含： ACK=1，(表示应答) seq=v (v-1是B向A发送的最后一个字节的序号)，ack=u+1(表示希望收到从第u+1个字节开始的报文段，并且已经成功接收了前u个字节)。A收到该应答，进入FIN-WAIT-2状态，等待B发送连接释放请求。<strong>第二次挥手完成后，A到B方向的连接已经释放，B不会再接收数据，A也不会再发送数据。但B到A方向的连接仍然存在，B可以继续向A发送数据。</strong></li>
+<li><strong>第三次握手</strong> ：当B向A发完所有数据后，向A发送连接释放请求，请求头：FIN=1，ACK=1，seq=w，ack=u+1。B便进入LAST-ACK状态。</li>
+<li><strong>第四次握手</strong> ：A收到释放请求后，向B发送确认应答，此时A进入TIME-WAIT状态。该状态会持续2MSL(报文最大生存时间)时间，若该时间段内没有B的重发请求的话，就进入CLOSED状态，撤销TCB。当B收到确认应答后，也便进入CLOSED状态，撤销TCB。</li>
+</ol>
+<h1 id="TCP的可靠传输"><a href="#TCP的可靠传输" class="headerlink" title="TCP的可靠传输"></a>TCP的可靠传输</h1><p>TCP采用了校验和、连接管理、序列号、确认应答，重发控制、滑动窗口协议（连续ARQ协议、流控制、拥塞控制）等机制来保证它的可靠性。</p>
+<h2 id="校验和"><a href="#校验和" class="headerlink" title="校验和"></a>校验和</h2><p>TCP和UDP校验和的方式一致，可以参照另一篇博客——<a href="http://todorex.com/2018/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/UDP%E5%8D%8F%E8%AE%AE/" target="_blank" rel="external">UDP协议</a></p>
+<h2 id="连接管理"><a href="#连接管理" class="headerlink" title="连接管理"></a>连接管理</h2><p>其实就是利用建立连接时的三次握手来提高可靠性。</p>
+<h2 id="通过序列号与确认应答"><a href="#通过序列号与确认应答" class="headerlink" title="通过序列号与确认应答"></a>通过序列号与确认应答</h2><p>在TCP中，当发送端的数据到达接收主机时，接收端主机会返回一个收到消息的通知，这个消息叫做<strong>确认应答(ACK)</strong>，比如客户端发送[数据(1-1000)]，那么服务端将会回应[确认应答(下一个数1001)]。在一定时间内没有等到确认应答，发送端会认为数据已经丢失，并进行重发。</p>
+<h2 id="滑动窗口协议-连续ARQ协议"><a href="#滑动窗口协议-连续ARQ协议" class="headerlink" title="滑动窗口协议(连续ARQ协议)"></a>滑动窗口协议(连续ARQ协议)</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>先简单说说ARQ(Automatic Repeat reQuest)协议(自动重传请求协议)： 当请求失败时它会自动重传，直到请求被正确接收为止。这种机制保证了每个分组都能被正确接收。</p>
+<p>再看连续ARQ协议：在ARQ协议发送者每次只能发送一个分组，在应答到来前必须等待。而连续ARQ协议的发送者拥有一个发送窗口，发送者可以在没有得到应答的情况下连续发送窗口中的分组。</p>
+<h3 id="发送窗口"><a href="#发送窗口" class="headerlink" title="发送窗口"></a>发送窗口</h3><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/sendWindow.png" alt="sendWindow"></p>
+<p>发送窗口的大小由接收窗口的剩余大小决定。接收者会把当前接收窗口的剩余大小写入应答TCP报文段的头部，发送者收到应答后根据该值和当前网络拥塞情况设置发送窗口的大小。发送窗口的大小是不断变化的。</p>
+<p>发送窗口(p1-p3)由三个指针构成：</p>
+<ul>
+<li>p1：p1指向发送窗口的后沿，它后面的字节表示已经发送且已收到应答。</li>
+<li>p2：p2指向尚未发送的第一个字节。<br>p1-p2间的字节表示已经发送，但还没收到确认应答。这部分的字节仍需保留，因为可能还要超时重发。<br>p2-p3间的字节表示可以发送，但还没有发送的字节。</li>
+<li>p3：p3指向发送窗口的前沿，它前面的字节尚未发送，且不允许发送。</li>
+</ul>
+<p>发送者每收到一个应答，后沿就可以向前移动指定的字节。此时若窗口大小仍然没变，前沿也可以向前移动指定字节。<br>当p2和前沿重合时，发送者必须等待确认应答。</p>
+<h3 id="接收窗口"><a href="#接收窗口" class="headerlink" title="接收窗口"></a>接收窗口</h3><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/receiverWindow.png" alt="receiverWindow"></p>
+<p>接收者收到的字节会存入接收窗口，接收者会对已经正确接收的有序字节进行累计确认，发送完确认应答后，接收窗口就可以向前移动指定字节。<br>如果某些字节并未按序收到，接收者<strong>只会</strong>确认最后一个有序的字节，从而乱序的字节就会被重新发送。</p>
+<h2 id="流控制"><a href="#流控制" class="headerlink" title="流控制"></a>流控制</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>让发送端根据接收端的实际接收能力控制发送的数据量。</p>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>防止接收端在高负荷的情况下接收数据，因为这个时候如果接收端会将本应该接收的数据丢弃，就又会触发重发机制，从而导致网络流量的无端浪费。</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>接收端主动向发送端主机通知自己可以接受数据的大小，于是发送端会发送不超过这个限度的数据。这个大小限度就是接收窗口大小，所以流控制就是利用滑动窗口协议实现的。</p>
+<h3 id="死锁问题"><a href="#死锁问题" class="headerlink" title="死锁问题"></a>死锁问题</h3><p>当发送者收到了一个窗口为0的应答，发送者便停止发送，等待接收者的下一个应答。但是如果这个窗口不为0的应答在传输过程丢失，发送者一直等待下去，而接收者以为发送者已经收到该应答，等待接收新数据，这样双方就相互等待，从而产生死锁。为了避免此类问题的发生，发送端主机会时不时发送一个叫做窗口探测的数据段，此数据段仅含一个以获取最新窗口的大小信息。</p>
+<h2 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h2><h3 id="拥塞控制和流控制的区别？"><a href="#拥塞控制和流控制的区别？" class="headerlink" title="拥塞控制和流控制的区别？"></a>拥塞控制和流控制的区别？</h3><ol>
+<li>拥塞控制：拥塞控制是作用于网络的，它是防止过多的数据注入到网络中，避免出现网络负载过大的情况</li>
+<li>流控制：流控制是作用于接收者的，它是控制发送者的发送速度从而使接收者来得及接收</li>
+</ol>
+<h3 id="拥塞情况"><a href="#拥塞情况" class="headerlink" title="拥塞情况"></a>拥塞情况</h3><p>观察拥塞的方式有两种：一是超时，二是连续接收到3个重复ACK。</p>
+<p><strong>PS：为什么是3个连续的ACK</strong>：由于我们不知道一个重复的ACK是由一个丢失的报文引起的，还是由于仅仅出现了几个报文段的重新排序引起的，因此我们等待少量的重复的ACK到来。因为若只是一些报文段的重新排序引起的，一般在重新排序报文段完成并产生一个新的ACK之前只可能产生1-2个重复的ACK。</p>
+<h3 id="拥塞的不同处理方式"><a href="#拥塞的不同处理方式" class="headerlink" title="拥塞的不同处理方式"></a>拥塞的不同处理方式</h3><p>对于由于超时重传认为的拥塞，我们一般是重传报文段，然后进入<strong>慢启动算法</strong>(下方)；对于由于接收到3个重复的ACK认为的拥塞，我们一般是<strong>立即重传报文段</strong>，然后进入<strong>拥塞避免算法</strong>(下方)。这样处理的原因是因为当因为定时器超时，此时网络中可能已经很拥塞，数据确认的ACK已经无法发送回来，因此我们立即减少注入网络中的数据，使用慢启动拥塞窗口减小为1；而对于收到,3个重复的ACK说明还有其他的报文段到达了目的地(因为接收方只有在收到失序的报文段时才会产生重复的ACK而且还有重复的ACK发送回来)，也即收发两端还有数据的流动，因此我们不必使用慢启动突然减少注入网络的数据。</p>
+<h3 id="慢启动算法-和-拥塞避免算法"><a href="#慢启动算法-和-拥塞避免算法" class="headerlink" title="慢启动算法 和 拥塞避免算法"></a>慢启动算法 和 拥塞避免算法</h3><p>发送方维护一个发送窗口，发送窗口的大小取决于网络的拥塞情况(拥塞窗口)，发送窗口是动态变化的。<br>发送方还维护一个慢启动阈值。</p>
+<ul>
+<li>发送窗口 &lt; 慢启动阈值：使用慢启动算法(指数级)</li>
+<li>发送窗口 &gt; 慢启动阈值：使用拥塞避免算法(线性加一)</li>
+<li>发送窗口 = 慢启动阈值：使用慢开始算法或拥塞避免算法</li>
+</ul>
+<p>算法的具体过程：</p>
+<ol>
+<li>通信开始时，使用慢启动算法，发送方的发送窗口设为1，并发送第一个分组M1；</li>
+<li>接收方收到M1后，返回确认应答，此时发送方发送窗口扩大两倍，并发送M2、M3；（即，发送方每次收到确认应答后，都将发送窗口设为当前值的两倍）</li>
+<li>若发送窗口&gt;慢启动阈值，则使用拥塞避免算法，每次收到确认应答后都将发送窗口+1；</li>
+<li>若发送方出现了超时重传，则表明网络出现拥塞，此时：<ol>
+<li>慢启动阈值设为当前发送窗口的一半；</li>
+<li>发送窗口设为1；</li>
+<li>启用拥塞避免算法；</li>
+</ol>
+</li>
+</ol>
+<p>PS：发送超时重传时，发送窗口有可能已经超过了慢开始门限，也有可能还没超过；此时不管何种情况，都一律启用拥塞避免算法，并执行上述三步操作！</p>
+<p><strong>慢开始算法的作用</strong>：慢开始算法将发送窗口从小扩大，而且按指数级扩大，从而避免一开始就往网络中注入过多的分组从而导致拥塞；它将窗口慢慢扩大的过程其实也在探测网络拥塞情况的过程，当发现出现拥塞时，及时降低发送速度，从而减缓网络拥塞。</p>
+<p><strong>拥塞避免算法的作用</strong>：拥塞避免算法使发送窗口以线性方式增长，而非指数级增长，从而使网络更加不容易发生拥塞。</p>
+<h3 id="快重传和快恢复"><a href="#快重传和快恢复" class="headerlink" title="快重传和快恢复"></a>快重传和快恢复</h3><p>当因收到三个及三个以上的重复ACK时，使用如下拥塞控制方法：</p>
+<ol>
+<li>收到3个重复的ACK，将慢启动阈值设为当前拥塞窗口大小的一半</li>
+<li>此时立即重传丢失的报文不用等到定时器超时(超时重传)，此为快重传。</li>
+<li>此后开始执行拥塞避免而不是慢启动，此为快恢复。</li>
+</ol>
+<h1 id="TCP的应用"><a href="#TCP的应用" class="headerlink" title="TCP的应用"></a>TCP的应用</h1><p>当对网络通讯质量有要求的时候，比如：整个数据要准确无误的传递给对方，这往往用于一些要求可靠的应用。常见的使用UDP协议的应用如下：</p>
+<ul>
+<li>HTTP(超文本传输协议)</li>
+<li>FTP(文件传输协议)</li>
+<li>POP、SMTP(邮件传输协议)</li>
+<li>Telnet、Telnet(远程连接协议)</li>
+<li>QQ文件传输</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://blog.csdn.net/u010425776/article/details/55006347?locationNum=2&amp;fps=1" target="_blank" rel="external">计算机网络传输层知识点全覆盖</a></li>
+<li><a href="https://blog.csdn.net/whoamiyang/article/details/50890801" target="_blank" rel="external">TCP协议详解—学习笔记</a></li>
+<li><a href="https://blog.csdn.net/corcplusplusorjava/article/details/46954433" target="_blank" rel="external">TCP协议</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：TCP作为传输层的一大协议，虽然没有UDP简单，但是胜在可靠。
+    
+    </summary>
+    
+      <category term="计算机网络" scheme="http://bestlixiang.site/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="TCP" scheme="http://bestlixiang.site/tags/TCP/"/>
+    
+  </entry>
   
   <entry>
     <title>UDP协议</title>
@@ -1821,42 +1958,6 @@
     <summary type="html">
     
       &lt;p&gt;引：保障数据的安全性是继保障数据的可用性之后最为重要的一项工作。防火墙作为公网与内网之间的保护屏障，在保障数据的安全性方面起着至关重要的作用。
-    
-    </summary>
-    
-      <category term="走进Linux" scheme="http://bestlixiang.site/categories/%E8%B5%B0%E8%BF%9BLinux/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>走进Linux_Linux中常用的网络命令</title>
-    <link href="http://bestlixiang.site/2018/04/08/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_Linux%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/"/>
-    <id>http://bestlixiang.site/2018/04/08/走进Linux/走进Linux_Linux中常用的网络命令/</id>
-    <published>2018-04-08T12:51:27.000Z</published>
-    <updated>2018-04-09T04:31:17.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：Linux的网络功能是相当强大的。所以我们必须要好好了解它，这里我们只是介绍一下常用的命令。<a id="more"></a></p>
-<h1 id="设置网络参数的命令"><a href="#设置网络参数的命令" class="headerlink" title="设置网络参数的命令"></a>设置网络参数的命令</h1><h2 id="ipconfig"><a href="#ipconfig" class="headerlink" title="ipconfig"></a>ipconfig</h2><p>ifconfig主要是可以都手动启动、查看与修改网络接口的相关参数，范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// 1. 查看所有网络接口</div><div class="line">ifconfig</div><div class="line">// 2. 查看eth0网卡</div><div class="line">ifconfig eth0</div><div class="line"></div><div class="line">输出：</div><div class="line">eth0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</div><div class="line">        inet 172.16.0.9  netmask 255.255.240.0  broadcast 172.16.15.255</div><div class="line">        ether 52:54:00:1c:91:2a  txqueuelen 1000  (Ethernet)</div><div class="line">        RX packets 15979545  bytes 1741444280 (1.6 GiB)</div><div class="line">        RX errors 0  dropped 0  overruns 0  frame 0</div><div class="line">        TX packets 15811187  bytes 2149680103 (2.0 GiB)</div><div class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</div><div class="line"></div><div class="line">* eth0：就是网络卡的代号，也有 lo 这个 loopback</div><div class="line">* mtu：网络接口的最大传输单元</div><div class="line">* inet：IPv4 的 IP 地址，后续是子网掩码和广播地址</div><div class="line">* RX：那一行代表的是网络由启动到目前为止的封包接收情况， packets 代表封包数、errors 代表封包发生错误的数量、 dropped 代表封包由于有问题而遭丢弃的数量等等</div><div class="line">* TX：与 RX 相反，为网络由启动到目前为止的传送情况；collisions：代表封包碰撞的情况，如果发生太多次， 表示您的网络状况不太好</div><div class="line"></div><div class="line">// 3. 暂时修改网络接口，给予eth0一个192.168.100.100/24的参数</div><div class="line">ifconfig eth0 192.168.100.100</div><div class="line"></div><div class="line">// 4. 将手动的处理全部取消，使用原有的设置值重置网络参数</div><div class="line">/etc/init.d/network restart</div></pre></td></tr></table></figure></p>
-<h1 id="网络排错与查看命令"><a href="#网络排错与查看命令" class="headerlink" title="网络排错与查看命令"></a>网络排错与查看命令</h1><h2 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h2><p>这个 ping 是很重要的指令，ping 主要透过 ICMP（Internet控制报文协议） 封包来进行整个网络的状况报告。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">// 1. 检测一下168.95.1.1这部DNS主机是否存在(存在于网络环境中)</div><div class="line">ping -c 3 168.95.1.1</div><div class="line"></div><div class="line">输出：</div><div class="line">PING 168.95.1.1 (168.95.1.1) 56(84) bytes of data.</div><div class="line">64 bytes from 168.95.1.1: icmp_seq=1 ttl=239 time=69.9 ms</div><div class="line">64 bytes from 168.95.1.1: icmp_seq=2 ttl=239 time=70.4 ms</div><div class="line">64 bytes from 168.95.1.1: icmp_seq=3 ttl=239 time=69.9 ms</div><div class="line"></div><div class="line">--- 168.95.1.1 ping statistics ---</div><div class="line">3 packets transmitted, 3 received, 0% packet loss, time 2002ms</div><div class="line">rtt min/avg/max/mdev = 69.920/70.119/70.467/0.328 ms</div><div class="line"></div><div class="line"></div><div class="line">// 2. 找出最大的MTU数值(如果有响应，那就是可以接受这个数据包，如果无响应，就表示这个MTU太大了)</div><div class="line">ping -c 2 -s 1000 -M do 192.168.1.254</div></pre></td></tr></table></figure></p>
-<h2 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a>netstat</h2><p>如果你觉得你的某个网络服务明明就启动了，但是就是无法造成联机的话，要查询一下自己的网络接口所监听的端口 (port) 来看看是否真的有启动。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 1. 列出当前路由表状态，且以IP及port number进行系那是</div><div class="line">netstat -rn</div><div class="line"></div><div class="line">// 2. 列出当前的所有网络连接状态，使用IP与port number</div><div class="line">netstat -an</div><div class="line"></div><div class="line">// 3. 显示目前已经启动的网络服务</div><div class="line">netstat -tulnp</div><div class="line"></div><div class="line">// 4. 查看本机上所有的网络连接状态</div><div class="line">netstat -atunp</div></pre></td></tr></table></figure></p>
-<h2 id="host"><a href="#host" class="headerlink" title="host"></a>host</h2><p>这个命令可以用来查出某个主机名的IP，范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 列出www.yahoo.com的IP(向/etc/resolv.conf里面记录的DNS服务器查询IP)</div><div class="line">host www.yohoo.com</div></pre></td></tr></table></figure></p>
-<h2 id="nslookup"><a href="#nslookup" class="headerlink" title="nslookup"></a>nslookup</h2><p>功能和host一样，范例如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 1. 查询www.google.com的IP</div><div class="line">nslookup www.google.com</div><div class="line"></div><div class="line">// 2. 找出168.95.1.1的主机名   (建议使用dig)</div><div class="line">nslookup 168.95.1.1</div></pre></td></tr></table></figure>
-<h1 id="远程连接命令与即时通信软件"><a href="#远程连接命令与即时通信软件" class="headerlink" title="远程连接命令与即时通信软件"></a>远程连接命令与即时通信软件</h1><h2 id="telnet"><a href="#telnet" class="headerlink" title="telnet"></a>telnet</h2><p>telnet本身数据的在传输过程中使用的是明文，所以数据在Internet上面传输的时候，会比较危险。使用范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 1. 连接到当前热门的PTT BBS站点ptt.cc</div><div class="line">yum install telnet // 默认没有安装（自己未成功）</div><div class="line"></div><div class="line">// 2. 检测本地主机的110这个port是否正确启动,</div><div class="line">// 如果出现telnet: connect to address 127.0.0.1: Connection refused，代表这个port没有启动或者这个连接有问题</div><div class="line">telnet localhost 22</div></pre></td></tr></table></figure></p>
-<h2 id="ftp"><a href="#ftp" class="headerlink" title="ftp"></a>ftp</h2><p>用于处理ftp服务器的下载数据，范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 连接到一个ftp服务器</div><div class="line">ftp ip //之后可以利用help来帮助操作</div></pre></td></tr></table></figure></p>
-<h1 id="文字接口网页浏览"><a href="#文字接口网页浏览" class="headerlink" title="文字接口网页浏览"></a>文字接口网页浏览</h1><h2 id="links"><a href="#links" class="headerlink" title="links"></a>links</h2><p>最大的功能就是查阅Linux本机上面以html语法写成的文件数据。具体效果自己看吧，范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 1. 浏览Linux kernel网站</div><div class="line">links http://www.kernel.org</div></pre></td></tr></table></figure></p>
-<h2 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h2><p>主要的功能是取得网页数据。范例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// 1. 下载 2.6.17 版的linux内核</div><div class="line">wget \</div><div class="line">http://www.kernel.org/pub/linux/kernel/v2.6/linux-2.6.17.tar.gz</div></pre></td></tr></table></figure></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《鸟哥的Linux私房菜》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：Linux的网络功能是相当强大的。所以我们必须要好好了解它，这里我们只是介绍一下常用的命令。
     
     </summary>
     

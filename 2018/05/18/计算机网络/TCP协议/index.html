@@ -1,0 +1,1088 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="TCP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：TCP作为传输层的一大协议，虽然没有UDP简单，但是胜在可靠。">
+<meta name="keywords" content="TCP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP协议">
+<meta property="og:url" content="http://bestlixiang.site/2018/05/18/计算机网络/TCP协议/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：TCP作为传输层的一大协议，虽然没有UDP简单，但是胜在可靠。">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcp.png">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpBuild.png">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpRelease.png">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/sendWindow.png">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/receiverWindow.png">
+<meta property="og:updated_time" content="2018-05-18T07:31:18.419Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TCP协议">
+<meta name="twitter:description" content="引：TCP作为传输层的一大协议，虽然没有UDP简单，但是胜在可靠。">
+<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcp.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/05/18/计算机网络/TCP协议/"/>
+
+
+
+
+
+  <title> TCP协议 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/05/18/计算机网络/TCP协议/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                TCP协议
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-18T14:58:34+08:00">
+                2018-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机网络/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机网络</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：TCP作为传输层的一大协议，虽然没有UDP简单，但是胜在可靠。<a id="more"></a></p>
+<h1 id="TCP认识"><a href="#TCP认识" class="headerlink" title="TCP认识"></a>TCP认识</h1><p><strong>TCP(传输控制协议)</strong> 是一种面向连接、可靠的、基于字节流的传输层协议。TCP在传送数据之前会先相互发送一些预备报文段协商一些参数，比如序号等等，TCP将用户数据打包成报文段，发送数据后启动一个定时器，另一端对收到的数据进行确认，对失序的数据重新排序，丢弃重复数据，TCP提供端到端的流量控制，并计算和验证一个强制性的端到端校验和。</p>
+<h1 id="TCP特点"><a href="#TCP特点" class="headerlink" title="TCP特点"></a>TCP特点</h1><ol>
+<li>TCP是面向连接的，通信前需要建立连接，通信结束需要释放连接。</li>
+<li>TCP提供可靠交付服务，可靠指的是：TCP发送的数据无重复、无丢失、无错误、与发送端顺序一致。</li>
+<li>TCP是面向字节流的，面向字节流指的是：TCP以字节为单位。虽然传输的过程中数据被划分成一个个数据报，但这只是为了方便传输，接收端最终接受到的数据将与发送端的数据一模一样。</li>
+<li>TCP提供全双工通信，全双工通信指的是：TCP的两端既可以作为发送端，也可以作为接收端。</li>
+<li>一条TCP连接的两端只能有两个端点，TCP只能提供点到点的通信，而UDP可以任意方式的通信。</li>
+</ol>
+<h1 id="TCP首部"><a href="#TCP首部" class="headerlink" title="TCP首部"></a>TCP首部</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcp.png" alt="tcp"></p>
+<ol>
+<li>16位端口号:包含源端口和目的端口，客户端通常使用系统自动选择的临时端口号，而服务器则使用自主定义端口号.</li>
+<li>32位序号:一次TCP通信过程中一个传输方向上的字节流的每个字节的编号，例如:A发送给B的第一个TCP报文段中，序号值被系统初始化为某个随机值ISN，那么在该传输方向上，后续的TCP报文段中序号值将被系统设置为ISN加上该报文段所携带数据的第一个字节在整个字节流中的偏移。</li>
+<li>32位的确认号: 用作对另外一方发送来的TCP报文段的响应，其值是收到的TCP报文段的序号值加1。</li>
+<li>4位头部长度: 标识TCP头部有多少个32bit(4字节)，最大60字节.</li>
+<li>6位标志位:<ul>
+<li>URG:表示紧急指针是否有效.</li>
+<li>ACK:表示确认号是否有效，我们称携带ACK标志的TCP报文段为确认报文段.</li>
+<li>PSH:提示接收端应用程序应该立即从TCP接收缓冲区中读走数据,为接收数据腾出空间.</li>
+<li>RST:表示要求对方重新建立连接(复位报文段)</li>
+<li>SYN:表示请求建立一个连接(同步报文段);</li>
+<li>FIN:表示通知对方本端要关闭连接了(结束报文段);</li>
+</ul>
+</li>
+<li>16位窗口大小:TCP流量的一个控制手段,,它告知是对方本端的TCP接收缓冲区还能容纳多少字节的数据，这样对方就可以控制发送数据的速度.</li>
+<li>16位校验和:由发送端填充，接收端对TCP报文段执行CRC算法（循环冗余码检验，与UDP一样），检验TCP头部在传输过程中是否损坏，不仅包括TCP头部，也包括数据部分。</li>
+<li>16位紧急指针:是一个正的偏移量.它和序号字段的值相加表示最后一个紧急数据的下一个字节的序号.</li>
+<li>选项字段，上述字段都是每个TCP头部必须要有的，而选项字段是可选的，且长度可变，最长40字节。 最常用的选项字段为MMS：最大报文长度。</li>
+</ol>
+<h1 id="TCP连接建立-三次握手"><a href="#TCP连接建立-三次握手" class="headerlink" title="TCP连接建立(三次握手)"></a>TCP连接建立(三次握手)</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpBuild.png" alt="tcpBuild"></p>
+<p>TCP协议中，主动发起请求的一端称为<strong>客户端</strong>，被动连接的一端称为<strong>服务端</strong>。不管是客户端还是服务端，TCP连接建立完后都能发送和接收数据。</p>
+<ol>
+<li><strong>握手前</strong>：服务器和客户端都为CLOSED状态，在通信开始前，双方都得创建各自的传输控制块（TCB）。服务器创建完TCB后遍进入LISTEN状态，此时准备接收客户端发来的连接请求。</li>
+<li><strong>第一次握手</strong>：客户端向服务端发送连接请求报文段。该报文段的头部中SYN=1，ACK=0，(表示该报文段为连接请求报文) seq=x(x为本次TCP通信的字节流的初始序号)。请求发送后，客户端便进入SYN-SENT状态。</li>
+<li><strong>第二次握手</strong> ：服务端收到连接请求报文段后，如果同意连接，则会发送一个应答：SYN=1，ACK=1，(表示该报文段为连接同意的应答报文) seq=y，(表示服务端作为发送者时，发送字节流的初始序号) ack=x+1(表示服务端希望下一个数据报发送序号从x+1开始的字节)。<br>该应答发送完成后便进入SYN-RCVD状态。</li>
+<li><strong>第三次握手</strong> ：当客户端收到连接同意的应答后，还要向服务端发送一个确认报文段，表示：服务端发来的连接同意应答已经成功收到。<br>该报文段的头部为：ACK=1，seq=x+1，ack=y+1。<br>客户端发完这个报文段后便进入ESTABLISHED状态，服务端收到这个应答后也进入ESTABLISHED状态，此时连接的建立完成！</li>
+</ol>
+<p><strong>PS：为什么连接建立需要三次握手，而不是两次握手？</strong></p>
+<p>防止失效的连接请求报文段被服务端接收，从而产生错误，失效的连接请求指的是：若客户端向服务端发送的连接请求丢失，客户端等待应答超时后就会再次发送连接请求，此时，上一个连接请求就是失效的。</p>
+<p>若建立连接只需两次握手，服务端在收到连接请求后就进入ESTABLISHED状态。此时如果网络拥塞，客户端发送的连接请求迟迟到不了服务端，客户端便超时重发请求，此时，如果那个失效的连接请求抵达了服务端，但此时的客户端早已进入CLOSED状态，服务端将会一直等待下去，这样浪费服务端连接资源。</p>
+<h1 id="TCP连接释放-四次握手"><a href="#TCP连接释放-四次握手" class="headerlink" title="TCP连接释放(四次握手)"></a>TCP连接释放(四次握手)</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpRelease.png" alt="tcpRelease"><br><strong>TCP连接发送数据</strong>是双向的，因此在四次挥手中，前两次挥手用于断开一个方向的连接，后两次挥手用于断开另一方向的连接。</p>
+<ol>
+<li><strong>第一次握手</strong> ：若A认为数据发送完成，则它需要向B发送连接释放请求。该请求只有报文头，头中携带的主要参数为：FIN=1，(表示该报文段是一个连接释放请求) seq=u(u-1是A向B发送的最后一个字节的序号)。此时，A将进入FIN-WAIT-1状态。</li>
+<li><strong>第二次握手</strong> ：B收到连接释放请求后，会通知相应的应用程序，告诉它A向B这个方向的连接已经释放。此时B进入CLOSE-WAIT状态，并向A发送连接释放的应答，其报文头包含： ACK=1，(表示应答) seq=v (v-1是B向A发送的最后一个字节的序号)，ack=u+1(表示希望收到从第u+1个字节开始的报文段，并且已经成功接收了前u个字节)。A收到该应答，进入FIN-WAIT-2状态，等待B发送连接释放请求。<strong>第二次挥手完成后，A到B方向的连接已经释放，B不会再接收数据，A也不会再发送数据。但B到A方向的连接仍然存在，B可以继续向A发送数据。</strong></li>
+<li><strong>第三次握手</strong> ：当B向A发完所有数据后，向A发送连接释放请求，请求头：FIN=1，ACK=1，seq=w，ack=u+1。B便进入LAST-ACK状态。</li>
+<li><strong>第四次握手</strong> ：A收到释放请求后，向B发送确认应答，此时A进入TIME-WAIT状态。该状态会持续2MSL(报文最大生存时间)时间，若该时间段内没有B的重发请求的话，就进入CLOSED状态，撤销TCB。当B收到确认应答后，也便进入CLOSED状态，撤销TCB。</li>
+</ol>
+<h1 id="TCP的可靠传输"><a href="#TCP的可靠传输" class="headerlink" title="TCP的可靠传输"></a>TCP的可靠传输</h1><p>TCP采用了校验和、连接管理、序列号、确认应答，重发控制、滑动窗口协议（连续ARQ协议、流控制、拥塞控制）等机制来保证它的可靠性。</p>
+<h2 id="校验和"><a href="#校验和" class="headerlink" title="校验和"></a>校验和</h2><p>TCP和UDP校验和的方式一致，可以参照另一篇博客——<a href="http://todorex.com/2018/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/UDP%E5%8D%8F%E8%AE%AE/" target="_blank" rel="external">UDP协议</a></p>
+<h2 id="连接管理"><a href="#连接管理" class="headerlink" title="连接管理"></a>连接管理</h2><p>其实就是利用建立连接时的三次握手来提高可靠性。</p>
+<h2 id="通过序列号与确认应答"><a href="#通过序列号与确认应答" class="headerlink" title="通过序列号与确认应答"></a>通过序列号与确认应答</h2><p>在TCP中，当发送端的数据到达接收主机时，接收端主机会返回一个收到消息的通知，这个消息叫做<strong>确认应答(ACK)</strong>，比如客户端发送[数据(1-1000)]，那么服务端将会回应[确认应答(下一个数1001)]。在一定时间内没有等到确认应答，发送端会认为数据已经丢失，并进行重发。</p>
+<h2 id="滑动窗口协议-连续ARQ协议"><a href="#滑动窗口协议-连续ARQ协议" class="headerlink" title="滑动窗口协议(连续ARQ协议)"></a>滑动窗口协议(连续ARQ协议)</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>先简单说说ARQ(Automatic Repeat reQuest)协议(自动重传请求协议)： 当请求失败时它会自动重传，直到请求被正确接收为止。这种机制保证了每个分组都能被正确接收。</p>
+<p>再看连续ARQ协议：在ARQ协议发送者每次只能发送一个分组，在应答到来前必须等待。而连续ARQ协议的发送者拥有一个发送窗口，发送者可以在没有得到应答的情况下连续发送窗口中的分组。</p>
+<h3 id="发送窗口"><a href="#发送窗口" class="headerlink" title="发送窗口"></a>发送窗口</h3><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/sendWindow.png" alt="sendWindow"></p>
+<p>发送窗口的大小由接收窗口的剩余大小决定。接收者会把当前接收窗口的剩余大小写入应答TCP报文段的头部，发送者收到应答后根据该值和当前网络拥塞情况设置发送窗口的大小。发送窗口的大小是不断变化的。</p>
+<p>发送窗口(p1-p3)由三个指针构成：</p>
+<ul>
+<li>p1：p1指向发送窗口的后沿，它后面的字节表示已经发送且已收到应答。</li>
+<li>p2：p2指向尚未发送的第一个字节。<br>p1-p2间的字节表示已经发送，但还没收到确认应答。这部分的字节仍需保留，因为可能还要超时重发。<br>p2-p3间的字节表示可以发送，但还没有发送的字节。</li>
+<li>p3：p3指向发送窗口的前沿，它前面的字节尚未发送，且不允许发送。</li>
+</ul>
+<p>发送者每收到一个应答，后沿就可以向前移动指定的字节。此时若窗口大小仍然没变，前沿也可以向前移动指定字节。<br>当p2和前沿重合时，发送者必须等待确认应答。</p>
+<h3 id="接收窗口"><a href="#接收窗口" class="headerlink" title="接收窗口"></a>接收窗口</h3><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/receiverWindow.png" alt="receiverWindow"></p>
+<p>接收者收到的字节会存入接收窗口，接收者会对已经正确接收的有序字节进行累计确认，发送完确认应答后，接收窗口就可以向前移动指定字节。<br>如果某些字节并未按序收到，接收者<strong>只会</strong>确认最后一个有序的字节，从而乱序的字节就会被重新发送。</p>
+<h2 id="流控制"><a href="#流控制" class="headerlink" title="流控制"></a>流控制</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>让发送端根据接收端的实际接收能力控制发送的数据量。</p>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>防止接收端在高负荷的情况下接收数据，因为这个时候如果接收端会将本应该接收的数据丢弃，就又会触发重发机制，从而导致网络流量的无端浪费。</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>接收端主动向发送端主机通知自己可以接受数据的大小，于是发送端会发送不超过这个限度的数据。这个大小限度就是接收窗口大小，所以流控制就是利用滑动窗口协议实现的。</p>
+<h3 id="死锁问题"><a href="#死锁问题" class="headerlink" title="死锁问题"></a>死锁问题</h3><p>当发送者收到了一个窗口为0的应答，发送者便停止发送，等待接收者的下一个应答。但是如果这个窗口不为0的应答在传输过程丢失，发送者一直等待下去，而接收者以为发送者已经收到该应答，等待接收新数据，这样双方就相互等待，从而产生死锁。为了避免此类问题的发生，发送端主机会时不时发送一个叫做窗口探测的数据段，此数据段仅含一个以获取最新窗口的大小信息。</p>
+<h2 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h2><h3 id="拥塞控制和流控制的区别？"><a href="#拥塞控制和流控制的区别？" class="headerlink" title="拥塞控制和流控制的区别？"></a>拥塞控制和流控制的区别？</h3><ol>
+<li>拥塞控制：拥塞控制是作用于网络的，它是防止过多的数据注入到网络中，避免出现网络负载过大的情况</li>
+<li>流控制：流控制是作用于接收者的，它是控制发送者的发送速度从而使接收者来得及接收</li>
+</ol>
+<h3 id="拥塞情况"><a href="#拥塞情况" class="headerlink" title="拥塞情况"></a>拥塞情况</h3><p>观察拥塞的方式有两种：一是超时，二是连续接收到3个重复ACK。</p>
+<p><strong>PS：为什么是3个连续的ACK</strong>：由于我们不知道一个重复的ACK是由一个丢失的报文引起的，还是由于仅仅出现了几个报文段的重新排序引起的，因此我们等待少量的重复的ACK到来。因为若只是一些报文段的重新排序引起的，一般在重新排序报文段完成并产生一个新的ACK之前只可能产生1-2个重复的ACK。</p>
+<h3 id="拥塞的不同处理方式"><a href="#拥塞的不同处理方式" class="headerlink" title="拥塞的不同处理方式"></a>拥塞的不同处理方式</h3><p>对于由于超时重传认为的拥塞，我们一般是重传报文段，然后进入<strong>慢启动算法</strong>(下方)；对于由于接收到3个重复的ACK认为的拥塞，我们一般是<strong>立即重传报文段</strong>，然后进入<strong>拥塞避免算法</strong>(下方)。这样处理的原因是因为当因为定时器超时，此时网络中可能已经很拥塞，数据确认的ACK已经无法发送回来，因此我们立即减少注入网络中的数据，使用慢启动拥塞窗口减小为1；而对于收到,3个重复的ACK说明还有其他的报文段到达了目的地(因为接收方只有在收到失序的报文段时才会产生重复的ACK而且还有重复的ACK发送回来)，也即收发两端还有数据的流动，因此我们不必使用慢启动突然减少注入网络的数据。</p>
+<h3 id="慢启动算法-和-拥塞避免算法"><a href="#慢启动算法-和-拥塞避免算法" class="headerlink" title="慢启动算法 和 拥塞避免算法"></a>慢启动算法 和 拥塞避免算法</h3><p>发送方维护一个发送窗口，发送窗口的大小取决于网络的拥塞情况(拥塞窗口)，发送窗口是动态变化的。<br>发送方还维护一个慢启动阈值。</p>
+<ul>
+<li>发送窗口 &lt; 慢启动阈值：使用慢启动算法(指数级)</li>
+<li>发送窗口 &gt; 慢启动阈值：使用拥塞避免算法(线性加一)</li>
+<li>发送窗口 = 慢启动阈值：使用慢开始算法或拥塞避免算法</li>
+</ul>
+<p>算法的具体过程：</p>
+<ol>
+<li>通信开始时，使用慢启动算法，发送方的发送窗口设为1，并发送第一个分组M1；</li>
+<li>接收方收到M1后，返回确认应答，此时发送方发送窗口扩大两倍，并发送M2、M3；（即，发送方每次收到确认应答后，都将发送窗口设为当前值的两倍）</li>
+<li>若发送窗口&gt;慢启动阈值，则使用拥塞避免算法，每次收到确认应答后都将发送窗口+1；</li>
+<li>若发送方出现了超时重传，则表明网络出现拥塞，此时：<ol>
+<li>慢启动阈值设为当前发送窗口的一半；</li>
+<li>发送窗口设为1；</li>
+<li>启用拥塞避免算法；</li>
+</ol>
+</li>
+</ol>
+<p>PS：发送超时重传时，发送窗口有可能已经超过了慢开始门限，也有可能还没超过；此时不管何种情况，都一律启用拥塞避免算法，并执行上述三步操作！</p>
+<p><strong>慢开始算法的作用</strong>：慢开始算法将发送窗口从小扩大，而且按指数级扩大，从而避免一开始就往网络中注入过多的分组从而导致拥塞；它将窗口慢慢扩大的过程其实也在探测网络拥塞情况的过程，当发现出现拥塞时，及时降低发送速度，从而减缓网络拥塞。</p>
+<p><strong>拥塞避免算法的作用</strong>：拥塞避免算法使发送窗口以线性方式增长，而非指数级增长，从而使网络更加不容易发生拥塞。</p>
+<h3 id="快重传和快恢复"><a href="#快重传和快恢复" class="headerlink" title="快重传和快恢复"></a>快重传和快恢复</h3><p>当因收到三个及三个以上的重复ACK时，使用如下拥塞控制方法：</p>
+<ol>
+<li>收到3个重复的ACK，将慢启动阈值设为当前拥塞窗口大小的一半</li>
+<li>此时立即重传丢失的报文不用等到定时器超时(超时重传)，此为快重传。</li>
+<li>此后开始执行拥塞避免而不是慢启动，此为快恢复。</li>
+</ol>
+<h1 id="TCP的应用"><a href="#TCP的应用" class="headerlink" title="TCP的应用"></a>TCP的应用</h1><p>当对网络通讯质量有要求的时候，比如：整个数据要准确无误的传递给对方，这往往用于一些要求可靠的应用。常见的使用UDP协议的应用如下：</p>
+<ul>
+<li>HTTP(超文本传输协议)</li>
+<li>FTP(文件传输协议)</li>
+<li>POP、SMTP(邮件传输协议)</li>
+<li>Telnet、Telnet(远程连接协议)</li>
+<li>QQ文件传输</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://blog.csdn.net/u010425776/article/details/55006347?locationNum=2&amp;fps=1" target="_blank" rel="external">计算机网络传输层知识点全覆盖</a></li>
+<li><a href="https://blog.csdn.net/whoamiyang/article/details/50890801" target="_blank" rel="external">TCP协议详解—学习笔记</a></li>
+<li><a href="https://blog.csdn.net/corcplusplusorjava/article/details/46954433" target="_blank" rel="external">TCP协议</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/TCP/" rel="tag"># TCP</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/17/计算机网络/UDP协议/" rel="next" title="UDP协议">
+                <i class="fa fa-chevron-left"></i> UDP协议
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">115</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">48</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP认识"><span class="nav-number">1.</span> <span class="nav-text">TCP认识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP特点"><span class="nav-number">2.</span> <span class="nav-text">TCP特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP首部"><span class="nav-number">3.</span> <span class="nav-text">TCP首部</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP连接建立-三次握手"><span class="nav-number">4.</span> <span class="nav-text">TCP连接建立(三次握手)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP连接释放-四次握手"><span class="nav-number">5.</span> <span class="nav-text">TCP连接释放(四次握手)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP的可靠传输"><span class="nav-number">6.</span> <span class="nav-text">TCP的可靠传输</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#校验和"><span class="nav-number">6.1.</span> <span class="nav-text">校验和</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连接管理"><span class="nav-number">6.2.</span> <span class="nav-text">连接管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过序列号与确认应答"><span class="nav-number">6.3.</span> <span class="nav-text">通过序列号与确认应答</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#滑动窗口协议-连续ARQ协议"><span class="nav-number">6.4.</span> <span class="nav-text">滑动窗口协议(连续ARQ协议)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念"><span class="nav-number">6.4.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发送窗口"><span class="nav-number">6.4.2.</span> <span class="nav-text">发送窗口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接收窗口"><span class="nav-number">6.4.3.</span> <span class="nav-text">接收窗口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流控制"><span class="nav-number">6.5.</span> <span class="nav-text">流控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念-1"><span class="nav-number">6.5.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#目的"><span class="nav-number">6.5.2.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">6.5.3.</span> <span class="nav-text">具体实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#死锁问题"><span class="nav-number">6.5.4.</span> <span class="nav-text">死锁问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拥塞控制"><span class="nav-number">6.6.</span> <span class="nav-text">拥塞控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#拥塞控制和流控制的区别？"><span class="nav-number">6.6.1.</span> <span class="nav-text">拥塞控制和流控制的区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拥塞情况"><span class="nav-number">6.6.2.</span> <span class="nav-text">拥塞情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拥塞的不同处理方式"><span class="nav-number">6.6.3.</span> <span class="nav-text">拥塞的不同处理方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#慢启动算法-和-拥塞避免算法"><span class="nav-number">6.6.4.</span> <span class="nav-text">慢启动算法 和 拥塞避免算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快重传和快恢复"><span class="nav-number">6.6.5.</span> <span class="nav-text">快重传和快恢复</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP的应用"><span class="nav-number">7.</span> <span class="nav-text">TCP的应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
