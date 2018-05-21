@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-05-20T06:59:29.325Z</updated>
+  <updated>2018-05-21T04:54:17.420Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,121 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>你不知道的Java 网络IO</title>
+    <link href="http://bestlixiang.site/2018/05/21/Java%E5%9F%BA%E7%A1%80/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84Java-%E7%BD%91%E7%BB%9CIO/"/>
+    <id>http://bestlixiang.site/2018/05/21/Java基础/你不知道的Java-网络IO/</id>
+    <published>2018-05-21T04:53:19.000Z</published>
+    <updated>2018-05-21T04:54:17.420Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：可能很多同学一看Java Java 网络IO，心里肯定会觉得这个有什么好讲的，不就是Socket吗，说对也对，因为他讲到了BIO(同步阻塞IO)，但是却不知还有NIO(同步非阻塞IO)，AIO(异步非阻塞IO)！<a id="more"></a></p>
+<h1 id="项目源码"><a href="#项目源码" class="headerlink" title="项目源码"></a>项目源码</h1><p>关于BIO、NIO以及AIO的代码都放在github上了，注释应该很详细了，大家有需要的可以看一下：<a href="https://github.com/todorex/Java_IO" target="_blank" rel="external">你不知道的那些Java网络IO（BIO、NIO、AIO）</a></p>
+<h1 id="同步or异步-阻塞or非阻塞"><a href="#同步or异步-阻塞or非阻塞" class="headerlink" title="同步or异步 阻塞or非阻塞"></a>同步or异步 阻塞or非阻塞</h1><p>在谈到IO的时候，避免不了听到同步、异步、阻塞、非阻塞这几个名词或者是他们的组合词，我们经常会感到迷惑不解。</p>
+<h2 id="同步or异步"><a href="#同步or异步" class="headerlink" title="同步or异步"></a>同步or异步</h2><p>同步和异步是相对于IO事件(读写操作)而言的</p>
+<ul>
+<li>同步：在进行IO操作时，程序不能干别的事情，等着IO事件完成之后才能去做别的事情</li>
+<li>异步：不关心IO处理操作(因为把IO操作交给操作系统干了)，在处理IO的时候，可以去做别的事情，然后等待IO事件处理完成的通知</li>
+</ul>
+<h2 id="阻塞or非阻塞"><a href="#阻塞or非阻塞" class="headerlink" title="阻塞or非阻塞"></a>阻塞or非阻塞</h2><p>阻塞和非阻塞是相对于数据而言的</p>
+<ul>
+<li>阻塞：如果数据没有准备好，程序就一直等待，直到数据准备好了才往下执行</li>
+<li>非阻塞：不管数据有没有准备好，程序都往下进行</li>
+</ul>
+<p>这里是自己看到的一个例子，可以结合起来理解：</p>
+<p>如果你想吃一份宫保鸡丁盖饭：</p>
+<p><strong>同步阻塞</strong>：你到饭馆点餐，然后在那等着，还要一边喊：好了没啊！（IO操作[拿饭]没有干好，预想之外的事都不能干，数据[饭]没有好，就一直等着）</p>
+<p><strong>同步非阻塞</strong>：在饭馆点完餐，就去遛狗了。不过溜一会儿，就回饭馆喊一声：好了没啊！（IO操作[拿饭]没有干好，预想之外的事都不能干，数据[饭]没有好，但是不用一直等着，可以继续干预先安排的事[遛狗]，但是需要时不时去问一下饭有没有好）</p>
+<p><strong>异步阻塞</strong>：遛狗的时候，接到饭馆电话，说饭做好了，让您亲自去拿。（IO操作[拿饭]没有干好，但是我想干啥就干啥，等着通知就好，数据[饭]没有好，就一直等着去拿饭）</p>
+<p><strong>异步非阻塞</strong>：饭馆打电话说，我们知道您的位置，一会给你送过来，安心遛狗就可以了。（IO操作[拿饭]没有干好，但是我想干啥就干啥，等着通知就好，数据[饭]没有好，但是不用一直等着，可以继续干预先安排的事）</p>
+<h1 id="I-O模型"><a href="#I-O模型" class="headerlink" title="I/O模型"></a>I/O模型</h1><p>Unix定义了五种I/O模型，如下：</p>
+<ul>
+<li>阻塞I/O</li>
+<li>非阻塞I/O</li>
+<li>I/O复用（select、poll、linux 2.6种改进的epoll）</li>
+<li>信号驱动IO（SIGIO）</li>
+<li>异步I/O（POSIX的aio_系列函数）</li>
+</ul>
+<p>下图是五种I/O模型的比较：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/javaCore/jpg/unix_io_model.jpg" alt="unix_io_model"></p>
+<p>POSIX把I/O操作划分成两类：</p>
+<ul>
+<li>同步I/O: 同步I/O操作<strong>导致请求阻塞</strong>，直至操作完成</li>
+<li>异步I/O: 异步I/O操作<strong>不导致请求阻塞</strong></li>
+</ul>
+<p>从上面的图中可以看出Unix的前四种I/O模型都是同步I/O, 只有最后一种才是异步I/O。</p>
+<p>我们在看看Java中的IO分类：</p>
+<ul>
+<li>传统的Java BIO (blocking I/O)是Unix I/O模型中的第一种。</li>
+<li>Java NIO中如果不使用select模式，而只把channel配置成nonblocking则是第二种模型。</li>
+<li>Java NIO select实现的是一种多路复用I/O。底层使用epoll或者相应的poll系统调用。</li>
+<li>第四种模型JDK应该是没有实现。</li>
+<li>Java NIO2增加了对第五种模型的支持，也就是AIO。</li>
+</ul>
+<h1 id="BIO网络编程"><a href="#BIO网络编程" class="headerlink" title="BIO网络编程"></a>BIO网络编程</h1><p>传统的同步阻塞模型(BIO)开发中，ServerSocket负责绑定IP地址，启动监听端口；Socket负责发起连接操作。连接成功后，双方通过输入和输出流进行同步阻塞式通信。</p>
+<p>简单的描述一下BIO的服务端通信模型：采用BIO通信模型的服务端，通常由一个独立的Acceptor线程负责监听客户端的连接，它接收到客户端连接请求之后为每个客户端创建一个新的线程进行链路处理没处理完成后，通过输出流返回应答给客户端，线程销毁。即典型的一请求一应答通信模型。如下图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/javaCore/jpg/bio.png" alt="bio"></p>
+<p>该模型最大的问题就是缺乏弹性伸缩能力，当客户端并发访问量增加后，服务端的线程个数和客户端并发访问数呈1:1的正比关系，Java中的线程也是比较宝贵的系统资源，线程数量快速膨胀后，系统的性能将急剧下降，随着访问量的继续增大，系统最终就<strong>死掉了</strong>。</p>
+<p> <strong>为了改进这种一连接一线程的模型</strong>，我们可以使用<strong>线程池</strong>来管理这些线程（需要了解更多请参考前面提供的文章），实现1个或多个线程处理N个客户端的模型（但是底层还是使用的同步阻塞I/O），通常被称为“伪异步I/O模型“。伪异步I/O模型图如下：</p>
+<p> <img src="http://o6plzvjf2.bkt.clouddn.com/javaCore/png/fake_aio.png" alt="fake_aio"></p>
+<p> 我们知道，如果使用CachedThreadPool线程池，其实除了能自动帮我们管理线程（复用），看起来也就像是1:1的客户端：线程数模型，而使用FixedThreadPool我们就有效的控制了线程的最大数量，保证了系统有限的资源的控制，实现了N:M的伪异步I/O模型。但是，正因为限制了线程数量，如果发生大量并发请求，超过最大数量的线程就只能等待，直到线程池中的有空闲的线程可以被复用。而对Socket的输入流就行读取时，会一直阻塞。  所以在读取数据较慢时（比如数据量大、网络传输慢等），大量并发的情况下，其他接入的消息，<strong>只能一直等待</strong>，这就是最大的弊端。</p>
+<p> <strong>PS：</strong> 源码都在github上。</p>
+<h1 id="NIO网络编程"><a href="#NIO网络编程" class="headerlink" title="NIO网络编程"></a>NIO网络编程</h1><p>NIO(同步非阻塞IO)提供了与传统BIO模型中的Socket和ServerSocket相对应的SocketChannel和ServerSocketChannel两种不同的套接字通道实现。<strong>新增的着两种通道都支持阻塞和非阻塞两种模式</strong>。阻塞模式使用就像传统中的支持一样，比较简单，但是性能和可靠性都不好；非阻塞模式正好与之相反。对于低负载、低并发的应用程序，可以使用同步阻塞I/O来提升开发速率和更好的维护性；对于高负载、高并发的（网络）应用，应使用NIO的非阻塞模式来开发。</p>
+<p>在用NIO进行开发时，我们需要先了解一下NIO的几个核心概念：</p>
+<h2 id="缓冲区-Buffer"><a href="#缓冲区-Buffer" class="headerlink" title="缓冲区 Buffer"></a>缓冲区 Buffer</h2><p>Buffer是一个对象，包含一些要写入或者读出的数据。在NIO库中，所有数据都是用缓冲区处理的。在读取数据时，它是直接读到缓冲区中的；在写入数据时，也是写入到缓冲区中。任何时候访问NIO中的数据，都是通过缓冲区进行操作。</p>
+<p>缓冲区实际上是一个数组，并提供了对数据结构化访问以及维护读写位置等信息。具体的缓存区有这些：ByteBuffe、CharBuffer、 ShortBuffer、IntBuffer、LongBuffer、FloatBuffer、DoubleBuffer。他们实现了相同的接口：Buffer。</p>
+<h2 id="通道-Channel"><a href="#通道-Channel" class="headerlink" title="通道 Channel"></a>通道 Channel</h2><p>我们对数据的读取和写入要通过Channel，它就像水管一样，是一个通道。通道不同于流的地方就是通道是双向的，可以用于读、写和同时读写操作。底层的操作系统的通道一般都是全双工的，所以全双工的Channel比流能更好的映射底层操作系统的API。</p>
+<p>Channel主要分两大类：</p>
+<ul>
+<li>SelectableChannel：用户网络读写</li>
+<li>FileChannel：用于文件操作</li>
+</ul>
+<p>网络编程中涉及的ServerSocketChannel和SocketChannel都是SelectableChannel的子类。</p>
+<h2 id="多路复用器-Selector"><a href="#多路复用器-Selector" class="headerlink" title="多路复用器 Selector"></a>多路复用器 Selector</h2><p>Selector提供选择已经就绪的任务的能力：Selector会不断轮询注册在其上的Channel，如果某个Channel上面发生读或者写事件，这个Channel就处于就绪状态，会被Selector轮询出来，然后通过SelectionKey可以获取就绪Channel的集合，进行后续的I/O操作。</p>
+<p>一个Selector可以同时轮询多个Channel(<strong>所以是非阻塞的</strong>)，因为JDK使用了epoll()代替传统的select实现，所以没有最大连接句柄1024/2048的限制。所以，只需要一个线程负责Selector的轮询，就可以接入成千上万的客户端。</p>
+<h2 id="创建NIO服务端的通信流程"><a href="#创建NIO服务端的通信流程" class="headerlink" title="创建NIO服务端的通信流程"></a>创建NIO服务端的通信流程</h2><p>我们可以看下面这种通信序列图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/javaCore/png/nioServer.png" alt="nioServer"></p>
+<p><strong>PS：</strong> 源码都在github上。</p>
+<h1 id="AIO网络编程"><a href="#AIO网络编程" class="headerlink" title="AIO网络编程"></a>AIO网络编程</h1><p>异步的套接字通道是真正的异步非阻塞I/O，对应于UNIX网络编程中的事件驱动I/O（AIO）。他不需要过多的Selector对注册的通道进行轮询即可实现异步读写，从而简化了NIO的编程模型。</p>
+<p>AIO(异步非阻塞IO)提供了与传统BIO模型中的Socket和ServerSocket相对应的AsynchronousSocketChannel和AsynchronousServerSocketChannel两种不同的套接字通道实现。</p>
+<h2 id="异步的处理"><a href="#异步的处理" class="headerlink" title="异步的处理"></a>异步的处理</h2><p>异步无非是通知系统做一件事情。然后忘掉它，自己做其他事情去了。很多时候系统做完某一件事情后需要一些后续的操作。怎么办？这时候就是告诉异步调用如何做后续处理。通常有两种方式：</p>
+<ul>
+<li>将来式: 当你希望主线程发起异步调用，并轮询等待结果的时候使用将来式;</li>
+<li>回调式: 常说的异步回调就是它。</li>
+</ul>
+<p><strong>PS：</strong> AIO的代码主要基于回调式，源码都在github上。</p>
+<h1 id="BIO、NIO、AIO适用场景分析"><a href="#BIO、NIO、AIO适用场景分析" class="headerlink" title="BIO、NIO、AIO适用场景分析:"></a>BIO、NIO、AIO适用场景分析:</h1><ul>
+<li>BIO方式适用于连接数目比较小且固定的架构，这种方式对服务器资源要求比较高，并发局限于应用中，JDK1.4以前的唯一选择，但程序直观简单易理解。</li>
+<li>NIO方式适用于连接数目多且连接比较短（轻操作）的架构，比如聊天服务器，并发局限于应用中，编程比较复杂，JDK1.4开始支持。</li>
+<li>AIO方式使用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分调用OS参与并发操作，编程比较复杂，JDK7开始支持。</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://blog.csdn.net/itismelzp/article/details/50886009" target="_blank" rel="external">Java中BIO,NIO,AIO的理解</a></li>
+<li><a href="https://blog.csdn.net/mcgrady_tracy/article/details/47424149" target="_blank" rel="external">Linux select和poll系统调用</a></li>
+<li><a href="http://colobu.com/2014/11/13/java-aio-introduction/" target="_blank" rel="external">java aio 编程</a></li>
+<li><a href="https://blog.csdn.net/anxpp/article/details/51512200" target="_blank" rel="external">Java 网络IO编程总结（BIO、NIO、AIO均含完整实例代码）</a></li>
+<li><a href="https://blog.csdn.net/huangwenyi1010/article/details/75577091?ref=myread" target="_blank" rel="external">Java之IO,BIO,NIO,AIO知多少？</a></li>
+<li><a href="https://blog.csdn.net/an_tao/article/details/45914841" target="_blank" rel="external">ServerSocketChannel的用法详解</a></li>
+<li><a href="https://www.jianshu.com/p/c5e16460047b" target="_blank" rel="external">(001)java中的AIO</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：可能很多同学一看Java Java 网络IO，心里肯定会觉得这个有什么好讲的，不就是Socket吗，说对也对，因为他讲到了BIO(同步阻塞IO)，但是却不知还有NIO(同步非阻塞IO)，AIO(异步非阻塞IO)！
+    
+    </summary>
+    
+      <category term="Java基础" scheme="http://bestlixiang.site/categories/Java%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="BIO" scheme="http://bestlixiang.site/tags/BIO/"/>
+    
+      <category term="NIO" scheme="http://bestlixiang.site/tags/NIO/"/>
+    
+      <category term="AIO" scheme="http://bestlixiang.site/tags/AIO/"/>
+    
+  </entry>
   
   <entry>
     <title>HTTP协议</title>
@@ -1878,82 +1993,6 @@
     <summary type="html">
     
       &lt;p&gt;引：前一篇文章我们介绍了Spring的整体架构以及核心组件，接下来我们将讲解Spring的核心概念之一IOC，我们将先简单介绍IOC与DI，然后再深入SpringIOC容器的工作流程。
-    
-    </summary>
-    
-      <category term="深入SSM" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5SSM/"/>
-    
-    
-      <category term="Spring" scheme="http://bestlixiang.site/tags/Spring/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>揭秘Spring(一)_Spring架构</title>
-    <link href="http://bestlixiang.site/2018/04/10/%E6%B7%B1%E5%85%A5SSM/%E6%8F%AD%E7%A7%98Spring-%E4%B8%80-Spring%E6%9E%B6%E6%9E%84/"/>
-    <id>http://bestlixiang.site/2018/04/10/深入SSM/揭秘Spring-一-Spring架构/</id>
-    <published>2018-04-10T11:31:40.000Z</published>
-    <updated>2018-04-10T11:34:13.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。<a id="more"></a></p>
-<h1 id="Spring的骨骼架构"><a href="#Spring的骨骼架构" class="headerlink" title="Spring的骨骼架构"></a>Spring的骨骼架构</h1><p>Spring总共有十几个组件，但是真正核心的组件只有几个，如下图为Spring框架开始以来拥有的总体架构图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/spring.gif" alt="spring"></p>
-<p>从上图可以看出，在Spring框架中的 <strong>核心组件</strong> 只有三个：core、context、bean。他们构建起整个Spring的骨骼架构，没有他们就不可能有AOP、Web等上层的 <strong>特性功能</strong> 。</p>
-<h2 id="Spring的设计理念"><a href="#Spring的设计理念" class="headerlink" title="Spring的设计理念"></a>Spring的设计理念</h2><p>上面说了三个核心组件，但是最重要就是Bean组件了，用过Spring的人都知道，我们所有的类基本上都会交给Spring托管，也就是说Spring就是面向Bean的编程。Bean在Spring中的作用就像Object对OOP的意义一样，没有对象的概念就没有面向对象的概念，在Spring中没有Bean也就没有Spring存在的意义。</p>
-<p><strong>使用Spring最大的原因：</strong> 是他解决了一个非常关键的问题，它可以让你把对象之间的依赖关系解耦，其中的关系交由<strong>IOC容器</strong>（Bean关系的集合）来管理，核心就是<strong>依赖注入机制</strong>。Spring也正是通过把对象包装在Bean中达到管理这些对象及做一些列额外操作的目的。</p>
-<p><strong>一般框架设计理念：</strong> 先构建一个数据结构，然后根据这个数据结构设计它的生存环境，并让它在这个环境中按照一定的规律不停的运动，在他不停运动的过程中设计它们与环境或者与其他个体完成信息交换。</p>
-<h2 id="核心组件如何协同工作"><a href="#核心组件如何协同工作" class="headerlink" title="核心组件如何协同工作"></a>核心组件如何协同工作</h2><p>参考《深入分析Java Web技术内幕》一书中有个形象的比喻：Spring框架就像一场演出，Bean相当于演员，Context相当于演出的舞台背景、Core相当于演出的道具（把演员联系起来）。如果想演出足够新颖，就需要Spring提供的其他特色功能了。</p>
-<p>回到Spring：Bean包装的是Object，而Object必然有数据，如何给这些数据提供生成环境就是Context要解决的事情，对于Context来说就是要发现每个Bean之间的关系，为他们建立这种关系并且维护好这种关系，而发现、建立和维护每个Bean之间的关系维护这种关系就需要Core组件了，Core组件其实就是发现、建立和维护每个Bean之间的关系所需要的一些列工具。最后我们发现Context就是一个Bean关系的集合，这个关系集合就叫<strong>IOC容器</strong>，当建立起IOC容器，Spring就可以工作了。他们的关系可以用下图来描述：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/ccb.gif" alt="ccb"></p>
-<h1 id="核心组件解析"><a href="#核心组件解析" class="headerlink" title="核心组件解析"></a>核心组件解析</h1><h2 id="Bean组件"><a href="#Bean组件" class="headerlink" title="Bean组件"></a>Bean组件</h2><p>Bean 组件在 Spring 的 org.springframework.beans 包下。这个包下的所有类主要解决了三件事：<strong>Bean 的定义、 Bean 的解析以及对Bean 的创建</strong>。对 Spring 的使用者来说唯一需要关心的就是 Bean 的创建，其他两个由 Spring 在内部帮你完成了，对你来说是透明的。</p>
-<h3 id="Bean的定义"><a href="#Bean的定义" class="headerlink" title="Bean的定义"></a>Bean的定义</h3><p>Bean 的定义主要有 BeanDefinition 描述，如下图（RootBeanDefinition类图）说明了这些类的层次关系：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/rootBeanDefinition.png" alt="rootBeanDefinition"></p>
-<p>Bean 的定义就是完整的描述了在 Spring 的配置的Bean中所有的信息。当 Spring 成功解析你定义的一个Bean后，在 Spring 的内部他就被转化成 BeanDefinition 对象，它可以定义为SINGLETON还是PROTOTYPE。以后所有的操作都是对这个对象完成的。</p>
-<h3 id="Bean的解析"><a href="#Bean的解析" class="headerlink" title="Bean的解析"></a>Bean的解析</h3><p>Bean 的解析过程非常复杂，功能被分的很细，因为这里需要被扩展的地方很多，必须保证有足够的灵活性，以应对可能的变化。Bean 的解析方式有很多种，这也就导致配置方式有很多种（之后会介绍各种Bean的配置方法，如xml，扫描，注解、java配置）。这里就介绍一下最早的解析XML配置，它的过程主要通过下图中的类(XmlBeanDefinitionReader)完成：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/XmlBeanDefinitionReader.png" alt="XmlBeanDefinitionReader"></p>
-<h3 id="Bean的创建"><a href="#Bean的创建" class="headerlink" title="Bean的创建"></a>Bean的创建</h3><p>Spring Bean 的创建是典型的工厂模式，我们可以通过DefaultListableBeanFactory这个类来了解Spring的工厂模式，工厂模式的顶级接口是 BeanFactory，下图是这个工厂的继承层次关系：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/defaultListableBeanFactory.png" alt="image"></p>
-<p>BeanFactory 有三个子类：ListableBeanFactory、HierarchicalBeanFactory 和 AutowireCapableBeanFactory。但是从上图中我们可以发现最终的默认实现类是 DefaultListableBeanFactory，他实现了所有的接口。</p>
-<p>框架核心：那为何要定义这么多层次的接口呢？</p>
-<p>查阅这些接口的源码和说明发现，每个接口都有他使用的场合，它主要是为了区分在 Spring 内部在操作过程中对象的传递和转化过程中，对对象的数据访问所做的限制，具体如下：</p>
-<ul>
-<li>ListableBeanFactory 接口表示这些 Bean 是可列表的</li>
-<li>HierarchicalBeanFactory 表示的是这些 Bean是有继承关系的，也就是每个 Bean有可能有父 Bean。</li>
-<li>AutowireCapableBeanFactory 接口定义Bean的自动装配规则。</li>
-</ul>
-<p>这四个接口共同定义了 Bean 的集合、Bean 之间的关系、以及 Bean 行为。</p>
-<h2 id="Context组件"><a href="#Context组件" class="headerlink" title="Context组件"></a>Context组件</h2><p>Context 在 Spring 的 org.springframework.context 包下，<strong>Context 组件在 Spring 中的作用实际上就是给Spring提供一个运行时的环境，用以保存各个对象的状态</strong> 。下面看一下这个环境是如何构建的。</p>
-<p>ApplicationContext 是 Context 的顶级父类，他除了能标识一个应用环境的基本信息外，他还继承了六个接口，这六个接口主要是扩展了 Context 的功能。下面是 Context 相关的类结构图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/AbstractRefreshableWebApplicationContext.png" alt="Context"></p>
-<p>从上图中可以看出 ApplicationContext 继承了BeanFactory，这也说明了 Spring 容器中运行的主体对象是 Bean，另外 ApplicationContext 继承了 ResourceLoader 接口，使得 ApplicationContext 可以访问到任何外部资源（就是Core里面的工具了，这将在 Core 中详细说明）。</p>
-<p>ApplicationContext 的子类主要包含两个方面：</p>
-<ul>
-<li>ConfigurableApplicationContext：表示该Context是可修改的，也就是在构建 Context 中用户可以动态添加或修改已有的配置信息，它下面又有多个子类，其中最经常使用的是可更新的 Context，即 AbstractRefreshableApplicationContext 类。</li>
-<li>WebApplicationContext ：看到web就知道这为 web 准备的 Context 他可以直接访问到 ServletContext，通常情况下，这个接口使用的少。<br>再往下分就是按照构建 Context 的文件类型（没列出，感兴趣的可以自己去看），接着就是访问 Context 的方式。这样一级一级构成了完整的 Context 等级层次。</li>
-</ul>
-<p>总体来说 ApplicationContext 必须要完成以下几件事：</p>
-<ul>
-<li>标识一个应用环境</li>
-<li>利用 BeanFactory 创建 Bean 对象</li>
-<li>保存对象关系表</li>
-<li>能够捕获各种事件</li>
-</ul>
-<p>Context 作为 Spring 的 <strong>IOC 容器</strong>，基本上整合了 Spring 的大部分功能，或者说是大部分功能的基础。</p>
-<h2 id="Core组件"><a href="#Core组件" class="headerlink" title="Core组件"></a>Core组件</h2><p>Core 组件在Spring 的org.springframework.core包下，它作为 Spring的核心组件，他其中包含了很多的关键类，其中一个重要组成部分就是定义了资源（Resource）的访问方式。这种<strong>把所有资源都抽象成一个接口的方式</strong>很值得在以后的设计中拿来学习。下面就重要看一下这个部分在 Spring 的作用。我们通过下图（ Resource 相关的类结构图）来理解：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/resource.png" alt="resource"></p>
-<p>从上图可以看出 Resource 接口封装了各种可能的资源类型，也就是对使用者来说屏蔽了文件类型的不同。对资源的提供者来说，如何把资源包装起来交给其他人用这也是一个问题(所以产生了很多方式)，我们看到 Resource 接口继承了 InputStreamSource 接口，这个接口中有个 getInputStream 方法，返回的是 InputStream 类。这样所有的资源都被可以通过 InputStream 这个类来获取，所以也屏蔽了资源的提供者。另外还有一个问题就是加载资源的问题，也就是资源的加载者要统一，从上图中可以看出这个任务是由 ResourceLoader 接口完成，他屏蔽了所有的资源加载者的差异，只需要实现这个接口就可以加载所有的资源，他的默认实现是 DefaultResourceLoader。</p>
-<p>那Context 和 Resource 是如何建立关系的？下面是他们的类关系图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/cc.png" alt="cc"></p>
-<p>从上图可以看出，Context 是把资源的加载、解析和描述工作委托给了 ResourcePatternResolver 类来完成，他相当于一个接头人，他把资源的加载、解析和资源的定义整合在一起便于其他组件使用。Core 组件中还有很多类似的方式。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《深入分析Java Web技术内幕》</li>
-<li><a href="http://www.jb51.net/article/112039.htm" target="_blank" rel="external">Spring多种加载Bean方式解析</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。
     
     </summary>
     
