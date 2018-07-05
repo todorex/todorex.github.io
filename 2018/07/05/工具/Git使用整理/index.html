@@ -99,7 +99,8 @@
 <meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg">
 <meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E5%B8%83%E5%BC%8F.jpg">
 <meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%8C%BA%E5%9F%9F.png">
-<meta property="og:updated_time" content="2018-07-05T11:32:51.598Z">
+<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E6%94%AF.jpg">
+<meta property="og:updated_time" content="2018-07-05T11:58:03.533Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git使用整理">
 <meta name="twitter:description" content="引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。">
@@ -394,7 +395,7 @@
 <h2 id="集中式（SVN）"><a href="#集中式（SVN）" class="headerlink" title="集中式（SVN）"></a>集中式（SVN）</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg" alt="集中式"></p>
 <p>集中式版本控制系统的版本库是集中存放在中央服务器的，而我们在干活的时候，用的都是自己的电脑，所以要先从中央服务器取得最新的版本，然后开始干活，干完活了，再把自己的活推送给中央服务器。</p>
 <p><strong>问题</strong>：必须联网才能工作；中央服务器要是出了问题，所有人都没法干活了</p>
-<h1 id="分布式（Git）"><a href="#分布式（Git）" class="headerlink" title="分布式（Git）"></a>分布式（Git）</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E5%B8%83%E5%BC%8F.jpg" alt="仓库"></p>
+<h2 id="分布式（Git）"><a href="#分布式（Git）" class="headerlink" title="分布式（Git）"></a>分布式（Git）</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E5%B8%83%E5%BC%8F.jpg" alt="仓库"></p>
 <p>每个人的电脑上都是一个完整的版本库，这样，你工作的时候，就不需要联网了，因为版本库就在你自己的电脑上。在双方协作的时候，如果你在自己电脑上改了文件A，你的同事也在他的电脑上改了文件A，这时，你们俩之间只需把各自的修改推送给对方，就可以互相看到对方的修改了。</p>
 <p>在实际使用分布式版本控制系统的时候，其实很少在两人之间的电脑上推送版本库的修改，而且如果你们俩不在一个局域网内，两台电脑也互相访问不了。所以分布式版本控制系统通常也有一台充当“中央服务器”的电脑，但这个服务器的作用仅仅是用来方便“交换”大家的修改，没有它大家也一样干活，只是交换修改不方便而已。</p>
 <h1 id="Git使用"><a href="#Git使用" class="headerlink" title="Git使用"></a>Git使用</h1><h2 id="Git安装"><a href="#Git安装" class="headerlink" title="Git安装"></a>Git安装</h2><p>这里就不多说了，推荐廖雪峰的官方网站<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137396287703354d8c6c01c904c7d9ff056ae23da865a000" target="_blank" rel="external">安装教程</a>。</p>
@@ -436,68 +437,92 @@
 <li><p>根据关键词搜索提交历史</p>
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git log -S [keyword]</div></pre></td></tr></table></figure>
 </li>
-<li><p>显示指定文件是什么人在什么时候修改过</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">    git blame [file]</div><div class="line">    ```   </div><div class="line">* 显示暂存区与工作区的差异</div></pre></td></tr></table></figure>
-<p>  git diff</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 显示暂存区和上一个commit的差异</div></pre></td></tr></table></figure>
-<p>  git diff –cached [file]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 显示工作区与当前分支最新的commit之间的差异</div></pre></td></tr></table></figure>
-<p>  git diff HEAD(当前最新commit)</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 上传本地指定分支到远程仓库</div></pre></td></tr></table></figure>
-<p>  git push [remote] [branch]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">### 远程同步</div><div class="line">* 下载远程仓库的**变动**</div></pre></td></tr></table></figure>
-<p>  git fetch [remote远程仓库名] [分支]:[本地新分支]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 显示所有远程仓库</div></pre></td></tr></table></figure>
-<p>  git remote -v</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 显示某个远程仓库的信息</div></pre></td></tr></table></figure>
-<p>  git remote show [branch]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 增加一个远程仓库并命名</div></pre></td></tr></table></figure>
-<p>  git remote add [shortname=remote] [url]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 上传本地指定分支到远程仓库</div></pre></td></tr></table></figure>
-<p>  git push [remote] [branch]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 强行推送当前分支到远程仓库，即使有冲突</div></pre></td></tr></table></figure>
-<p>  git push [remote] –force</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 推送所有分支到远程仓库</div></pre></td></tr></table></figure>
-<p>  git push [remote] -all</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">### 撤销</div><div class="line">* 恢复暂存区的指定文件到工作区</div></pre></td></tr></table></figure>
-<p>  git checkout [file]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 恢复某个commit的指定文件到暂存区与工作区</div></pre></td></tr></table></figure>
-<p>  git checkout [commit] [file]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 恢复暂存区的所有文件到工作区</div></pre></td></tr></table></figure>
-<p>  git checkout .</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 重置暂存区与工作区，与上一次commit保持一致</div></pre></td></tr></table></figure>
-<p>  git reset –hard</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 重置当前分支的HEAD（指针，指向commit-id）为指定commit，同时重置暂存区和工作区，与指定commit一致</div></pre></td></tr></table></figure>
-<p>  git reset –hard [commit]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 后者的所有变化都将被前者抵消，并应用当前分支</div></pre></td></tr></table></figure>
-<p>  git revert [commit]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 暂时将未提交的变化移除，稍后再移入</div></pre></td></tr></table></figure>
-<p>  git stash<br>  git stash pop</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">## Git多人协作</div><div class="line">多人协作就会涉及到分支的概念（其实单人开发也会遇到，只是多人会更常见）</div><div class="line"></div><div class="line">我们先看看下面的图：</div><div class="line"></div><div class="line">![多人协作](http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E6%94%AF.jpg)</div><div class="line"></div><div class="line">这张图可以很清楚让我们认识到在工作中使用git工作流的开发流程。Master分支是线上分支，我们在开发新功能的时候不会去动它，Hotfix分支是如果出了bug就拉一条bug分支快速修复合并到master分支里。我们平时开发都是先从Master分支拉出一条Develop分支，在这个分支上进行开发。每个人一般都会负责项目的一个特性功能，所以我们又会从Develop分支拉出几个Feature分支。在开发测试完成后我们形成Release分支，再次检验后将它与Master分支合并，然后我们之后Release分支拉出Develop分支进行新一轮的开发。</div><div class="line"></div><div class="line">### Git分支</div><div class="line">* 列出所有本地分支</div></pre></td></tr></table></figure>
-<p>  git branch</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 列出所有远程分支</div></pre></td></tr></table></figure>
-<p>  git branch -r</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 列出所有本地分支和远程分支</div></pre></td></tr></table></figure>
-<p>  git branch -a</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 新建一个分支，但依然停留在当前分支</div></pre></td></tr></table></figure>
-<p>  git branch [branch-name]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 新建一个分支，并切换到该分支</div></pre></td></tr></table></figure>
-<p>  git checkout -b [branch]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 切换到当前指定分支，并指定工作区</div></pre></td></tr></table></figure>
-<p>  git checkout [branch-name]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 切换到上一个分支</div></pre></td></tr></table></figure>
-<p>  git checkout -</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 建立追踪关系，在现有分支与指定的远程分支之间</div></pre></td></tr></table></figure>
-<p>  git branch –set-upstream [branch] [remote-branch]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 合并指定分支到当前分支</div></pre></td></tr></table></figure>
-<p>  git merge [branch]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 删除远程分支</div></pre></td></tr></table></figure>
-<p>  git branch -d [branch-name]</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### 协作冲突</div><div class="line"></div><div class="line">在多人协作的过程中肯定会碰到这样的**问题**：如果你的小伙伴已经向一个分支推送了他的提交，而碰巧你也对同个分支的同样的文件作了修改，并试图推送，那么就会提交被拒绝，这个时候就需要先：</div></pre></td></tr></table></figure>
+<li><p>显示暂存区与工作区的差异</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git diff</div></pre></td></tr></table></figure>
+</li>
+<li><p>显示工作区与当前分支最新的commit之间的差异<br>  <code>git diff HEAD(当前最新commit)</code></p>
+</li>
+<li>上传本地指定分支到远程仓库  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git push [remote] [branch]</div></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>git pull<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">等价于：</div></pre></td></tr></table></figure></p>
-<p>git fetch temp(临时分支)<br>git merge temp<br>```<br>这个时候合git会将你们两个人对文件的修改都呈现在同一个文件中，你需要在与你的小伙伴商量出一个最终版，修改之后再提交上去。</p>
+<h3 id="远程同步"><a href="#远程同步" class="headerlink" title="远程同步"></a>远程同步</h3><ul>
+<li><p>下载远程仓库的<strong>变动</strong></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git fetch [remote远程仓库名] [分支]:[本地新分支]</div></pre></td></tr></table></figure>
+</li>
+<li><p>显示所有远程仓库</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git remote -v</div></pre></td></tr></table></figure>
+</li>
+<li><p>显示某个远程仓库的信息</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git remote show [branch]</div></pre></td></tr></table></figure>
+</li>
+<li><p>增加一个远程仓库并命名</p>
+<p>  <code>git remote add [shortname=remote] [url]</code></p>
+</li>
+<li><p>上传本地指定分支到远程仓库</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git push [remote] [branch]</div></pre></td></tr></table></figure>
+</li>
+<li><p>强行推送当前分支到远程仓库，即使有冲突<br>  <code>git push [remote] --force</code></p>
+</li>
+<li>推送所有分支到远程仓库<br>  <code>git push [remote] -all</code></li>
+</ul>
+<h3 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h3><ul>
+<li><p>恢复暂存区的指定文件到工作区</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git checkout [file]</div></pre></td></tr></table></figure>
+</li>
+<li><p>恢复某个commit的指定文件到暂存区与工作区</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git checkout [commit] [file]</div></pre></td></tr></table></figure>
+</li>
+<li><p>恢复暂存区的所有文件到工作区</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git checkout .</div></pre></td></tr></table></figure>
+</li>
+<li><p>重置暂存区与工作区，与上一次commit保持一致<br>  <code>git reset --hard</code></p>
+</li>
+<li><p>重置当前分支的HEAD（指针，指向commit-id）为指定commit，同时重置暂存区和工作区，与指定commit一致<br>  <code>git reset --hard [commit]</code></p>
+</li>
+<li><p>后者的所有变化都将被前者抵消，并应用当前分支<br>  <code>git revert [commit]</code></p>
+</li>
+<li><p>暂时将未提交的变化移除，稍后再移入<br>  <code>git stash</code><br>  <code>git stash pop</code></p>
+</li>
+</ul>
+<h2 id="Git多人协作"><a href="#Git多人协作" class="headerlink" title="Git多人协作"></a>Git多人协作</h2><p>多人协作就会涉及到分支的概念（其实单人开发也会遇到，只是多人会更常见）</p>
+<p>我们先看看下面的图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E6%94%AF.jpg" alt="多人协作"></p>
+<p>这张图可以很清楚让我们认识到在工作中使用git工作流的开发流程。Master分支是线上分支，我们在开发新功能的时候不会去动它，Hotfix分支是如果出了bug就拉一条bug分支快速修复合并到master分支里。我们平时开发都是先从Master分支拉出一条Develop分支，在这个分支上进行开发。每个人一般都会负责项目的一个特性功能，所以我们又会从Develop分支拉出几个Feature分支。在开发测试完成后我们形成Release分支，再次检验后将它与Master分支合并，然后我们之后Release分支拉出Develop分支进行新一轮的开发。</p>
+<h3 id="Git分支"><a href="#Git分支" class="headerlink" title="Git分支"></a>Git分支</h3><ul>
+<li><p>列出所有本地分支</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git branch</div></pre></td></tr></table></figure>
+</li>
+<li><p>列出所有远程分支</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git branch -r</div></pre></td></tr></table></figure>
+</li>
+<li><p>列出所有本地分支和远程分支</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git branch -a</div></pre></td></tr></table></figure>
+</li>
+<li><p>新建一个分支，但依然停留在当前分支</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git branch [branch-name]</div></pre></td></tr></table></figure>
+</li>
+<li><p>新建一个分支，并切换到该分支</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git checkout -b [branch]</div></pre></td></tr></table></figure>
+</li>
+<li><p>切换到当前指定分支，并指定工作区</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git checkout [branch-name]</div></pre></td></tr></table></figure>
+</li>
+<li><p>切换到上一个分支</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git checkout -</div></pre></td></tr></table></figure>
+</li>
+<li><p>建立追踪关系，在现有分支与指定的远程分支之间</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git branch --set-upstream [branch] [remote-branch]</div></pre></td></tr></table></figure>
+</li>
+<li><p>合并指定分支到当前分支</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git merge [branch]</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除远程分支</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git branch -d [branch-name]</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="协作冲突"><a href="#协作冲突" class="headerlink" title="协作冲突"></a>协作冲突</h3><p>在多人协作的过程中肯定会碰到这样的<strong>问题</strong>：如果你的小伙伴已经向一个分支推送了他的提交，而碰巧你也对同个分支的同样的文件作了修改，并试图推送，那么就会提交被拒绝，这个时候就需要先：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git pull</div></pre></td></tr></table></figure></p>
+<p>等价于：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git fetch temp(临时分支)</div><div class="line">git merge temp</div></pre></td></tr></table></figure></p>
+<p>这个时候合git会将你们两个人对文件的修改都呈现在同一个文件中，你需要在与你的小伙伴商量出一个最终版，修改之后再提交上去。</p>
 <h1 id="IDEA与Git"><a href="#IDEA与Git" class="headerlink" title="IDEA与Git"></a>IDEA与Git</h1><p>可能大家对使用命令行并不感冒，所以这里也为大家找了一份<a href="https://blog.csdn.net/lovecarpenter/article/details/54290045" target="_blank" rel="external">IDEA的git使用教程</a>，至此大家只要点点点就好了。当然这里还会有很多我没有涉及到的地方，就需要平时多积累了。</p>
 <p>别急，别急！！还要最后一点就是 <strong>.gitignore</strong> 了！</p>
 <p>我们发现在使用IDEA的时候，他默认会要求我们把所有的文件加入到git控制里，但是我们知道很多IDEA的自带配置文件是不用也没有必要加入git（之前在说git add . 的时候也说过），所以可以利用IDEA的.gitignore插件来帮助我们忽略这些没有必要的插件，这里也放一个<a href="https://blog.csdn.net/qq_34590097/article/details/56284935" target="_blank" rel="external">.gitignore教程</a>。</p>
@@ -758,7 +783,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本控制系统"><span class="nav-number">1.</span> <span class="nav-text">版本控制系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#集中式（SVN）"><span class="nav-number">1.1.</span> <span class="nav-text">集中式（SVN）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式（Git）"><span class="nav-number">2.</span> <span class="nav-text">分布式（Git）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Git使用"><span class="nav-number">3.</span> <span class="nav-text">Git使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Git安装"><span class="nav-number">3.1.</span> <span class="nav-text">Git安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git区域"><span class="nav-number">3.2.</span> <span class="nav-text">Git区域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git个人操作"><span class="nav-number">3.3.</span> <span class="nav-text">Git个人操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新建仓库"><span class="nav-number">3.3.1.</span> <span class="nav-text">新建仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加文件"><span class="nav-number">3.3.2.</span> <span class="nav-text">增加文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提交文件"><span class="nav-number">3.3.3.</span> <span class="nav-text">提交文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看信息"><span class="nav-number">3.3.4.</span> <span class="nav-text">查看信息</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA与Git"><span class="nav-number">4.</span> <span class="nav-text">IDEA与Git</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本控制系统"><span class="nav-number">1.</span> <span class="nav-text">版本控制系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#集中式（SVN）"><span class="nav-number">1.1.</span> <span class="nav-text">集中式（SVN）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式（Git）"><span class="nav-number">1.2.</span> <span class="nav-text">分布式（Git）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Git使用"><span class="nav-number">2.</span> <span class="nav-text">Git使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Git安装"><span class="nav-number">2.1.</span> <span class="nav-text">Git安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git区域"><span class="nav-number">2.2.</span> <span class="nav-text">Git区域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git个人操作"><span class="nav-number">2.3.</span> <span class="nav-text">Git个人操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新建仓库"><span class="nav-number">2.3.1.</span> <span class="nav-text">新建仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增加文件"><span class="nav-number">2.3.2.</span> <span class="nav-text">增加文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提交文件"><span class="nav-number">2.3.3.</span> <span class="nav-text">提交文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看信息"><span class="nav-number">2.3.4.</span> <span class="nav-text">查看信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#远程同步"><span class="nav-number">2.3.5.</span> <span class="nav-text">远程同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#撤销"><span class="nav-number">2.3.6.</span> <span class="nav-text">撤销</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git多人协作"><span class="nav-number">2.4.</span> <span class="nav-text">Git多人协作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Git分支"><span class="nav-number">2.4.1.</span> <span class="nav-text">Git分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#协作冲突"><span class="nav-number">2.4.2.</span> <span class="nav-text">协作冲突</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDEA与Git"><span class="nav-number">3.</span> <span class="nav-text">IDEA与Git</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
