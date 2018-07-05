@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-07-05T11:30:36.591Z</updated>
+  <updated>2018-07-05T11:32:51.598Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://bestlixiang.site/2018/07/05/%E5%B7%A5%E5%85%B7/Git%E4%BD%BF%E7%94%A8%E6%95%B4%E7%90%86/"/>
     <id>http://bestlixiang.site/2018/07/05/工具/Git使用整理/</id>
     <published>2018-07-05T11:29:14.000Z</published>
-    <updated>2018-07-05T11:30:36.591Z</updated>
+    <updated>2018-07-05T11:32:51.598Z</updated>
     
-    <content type="html"><![CDATA[<p>引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。</p>
+    <content type="html"><![CDATA[<p>引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。<a id="more"></a></p>
 <h1 id="版本控制系统"><a href="#版本控制系统" class="headerlink" title="版本控制系统"></a>版本控制系统</h1><p>谈到Git，就需要先说说版本控制系统。<strong>版本控制系统</strong>就是能自动帮我们记录每次文件的改动的一个软件，而Git就是它的一种实现。想想我们写论文还是写代码，是不是有了他就很方便了，再也不用自己手动备份每一次修改了。版本控制系统又分为集中式和分布式。</p>
 <h2 id="集中式（SVN）"><a href="#集中式（SVN）" class="headerlink" title="集中式（SVN）"></a>集中式（SVN）</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg" alt="集中式"></p>
 <p>集中式版本控制系统的版本库是集中存放在中央服务器的，而我们在干活的时候，用的都是自己的电脑，所以要先从中央服务器取得最新的版本，然后开始干活，干完活了，再把自己的活推送给中央服务器。</p>
@@ -144,8 +144,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。&lt;/p&gt;
-&lt;h1 id=&quot;版本控制系统&quot;&gt;&lt;a href=&quot;#版本控制系统&quot; class=&quot;headerlink&quot; title=&quot;版本控制系统&quot;&gt;&lt;/a&gt;版本控制系统&lt;/h1
+      &lt;p&gt;引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。
     
     </summary>
     
