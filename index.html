@@ -283,6 +283,266 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/07/05/工具/Git使用整理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/07/05/工具/Git使用整理/" itemprop="url">
+                  Git使用整理
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-05T19:29:14+08:00">
+                2018-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具/" itemprop="url" rel="index">
+                    <span itemprop="name">工具</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。</p>
+<h1 id="版本控制系统"><a href="#版本控制系统" class="headerlink" title="版本控制系统"></a>版本控制系统</h1><p>谈到Git，就需要先说说版本控制系统。<strong>版本控制系统</strong>就是能自动帮我们记录每次文件的改动的一个软件，而Git就是它的一种实现。想想我们写论文还是写代码，是不是有了他就很方便了，再也不用自己手动备份每一次修改了。版本控制系统又分为集中式和分布式。</p>
+<h2 id="集中式（SVN）"><a href="#集中式（SVN）" class="headerlink" title="集中式（SVN）"></a>集中式（SVN）</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg" alt="集中式"></p>
+<p>集中式版本控制系统的版本库是集中存放在中央服务器的，而我们在干活的时候，用的都是自己的电脑，所以要先从中央服务器取得最新的版本，然后开始干活，干完活了，再把自己的活推送给中央服务器。</p>
+<p><strong>问题</strong>：必须联网才能工作；中央服务器要是出了问题，所有人都没法干活了</p>
+<h1 id="分布式（Git）"><a href="#分布式（Git）" class="headerlink" title="分布式（Git）"></a>分布式（Git）</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E5%B8%83%E5%BC%8F.jpg" alt="仓库"></p>
+<p>每个人的电脑上都是一个完整的版本库，这样，你工作的时候，就不需要联网了，因为版本库就在你自己的电脑上。在双方协作的时候，如果你在自己电脑上改了文件A，你的同事也在他的电脑上改了文件A，这时，你们俩之间只需把各自的修改推送给对方，就可以互相看到对方的修改了。</p>
+<p>在实际使用分布式版本控制系统的时候，其实很少在两人之间的电脑上推送版本库的修改，而且如果你们俩不在一个局域网内，两台电脑也互相访问不了。所以分布式版本控制系统通常也有一台充当“中央服务器”的电脑，但这个服务器的作用仅仅是用来方便“交换”大家的修改，没有它大家也一样干活，只是交换修改不方便而已。</p>
+<h1 id="Git使用"><a href="#Git使用" class="headerlink" title="Git使用"></a>Git使用</h1><h2 id="Git安装"><a href="#Git安装" class="headerlink" title="Git安装"></a>Git安装</h2><p>这里就不多说了，推荐廖雪峰的官方网站<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137396287703354d8c6c01c904c7d9ff056ae23da865a000" target="_blank" rel="external">安装教程</a>。</p>
+<h2 id="Git区域"><a href="#Git区域" class="headerlink" title="Git区域"></a>Git区域</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%8C%BA%E5%9F%9F.png" alt="Git区域"></p>
+<ul>
+<li>工作区（Workspace）：在计算机能看到的目录。</li>
+<li>缓存区（Index/Stage）：临时保存我们的改动。</li>
+<li>版本库（Repository）：工作区有一个隐藏的目录.git，它是Git的本地版本库。</li>
+<li>远程仓库（Remote）：“Git中央服务器”，托管在网络中的项目的版本库，可供多人协作开发。（国外有<a href="https://gitee.com/" target="_blank" rel="external">基佬俱乐部Github</a>，国内有<a href="https://gitee.com/" target="_blank" rel="external">码云</a>、<a href="https://coding.net/" target="_blank" rel="external">Coding</a>、还有可个人或者公司定制的<a href="https://about.gitlab.com/" target="_blank" rel="external">GitLab</a>，请按需选择）</li>
+</ul>
+<h2 id="Git个人操作"><a href="#Git个人操作" class="headerlink" title="Git个人操作"></a>Git个人操作</h2><p>在上面的区域图中，其实我们已经看到很多操作，这里我再总结一下：</p>
+<h3 id="新建仓库"><a href="#新建仓库" class="headerlink" title="新建仓库"></a>新建仓库</h3><ul>
+<li><p>在当前目录新建一个Git仓库</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git init</div></pre></td></tr></table></figure>
+</li>
+<li><p>在当前目录克隆一个仓库</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone [url]</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="增加文件"><a href="#增加文件" class="headerlink" title="增加文件"></a>增加文件</h3><ul>
+<li><p>添加指定文件/目录到暂存区</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git add [file]/[dir]</div></pre></td></tr></table></figure>
+</li>
+<li><p>添加当前目录的所有文件到暂存区（慎用，尤其在IDE中，因为它会包含IDE的配置文件，如IDEA的.idea和iml文件）</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git add .</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h3><ul>
+<li>提交缓存区的文件到仓库区  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git commit -m [改变信息]</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="查看信息"><a href="#查看信息" class="headerlink" title="查看信息"></a>查看信息</h3><ul>
+<li><p>显示有变更的文件</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git status</div></pre></td></tr></table></figure>
+</li>
+<li><p>显示当前分支的版本历史</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git log</div></pre></td></tr></table></figure>
+</li>
+<li><p>根据关键词搜索提交历史</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git log -S [keyword]</div></pre></td></tr></table></figure>
+</li>
+<li><p>显示指定文件是什么人在什么时候修改过</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">    git blame [file]</div><div class="line">    ```   </div><div class="line">* 显示暂存区与工作区的差异</div></pre></td></tr></table></figure>
+<p>  git diff</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 显示暂存区和上一个commit的差异</div></pre></td></tr></table></figure>
+<p>  git diff –cached [file]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 显示工作区与当前分支最新的commit之间的差异</div></pre></td></tr></table></figure>
+<p>  git diff HEAD(当前最新commit)</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 上传本地指定分支到远程仓库</div></pre></td></tr></table></figure>
+<p>  git push [remote] [branch]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">### 远程同步</div><div class="line">* 下载远程仓库的**变动**</div></pre></td></tr></table></figure>
+<p>  git fetch [remote远程仓库名] [分支]:[本地新分支]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 显示所有远程仓库</div></pre></td></tr></table></figure>
+<p>  git remote -v</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 显示某个远程仓库的信息</div></pre></td></tr></table></figure>
+<p>  git remote show [branch]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 增加一个远程仓库并命名</div></pre></td></tr></table></figure>
+<p>  git remote add [shortname=remote] [url]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 上传本地指定分支到远程仓库</div></pre></td></tr></table></figure>
+<p>  git push [remote] [branch]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 强行推送当前分支到远程仓库，即使有冲突</div></pre></td></tr></table></figure>
+<p>  git push [remote] –force</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 推送所有分支到远程仓库</div></pre></td></tr></table></figure>
+<p>  git push [remote] -all</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">### 撤销</div><div class="line">* 恢复暂存区的指定文件到工作区</div></pre></td></tr></table></figure>
+<p>  git checkout [file]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 恢复某个commit的指定文件到暂存区与工作区</div></pre></td></tr></table></figure>
+<p>  git checkout [commit] [file]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 恢复暂存区的所有文件到工作区</div></pre></td></tr></table></figure>
+<p>  git checkout .</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 重置暂存区与工作区，与上一次commit保持一致</div></pre></td></tr></table></figure>
+<p>  git reset –hard</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 重置当前分支的HEAD（指针，指向commit-id）为指定commit，同时重置暂存区和工作区，与指定commit一致</div></pre></td></tr></table></figure>
+<p>  git reset –hard [commit]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 后者的所有变化都将被前者抵消，并应用当前分支</div></pre></td></tr></table></figure>
+<p>  git revert [commit]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 暂时将未提交的变化移除，稍后再移入</div></pre></td></tr></table></figure>
+<p>  git stash<br>  git stash pop</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">## Git多人协作</div><div class="line">多人协作就会涉及到分支的概念（其实单人开发也会遇到，只是多人会更常见）</div><div class="line"></div><div class="line">我们先看看下面的图：</div><div class="line"></div><div class="line">![多人协作](http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E6%94%AF.jpg)</div><div class="line"></div><div class="line">这张图可以很清楚让我们认识到在工作中使用git工作流的开发流程。Master分支是线上分支，我们在开发新功能的时候不会去动它，Hotfix分支是如果出了bug就拉一条bug分支快速修复合并到master分支里。我们平时开发都是先从Master分支拉出一条Develop分支，在这个分支上进行开发。每个人一般都会负责项目的一个特性功能，所以我们又会从Develop分支拉出几个Feature分支。在开发测试完成后我们形成Release分支，再次检验后将它与Master分支合并，然后我们之后Release分支拉出Develop分支进行新一轮的开发。</div><div class="line"></div><div class="line">### Git分支</div><div class="line">* 列出所有本地分支</div></pre></td></tr></table></figure>
+<p>  git branch</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 列出所有远程分支</div></pre></td></tr></table></figure>
+<p>  git branch -r</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 列出所有本地分支和远程分支</div></pre></td></tr></table></figure>
+<p>  git branch -a</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 新建一个分支，但依然停留在当前分支</div></pre></td></tr></table></figure>
+<p>  git branch [branch-name]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 新建一个分支，并切换到该分支</div></pre></td></tr></table></figure>
+<p>  git checkout -b [branch]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 切换到当前指定分支，并指定工作区</div></pre></td></tr></table></figure>
+<p>  git checkout [branch-name]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 切换到上一个分支</div></pre></td></tr></table></figure>
+<p>  git checkout -</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 建立追踪关系，在现有分支与指定的远程分支之间</div></pre></td></tr></table></figure>
+<p>  git branch –set-upstream [branch] [remote-branch]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 合并指定分支到当前分支</div></pre></td></tr></table></figure>
+<p>  git merge [branch]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">* 删除远程分支</div></pre></td></tr></table></figure>
+<p>  git branch -d [branch-name]</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">### 协作冲突</div><div class="line"></div><div class="line">在多人协作的过程中肯定会碰到这样的**问题**：如果你的小伙伴已经向一个分支推送了他的提交，而碰巧你也对同个分支的同样的文件作了修改，并试图推送，那么就会提交被拒绝，这个时候就需要先：</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>git pull<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">等价于：</div></pre></td></tr></table></figure></p>
+<p>git fetch temp(临时分支)<br>git merge temp<br>```<br>这个时候合git会将你们两个人对文件的修改都呈现在同一个文件中，你需要在与你的小伙伴商量出一个最终版，修改之后再提交上去。</p>
+<h1 id="IDEA与Git"><a href="#IDEA与Git" class="headerlink" title="IDEA与Git"></a>IDEA与Git</h1><p>可能大家对使用命令行并不感冒，所以这里也为大家找了一份<a href="https://blog.csdn.net/lovecarpenter/article/details/54290045" target="_blank" rel="external">IDEA的git使用教程</a>，至此大家只要点点点就好了。当然这里还会有很多我没有涉及到的地方，就需要平时多积累了。</p>
+<p>别急，别急！！还要最后一点就是 <strong>.gitignore</strong> 了！</p>
+<p>我们发现在使用IDEA的时候，他默认会要求我们把所有的文件加入到git控制里，但是我们知道很多IDEA的自带配置文件是不用也没有必要加入git（之前在说git add . 的时候也说过），所以可以利用IDEA的.gitignore插件来帮助我们忽略这些没有必要的插件，这里也放一个<a href="https://blog.csdn.net/qq_34590097/article/details/56284935" target="_blank" rel="external">.gitignore教程</a>。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="external">廖雪峰的git教程</a></li>
+<li><a href="https://blog.csdn.net/riddle1981/article/details/74938111" target="_blank" rel="external">详解git fetch与git pull的区别</a></li>
+<li><a href="https://blog.csdn.net/lovecarpenter/article/details/54290045" target="_blank" rel="external">版本控制之IDEA使用Git</a></li>
+<li><a href="https://blog.csdn.net/qq_34590097/article/details/56284935/" target="_blank" rel="external">如何在IntelliJ IDEA中使用.ignore插件忽略不必要提交的文件</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/05/21/Java基础/你不知道的Java-网络IO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1597,153 +1857,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/25/HelloWorld/HelloWorld-SpringBoot-Angular/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="rex">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/me.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="rex note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2018/04/25/HelloWorld/HelloWorld-SpringBoot-Angular/" itemprop="url">
-                  HelloWorld_SpringBoot Angular
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-25T19:31:14+08:00">
-                2018-04-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/HelloWorld/" itemprop="url" rel="index">
-                    <span itemprop="name">HelloWorld</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>引：前段时间写了个前后台不分离的<a href="http://todorex.com/2018/04/17/HelloWorld/HelloWorld-SSMLogin/" target="_blank" rel="external">SSMLogin</a>，大家可能会觉得前后台不分离太low，所以这次我们使用SpringBoot+Angular搭建了一个利用Token来进行身份验证的前后台分离登录Demo项目。
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/25/HelloWorld/HelloWorld-SpringBoot-Angular/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1815,7 +1928,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">53</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
