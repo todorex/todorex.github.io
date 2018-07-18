@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-07-06T14:06:36.067Z</updated>
+  <updated>2018-07-18T02:56:09.672Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,83 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SpringBoot+Git+Jenkins+Docker实现CI/CD</title>
+    <link href="http://bestlixiang.site/2018/07/18/%E8%BF%90%E7%BB%B4/SpringBoot-Git-Jenkins-Docker%E5%AE%9E%E7%8E%B0CI-CD/"/>
+    <id>http://bestlixiang.site/2018/07/18/运维/SpringBoot-Git-Jenkins-Docker实现CI-CD/</id>
+    <published>2018-07-18T01:03:46.000Z</published>
+    <updated>2018-07-18T02:56:09.672Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：现在DevOps这么运行，你没有理由不去了解，不去实践，这次就以Springboot为底，利用Git，jenkins，Docker实现持续集成和持续部署！<a id="more"></a></p>
+<h1 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h1><p>下面是常用的开发流程图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com//cicd/devops.jpg" alt="dev"></p>
+<p>我们简单说说这张图：首先我们会将代码文件、测试文件以及Dockerfile都存在代码仓库里，版本控制利用git，这里代码仓库有很多选择，比如github、码云(本次使用)、Coding以及自己搭建的gitlab。然后由持续集成工具进行自动化构建，包括了测试、编译、打包、构建镜像、推送镜像到仓库（有很多选择，如docker官方仓库，时速运、自己搭建的Registry）、启动服务等操作，持续集成工具也有很多选择，比如Jenkins(这次使用)、Gitlab CI、Trivas CI。这里使用的容器是Docker，这里Docker的编排工具可以选择Swarm，也可以是K8S。</p>
+<p>本次实现流程如下：</p>
+<ol>
+<li>push代码到码云触发WebHook</li>
+<li>Jenkins从码云拉取代码</li>
+<li>maven构建代码</li>
+<li>build镜像</li>
+<li>push镜像到镜像仓库</li>
+<li>部署服务</li>
+</ol>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>关于Jdk、Git、Maven的配置这里就不说，自己面向搜索引擎。这里主要说Jenkins和码云的配置。</p>
+<h2 id="Jenkins安装配置"><a href="#Jenkins安装配置" class="headerlink" title="Jenkins安装配置"></a>Jenkins安装配置</h2><ol>
+<li><a href="https://jenkins.io/download/" target="_blank" rel="external">下载Jenkins</a>（采用war包安装）</li>
+<li>将war包放入Tomcat的webapps目录下</li>
+<li>进入YourHostIp:8080/jenkins路径下进行Jenkins的初始化，我们进入 <strong>用户自定义插件</strong> 安装界面，你可以根据自己的构建方式选择需要安装的插件，本次使用的Pipelines方式进行构建，Pipelines方式是Jenkins2推荐的方式，所以我们构建Pipelines相关的插件进行安装，当然待会进入Jenkins安装也行。</li>
+<li>配置用户名和密码</li>
+<li>全局工具配置（从系统管理进入全局工具配置，配置Jdk、Git、Maven）</li>
+<li><p>安全配置（从系统管理进入全局安全配置）,如下图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com//cici/jenkins_security.jpg" alt="jenkins_security"></p>
+</li>
+</ol>
+<h2 id="Jenkins构建任务"><a href="#Jenkins构建任务" class="headerlink" title="Jenkins构建任务"></a>Jenkins构建任务</h2><ol>
+<li>新建任务，构建一个流水线任务（Pipeline）</li>
+<li><p>在配置里构建触发器，如下图：</p>
+<p> <img src="http://o6plzvjf2.bkt.clouddn.com//cicd/jenkins_webhooks_url.jpg" alt="jenkins_webhooks_url"></p>
+</li>
+<li><p>构建Pipeline脚本（Pipeline脚本写法见参考）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">  #!groovy</div><div class="line">  pipeline&#123;</div><div class="line">    agent any</div><div class="line">    //定义仓库地址</div><div class="line">    environment &#123;</div><div class="line">        REPOSITORY=&quot;https://gitee.com/todorex/springboot_docker_git_jenkins_demo.git&quot;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    stages &#123;</div><div class="line"></div><div class="line">        stage(&apos;获取代码&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start fetch code from git:$&#123;REPOSITORY&#125;&quot;</div><div class="line">                // 清空当前目录</div><div class="line">                deleteDir()</div><div class="line">                // 拉取代码    </div><div class="line">                git &quot;$&#123;REPOSITORY&#125;&quot;</div><div class="line">                // 清空之前的容器</div><div class="line">                sh &apos;docker stop $(docker ps -a -q)&apos;</div><div class="line">                sh &apos;docker rm $(docker ps -a -q)&apos;</div><div class="line">            &#125;</div><div class="line">        &#125;       </div><div class="line"></div><div class="line">        stage(&apos;Maven 构建&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start compile&quot;</div><div class="line">                // 切换目录</div><div class="line">                dir(&apos;demo&apos;) &#123;</div><div class="line">                    // 重新打包</div><div class="line">                    sh &apos;mvn -Dmaven.test.skip=true -U clean install&apos;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        stage(&apos;构建镜像&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start build image&quot;</div><div class="line">                dir(&apos;demo&apos;) &#123;</div><div class="line">                    // build镜像</div><div class="line">                    sh &apos;docker build -t todorex/springboot_docker_git_jenkins_demo:1.0 .&apos;</div><div class="line">                    // 登录镜像仓库</div><div class="line">                    sh &apos;docker login -u your_username -p your_password&apos;</div><div class="line">                    // 推送镜像到镜像仓库</div><div class="line">                    sh &apos;docker push todorex/springboot_docker_git_jenkins_demo:1.0&apos;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        stage(&apos;启动服务&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start demo&quot;</div><div class="line">                // 部署服务</div><div class="line">                sh &apos;docker run -d -p 8888:8888 --name=demo todorex/springboot_docker_git_jenkins_demo:1.0&apos;</div><div class="line">            &#125;</div><div class="line">        &#125;                </div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="SSH的配置"><a href="#SSH的配置" class="headerlink" title="SSH的配置"></a>SSH的配置</h2><p>为了避免jenkins拉取代码时需要输入密码，这里需要配置SSH免密码拉取。如下图：</p>
+<p><img src="http://o6plzvjf2.bkt.clouddn.com//cicd/gitee_ssh.jpg" alt="gitee_ssh"></p>
+<h2 id="WebHooks配置"><a href="#WebHooks配置" class="headerlink" title="WebHooks配置"></a>WebHooks配置</h2><p>当你每次对代码仓库进行push操作时，会自动通知jenkins进行构建<br><img src="http://o6plzvjf2.bkt.clouddn.com//cicd/gitee_webhooks.jpg" alt="gitee_webhooks"></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>这次项目的代码仓库为：<a href="https://gitee.com/todorex/springboot_docker_git_jenkins_demo" target="_blank" rel="external">springboot_docker_git_jenkins_demo</a></p>
+<p>关于Dockerfile以及docker-compose.yml的编写，自己也去面向搜索引擎看看吧。</p>
+<p>当我们push代码之后，jenkins就会自动帮我们进行构建。如下图：<br><img src="http://o6plzvjf2.bkt.clouddn.com//cicd/jenkins_test.jpg" alt="jenkins_test"></p>
+<p>PS：第一次比较慢是因为要安装Maven依赖，后面就好了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里只是展示了一个CI/CD的开发流程，关于具体技术细节，无论是Jenkins还是Docker都需要深入学习，加油，骚年！</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://niocoder.com/2018/04/22/SpringBoot+Docker+Git+Jenkins%E5%AE%9E%E7%8E%B0%E7%AE%80%E6%98%93%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%92%8C%E9%83%A8%E7%BD%B2/" target="_blank" rel="external">SpringBoot+Docker+Git+Jenkins实现简易的持续集成和持续部署</a></li>
+<li><a href="http://www.cnblogs.com/fengjian2016/p/8227532.html" target="_blank" rel="external">Jenkins pipeline：pipeline 语法详解</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：现在DevOps这么运行，你没有理由不去了解，不去实践，这次就以Springboot为底，利用Git，jenkins，Docker实现持续集成和持续部署！
+    
+    </summary>
+    
+      <category term="运维" scheme="http://bestlixiang.site/categories/%E8%BF%90%E7%BB%B4/"/>
+    
+    
+      <category term="SpringBoot" scheme="http://bestlixiang.site/tags/SpringBoot/"/>
+    
+      <category term="Git" scheme="http://bestlixiang.site/tags/Git/"/>
+    
+      <category term="Jenkins" scheme="http://bestlixiang.site/tags/Jenkins/"/>
+    
+      <category term="Docker" scheme="http://bestlixiang.site/tags/Docker/"/>
+    
+      <category term="CI" scheme="http://bestlixiang.site/tags/CI/"/>
+    
+      <category term="CD" scheme="http://bestlixiang.site/tags/CD/"/>
+    
+  </entry>
   
   <entry>
     <title>Maven使用整理</title>
@@ -152,7 +229,7 @@
     <link href="http://bestlixiang.site/2018/07/05/%E5%B7%A5%E5%85%B7/Git%E4%BD%BF%E7%94%A8%E6%95%B4%E7%90%86/"/>
     <id>http://bestlixiang.site/2018/07/05/工具/Git使用整理/</id>
     <published>2018-07-05T11:29:14.000Z</published>
-    <updated>2018-07-05T11:58:03.533Z</updated>
+    <updated>2018-07-10T13:29:20.198Z</updated>
     
     <content type="html"><![CDATA[<p>引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。<a id="more"></a></p>
 <h1 id="版本控制系统"><a href="#版本控制系统" class="headerlink" title="版本控制系统"></a>版本控制系统</h1><p>谈到Git，就需要先说说版本控制系统。<strong>版本控制系统</strong>就是能自动帮我们记录每次文件的改动的一个软件，而Git就是它的一种实现。想想我们写论文还是写代码，是不是有了他就很方便了，再也不用自己手动备份每一次修改了。版本控制系统又分为集中式和分布式。</p>
@@ -245,7 +322,7 @@
 </li>
 <li><p>后者的所有变化都将被前者抵消，并应用当前分支<br>  <code>git revert [commit]</code></p>
 </li>
-<li><p>暂时将未提交的变化移除，稍后再移入<br>  <code>git stash</code><br>  <code>git stash pop</code></p>
+<li><p>暂时将未提交的变化移除，稍后再移入<br>  <code>git stash</code><br>  <code>git stash pop</code> </p>
 </li>
 </ul>
 <h2 id="Git多人协作"><a href="#Git多人协作" class="headerlink" title="Git多人协作"></a>Git多人协作</h2><p>多人协作就会涉及到分支的概念（其实单人开发也会遇到，只是多人会更常见）</p>
@@ -307,9 +384,9 @@
       <category term="工具" scheme="http://bestlixiang.site/categories/%E5%B7%A5%E5%85%B7/"/>
     
     
-      <category term="IDEA" scheme="http://bestlixiang.site/tags/IDEA/"/>
-    
       <category term="Git" scheme="http://bestlixiang.site/tags/Git/"/>
+    
+      <category term="IDEA" scheme="http://bestlixiang.site/tags/IDEA/"/>
     
   </entry>
   
@@ -1782,11 +1859,11 @@
       <category term="HelloWorld" scheme="http://bestlixiang.site/categories/HelloWorld/"/>
     
     
-      <category term="Mybatis" scheme="http://bestlixiang.site/tags/Mybatis/"/>
-    
       <category term="Spring" scheme="http://bestlixiang.site/tags/Spring/"/>
     
       <category term="SpringMVC" scheme="http://bestlixiang.site/tags/SpringMVC/"/>
+    
+      <category term="Mybatis" scheme="http://bestlixiang.site/tags/Mybatis/"/>
     
   </entry>
   
@@ -2097,63 +2174,6 @@
     
     
       <category term="Spring" scheme="http://bestlixiang.site/tags/Spring/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Centos7利用Nginx配置HTTPS</title>
-    <link href="http://bestlixiang.site/2018/04/12/%E5%B7%A5%E5%85%B7/Centos7%E5%88%A9%E7%94%A8Nginx%E9%85%8D%E7%BD%AEHTTPS/"/>
-    <id>http://bestlixiang.site/2018/04/12/工具/Centos7利用Nginx配置HTTPS/</id>
-    <published>2018-04-12T08:53:31.000Z</published>
-    <updated>2018-04-12T08:54:54.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：最近在做一个微信小程序项目，坑爹的小程序不仅需要https协议，而且还要是80端口才能访问后台，这里总结一下Nginx的安装过程与HTTPS的配置。<a id="more"></a></p>
-<h1 id="Ngnix的安装"><a href="#Ngnix的安装" class="headerlink" title="Ngnix的安装"></a>Ngnix的安装</h1><p>由于后面Nginx需要添加模块，所以我们采用<strong>源码安装</strong>，具体安装方法可以参考 <a href="http://bestlixiang.site/2018/04/08/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85-%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/">走进Linux_软件安装</a> 中的源码安装一节。</p>
-<p>这里需要注意的我们在 <strong>产生makefile文件的时候</strong> 需要加一些configure arguments，以便安装相关模块。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-file-aio --with-http_realip_module</div></pre></td></tr></table></figure></p>
-<p>安装完之后可以利用下面的命令查看Ngnix版本及其编译参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/usr/local/nginx/sbin/nginx -V</div><div class="line"></div><div class="line">// 输出如下结果就是对的</div><div class="line">nginx version: nginx/1.11.6</div><div class="line">built by gcc 4.8.5 20150623 (Red Hat 4.8.5-16) (GCC)</div><div class="line">built with OpenSSL 1.0.2k-fips  26 Jan 2017</div><div class="line">TLS SNI support enabled</div><div class="line">configure arguments: --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-file-aio --with-http_realip_module</div></pre></td></tr></table></figure></p>
-<p>然后我们测试新的nginx程序是否正确：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/usr/local/nginx/sbin/nginx -t</div><div class="line"></div><div class="line">// 输出如下结果J就表面安装成功</div><div class="line">nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok</div><div class="line">nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful</div></pre></td></tr></table></figure></p>
-<h1 id="配置HTTPS"><a href="#配置HTTPS" class="headerlink" title="配置HTTPS"></a>配置HTTPS</h1><h2 id="SSL证书申请"><a href="#SSL证书申请" class="headerlink" title="SSL证书申请"></a>SSL证书申请</h2><p>SSL证书遵守 SSL（Secure Sockets Layer 安全套接层）协议，由受信任的数字证书颁发机构CA，在验证服务器身份后颁发，具有服务器身份验证和数据传输加密功能，也就是说你想要使用https就需要拥有SSL证书。</p>
-<p>这里我们使用openssl证书来举例，<a href="https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=10_4" target="_blank" rel="external">微信小程序官网也是使用openssl来进行HTTPS服务器配置</a>。</p>
-<ol>
-<li><p>生成私钥</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 进入nginx的安装目录</div><div class="line">cd /usr/local/nginx</div><div class="line"></div><div class="line">// 创建一个存放私钥的文件夹（自定义）</div><div class="line">mkdir key</div><div class="line"></div><div class="line">// 进入key文件夹</div><div class="line">cd key</div><div class="line"></div><div class="line">// 生成私钥</div><div class="line">openssl genrsa -out server.key 2048</div></pre></td></tr></table></figure>
-</li>
-<li><p>生成csr文件</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">// CSR 是Certificate Signing Request的缩写，即证书签名请求，</div><div class="line">// 这不是证书，可以简单理解成公钥，生成证书时要把这个提交给权威的证书颁发机构。</div><div class="line"></div><div class="line"></div><div class="line">// 生成csr文件</div><div class="line">openssl req -new -key server.key -out certreq.csr</div><div class="line"></div><div class="line">// 输入上面的命令后会要求你输入一些信息：</div><div class="line">Country Name： CN        //您所在国家的ISO标准代号，中国为CN</div><div class="line">State or Province Name：guandong //您单位所在地省/自治区/直辖市</div><div class="line">Locality Name：shenzhen      //您单位所在地的市/县/区</div><div class="line">Organization Name： Tencent Technology (Shenzhen) Company Limited    //您单位/机构/企业合法的名称</div><div class="line">Organizational Unit Name： R&amp;D         //部门名称</div><div class="line">Common Name： www.example.com     //通用名，网站域名。此项必须与您访问提供SSL服务的服务器时所应用的域名完全匹配。</div><div class="line">Email Address：      //您的邮件地址，不必输入，直接回车跳过</div><div class="line">&quot;extra&quot;attributes  // 以下信息不必输入，回车跳过直到命令执行完毕。</div></pre></td></tr></table></figure>
-</li>
-<li><p>生成crt证书</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// CRT 即 certificate的缩写，即证书。</div><div class="line">openssl x509 -req -days 365 -in certreq.csr -signkey server.key -out certreq.crt</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="Nginx配置SSL加密"><a href="#Nginx配置SSL加密" class="headerlink" title="Nginx配置SSL加密"></a>Nginx配置SSL加密</h2><p>想要https就要监听443端口，nginx.conf已经预留出了server，只要我们把注释去掉开启即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// 编辑Ngnix配置文件</div><div class="line">vim /usr/local/nginx/conf/nginx.conf</div><div class="line"></div><div class="line">// 修改监听443端口的Server，使其如下：</div><div class="line">server &#123;</div><div class="line">    listen 443 ssl;</div><div class="line">    server_name www.example.com;</div><div class="line">    ssl on;</div><div class="line">    # ssl_certificate证书其实是个公钥，它会被发送到连接服务器的每个客户端</div><div class="line">    ssl_certificate /usr/local/nginx/key/certreq.crt;</div><div class="line">    # ssl_certificate_key私钥是用来解密的，所以它的权限要得到保护但nginx的主进程能够读取</div><div class="line">    ssl_certificate_key /usr/local/nginx/key/server.key;</div><div class="line">    ssl_session_timeout  5m;</div><div class="line">    # 指定SSL服务器端支持的协议版本</div><div class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</div><div class="line">    # 选择加密算法</div><div class="line">    ssl_ciphers  HIGH:!aNULL:!MD5;</div><div class="line">    # ssl_ciphers  ALL：!ADH：!EXPORT56：RC4+RSA：+HIGH：+MEDIUM：+LOW：+SSLv2：+EXP;</div><div class="line">    # 在使用SSLv3和TLS协议时指定服务器的加密算法要优先于客户端的加密算法</div><div class="line">    ssl_prefer_server_ciphers   on;</div><div class="line">    # 虽然我们要使用HTTPS，但是服务器的程序接收的还是HTTP，所以要做个反向代理</div><div class="line">    location /&#123;</div><div class="line">        proxy_pass http://localhost:8080;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>这样虽然可以利用https来访问我们的ip，但是对于浏览器还是不受信任的。</strong></p>
-<h2 id="导入证书"><a href="#导入证书" class="headerlink" title="导入证书"></a>导入证书</h2><p>如果你是找一个知名的SSL证书颁发机构如VeriSign、Wosign、StartSSL签发的证书，<strong>并且浏览器已经内置并信任了这些根证书</strong>，如果你是自建证书（向我们刚才那样）或获得二级证书授权，那么就<strong>需要将证书添加到浏览器</strong>，这样在访问站点时才不会显示不安全连接。<strong>不够买证书微信小程序会不支持。</strong> 证书生成的方法有很多，这里说两种：</p>
-<ol>
-<li><p>购买阿里云的免费证书</p>
-</li>
-<li><p>购买<a href="http://note.youdao.com/" target="_blank" rel="external">GETSSL官网</a>证书</p>
-</li>
-</ol>
-<p>购买好证书并下载后（可以将证书和私钥放到之前的key目录）需要从新配置nginx.conf文件，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen 443 ssl;</div><div class="line">    server_name www.example.com;</div><div class="line">    ssl on;</div><div class="line">    # pem是crt的一种，内容是BASE64编码，Apache和*NIX服务器偏向于使用这种编码格式</div><div class="line">    ssl_certificate /usr/local/nginx/key/*.pem;</div><div class="line">    ssl_certificate_key /usr/local/nginx/key/*.key;</div><div class="line">    ssl_session_timeout  5m;</div><div class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</div><div class="line">    ssl_ciphers  HIGH:!aNULL:!MD5;</div><div class="line">    ssl_prefer_server_ciphers   on;</div><div class="line">    location /&#123;</div><div class="line">        proxy_pass http://localhost:8080;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://blog.csdn.net/w410589502/article/details/72833283" target="_blank" rel="external"> linux nginx配置https</a></li>
-<li><a href="https://www.cnblogs.com/yjmyzz/p/openssl-tutorial.html" target="_blank" rel="external">openssl、x509、crt、cer、key、csr、ssl、tls 这些都是什么鬼?</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：最近在做一个微信小程序项目，坑爹的小程序不仅需要https协议，而且还要是80端口才能访问后台，这里总结一下Nginx的安装过程与HTTPS的配置。
-    
-    </summary>
-    
-      <category term="工具" scheme="http://bestlixiang.site/categories/%E5%B7%A5%E5%85%B7/"/>
-    
-    
-      <category term="Linux" scheme="http://bestlixiang.site/tags/Linux/"/>
-    
-      <category term="HTTPS" scheme="http://bestlixiang.site/tags/HTTPS/"/>
     
   </entry>
   
