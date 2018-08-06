@@ -1,0 +1,988 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Netty," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：Netty在帮我们解决性能的同时，也提供了丰富的编解码器来为我们业务上提供便利，这次我们就来看看Netty的解码器。">
+<meta name="keywords" content="Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty源码之解码器">
+<meta property="og:url" content="http://bestlixiang.site/2018/08/06/Netty源码之解码器/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：Netty在帮我们解决性能的同时，也提供了丰富的编解码器来为我们业务上提供便利，这次我们就来看看Netty的解码器。">
+<meta property="og:updated_time" content="2018-08-06T08:14:29.964Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty源码之解码器">
+<meta name="twitter:description" content="引：Netty在帮我们解决性能的同时，也提供了丰富的编解码器来为我们业务上提供便利，这次我们就来看看Netty的解码器。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/08/06/Netty源码之解码器/"/>
+
+
+
+
+
+  <title> Netty源码之解码器 | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/08/06/Netty源码之解码器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Netty源码之解码器
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-06T16:07:37+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Netty源码/" itemprop="url" rel="index">
+                    <span itemprop="name">Netty源码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：Netty在帮我们解决性能的同时，也提供了丰富的编解码器来为我们业务上提供便利，这次我们就来看看Netty的解码器。<a id="more"></a></p>
+<h1 id="解码器基类"><a href="#解码器基类" class="headerlink" title="解码器基类"></a>解码器基类</h1><p><strong>解码：</strong>就是将二进制数据流解码为自定义数据包。</p>
+<p>在Netty中解码器的基类是<strong>ByteToMessageDecoder</strong>，然后我们要明白的是ByteToMessageDecoder其实是一个ChannelInboundHandlerAdapter。</p>
+<p>一个解码器解码的过程主要有如下三个步骤：</p>
+<ol>
+<li>累加字节流</li>
+<li>调用子类的decode方法进行解析</li>
+<li>将解析到的ByteBuf向下传播</li>
+</ol>
+<p>当我们知道ByteToMessageDecoder是一个Handler的时候，我们就会去找它对事件的处理方法，主要是读事件，所以我们找到读事件处理方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1</span></div><div class="line">ByteBuf cumulation;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// 解码器是相对于ByteBuf进行解码的(在入站的时候已经封装好了，可以参考自己之前关于Pipeline的博文)</span></div><div class="line">    <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> ByteBuf) &#123;</div><div class="line">        <span class="comment">// 存储解码后的数据 List</span></div><div class="line">        CodecOutputList out = CodecOutputList.newInstance();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            ByteBuf data = (ByteBuf) msg;</div><div class="line">            <span class="comment">// 是否是第一次累加</span></div><div class="line">            first = cumulation == <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">if</span> (first) &#123;</div><div class="line">                <span class="comment">// 第一次</span></div><div class="line">                cumulation = data;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 不是第一次，则进行累加</span></div><div class="line">                <span class="comment">// 我们看看这个累加器的cumulate方法 step 2</span></div><div class="line">                cumulation = cumulator.cumulate(ctx.alloc(), cumulation, data);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 调用子类的decode方法进行解析</span></div><div class="line">            <span class="comment">// step 3</span></div><div class="line">            callDecode(ctx, cumulation, out);</div><div class="line">        &#125; <span class="keyword">catch</span>(DecoderException e) &#123;</div><div class="line">            <span class="keyword">throw</span> e;</div><div class="line">        &#125; <span class="keyword">catch</span>(Exception e) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> DecoderException(e);</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">int</span> size = out.size();</div><div class="line">            decodeWasNull = !out.insertSinceRecycled();</div><div class="line">            <span class="comment">// 将解析到的对象向下继续传播</span></div><div class="line">            <span class="comment">// step 5</span></div><div class="line">            fireChannelRead(ctx, out, size);</div><div class="line">            <span class="comment">// 回收list</span></div><div class="line">            out.recycle();</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// 不是ByteBuf就直接向下传播</span></div><div class="line">        ctx.fireChannelRead(msg);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2</span></div><div class="line"><span class="function"><span class="keyword">public</span> ByteBuf <span class="title">cumulate</span><span class="params">(ByteBufAllocator alloc, ByteBuf cumulation, ByteBuf in )</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> ByteBuf buffer;</div><div class="line">    <span class="comment">// 当buf的数据大于cumulation的剩余容量时</span></div><div class="line">    <span class="keyword">if</span> (cumulation.writerIndex() &gt; cumulation.maxCapacity() - in.readableBytes() || cumulation.refCnt() &gt; <span class="number">1</span> || cumulation.isReadOnly()) &#123;</div><div class="line">		<span class="comment">// 进行扩容(扩容其实就是一个内存拷贝操作)</span></div><div class="line">        buffer = expandCumulation(alloc, cumulation, in.readableBytes());</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// 不然就不扩容</span></div><div class="line">        buffer = cumulation;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 将数据写入buf</span></div><div class="line">    buffer.writeBytes(in);</div><div class="line">    <span class="comment">// 释放传入的buf</span></div><div class="line">    in.release();</div><div class="line">    <span class="keyword">return</span> buffer;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 3</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">callDecode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in , List &lt; Object &gt; out)</span> </span>&#123;</div><div class="line">    <span class="keyword">while</span> ( in .isReadable()) &#123;</div><div class="line">        <span class="keyword">int</span> outSize = out.size();</div><div class="line">        <span class="comment">// 看list是否有对象</span></div><div class="line">        <span class="keyword">if</span> (outSize &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// 有对象则将list传播出去</span></div><div class="line">            fireChannelRead(ctx, out, outSize);</div><div class="line">            <span class="comment">// 并清空list</span></div><div class="line">            out.clear();</div><div class="line">            outSize = <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 记录可读长度</span></div><div class="line">        <span class="keyword">int</span> oldInputLength = in.readableBytes();</div><div class="line">        <span class="comment">// 开始调用decode方法了</span></div><div class="line">        <span class="comment">// step 4</span></div><div class="line">        decodeRemovalReentryProtection(ctx, in, out);</div><div class="line">        <span class="comment">// 什么都没有解析出来时</span></div><div class="line">        <span class="keyword">if</span> (outSize == out.size()) &#123;</div><div class="line">            <span class="comment">// 代表当前的数据不能拼装成一个完整的数据包，break准备等待下一次数据包</span></div><div class="line">            <span class="keyword">if</span> (oldInputLength == in.readableBytes()) &#123;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 4</span></div><div class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">decodeRemovalReentryProtection</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in , List &lt; Object &gt; out)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">    <span class="comment">// 开始调用解码器子类的decode方法了</span></div><div class="line">    decode(ctx, in, out);</div><div class="line">    <span class="comment">// ...</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// step 5</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">fireChannelRead</span><span class="params">(ChannelHandlerContext ctx, CodecOutputList msgs, <span class="keyword">int</span> numElements)</span> </span>&#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numElements; i++) &#123;</div><div class="line">        <span class="comment">// msgs.getUnsafe(i)保证成byteBuf</span></div><div class="line">        <span class="comment">// 这里可能就会传播到业务的处理器</span></div><div class="line">        ctx.fireChannelRead(msgs.getUnsafe(i));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="LineBasedFrameDecoder"><a href="#LineBasedFrameDecoder" class="headerlink" title="LineBasedFrameDecoder"></a>LineBasedFrameDecoder</h1><p>我们挑选了基于分隔符解码器LineBasedFrameDecoder来分析，它可以同时处理 \n以及\r\n两种类型的行分隔符，我们看看它的decode方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1 (解码器模板)</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in , List &lt; Object &gt; out)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// step 2</span></div><div class="line">    Object decoded = decode(ctx, in);</div><div class="line">    <span class="keyword">if</span> (decoded != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="comment">// 拆除一个数据包就放进List里</span></div><div class="line">        out.add(decoded);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2 LineBasedFrameDecoder</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">boolean</span> discarding;</div><div class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf buffer)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// 找到换行符位置</span></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> eol = findEndOfLine(buffer);</div><div class="line">    <span class="comment">// 第一次拆包不在丢弃模式下</span></div><div class="line">    <span class="keyword">if</span> (!discarding) &#123;</div><div class="line">        <span class="comment">// 非丢弃模式下</span></div><div class="line">        <span class="comment">// 找到分隔符</span></div><div class="line">        <span class="keyword">if</span> (eol &gt;= <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">final</span> ByteBuf frame;</div><div class="line">            <span class="keyword">final</span> <span class="keyword">int</span> length = eol - buffer.readerIndex();</div><div class="line">            <span class="keyword">final</span> <span class="keyword">int</span> delimLength = buffer.getByte(eol) == <span class="string">'\r'</span> ? <span class="number">2</span> : <span class="number">1</span>;</div><div class="line">			<span class="comment">// 判断拆包的长度是否大于允许的最大长度，maxLength构造时传入</span></div><div class="line">            <span class="keyword">if</span> (length &gt; maxLength) &#123;</div><div class="line">                <span class="comment">// 超出最大长度则丢弃这段数据，抛出异常</span></div><div class="line">                buffer.readerIndex(eol + delimLength);</div><div class="line">                fail(ctx, length);</div><div class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">            &#125;</div><div class="line">			<span class="comment">// 解码数据是否要包含分隔符</span></div><div class="line">            <span class="keyword">if</span> (stripDelimiter) &#123;</div><div class="line">                <span class="comment">// 不包含</span></div><div class="line">                frame = buffer.readRetainedSlice(length);</div><div class="line">                buffer.skipBytes(delimLength);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 包含</span></div><div class="line">                frame = buffer.readRetainedSlice(length + delimLength);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 返回拆包后封装成的帧</span></div><div class="line">            <span class="keyword">return</span> frame;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 没找到分隔符</span></div><div class="line">            <span class="keyword">final</span> <span class="keyword">int</span> length = buffer.readableBytes();</div><div class="line">            <span class="keyword">if</span> (length &gt; maxLength) &#123;</div><div class="line">                <span class="comment">// 如果大于最大长度，进入丢弃模式</span></div><div class="line">                <span class="comment">// 保存丢弃长度</span></div><div class="line">                discardedBytes = length;</div><div class="line">                buffer.readerIndex(buffer.writerIndex());</div><div class="line">                discarding = <span class="keyword">true</span>;</div><div class="line">                offset = <span class="number">0</span>;</div><div class="line">                <span class="keyword">if</span> (failFast) &#123;</div><div class="line">                    fail(ctx, <span class="string">"over "</span> + discardedBytes);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 不大于，则返回null</span></div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// 丢弃模式下</span></div><div class="line">        <span class="keyword">if</span> (eol &gt;= <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// 找到分割符</span></div><div class="line">            <span class="keyword">final</span> <span class="keyword">int</span> length = discardedBytes + eol - buffer.readerIndex();</div><div class="line">            <span class="keyword">final</span> <span class="keyword">int</span> delimLength = buffer.getByte(eol) == <span class="string">'\r'</span> ? <span class="number">2</span> : <span class="number">1</span>;</div><div class="line">            buffer.readerIndex(eol + delimLength);</div><div class="line">            discardedBytes = <span class="number">0</span>;</div><div class="line">            discarding = <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">if</span> (!failFast) &#123;</div><div class="line">                fail(ctx, length);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 保存丢弃长度</span></div><div class="line">            discardedBytes += buffer.readableBytes();</div><div class="line">            <span class="comment">// 改变读指针位置</span></div><div class="line">            buffer.readerIndex(buffer.writerIndex());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>其他的解码器也可以根据LineBasedFrameDecoder的思路去分析。当然我们最需要关注的还是整个解码器的设计思想。学会去抽象一类东西。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.jianshu.com/p/dc26e944da95" target="_blank" rel="external">netty源码分析之拆包器的奥秘</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Netty/" rel="tag"># Netty</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/Netty源码之ChannelPipeline/" rel="next" title="Netty源码之ChannelPipeline">
+                <i class="fa fa-chevron-left"></i> Netty源码之ChannelPipeline
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/06/Netty源码之编码器/" rel="prev" title="Netty源码之编码器">
+                Netty源码之编码器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">126</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#解码器基类"><span class="nav-number">1.</span> <span class="nav-text">解码器基类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LineBasedFrameDecoder"><span class="nav-number">2.</span> <span class="nav-text">LineBasedFrameDecoder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

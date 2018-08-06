@@ -1,0 +1,991 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Netty," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：其实前面就多次提到了ChannelPipeline，但是都没有详细说明ChannelPipeline是如何工作的，这里我们就具体看看这个管理处理逻辑的抽象以及处理逻辑的抽象ChannelHandler。">
+<meta name="keywords" content="Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty源码之ChannelPipeline">
+<meta property="og:url" content="http://bestlixiang.site/2018/08/06/Netty源码之ChannelPipeline/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：其实前面就多次提到了ChannelPipeline，但是都没有详细说明ChannelPipeline是如何工作的，这里我们就具体看看这个管理处理逻辑的抽象以及处理逻辑的抽象ChannelHandler。">
+<meta property="og:updated_time" content="2018-08-06T08:13:59.182Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty源码之ChannelPipeline">
+<meta name="twitter:description" content="引：其实前面就多次提到了ChannelPipeline，但是都没有详细说明ChannelPipeline是如何工作的，这里我们就具体看看这个管理处理逻辑的抽象以及处理逻辑的抽象ChannelHandler。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/08/06/Netty源码之ChannelPipeline/"/>
+
+
+
+
+
+  <title> Netty源码之ChannelPipeline | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/08/06/Netty源码之ChannelPipeline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Netty源码之ChannelPipeline
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-06T16:07:14+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Netty源码/" itemprop="url" rel="index">
+                    <span itemprop="name">Netty源码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：其实前面就多次提到了ChannelPipeline，但是都没有详细说明ChannelPipeline是如何工作的，这里我们就具体看看这个管理处理逻辑的抽象以及处理逻辑的抽象ChannelHandler。<a id="more"></a></p>
+<h1 id="ChannelPipeline的创建"><a href="#ChannelPipeline的创建" class="headerlink" title="ChannelPipeline的创建"></a>ChannelPipeline的创建</h1><p>通过前面的讲解，我们应该还记得一个Channel对应了一个ChannelPipeline，而ChannelPipeline也就是在创建Channel的时候随之创建的。我们就从那里开始。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1 AbstractChannel的创建</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractChannel</span><span class="params">(Channel parent)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.parent = parent;</div><div class="line">    id = newId();</div><div class="line">    unsafe = newUnsafe();</div><div class="line">    <span class="comment">// step 2 ChannelPipeline的创建</span></div><div class="line">    pipeline = newChannelPipeline();</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2</span></div><div class="line"><span class="function"><span class="keyword">protected</span> DefaultChannelPipeline <span class="title">newChannelPipeline</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// step 3</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DefaultChannelPipeline(<span class="keyword">this</span>);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 3</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">DefaultChannelPipeline</span><span class="params">(Channel channel)</span> </span>&#123;</div><div class="line">    <span class="comment">// 绑定channel</span></div><div class="line">    <span class="keyword">this</span>.channel = ObjectUtil.checkNotNull(channel, <span class="string">"channel"</span>);</div><div class="line">    <span class="comment">// 默认创建一个由头尾节点的双向链表，我们可以看一下节点的类型</span></div><div class="line">    tail = <span class="keyword">new</span> TailContext(<span class="keyword">this</span>);</div><div class="line">    head = <span class="keyword">new</span> HeadContext(<span class="keyword">this</span>);</div><div class="line">    head.next = tail;</div><div class="line">    tail.prev = head;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ChannelPipeline创建完毕！！</p>
+<h1 id="节点的添加"><a href="#节点的添加" class="headerlink" title="节点的添加"></a>节点的添加</h1><p>节点的添加我们必然要从我们见过的ChannelPipeline的addLast(handler)方法开始分析：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> ChannelPipeline <span class="title">addLast</span><span class="params">(ChannelHandler handler)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 2</span></div><div class="line">    <span class="keyword">return</span> addLast(<span class="keyword">null</span>, handler);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> ChannelPipeline <span class="title">addLast</span><span class="params">(String name, ChannelHandler handler)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 3</span></div><div class="line">    <span class="keyword">return</span> addLast(<span class="keyword">null</span>, name, handler);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 3</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> ChannelPipeline <span class="title">addLast</span><span class="params">(EventExecutorGroup group, String name, ChannelHandler handler)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> AbstractChannelHandlerContext newCtx;</div><div class="line">    <span class="comment">// 同步</span></div><div class="line">    <span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</div><div class="line">        <span class="comment">// 检查是否有重复节点</span></div><div class="line">        checkMultiplicity(handler);</div><div class="line">        <span class="comment">// 将handler包装成节点上下文 DefaultChannelHandlerContext</span></div><div class="line">        <span class="comment">// step 4</span></div><div class="line">        newCtx = newContext(group, filterName(name, handler), handler);</div><div class="line">        <span class="comment">// 添加节点 step 7</span></div><div class="line">        addLast0(newCtx);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 回调处理器被添加的方法</span></div><div class="line">    callHandlerAdded0(newCtx);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 4</span></div><div class="line"><span class="function"><span class="keyword">private</span> AbstractChannelHandlerContext <span class="title">newContext</span><span class="params">(EventExecutorGroup group, String name, ChannelHandler handler)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 5</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DefaultChannelHandlerContext(<span class="keyword">this</span>, childExecutor(group), name, handler);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 5</span></div><div class="line">DefaultChannelHandlerContext(DefaultChannelPipeline pipeline, EventExecutor executor, String name, ChannelHandler handler) &#123;</div><div class="line">    <span class="comment">// step 6 isInBound,isOutBount已经确定了</span></div><div class="line">    <span class="keyword">super</span>(pipeline, executor, name, isInbound(handler), isOutbound(handler));</div><div class="line">	<span class="comment">// 绑定handler</span></div><div class="line">    <span class="keyword">this</span>.handler = handler;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 6</span></div><div class="line">AbstractChannelHandlerContext(DefaultChannelPipeline pipeline, EventExecutor executor, String name, <span class="keyword">boolean</span> inbound, <span class="keyword">boolean</span> outbound) &#123;</div><div class="line">    <span class="comment">// 设定名字</span></div><div class="line">    <span class="keyword">this</span>.name = ObjectUtil.checkNotNull(name, <span class="string">"name"</span>);</div><div class="line">    <span class="comment">// 绑定pipeline</span></div><div class="line">    <span class="keyword">this</span>.pipeline = pipeline;</div><div class="line">    <span class="comment">// 绑定NioEventLoop</span></div><div class="line">    <span class="keyword">this</span>.executor = executor;</div><div class="line">    <span class="comment">// 表示自己是inbound处理器还是outbound处理器，后面根据这个值来判断</span></div><div class="line">    <span class="keyword">this</span>.inbound = inbound;</div><div class="line">    <span class="keyword">this</span>.outbound = outbound;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 7</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addLast0</span><span class="params">(AbstractChannelHandlerContext newCtx)</span> </span>&#123;</div><div class="line">    <span class="comment">// 添加到Pipeline的那个双向链表中</span></div><div class="line">    AbstractChannelHandlerContext prev = tail.prev;</div><div class="line">    newCtx.prev = prev;</div><div class="line">    newCtx.next = tail;</div><div class="line">    prev.next = newCtx;</div><div class="line">    tail.prev = newCtx;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="节点的删除"><a href="#节点的删除" class="headerlink" title="节点的删除"></a>节点的删除</h1><p>和ChannelPipeline的addLast(handler)一样，我们可以找到ChannelPipeline的remove(handler)方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> ChannelPipeline <span class="title">remove</span><span class="params">(ChannelHandler handler)</span> </span>&#123;</div><div class="line">    <span class="comment">// 我们知道节点是保证了handler的AbstractChannelHandlerContext</span></div><div class="line">    <span class="comment">// step 2</span></div><div class="line">    remove(getContextOrDie(handler));</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2</span></div><div class="line"><span class="function"><span class="keyword">private</span> AbstractChannelHandlerContext <span class="title">remove</span><span class="params">(<span class="keyword">final</span> AbstractChannelHandlerContext ctx)</span> </span>&#123;</div><div class="line">    <span class="keyword">assert</span> ctx != head &amp;&amp; ctx != tail;</div><div class="line">	<span class="comment">// 同步</span></div><div class="line">    <span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</div><div class="line">        <span class="comment">// step 3</span></div><div class="line">        remove0(ctx);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 回调节点的删除方法</span></div><div class="line">    callHandlerRemoved0(ctx);</div><div class="line">    <span class="keyword">return</span> ctx;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 3</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">remove0</span><span class="params">(AbstractChannelHandlerContext ctx)</span> </span>&#123;</div><div class="line">    <span class="comment">// 就是双向链表的删除</span></div><div class="line">    AbstractChannelHandlerContext prev = ctx.prev;</div><div class="line">    AbstractChannelHandlerContext next = ctx.next;</div><div class="line">    prev.next = next;</div><div class="line">    next.prev = prev;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="入站事件的传播"><a href="#入站事件的传播" class="headerlink" title="入站事件的传播"></a>入站事件的传播</h1><p>其实我们应该已经经历过了，源头都是在从Unsafe对象(它负责最底层的IO操作)出发的，所以我们从NioEventLoop的这一段代码出发：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSelectedKey</span><span class="params">(SelectionKey k, AbstractNioChannel ch)</span> </span>&#123;</div><div class="line">	<span class="comment">// ...</span></div><div class="line">    <span class="keyword">if</span> ((readyOps &amp; (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != <span class="number">0</span> || readyOps == <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// 接受IO事件，这里需要注意的是在SeverSocketChannel和SocketChannel处理的事件是不一样的</span></div><div class="line">        <span class="comment">// 我们主要分析SocketChannel的读事件，对应的Unsafe对象是NioByteUnSafe</span></div><div class="line">        <span class="comment">// step 2</span></div><div class="line">        unsafe.read();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2 AbstractNioByteChannel的NioByteUnSafe</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> ChannelConfig config = config();</div><div class="line">    <span class="keyword">final</span> ChannelPipeline pipeline = pipeline();</div><div class="line">    <span class="comment">// 创建ByteBuf分配器</span></div><div class="line">    <span class="keyword">final</span> ByteBufAllocator allocator = config.getAllocator();</div><div class="line">    <span class="comment">// 控制连接数</span></div><div class="line">    <span class="keyword">final</span> RecvByteBufAllocator.Handle allocHandle = recvBufAllocHandle();</div><div class="line">    allocHandle.reset(config);</div><div class="line"></div><div class="line">    ByteBuf byteBuf = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">do</span> &#123;</div><div class="line">        <span class="comment">// 分配一个byteBuf</span></div><div class="line">        byteBuf = allocHandle.allocate(allocator);</div><div class="line">        <span class="comment">// 读数据</span></div><div class="line">        allocHandle.lastBytesRead(doReadBytes(byteBuf));</div><div class="line">        allocHandle.incMessagesRead(<span class="number">1</span>);</div><div class="line">        readPending = <span class="keyword">false</span>;</div><div class="line">        <span class="comment">// 触发读事件，这是我们要关注的重点</span></div><div class="line">        <span class="comment">// step 3</span></div><div class="line">        pipeline.fireChannelRead(byteBuf);</div><div class="line">        byteBuf = <span class="keyword">null</span>;</div><div class="line">    &#125; <span class="keyword">while</span> ( allocHandle . continueReading ());</div><div class="line"></div><div class="line">    allocHandle.readComplete();</div><div class="line">    <span class="comment">// 触发读完成事件</span></div><div class="line">    pipeline.fireChannelReadComplete();</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 3</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> ChannelPipeline <span class="title">fireChannelRead</span><span class="params">(Object msg)</span> </span>&#123;</div><div class="line">    <span class="comment">// 出发头节点的读事件</span></div><div class="line">    <span class="comment">// step 4</span></div><div class="line">    AbstractChannelHandlerContext.invokeChannelRead(head, msg);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 4</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">invokeChannelRead</span><span class="params">(<span class="keyword">final</span> AbstractChannelHandlerContext next, Object msg)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> Object m = next.pipeline.touch(ObjectUtil.checkNotNull(msg, <span class="string">"msg"</span>), next);</div><div class="line">    <span class="comment">// 调用头节点的channelRead方法</span></div><div class="line">    <span class="comment">// step 5</span></div><div class="line">    next.invokeChannelRead(m);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 5</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">invokeChannelRead</span><span class="params">(Object msg)</span> </span>&#123;</div><div class="line">    <span class="comment">// 调用头节点的channelRead方法</span></div><div class="line">    <span class="comment">// step 6</span></div><div class="line">    ((ChannelInboundHandler) handler()).channelRead(<span class="keyword">this</span>, msg);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 6</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// 继续传递读事件</span></div><div class="line">    <span class="comment">// step 7</span></div><div class="line">    ctx.fireChannelRead(msg);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 7</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelHandlerContext <span class="title">fireChannelRead</span><span class="params">(<span class="keyword">final</span> Object msg)</span> </span>&#123;</div><div class="line">    <span class="comment">// 找到下一个入站节点</span></div><div class="line">    <span class="comment">// step 8 findContextInbound</span></div><div class="line">    <span class="comment">// step 9 会重复这个过程，如果消息没有被释放，那么将一直传递到tail节点(最后一个inbound节点public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception &#123;</span></div><div class="line">    onUnhandledInboundMessage(msg);</div><div class="line">&#125;)</div><div class="line">    invokeChannelRead(findContextInbound(), msg);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 8</span></div><div class="line"><span class="function"><span class="keyword">private</span> AbstractChannelHandlerContext <span class="title">findContextInbound</span><span class="params">()</span> </span>&#123;</div><div class="line">    AbstractChannelHandlerContext ctx = <span class="keyword">this</span>;</div><div class="line">    <span class="keyword">do</span> &#123;</div><div class="line">        ctx = ctx.next;</div><div class="line">        <span class="comment">// 可以看到是根据标志位来判定的</span></div><div class="line">    &#125; <span class="keyword">while</span> (! ctx . inbound );</div><div class="line">    <span class="keyword">return</span> ctx;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 9 DefaultChannelPipeline的TailContext</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// step 10</span></div><div class="line">    onUnhandledInboundMessage(msg);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onUnhandledInboundMessage</span><span class="params">(Object msg)</span> </span>&#123;</div><div class="line">    <span class="comment">// 如果消息一直没有被释放，将在tail节点被释放</span></div><div class="line">    ReferenceCountUtil.release(msg);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="出站事件的传播"><a href="#出站事件的传播" class="headerlink" title="出站事件的传播"></a>出站事件的传播</h1><p>出站事件一般是写事件，有两种写需要区别一下：（来自netty源码中telnet例子）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ChannelFuture future = ctx.channel().write(response);   <span class="comment">// 1</span></div><div class="line">ChannelFuture future = ctx.write(response); <span class="comment">// 2</span></div></pre></td></tr></table></figure>
+<p>我们先看第一种：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, String request)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// step 2</span></div><div class="line">    ChannelFuture future = ctx.channel().write(response);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2 AbstractChannel</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">write</span><span class="params">(Object msg)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 3</span></div><div class="line">    <span class="keyword">return</span> pipeline.write(msg);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 3 DefaultChannelPipeline</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> ChannelFuture <span class="title">write</span><span class="params">(Object msg)</span> </span>&#123;</div><div class="line">    <span class="comment">// 直接调用tail的写方法</span></div><div class="line">    <span class="comment">// step 4</span></div><div class="line">    <span class="keyword">return</span> tail.write(msg);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 5 AbstractChannelHandlerContext</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">write</span><span class="params">(Object msg)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 6</span></div><div class="line">    <span class="keyword">return</span> write(msg, newPromise());</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 6 AbstractChannelHandlerContext</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">write</span><span class="params">(<span class="keyword">final</span> Object msg, <span class="keyword">final</span> ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="comment">// 加上是否flush的信息</span></div><div class="line">    <span class="comment">// step 7</span></div><div class="line">    write(msg, <span class="keyword">false</span>, promise);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 7</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(Object msg, <span class="keyword">boolean</span> flush, ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="comment">// 和进站相识，这里找的出站节点</span></div><div class="line">    AbstractChannelHandlerContext next = findContextOutbound();</div><div class="line">    <span class="keyword">final</span> Object m = pipeline.touch(msg, next);</div><div class="line">    EventExecutor executor = next.executor();</div><div class="line">    <span class="keyword">if</span> (flush) &#123;</div><div class="line">        next.invokeWriteAndFlush(m, promise);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// 调用下一个出站节点的写方法</span></div><div class="line">        next.invokeWrite(m, promise);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 7</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">invokeWrite</span><span class="params">(Object msg, ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 8    </span></div><div class="line">    invokeWrite0(msg, promise);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 8</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">invokeWrite0</span><span class="params">(Object msg, ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 9 会直接调用到HeadContext的write方法</span></div><div class="line">    ((ChannelOutboundHandler) handler()).write(<span class="keyword">this</span>, msg, promise);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 9</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(ChannelHandlerContext ctx, Object msg, ChannelPromise promise)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// 利用unsafe写入(明白流程就好，关于具体怎么写入将放到编码器的博文上)</span></div><div class="line">    unsafe.write(msg, promise);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第二种情况：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead0</span><span class="params">(ChannelHandlerContext ctx, String request)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// step 2</span></div><div class="line">    ChannelFuture future = ctx.write(response);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">write</span><span class="params">(<span class="keyword">final</span> Object msg, <span class="keyword">final</span> ChannelPromise promise)</span> </span>&#123;</div><div class="line">	<span class="comment">// 直接从当前节点写，后面就和第一种情况一样了</span></div><div class="line">    write(msg, <span class="keyword">false</span>, promise);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.jianshu.com/p/6efa9c5fa702" target="_blank" rel="external">netty源码分析之pipeline(一)</a></li>
+<li><a href="https://www.jianshu.com/p/087b7e9a27a2" target="_blank" rel="external">netty源码分析之pipeline(二)</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Netty/" rel="tag"># Netty</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/Netty源码之新连接接入/" rel="next" title="Netty源码之新连接接入">
+                <i class="fa fa-chevron-left"></i> Netty源码之新连接接入
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/06/Netty源码之解码器/" rel="prev" title="Netty源码之解码器">
+                Netty源码之解码器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">126</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ChannelPipeline的创建"><span class="nav-number">1.</span> <span class="nav-text">ChannelPipeline的创建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节点的添加"><span class="nav-number">2.</span> <span class="nav-text">节点的添加</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节点的删除"><span class="nav-number">3.</span> <span class="nav-text">节点的删除</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#入站事件的传播"><span class="nav-number">4.</span> <span class="nav-text">入站事件的传播</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#出站事件的传播"><span class="nav-number">5.</span> <span class="nav-text">出站事件的传播</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
