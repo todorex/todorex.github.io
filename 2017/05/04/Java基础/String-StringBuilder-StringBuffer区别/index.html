@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="java," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -90,13 +90,13 @@
 
 
 <meta name="description" content="引：最近心情非常的不静，我知道自己需要沉下心去沉淀，慢慢来，小朋友。今天谈谈3个字符串类">
-<meta name="keywords" content="java">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="String,StringBuilder,StringBuffer区别">
 <meta property="og:url" content="http://bestlixiang.site/2017/05/04/Java基础/String-StringBuilder-StringBuffer区别/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：最近心情非常的不静，我知道自己需要沉下心去沉淀，慢慢来，小朋友。今天谈谈3个字符串类">
-<meta property="og:updated_time" content="2017-05-04T12:15:13.000Z">
+<meta property="og:updated_time" content="2018-09-02T00:56:42.965Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="String,StringBuilder,StringBuffer区别">
 <meta name="twitter:description" content="引：最近心情非常的不静，我知道自己需要沉下心去沉淀，慢慢来，小朋友。今天谈谈3个字符串类">
@@ -345,8 +345,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java基础/" itemprop="url" rel="index">
-                    <span itemprop="name">java基础</span>
+                  <a href="/categories/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
                   </a>
                 </span>
 
@@ -397,18 +397,7 @@ public StringBuilder append(String str) {
     return this;
 }
 </code></pre></blockquote>
-<p>我们看到他的append()方法是调用他的父类来的，所以我们继续看看他的父类是在搞什么鬼👻</p>
-<blockquote>
-<pre><code>    public AbstractStringBuilder append(String str) {
-    if (str == null)
-        return appendNull();
-    int len = str.length();
-    ensureCapacityInternal(count + len);
-    str.getChars(0, len, value, count);
-    count += len;
-    return this;
-}
-</code></pre></blockquote>
+<p>我们看到他的append()方法是调用他的父类来的，所以我们继续看看他的父类是在搞什么鬼👻<br>&gt;<br>        public AbstractStringBuilder append(String str) {<br>        if (str == null)<br>            return appendNull();<br>        int len = str.length();<br>        ensureCapacityInternal(count + len);<br>        str.getChars(0, len, value, count);<br>        count += len;<br>        return this;<br>    }</p>
 <p>我们终于找到他怎么又这个添加字符串的方法了。具体AbstractStringBuilder是怎么实现添加的就让想要了解的人继续往下看源码就好了。</p>
 <p><strong>对比string:</strong> 我们可以从日常编写的代码可以了解到，用String拼接由于每次都是新建一个对象所以效率自然是低的，所以在使用字符串拼接的时候还是用StringBuilder比较好，但是对于单个常量字符串来说还是String好，因为它是放在常量池里，读取速度比放在堆中的对象自然是要快很多。</p>
 <h2 id="StringBuffer"><a href="#StringBuffer" class="headerlink" title="StringBuffer"></a>StringBuffer</h2><p>这又是一个什么鬼，继续看源码吧</p>
@@ -456,7 +445,7 @@ extends AbstractStringBuilder
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -578,7 +567,7 @@ extends AbstractStringBuilder
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">127</span>
+                <span class="site-state-item-count">128</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
