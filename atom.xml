@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-09-02T00:54:16.648Z</updated>
+  <updated>2018-09-02T05:03:20.173Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,42 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JDK源码分析——ArrayList</title>
+    <link href="http://bestlixiang.site/2018/09/02/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94ArrayList/"/>
+    <id>http://bestlixiang.site/2018/09/02/JDK源码分析/JDK源码分析——ArrayList/</id>
+    <published>2018-09-02T02:16:31.000Z</published>
+    <updated>2018-09-02T05:03:20.173Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：大家在集合框架中用的最多一定是ArrayList吧，今天我们就来一探究竟！<a id="more"></a></p>
+<p>详细注释：<a href="https://github.com/todorex/JDK" target="_blank" rel="external">源码分析地址</a></p>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>ArrayList是基于可变数组实现了，允许包括 null 在内的所有元素。</p>
+<p>每个 ArrayList 实例都有一个容量。该容量是指用来存储列表元素的数组的大小。它总是至少等于列表的大小。随着向 ArrayList 中不断添加元素，其容量也自动增长。</p>
+<p>在添加大量元素前，应用程序可以使用 ensureCapacity 操作来增加 ArrayList 实例的容量。这可以减少递增式再分配的数量。</p>
+<p><strong>注意：</strong> 此实现不是同步的。如果多个线程同时访问一个 ArrayList 实例，而其中至少一个线程从结构上修改了列表，那么它必须保持外部同步。（结构上的修改是指任何添加或删除一个或多个元素的操作，或者显式调整底层数组的大小；仅仅设置元素的值不是结构上的修改。）这一般通过对自然封装该列表的对象进行同步操作来完成。如果不存在这样的对象，则应该使用 Collections.synchronizedList 方法将该列表“包装”起来。这最好在创建时完成，以防止意外对列表进行不同步的访问。</p>
+<p>此类的 iterator 和 listIterator 方法返回的迭代器是快速失败的：在创建迭代器之后，除非通过迭代器自身的 remove 或 add 方法从结构上对列表进行修改，否则在任何时间以任何方式对列表进行修改，迭代器都会抛出 ConcurrentModificationException。</p>
+<p>ArrayList从类 java.util.AbstractList 继承了字段 modCount，在进行序列化或者迭代等操作时，需要比较操作前后 modCount 是否改变，如果改变了需要抛出 ConcurrentModificationException。</p>
+<h1 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 默认数组初始大小为10</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_CAPACITY = <span class="number">10</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (initialCapacity &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">this</span>.elementData = <span class="keyword">new</span> Object[initialCapacity];</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (initialCapacity == <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// 返回空数组</span></div><div class="line">        <span class="keyword">this</span>.elementData = EMPTY_ELEMENTDATA;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal Capacity: "</span> + initialCapacity);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="增"><a href="#增" class="headerlink" title="增"></a>增</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 新增元素</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    <span class="comment">// 确保容量足够</span></div><div class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></div><div class="line">    elementData[size++] = e;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacityInternal</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</div><div class="line">    <span class="comment">// 如果是默认创建的数组，则和容量默认值比较</span></div><div class="line">    <span class="keyword">if</span> (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</div><div class="line">        minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 确保容量足够</span></div><div class="line">    ensureExplicitCapacity(minCapacity);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureExplicitCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</div><div class="line">    <span class="comment">// 修改操作加1</span></div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// overflow-conscious code</span></div><div class="line">    <span class="comment">// 如果需要的容量比数组长度大，则进行扩容</span></div><div class="line">    <span class="keyword">if</span> (minCapacity - elementData.length &gt; <span class="number">0</span>) grow(minCapacity);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</div><div class="line">    <span class="comment">// overflow-conscious code</span></div><div class="line">    <span class="comment">// 新容量将使原来的1.5倍</span></div><div class="line">    <span class="keyword">int</span> oldCapacity = elementData.length;</div><div class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</div><div class="line">    <span class="comment">// 1.5倍还不够的话，就将容量设置为需要的大小</span></div><div class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>) newCapacity = minCapacity;</div><div class="line">    <span class="comment">// 如果新容量比最大的数组容量（Integer.MAX_VALUE - 8;）还要大，则创建更大的容量（Integer.MAX_VALUE）</span></div><div class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>) newCapacity = hugeCapacity(minCapacity);</div><div class="line">    <span class="comment">// minCapacity is usually close to size, so this is a win:</span></div><div class="line">    <span class="comment">// Arrays.copyOf() 是把原数组整个复制到新数组，这个代价很高</span></div><div class="line">    <span class="comment">// 因此最好在创建 ArrayList 对象时就指定大概的容量大小，减少扩容操作的次数</span></div><div class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">hugeCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>) <span class="comment">// overflow</span></div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> OutOfMemoryError();</div><div class="line">    <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</div><div class="line">        Integer.MAX_VALUE :</div><div class="line">        MAX_ARRAY_SIZE;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="删"><a href="#删" class="headerlink" title="删"></a>删</h1><p>删除需要将 index+1 后面的元素都复制到 index 位置上，该操作的时间复杂度为 O(N)，所以ArrayList 删除元素的代价是非常高的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="comment">// 验证index是否超出size大小</span></div><div class="line">    rangeCheck(index);</div><div class="line"></div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// 拿到值</span></div><div class="line">    E oldValue = elementData(index);</div><div class="line">    <span class="comment">// 统计要移动的位数</span></div><div class="line">    <span class="keyword">int</span> numMoved = size - index - <span class="number">1</span>;</div><div class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)</div><div class="line">        <span class="comment">// 调用系统方法开始拷贝</span></div><div class="line">        System.arraycopy(elementData, index+<span class="number">1</span>, elementData, index,</div><div class="line">                         numMoved);</div><div class="line">    <span class="comment">// 即时放开引用，等待GC</span></div><div class="line">    elementData[--size] = <span class="keyword">null</span>; <span class="comment">// clear to let GC do its work</span></div><div class="line">    <span class="comment">// 返回被删除的元素</span></div><div class="line">    <span class="keyword">return</span> oldValue;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="改"><a href="#改" class="headerlink" title="改"></a>改</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>&#123;</div><div class="line">    <span class="comment">// 验证index是否超出size大小</span></div><div class="line">    rangeCheck(index);</div><div class="line">    <span class="comment">// 拿出原值</span></div><div class="line">    E oldValue = elementData(index);</div><div class="line">    <span class="comment">// 设置新值</span></div><div class="line">    elementData[index] = element;</div><div class="line">    <span class="comment">// 返回被替换的值</span></div><div class="line">    <span class="keyword">return</span> oldValue;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="查"><a href="#查" class="headerlink" title="查"></a>查</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="comment">// 验证index是否超出size大小</span></div><div class="line">    rangeCheck(index);</div><div class="line">    <span class="keyword">return</span> elementData(index);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function">E <span class="title">elementData</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="comment">// 拿出值</span></div><div class="line">    <span class="keyword">return</span> (E) elementData[index];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h1><p>ArrayList 基于数组实现，并且具有动态扩容特性，因此保存元素的数组不一定都会被使用，那么就没必要全部进行序列化。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 保存元素的数组 elementData 使用 transient 修饰，该关键字声明数组默认不会被序列化</span></div><div class="line"><span class="keyword">transient</span> Object[] elementData;</div><div class="line"></div><div class="line"><span class="comment">// 序列化</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream s)</span></span></div><div class="line">    <span class="keyword">throws</span> java.io.IOException&#123;</div><div class="line">    <span class="comment">// Write out element count, and any hidden stuff</span></div><div class="line">    <span class="comment">// 记录修改次数，后面可以根据他判断结构是否发生了变化</span></div><div class="line">    <span class="keyword">int</span> expectedModCount = modCount;</div><div class="line">    <span class="comment">// 写入非静态，非暂时数据到流中</span></div><div class="line">    s.defaultWriteObject();</div><div class="line"></div><div class="line">    <span class="comment">// Write out size as capacity for behavioural compatibility with clone()</span></div><div class="line">    <span class="comment">// 写入元素个数</span></div><div class="line">    s.writeInt(size);</div><div class="line"></div><div class="line">    <span class="comment">// Write out all elements in the proper order.</span></div><div class="line">    <span class="comment">// 写入元素</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;size; i++) &#123;</div><div class="line">        s.writeObject(elementData[i]);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 比较操作前后 modCount 是否改变，如果改变了需要抛出 ConcurrentModificationException。</span></div><div class="line">    <span class="keyword">if</span> (modCount != expectedModCount) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 反序列化</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream s)</span></span></div><div class="line">    <span class="keyword">throws</span> java.io.IOException, ClassNotFoundException &#123;</div><div class="line">    elementData = EMPTY_ELEMENTDATA;</div><div class="line"></div><div class="line">    <span class="comment">// Read in size, and any hidden stuff</span></div><div class="line">    s.defaultReadObject();</div><div class="line"></div><div class="line">    <span class="comment">// Read in capacity</span></div><div class="line">    s.readInt(); <span class="comment">// ignored</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// be like clone(), allocate array based upon size not capacity</span></div><div class="line">        ensureCapacityInternal(size);</div><div class="line"></div><div class="line">        Object[] a = elementData;</div><div class="line">        <span class="comment">// Read in all elements in the proper order.</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;size; i++) &#123;</div><div class="line">            a[i] = s.readObject();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：大家在集合框架中用的最多一定是ArrayList吧，今天我们就来一探究竟！
+    
+    </summary>
+    
+      <category term="JDK源码分析" scheme="http://bestlixiang.site/categories/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+    
+      <category term="ArrayList" scheme="http://bestlixiang.site/tags/ArrayList/"/>
+    
+  </entry>
   
   <entry>
     <title>Java集合框架类图</title>
@@ -1576,333 +1612,6 @@
     
     
       <category term="数据库" scheme="http://bestlixiang.site/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MySQL必知必会</title>
-    <link href="http://bestlixiang.site/2018/05/07/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/"/>
-    <id>http://bestlixiang.site/2018/05/07/数据库/MySQL必知必会/</id>
-    <published>2018-05-07T07:46:56.000Z</published>
-    <updated>2018-05-07T11:29:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>引:虽然用了这么久的数据库，但是有时候使用起来难免会去查怎么使用，这样下去也不是办法，所以自己就在这里以Mysql为例总结一下经常用到的地方。 <a id="more"></a></p>
-<h1 id="基本注意点"><a href="#基本注意点" class="headerlink" title="基本注意点"></a>基本注意点</h1><ol>
-<li>SQL关键字使用大写，所有列和表名使用小写</li>
-<li>SQL语句由子句构成，一个子句通常由一个关键字和一个数据组成，子句的顺序一般为:<blockquote>
-<p>SELECT 数据 FROM 数据 WHERE 数据 GROUP BY 数据 HAVING 数据 ORDER BY 数据 LIMIT 数据</p>
-</blockquote>
-</li>
-<li>通配符搜索的处理一般要比其他搜索所花时间长，不要过度使用通配符，如果要，就应该将通配符放在搜索集合小的搜索上</li>
-<li>多数DBMS使 +或||来实现拼接，MYSQL则使 Concat函数来实现</li>
-<li>数据库列般称为列，计算字段一般称为字段</li>
-<li>MySQL使用的日期格式必须是yyyy-mm-dd</li>
-<li>WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤</li>
-<li>子查询最常见的使用是在WHERE子句的IN操作符后</li>
-<li>在删除或更新表之前先SELECT出来，防止删错</li>
-<li>利用外键约束，防止删除与其他表相关联的行</li>
-</ol>
-<h1 id="MySQL基本使用"><a href="#MySQL基本使用" class="headerlink" title="MySQL基本使用"></a>MySQL基本使用</h1><ol>
-<li>MySQL帮助<blockquote>
-<p>相关命令 -h/–help</p>
-</blockquote>
-</li>
-<li>MySQL服务启动和关闭<blockquote>
-<p>mysql.server start/stop</p>
-</blockquote>
-</li>
-<li><p>MySQL连接</p>
-<blockquote>
-<p>mysql -u 用户名 -p 密码 -h 主机名 -P 端口  </p>
-</blockquote>
-<p> （默认用户名为使用者名，主机名默认为localhost，端口默认为3306）    </p>
-</li>
-<li>退出命令行<blockquote>
-<p>quit/exit</p>
-</blockquote>
-</li>
-<li>显示所有数据库<blockquote>
-<p>SHOW DATABASES</p>
-</blockquote>
-</li>
-<li>使用数据库<blockquote>
-<p>USE 数据库名</p>
-</blockquote>
-</li>
-<li>显示某库下所有的表<blockquote>
-<p>SHOW TABLES</p>
-</blockquote>
-</li>
-<li>显示某表下面的列<blockquote>
-<p>SHOW COLUMNS FROM 表名 / DISCRIBE 表名</p>
-</blockquote>
-</li>
-<li>显示服务器的状态信息<blockquote>
-<p>SHOW STATUS</p>
-</blockquote>
-</li>
-<li>显示创建特定数据库或表的MySQL语句<blockquote>
-<p>SHOW CREATE DATABASE 数据库名 / TABLE 表名</p>
-</blockquote>
-</li>
-</ol>
-<h1 id="安全管理"><a href="#安全管理" class="headerlink" title="安全管理"></a>安全管理</h1><ol>
-<li><p>用户管理</p>
-<blockquote>
-<p>USE mysql</p>
-<p>SELECT user FROM user</p>
-<p>CREATE USER rex IDENTIFIED BY ‘密码’  //创建用户账号</p>
-<p>RENAME USER rex TO rex1  // 修改用户名</p>
-<p>DROP USER rex  // 删除用户账号</p>
-<p>SHOW GRANTS FOR rex  // 显示rex的权限，USAGE ON <em>.</em>表示没有权限</p>
-<p>GRANT SELECT ON 数据库/表.* TO rex // 给rex对数据库/表的读权限</p>
-<p>REVOKE SELECT ON 数据库/表.* TO rex // 撤销rex对数据库/表的读权限</p>
-</blockquote>
-</li>
-<li><p>更改密码</p>
-<blockquote>
-<p>SET PASSWORD FOR rex = Password ‘新密码’</p>
-<p>SET PASSWORD = Password ‘新密码’  // 修改当前用户的密码</p>
-</blockquote>
-</li>
-</ol>
-<h1 id="数据库维护"><a href="#数据库维护" class="headerlink" title="数据库维护"></a>数据库维护</h1><ol>
-<li>数据库备份<ul>
-<li>使用mysqldump</li>
-<li>使用mysqlhotcopy</li>
-<li>使用BACKUP TABLE或SELECT INTO OUTFILE</li>
-</ul>
-</li>
-<li><p>维护数据库</p>
-<blockquote>
-<p>ANALYZE/CHECK TABLE 表名 // 检查表键是否正确</p>
-<p>OPTIMIZE TABLE 表名 // 回收所用空间  </p>
-</blockquote>
-</li>
-<li>查看日志文件<ul>
-<li>错误日志：通常为/data/hostname.err，可通过–log-error修改文件</li>
-<li>查询日志：通常为/data/hostname.log，可通过–log修改文件   </li>
-<li>二进制文件：通常为/data/hostname-bin</li>
-<li>缓慢查询日志：通常为/data/hostname-slow.log，可通过hostname-slow- queries修改文件  </li>
-</ul>
-</li>
-</ol>
-<h1 id="创建和操纵表"><a href="#创建和操纵表" class="headerlink" title="创建和操纵表"></a>创建和操纵表</h1><ol>
-<li>创建表<blockquote>
-<p>CREATE IF NOT EXISTS TABLE 表名(id int NOT NULL AUTO_INCREMENT          ,…, PRIMARY KEY(id)) ENGINE=InnoDB</p>
-</blockquote>
-</li>
-<li><p>更新表</p>
-<blockquote>
-<p>ALTER TABLE 表名 ADD 类型 // 增加列</p>
-<p>ALTER TABLE  表1 ADD CONSTRAINT fk<em>表1</em>表2 FOREIGN KEY(表2id)  REFERENCES  表2(表2id)</p>
-</blockquote>
-</li>
-<li><p>删除表</p>
-<blockquote>
-<p>DROP TABLE 表名</p>
-</blockquote>
-</li>
-<li>重命名表<blockquote>
-<p>RENAME TABLE 表名1 TO 表名2</p>
-</blockquote>
-</li>
-</ol>
-<h1 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h1><h2 id="基本查询数据"><a href="#基本查询数据" class="headerlink" title="基本查询数据"></a>基本查询数据</h2><ol>
-<li>检索单个列<blockquote>
-<p>SELECT prod_name FROM product</p>
-</blockquote>
-</li>
-<li>检索多个列<blockquote>
-<p>SELECT prod_id, prod_name FROM product</p>
-</blockquote>
-</li>
-<li>检索所有列<blockquote>
-<p>SELECT * FROM product</p>
-</blockquote>
-</li>
-<li>检索不同的行<blockquote>
-<p>SELECT DISTINCT vend_id FROM product</p>
-</blockquote>
-</li>
-<li><p>限制结果的行数为前5条/第二个5条</p>
-<blockquote>
-<p>SELECT * FROM product LIMIT 5 / LIMIT 5(开始位置，第一行其实第0    行),5(要检索的行数)</p>
-<p>SELECT * FROM product LIMIT 5 (偏移量) OFFSET 5 (开始位置)      </p>
-</blockquote>
-</li>
-</ol>
-<h2 id="排序检索数据"><a href="#排序检索数据" class="headerlink" title="排序检索数据"></a>排序检索数据</h2><ol>
-<li>按一个列排序<blockquote>
-<p>SELECT prod_name FROM product ORDER BY prod_name</p>
-</blockquote>
-</li>
-<li>按多个列排序(先按prod_price排序，如果相同，则比较prod_name)<blockquote>
-<p>SELECT prod_id, prod_price, prod_name FROM product ORDER BY prod_price, prod_name</p>
-</blockquote>
-</li>
-<li>指定排序方向(默认升序ASC，降序DESC)<blockquote>
-<p>SELECT prod_id, prod_price, prod_name FROM product ORDER BY prod_price DESC</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="过滤数据"><a href="#过滤数据" class="headerlink" title="过滤数据"></a>过滤数据</h2><ol>
-<li>WHERE子句过滤<blockquote>
-<p>SELECT prod_name, prod_price FROM product WHERE prod_price =<br> 2.50</p>
-</blockquote>
-</li>
-<li><p>WHERE子句操作符</p>
-<p>操作符 | 说明<br>—|—<br>= | 等于<br>&lt;&gt; | 不等于<br>!= | 不等于<br>&lt; | 小于<br>&lt;= | 小于等于<br>> | 大于<br>>= | 大于等于<br>BETWEEN… AND | 在指定的两个值之间(mysql包括两端)<br>NOT BETWEEN… AND | 不在指定的两个值之间(mysql不包括两端)      </p>
-</li>
-<li>空值检查(需要注意null和没有值得区别)<blockquote>
-<p>SELECT prod_name FROM products WHERE prod_price IS NULL</p>
-</blockquote>
-</li>
-<li>数据过滤操作符<br> 操作符 | 说明<br> —|—<br> AND | 且（优先级比OR高）<br> OR | 或<br> IN | 在指定范围内，如WHERE id IN  (1002 1003)<br> NOT IN | 不在指定范围内</li>
-<li>数据过滤通配符(利用LIKE操作符)<br> 操作符 | 说明<br> —|—<br> % | 表示任意字符出现的任意次数<br> _ | 表示单个字符</li>
-<li>用正则表达式进行搜索(正则表达式的使用自行搜索)<blockquote>
-<p>SELECT * FROM product WHERE prod_name REGEXP ‘.000’ OR<br> prod_name REGEXP ‘1000|2000’ OR prod_name REGEXP ‘[123]  Ton’</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="创建计算字段"><a href="#创建计算字段" class="headerlink" title="创建计算字段"></a>创建计算字段</h2><p>计算字符是运行时在SELECT语句内创建的。</p>
-<ol>
-<li>拼接字段(Concat函数)<blockquote>
-<p>SELECT Concat(vend_name,’(‘,vend_country,’)’) FROM vendors</p>
-</blockquote>
-</li>
-<li>使用别名(列名，表名都可以使用，使用关键字AS，也可省略)<blockquote>
-<p>SELECT Concat(RTrim(vend_name),’(‘, RTrim(vend_country),’)’)  AS vend_title FROM vendors</p>
-</blockquote>
-</li>
-<li>执行算术计算(加减乘除)<blockquote>
-<p>SELECT quantity*item_price AS expanded_price FROM orderitems</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="使用数据处理函数"><a href="#使用数据处理函数" class="headerlink" title="使用数据处理函数"></a>使用数据处理函数</h2><ol>
-<li>文本处理函数<br>函数 | 说明<br>—|—<br>Left() | 返回串左边的字符<br>Right() | 返回串右边的字符<br>Length() | 返回串的长度<br>Locate() | 找出一个串的子串<br>Lower() | 将串转化为小写<br>Upper() | 将串转化为大写<br>LRrim() | 去掉串左边的空格<br>RTrim() | 去掉串右边的空格<br>Trim() | 去掉串两边的空格<br>SubString() | 返回子串的字符  </li>
-<li><p>日期和时间处理函数<br> 函数 | 说明<br> —|—<br> AddDate() | 增加一个日期(天、周等)<br> AddTime() | 增加一个时间(时、分等)<br> CurDate() | 返回当前的日期<br> CurTime() | 返回当前的时间<br> Date() | 返回日期时间的日期部分<br> DateDiff() | 计算两个日期之差<br> Date_Format() | 返回一个格式化的日期或时间串<br> Day() | 返回一个日期的天数部分，类推年月日，时分秒<br> Now() | 返回当前日期和时间  </p>
-</li>
-<li><p>数值处理函数<br> 函数 | 说明<br> —|—<br> Abs() | 返回一个数的绝对值<br> Cos() | 返回一个角度的余弦，类推正弦<br> Exp() | 返回一个数的指数值<br> Mod() | 返回除数操作的余数<br> Rand() | 返回一个随机数<br> Sqrt() | 返回一个数的平方根</p>
-</li>
-</ol>
-<h2 id="汇总数据"><a href="#汇总数据" class="headerlink" title="汇总数据"></a>汇总数据</h2><ol>
-<li><p>聚集函数</p>
-<p> 函数 | 说明<br> —|—<br> AVG() | 返回某列的平均值<br> COUNT() | 返回某列的行数<br> MAX() | 返回某列的最大值<br> MIN() | 返回某列的最小值<br> SUM() | 返回某列的总和</p>
-</li>
-</ol>
-<h2 id="分组数据"><a href="#分组数据" class="headerlink" title="分组数据"></a>分组数据</h2><ol>
-<li>创建分组(先分组后聚集)<blockquote>
-<p>SELECT vend_id  COUNT(*) AS num_prods FROM product GROUP BY vend_id</p>
-</blockquote>
-</li>
-<li>过滤分组<blockquote>
-<p>SELECT cust_id  COUNT(<em>) AS orders FROM order GROUP BY cust_id HAVING COUNT(</em>)&gt;=2</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="使用子查询"><a href="#使用子查询" class="headerlink" title="使用子查询"></a>使用子查询</h2><ol>
-<li>利用子查询进行过滤(找出买TNT2的顾客信息)<blockquote>
-<p>SELECT cust_name, cust_contact FROM customers WHERE cust_id IN  (SELECT cust_id FROM order WHERE order_num IN (SELECT order_num FROM orderitem WHERE prod_id=’TNT2’))</p>
-</blockquote>
-</li>
-<li>使用计算字段使用子查询(显示顾客的信息和订单量)<blockquote>
-<p>SELECT cust_name, cust_state, (SELECT COUNT (*)  FROM order WHERE order.cust_id = customer.cust_id)  AS orders FROM customer</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="联结表查询"><a href="#联结表查询" class="headerlink" title="联结表查询"></a>联结表查询</h2><ol>
-<li>联结查询(没有WHERE子句会产生笛卡尔积)<blockquote>
-<p>SELECT vend_name, prod_name FROM vendor, product, WHERE vendor.vend_id = product.vend_id</p>
-</blockquote>
-</li>
-<li>内部联结(等值联结，首选)<blockquote>
-<p>SELECT vend_name, prod_name FROM vendor INNER JOIN product ON vendor.vend_id = product.vend_id</p>
-</blockquote>
-</li>
-<li>多表联结<blockquote>
-<p>SELECT vend_name, prod_name, quantity FROM vendor, product, orderitem WHERE product.vend_id = vendor.vend_id AND orderitem.prod_id = product.prod_id</p>
-</blockquote>
-</li>
-<li>自联结(一般联结查询要比子查询快)<blockquote>
-<p>ELECT p1.prod_id, p1.prod_name FROM product p1, product p2 WHERE<br> p1.vend_id = p2.vend_id AND p2.prod_id = ‘DTNTR’</p>
-</blockquote>
-</li>
-<li>自然联结(排除一个列多次出现，使每个列只返回一次; 大部分内部联结都是自然联结)</li>
-<li>外部联结(联结包括了那些在相关表没有关联行的行，左外联结(左边的所有行必出现)，右外联结(右边的所有行必出现))<blockquote>
-<p>SELECT vend_name, prod_name FROM vendor LEFT OUTER JOIN product ON vendor.vend_id = product.vend_id</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="组合查询"><a href="#组合查询" class="headerlink" title="组合查询"></a>组合查询</h2><ol>
-<li>创建组合查询(大部分使用WHERE子句更快，但是对于多个表使用UNION可能更简单，重复行会被自动取消，如果不取消，使用UNION ALL)<blockquote>
-<p>SELECT vend_id, prod_id, prod_price FROM product WHERE prod_price &lt;=5 UNION SELECT vend_id, prod_id, prod_price FROM product WHERE vend_id IN  (1001, 1002)</p>
-</blockquote>
-</li>
-</ol>
-<h1 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h1><ol>
-<li>插入一行数据(如果是完整的行，可以不写列名，但是要注意值的顺序)<blockquote>
-<p>INSERT INTO customer(列名) VALUES(类名对应的值)        </p>
-</blockquote>
-</li>
-<li>插入多个行<blockquote>
-<p>INSERT INTO customer(列名) VALUES(类名对应的值),VALUES(类名对应的值)</p>
-</blockquote>
-</li>
-<li>插入检索出的数据<blockquote>
-<p>INSERT INTO customer(列名) SELECT (列名) FROM  表名</p>
-</blockquote>
-</li>
-</ol>
-<h1 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h1><ol>
-<li>更新表中特定的列(一定不要忘了WHERE子句)<blockquote>
-<p>UPDATE customer SET 列名 = 值  WHERE 子句</p>
-</blockquote>
-</li>
-<li>更新多列<blockquote>
-<p>UPDATE customer SET 列名 = 值,列名 = 值 WHERE 子句</p>
-</blockquote>
-</li>
-</ol>
-<h1 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h1><ol>
-<li>删除特定的行<blockquote>
-<p>DELETE FROM 表 WHERE 子句   </p>
-</blockquote>
-</li>
-</ol>
-<h1 id="使用视图"><a href="#使用视图" class="headerlink" title="使用视图"></a>使用视图</h1><ol>
-<li>创建视图<blockquote>
-<p>CREATE VIEW 视图名 AS SELECT 语句</p>
-</blockquote>
-</li>
-<li>查看创建视图的语句<blockquote>
-<p>SHOW CREATE VIEW 视图名</p>
-</blockquote>
-</li>
-<li>删除视图<blockquote>
-<p>DROP VIEW 视图名</p>
-</blockquote>
-</li>
-<li>更新视图（先删除原视图，再创建新视图）</li>
-</ol>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《MySQL必知必会》</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引:虽然用了这么久的数据库，但是有时候使用起来难免会去查怎么使用，这样下去也不是办法，所以自己就在这里以Mysql为例总结一下经常用到的地方。
-    
-    </summary>
-    
-      <category term="数据库" scheme="http://bestlixiang.site/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    
-      <category term="数据库" scheme="http://bestlixiang.site/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-      <category term="MySQL" scheme="http://bestlixiang.site/tags/MySQL/"/>
     
   </entry>
   
