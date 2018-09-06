@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-09-06T00:24:30.280Z</updated>
+  <updated>2018-09-06T01:35:20.622Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,43 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JDK源码分析——TreeMap</title>
+    <link href="http://bestlixiang.site/2018/09/06/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94TreeMap/"/>
+    <id>http://bestlixiang.site/2018/09/06/JDK源码分析/JDK源码分析——TreeMap/</id>
+    <published>2018-09-06T00:32:02.000Z</published>
+    <updated>2018-09-06T01:35:20.622Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：你想利用的Map高效的查找效率，又想拥有一个有序的Map，这个时候就需要用到TreeMap了!<a id="more"></a></p>
+<p>详细注释：<a href="https://github.com/todorex/JDK" target="_blank" rel="external">源码分析地址</a></p>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>TreeMap集合是基于红黑树（Red-Black tree）的 NavigableMap实现。该Map根据其键的自然顺序进行排序，或者根据创建Map时提供的 Comparator 进行排序，具体取决于使用的构造方法。你可以根据自己的需要选择排序的方式。</p>
+<p>关于不同步都和之前解析的非同步容器类似。</p>
+<h1 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h1><p>在概览中说到我们可以在它构造时传递Comparator来决定排序的方法，所以我们就看看这个构造方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 比较器</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Comparator&lt;? <span class="keyword">super</span> K&gt; comparator;</div><div class="line"><span class="comment">// 根节点</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> Entry&lt;K,V&gt; root;</div><div class="line"><span class="comment">// 集合大小</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">int</span> size = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">TreeMap</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> K&gt; comparator)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.comparator = comparator;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="增"><a href="#增" class="headerlink" title="增"></a>增</h1><p>我们看出在构造方法中只是设置了属性，并没有真正构建红黑树，那么它一定在第一次put操作里。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">    <span class="comment">// 获取根节点</span></div><div class="line">    Entry&lt;K,V&gt; t = root;</div><div class="line">    <span class="comment">// 如果根节点为空，则该元素置为根节点</span></div><div class="line">    <span class="keyword">if</span> (t == <span class="keyword">null</span>) &#123;</div><div class="line">        compare(key, key); <span class="comment">// type (and possibly null) check</span></div><div class="line">        <span class="comment">// 新建节点</span></div><div class="line">        root = <span class="keyword">new</span> Entry&lt;&gt;(key, value, <span class="keyword">null</span>);</div><div class="line">        <span class="comment">// 改变集合大小和修改次数</span></div><div class="line">        size = <span class="number">1</span>;</div><div class="line">        modCount++;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">int</span> cmp;</div><div class="line">    Entry&lt;K,V&gt; parent;</div><div class="line">    <span class="comment">// split comparator and comparable paths</span></div><div class="line">    <span class="comment">// 获得key比较器</span></div><div class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cpr = comparator;</div><div class="line">    <span class="comment">// 如果比较器对象不为空，也就是自定义了比较器</span></div><div class="line">    <span class="keyword">if</span> (cpr != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">            <span class="comment">// 循环比较并确定元素应插入的位置(也就是找到该元素的父节点)</span></div><div class="line">            parent = t;</div><div class="line">            cmp = cpr.compare(key, t.key);</div><div class="line">            <span class="comment">// 待插入元素的key小于当前位置元素的key，则查询左子树</span></div><div class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">                t = t.left;</div><div class="line">            <span class="comment">// 待插入元素的key大于当前位置元素的key，则查询右子树</span></div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</div><div class="line">                t = t.right;</div><div class="line">            <span class="comment">// 相等则替换其value</span></div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> t.setValue(value);</div><div class="line">        &#125; <span class="keyword">while</span> (t != <span class="keyword">null</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 如果比较器对象为空，使用默认的比较机制</span></div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// 默认机制下不允许设置 null key</span></div><div class="line">        <span class="keyword">if</span> (key == <span class="keyword">null</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">        <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">            Comparable&lt;? <span class="keyword">super</span> K&gt; k = (Comparable&lt;? <span class="keyword">super</span> K&gt;) key;</div><div class="line">        <span class="comment">// 和上面的循环做同样的事</span></div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">            parent = t;</div><div class="line">            cmp = k.compareTo(t.key);</div><div class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">                t = t.left;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</div><div class="line">                t = t.right;</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> t.setValue(value);</div><div class="line">        &#125; <span class="keyword">while</span> (t != <span class="keyword">null</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 根据key找到父节点后新建一个节点</span></div><div class="line">    Entry&lt;K,V&gt; e = <span class="keyword">new</span> Entry&lt;&gt;(key, value, parent);</div><div class="line">    <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">        parent.left = e;</div><div class="line">    <span class="keyword">else</span></div><div class="line">        parent.right = e;</div><div class="line">    <span class="comment">// 调整红黑树</span></div><div class="line">    fixAfterInsertion(e);</div><div class="line">    size++;</div><div class="line">    modCount++;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>大概的流程如下：</p>
+<ol>
+<li>判断根节点是否为空，为空，则该节点就是根节点</li>
+<li>根据比较器(可能是外部传进来的，也可能是默认的)，找到父节点。</li>
+<li>插入节点之后，就需要用红黑树的修正了。</li>
+</ol>
+<h1 id="删"><a href="#删" class="headerlink" title="删"></a>删</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">remove</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    <span class="comment">// 利用比较器二分查找</span></div><div class="line">    Entry&lt;K,V&gt; p = getEntry(key);</div><div class="line">    <span class="keyword">if</span> (p == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    V oldValue = p.value;</div><div class="line"></div><div class="line">    <span class="comment">// 红黑树删除</span></div><div class="line">    deleteEntry(p);</div><div class="line">    <span class="keyword">return</span> oldValue;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getEntry</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    <span class="comment">// Offload comparator-based version for sake of performance</span></div><div class="line">    <span class="keyword">if</span> (comparator != <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">return</span> getEntryUsingComparator(key);</div><div class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">        Comparable&lt;? <span class="keyword">super</span> K&gt; k = (Comparable&lt;? <span class="keyword">super</span> K&gt;) key;</div><div class="line">    Entry&lt;K,V&gt; p = root;</div><div class="line">    <span class="comment">// 普通的二分查找</span></div><div class="line">    <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">int</span> cmp = k.compareTo(p.key);</div><div class="line">        <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">            p = p.left;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</div><div class="line">            p = p.right;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            <span class="keyword">return</span> p;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getEntryUsingComparator</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">        K k = (K) key;</div><div class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cpr = comparator;</div><div class="line">    <span class="comment">// 普通的二分查找</span></div><div class="line">    <span class="keyword">if</span> (cpr != <span class="keyword">null</span>) &#123;</div><div class="line">        Entry&lt;K,V&gt; p = root;</div><div class="line">        <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">int</span> cmp = cpr.compare(k, p.key);</div><div class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">                p = p.left;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</div><div class="line">                p = p.right;</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> p;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="改"><a href="#改" class="headerlink" title="改"></a>改</h1><p>找到该key对应的节点，然后替换该值<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">replace</span><span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">    <span class="comment">// 找到节点</span></div><div class="line">    Entry&lt;K,V&gt; p = getEntry(key);</div><div class="line">    <span class="comment">// 替换值</span></div><div class="line">    <span class="keyword">if</span> (p!=<span class="keyword">null</span>) &#123;</div><div class="line">        V oldValue = p.value;</div><div class="line">        p.value = value;</div><div class="line">        <span class="keyword">return</span> oldValue;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="查"><a href="#查" class="headerlink" title="查"></a>查</h1><p>一批以getFirstEntry()，getLastEntry()为基础的获取头和尾元素的方法，其中包括：firstKey()，lastKey()；firstEntry()，lastEntry()；pollFirstEntry()，pollLastEntry()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//  返回第一个节点(值最小的节点)</span></div><div class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getFirstEntry</span><span class="params">()</span> </span>&#123;</div><div class="line">    Entry&lt;K,V&gt; p = root;</div><div class="line">    <span class="keyword">if</span> (p != <span class="keyword">null</span>)</div><div class="line">        <span class="comment">// 一直遍历左子树</span></div><div class="line">        <span class="keyword">while</span> (p.left != <span class="keyword">null</span>)</div><div class="line">            p = p.left;</div><div class="line">    <span class="keyword">return</span> p;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 返回最后一个节点(值最大的节点)</span></div><div class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getLastEntry</span><span class="params">()</span> </span>&#123;</div><div class="line">    Entry&lt;K,V&gt; p = root;</div><div class="line">    <span class="keyword">if</span> (p != <span class="keyword">null</span>)</div><div class="line">        <span class="comment">// 一直遍历右子树</span></div><div class="line">        <span class="keyword">while</span> (p.right != <span class="keyword">null</span>)</div><div class="line">            p = p.right;</div><div class="line">    <span class="keyword">return</span> p;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：你想利用的Map高效的查找效率，又想拥有一个有序的Map，这个时候就需要用到TreeMap了!
+    
+    </summary>
+    
+      <category term="JDK源码分析" scheme="http://bestlixiang.site/categories/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+    
+      <category term="TreeMap" scheme="http://bestlixiang.site/tags/TreeMap/"/>
+    
+  </entry>
   
   <entry>
     <title>JDK源码分析——HashSet</title>
@@ -1390,106 +1427,6 @@
     
     
       <category term="TCP" scheme="http://bestlixiang.site/tags/TCP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>UDP协议</title>
-    <link href="http://bestlixiang.site/2018/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/UDP%E5%8D%8F%E8%AE%AE/"/>
-    <id>http://bestlixiang.site/2018/05/17/计算机网络/UDP协议/</id>
-    <published>2018-05-17T07:03:18.000Z</published>
-    <updated>2018-05-17T07:09:07.421Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：UDP作为传输层的一大协议，虽然没有TCP可靠，但是却胜在简单。<a id="more"></a></p>
-<h1 id="UDP认识"><a href="#UDP认识" class="headerlink" title="UDP认识"></a>UDP认识</h1><p><strong>UDP(用户数据报协议)</strong> 是一种简单的面向数据报、无连接、传输层协议，并且保留了信息边界。UDP不提供错误校正，不保证有序，无法去重复，没有流量控制和拥塞控制，不能保证数据一定到达目的地，但是可以通过校验和提供错误侦测。UDP提供的的是不可靠传输，<strong>因此要有应用层来提供这些功能</strong>。</p>
-<h1 id="UDP特点"><a href="#UDP特点" class="headerlink" title="UDP特点"></a>UDP特点</h1><ol>
-<li>UDP只在IP数据报服务的基础上增加了少量的功能：利用端口号是实现分用、对整个报文的差错检测。</li>
-<li>UDP是无连接的，通信前不需要建立连接，通信结束也无需释放连接。</li>
-<li>UDP是不可靠的 它是<strong>尽力而为</strong>交付，不能确保每一个数据报都送达。</li>
-<li>UDP是<strong>面向报文</strong>的，面向报文就是指：UDP数据传输的单位是报文，且不会对数据作任何拆分和拼接 操作。在发送端，应用程序给传输层的UDP什么样的数据，UDP不会对数据进行切分，只增加一个UDP头并交给网络层。在接收端，UDP收到网络层的数据报后，去除IP数据报头部后遍交给应用层，不会作任何拼接操作。</li>
-<li>相比于TCP，UDP没有拥塞控制，UDP始终以恒定的速率发送数据，并不会根据网络拥塞情况对发送速率作调整。这种方式有利有弊。弊端：网络拥塞时有些报文可能会丢失，因此UDP不可靠。优点：有些使用场景允许报文丢失，如：直播、语音通话，但对实时性要求很高，此时UDP还是很有用武之地的。</li>
-<li>UDP支持一对一、一对多、多对多、多对一通信；而TCP只支持一对一通信。</li>
-<li>UDP首部开销小，只有8字节。而TCP头部至少由20字节，相比于TCP要高效很多。</li>
-</ol>
-<h1 id="UDP数据包首部"><a href="#UDP数据包首部" class="headerlink" title="UDP数据包首部"></a>UDP数据包首部</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/udp.png" alt="udp"></p>
-<h2 id="UDP数据包首部解析"><a href="#UDP数据包首部解析" class="headerlink" title="UDP数据包首部解析"></a>UDP数据包首部解析</h2><ol>
-<li>16位源端口号：发送端应用程序使用的端口号，用于区分数据报来自哪个进程，多路复用一个传输层（复用：在发送端，多个应用进程公用一个传输层）。</li>
-<li>16位目的端口号：数据送往接收端哪个应用程序，利用端口号实现多路分用（分用：在接收端，传输层会根据端口号将数据分派给不同的应用进程）。</li>
-<li>16位UDP长度：UDP数据报首部和UDP数据报数据部分总字节数，最小值为8字节(仅有首部)，最大值为65535字节。</li>
-<li>16位UDP检验和：UDP的校验和是可选的，TCP是必需的。UDP的校验和覆盖首部及数据部分。在下一节。</li>
-<li>数据：要发送的数据，可以为空(0字节)。</li>
-</ol>
-<h2 id="UDP检验和"><a href="#UDP检验和" class="headerlink" title="UDP检验和"></a>UDP检验和</h2><p>UDP校验和的内容超出了UDP数据报文本身的范围，实际上，它的值是通过计算UDP数据报及一个伪包头而得到的。校验和的计算方法与通用的一样，都是累加求和。<br>它的校验和的检验范围如下图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/checksum.png" alt="checksum"></p>
-<p>伪首部并非UDP数据报中实际的有效成分。伪首部是一个虚拟的数据结构，其中的信息是从数据报所在IP分组头的分组头中提取的，既不向下传送也不向上递交，而仅仅是为计算校验和。这样的校验和，既校验了UDP用户数据的源端口号和目的端口号以及UDP用户数据报的数据部分，又检验了IP数据报的源IP地址和目的IP<br>地址。<strong>伪报头保证UDP数据单元到达正确的目的地址</strong>。</p>
-<p>校验方式：</p>
-<ol>
-<li><p>《TCP/IP 详解》卷一 第一版中如下计算检验和字段的值：</p>
-<ul>
-<li>发送方计算UDP检验和：<br>首先把检验和字段置为0，把上图中,各部分数据(包括UDP伪首部及填充字段)按每16bit进行二进制反码求和(若最高位产生进位就加到最低位上去)，所求结果就是16bitUDP检验和字段的值。</li>
-<li>接收方计算UDP检验和：<br>对收到的UDP数据报(加上了UDP首部和填充字节)按每16bit进行二进制反码求和(若最高位产生进位就加到最低位上去)，若结果为全1，则UDP数据报在传输过程中没有出现差错，否则数据报有差错。</li>
-</ul>
-</li>
-<li>《TCP/IP 详解》卷一 第二版中如下计算检验和字段的值：<ul>
-<li>发送方计算UDP检验和：<br>首先把检验和字段置为0，把上图中,各部分数据(包括UDP伪首部及填充字段)按每16bit进行二进制反码求和(若最高位产生进位就加到最低位上去)，最后结果再按位取反，所得结果就是16bitUDP检验和字段的值。</li>
-<li>接收方计算UDP检验和：<br>对收到的UDP数据报(加上了UDP首部和填充字节)按每16bit进行二进制反码求和(若最高位产生进位就加到最低位上去)，再按位取反，若结果为全0，则UDP数据报在传输过程中没有出现差错，否则数据报有差错。<strong>因为检验和的值从不为0xFFFF</strong></li>
-</ul>
-</li>
-</ol>
-<h1 id="UDP服务器三类地址绑定"><a href="#UDP服务器三类地址绑定" class="headerlink" title="UDP服务器三类地址绑定"></a>UDP服务器三类地址绑定</h1><table>
-<thead>
-<tr>
-<th>本地地址</th>
-<th>远端地址</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>LocalIP:Lport</td>
-<td>ForeignIP:Fport</td>
-<td>只限于一个客户</td>
-</tr>
-<tr>
-<td>LocalIP:Lport</td>
-<td>*:*</td>
-<td>只限于一个本地IP和端口的数据包</td>
-</tr>
-<tr>
-<td>*:port</td>
-<td>*:*</td>
-<td>接收发送到Lport的所有数据包</td>
-</tr>
-</tbody>
-</table>
-<ol>
-<li>第一行中服务器限定了只从本地Local这个IP地址的Lport端口接收数据报，而且只接收来自IP为Foreign且端口为Fport发来的数据。</li>
-<li>第二行中服务器限定了只从本地LocalIP这个IP地址的Lport端口接收数据报，但可以接收任何主机发送的数据。</li>
-<li>第三行中服务器只限定了接收数据的端口号，因此任何一个本地接口IP都可以接收它，而且数据可以来自任何主机发送的数据。</li>
-</ol>
-<h1 id="UDP的应用"><a href="#UDP的应用" class="headerlink" title="UDP的应用"></a>UDP的应用</h1><p>当对网络通讯质量要求不高的时候，要求网络通讯速度能尽量的快，这时就可以使用UDP。常见的使用UDP协议的应用如下：</p>
-<ul>
-<li>QQ语言和视频</li>
-<li>DNS(域名服务器)</li>
-<li>NFS(网络文件系统)</li>
-<li>TFTP(普通文件传输协议)</li>
-</ul>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://blog.csdn.net/CorCplusplusorjava/article/details/47164875" target="_blank" rel="external">UDP协议</a></li>
-<li><a href="https://blog.csdn.net/sinat_30270011/article/details/51980160" target="_blank" rel="external">UDP协议的应用</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：UDP作为传输层的一大协议，虽然没有TCP可靠，但是却胜在简单。
-    
-    </summary>
-    
-      <category term="计算机网络" scheme="http://bestlixiang.site/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
-    
-    
-      <category term="UDP" scheme="http://bestlixiang.site/tags/UDP/"/>
     
   </entry>
   
