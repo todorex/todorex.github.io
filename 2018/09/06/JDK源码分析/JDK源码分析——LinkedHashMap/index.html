@@ -97,7 +97,7 @@
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：如果有这样一种情形，我们需要按照元素插入的顺序来访问元素，这个时候LinkedHashMap大展身手了，它保存着元素插入的顺序，并且可以按照我们插入的顺序进行访问。">
 <meta property="og:image" content="https://blog-pictures.oss-cn-shanghai.aliyuncs.com/15166338955699.jpg">
-<meta property="og:updated_time" content="2018-09-06T06:31:28.751Z">
+<meta property="og:updated_time" content="2018-09-07T13:25:42.604Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK源码分析——LinkedHashMap">
 <meta name="twitter:description" content="引：如果有这样一种情形，我们需要按照元素插入的顺序来访问元素，这个时候LinkedHashMap大展身手了，它保存着元素插入的顺序，并且可以按照我们插入的顺序进行访问。">
@@ -388,6 +388,7 @@
 
       
         <p>引：如果有这样一种情形，我们需要按照元素插入的顺序来访问元素，这个时候LinkedHashMap大展身手了，它保存着元素插入的顺序，并且可以按照我们插入的顺序进行访问。<a id="more"></a></p>
+<p>详细注释：<a href="https://github.com/todorex/JDK" target="_blank" rel="external">源码分析地址</a></p>
 <h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>LinkedHashMap 继承自 HashMap，在 HashMap 基础上，通过维护一条双向链表，解决了 HashMap 不能随时保持遍历顺序和插入顺序一致的问题。除此之外，LinkedHashMap 对访问顺序也提供了相关支持。在一些场景下，该特性很有用，比如缓存。在实现上，LinkedHashMap 很多方法直接继承自 HashMap，仅为维护双向链表覆写了部分方法。</p>
 <p>它的结构示意图如下：<br><img src="https://blog-pictures.oss-cn-shanghai.aliyuncs.com/15166338955699.jpg" alt="LinkedHashMap"></p>
 <h1 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h1><p>主要就是设置初始容量、负载因子和迭代顺序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 双向链表的头，最久访问的</span></div><div class="line"><span class="keyword">transient</span> LinkedHashMap.Entry&lt;K,V&gt; head;</div><div class="line"><span class="comment">// 双向链表的尾，最新访问的</span></div><div class="line"><span class="keyword">transient</span> LinkedHashMap.Entry&lt;K,V&gt; tail;</div><div class="line"><span class="comment">// 默认为false，迭代顺序是按照插入顺序，当为true时，迭代顺序是按照访问信息，最近访问在尾部</span></div><div class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> accessOrder;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedHashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity,</span></span></div><div class="line">                     <span class="keyword">float</span> loadFactor,</div><div class="line">                     <span class="keyword">boolean</span> accessOrder) &#123;</div><div class="line">    <span class="comment">// 后面和HashMap一样</span></div><div class="line">    <span class="keyword">super</span>(initialCapacity, loadFactor);</div><div class="line">    <span class="keyword">this</span>.accessOrder = accessOrder;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -553,7 +554,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">135</span>
+                <span class="site-state-item-count">136</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

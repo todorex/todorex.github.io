@@ -96,7 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/09/07/JDK源码分析/JDK源码分析——ThreadLocal/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：可能大家对ThreadLocal这个类既熟悉又陌生，看到得多用到得少。">
-<meta property="og:updated_time" content="2018-09-07T06:09:05.357Z">
+<meta property="og:updated_time" content="2018-09-07T13:25:37.434Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK源码分析——ThreadLocal">
 <meta name="twitter:description" content="引：可能大家对ThreadLocal这个类既熟悉又陌生，看到得多用到得少。">
@@ -386,6 +386,7 @@
 
       
         <p>引：可能大家对ThreadLocal这个类既熟悉又陌生，看到得多用到得少。<a id="more"></a></p>
+<p>详细注释：<a href="https://github.com/todorex/JDK" target="_blank" rel="external">源码分析地址</a></p>
 <h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>该类提供了线程局部 (thread-local) 变量。ThreadLocal 实例通常是类中的 private static 字段，它们希望将状态与某一个线程（例如，用户 ID 或事务 ID）相关联。</p>
 <p>每个线程都保持对其线程局部变量副本的隐式引用，只要线程是活动的并且 ThreadLocal 实例是可访问的；在线程消失之后，其线程局部实例的所有副本都会被垃圾回收（除非存在对这些副本的其他引用）</p>
 <p><strong>应用</strong>：在单线程应用程序中可能会维持一个全局的数据库连接，并在程序启动时初始化这个连接对象，从而避免在调用每个方法时都要传递一个Connection对象。由于JDBC的连接对象不一定是线程安全的，因此，当多线程应用程序在没有协同的情况下使用全局变量时，就不是线程安全的。通过将JDBC的连接保存到ThreadLocal对象中，每个线程都会拥有属于自己的连接。</p>
@@ -451,6 +452,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/07/JDK源码分析/JDK源码分析——ThreadPoolExecutor/" rel="prev" title="JDK源码分析——ThreadPoolExecutor">
+                JDK源码分析——ThreadPoolExecutor <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -547,7 +552,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">135</span>
+                <span class="site-state-item-count">136</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
