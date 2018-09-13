@@ -1,0 +1,983 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="锁," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="引：虽然有了synchronized这种内置的锁功能，但是在JDK5之后又新增了Lock接口，它的实现类可比内置的锁强大多了。今天我们主要看看它的实现类之一ReentrantLock。">
+<meta name="keywords" content="锁">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDK源码分析——ReentrantLock">
+<meta property="og:url" content="http://bestlixiang.site/2018/09/13/JDK源码分析/JDK源码分析——ReentrantLock/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：虽然有了synchronized这种内置的锁功能，但是在JDK5之后又新增了Lock接口，它的实现类可比内置的锁强大多了。今天我们主要看看它的实现类之一ReentrantLock。">
+<meta property="og:updated_time" content="2018-09-13T06:15:42.266Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JDK源码分析——ReentrantLock">
+<meta name="twitter:description" content="引：虽然有了synchronized这种内置的锁功能，但是在JDK5之后又新增了Lock接口，它的实现类可比内置的锁强大多了。今天我们主要看看它的实现类之一ReentrantLock。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2018/09/13/JDK源码分析/JDK源码分析——ReentrantLock/"/>
+
+
+
+
+
+  <title> JDK源码分析——ReentrantLock | rex note </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/09/13/JDK源码分析/JDK源码分析——ReentrantLock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                JDK源码分析——ReentrantLock
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-13T10:13:39+08:00">
+                2018-09-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JDK源码分析/" itemprop="url" rel="index">
+                    <span itemprop="name">JDK源码分析</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：虽然有了synchronized这种内置的锁功能，但是在JDK5之后又新增了Lock接口，它的实现类可比内置的锁强大多了。今天我们主要看看它的实现类之一ReentrantLock。<a id="more"></a></p>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>在看之前，我们一定要对AbstractQueuedSynchronizer熟悉，不熟悉的可以参考我这篇文章——<a href="http://todorex.com/2018/09/11/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94AbstractQueuedSynchronizer/" target="_blank" rel="external">JDK源码分析——AbstractQueuedSynchronizer</a></p>
+<p>我们先看看他的定义：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReentrantLock</span> <span class="keyword">implements</span> <span class="title">Lock</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="comment">// 同步器(可选择公平同步器或者非公平同步器)</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Sync sync;</div><div class="line"></div><div class="line">    <span class="comment">// 默认非公平锁</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ReentrantLock</span><span class="params">()</span> </span>&#123;</div><div class="line">        sync = <span class="keyword">new</span> NonfairSync();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// fair为true时，采用公平锁策略</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ReentrantLock</span><span class="params">(<span class="keyword">boolean</span> fair)</span> </span>&#123;    </div><div class="line">        sync = fair ? <span class="keyword">new</span> FairSync() : <span class="keyword">new</span> NonfairSync();</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</div><div class="line">        sync.lock();</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span> </span>&#123;    </div><div class="line">        sync.release(<span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>同步器抽象类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">abstract</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Sync</span> <span class="keyword">extends</span> <span class="title">AbstractQueuedSynchronizer</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">// 非公平的TryAcquire</span></div><div class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">nonfairTryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> Thread current = Thread.currentThread();</div><div class="line">        <span class="keyword">int</span> c = getState();</div><div class="line">        <span class="comment">// 为0，则可获得锁，进行CAS操作设置state，并设置当前线程为独占线程</span></div><div class="line">        <span class="keyword">if</span> (c == <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (compareAndSetState(<span class="number">0</span>, acquires)) &#123;</div><div class="line">                setExclusiveOwnerThread(current);</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 重入锁的体现</span></div><div class="line">        <span class="comment">// 如果当前线程为独占线程，则可重入</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (current == getExclusiveOwnerThread()) &#123;</div><div class="line">            <span class="comment">// 重入次数增加</span></div><div class="line">            <span class="keyword">int</span> nextc = c + acquires;</div><div class="line">            <span class="keyword">if</span> (nextc &lt; <span class="number">0</span>) <span class="comment">// overflow</span></div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Maximum lock count exceeded"</span>);</div><div class="line">            setState(nextc);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 获取失败</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 释放锁</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryRelease</span><span class="params">(<span class="keyword">int</span> releases)</span> </span>&#123;</div><div class="line">        <span class="comment">// 截取释放次数</span></div><div class="line">        <span class="keyword">int</span> c = getState() - releases;</div><div class="line">        <span class="keyword">if</span> (Thread.currentThread() != getExclusiveOwnerThread())</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</div><div class="line">        <span class="keyword">boolean</span> free = <span class="keyword">false</span>;</div><div class="line">        <span class="comment">// 重入次数要减到0，才是真正得释放了锁</span></div><div class="line">        <span class="keyword">if</span> (c == <span class="number">0</span>) &#123;</div><div class="line">            free = <span class="keyword">true</span>;</div><div class="line">            setExclusiveOwnerThread(<span class="keyword">null</span>);</div><div class="line">        &#125;</div><div class="line">        setState(c);</div><div class="line">        <span class="keyword">return</span> free;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 维护了一个条件队列</span></div><div class="line">    <span class="function"><span class="keyword">final</span> ConditionObject <span class="title">newCondition</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> ConditionObject();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="公平锁"><a href="#公平锁" class="headerlink" title="公平锁"></a>公平锁</h1><p>公平锁是指如果同步器的队列中有线程在等待，后来的线程则直接加入到队列中<br>公平同步器实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">FairSync</span> <span class="keyword">extends</span> <span class="title">Sync</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="comment">// AQS分析逻辑</span></div><div class="line">      acquire(<span class="number">1</span>);</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 公平实现</span></div><div class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">      <span class="keyword">final</span> Thread current = Thread.currentThread();</div><div class="line">      <span class="keyword">int</span> c = getState();</div><div class="line">      <span class="comment">// 可获得锁</span></div><div class="line">      <span class="keyword">if</span> (c == <span class="number">0</span>) &#123;</div><div class="line">          <span class="comment">// 如果同步器的队列中没有线程在等待 或者 CAS成功 或者设置独占线程成功</span></div><div class="line">          <span class="comment">// 公平的体现</span></div><div class="line">          <span class="keyword">if</span> (!hasQueuedPredecessors() &amp;&amp;</div><div class="line">              compareAndSetState(<span class="number">0</span>, acquires)) &#123;</div><div class="line">              setExclusiveOwnerThread(current);</div><div class="line">              <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">          &#125;</div><div class="line">      &#125;</div><div class="line">      <span class="comment">// 可重入</span></div><div class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (current == getExclusiveOwnerThread()) &#123;</div><div class="line">          <span class="keyword">int</span> nextc = c + acquires;</div><div class="line">          <span class="keyword">if</span> (nextc &lt; <span class="number">0</span>)</div><div class="line">              <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"Maximum lock count exceeded"</span>);</div><div class="line">          setState(nextc);</div><div class="line">          <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="非公平锁"><a href="#非公平锁" class="headerlink" title="非公平锁"></a>非公平锁</h1><p>非公平锁是指后来的线程也有同样的优先级。</p>
+<p>非公平同步器实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">NonfairSync</span> <span class="keyword">extends</span> <span class="title">Sync</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 利用CAS把state从0设置为1</span></div><div class="line">        <span class="comment">// 成功则获得锁</span></div><div class="line">        <span class="keyword">if</span> (compareAndSetState(<span class="number">0</span>, <span class="number">1</span>))</div><div class="line">            setExclusiveOwnerThread(Thread.currentThread());</div><div class="line">        <span class="keyword">else</span></div><div class="line">            <span class="comment">// 进入AQS分析逻辑</span></div><div class="line">            acquire(<span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> acquires)</span> </span>&#123;</div><div class="line">        <span class="comment">// 非公平获取</span></div><div class="line">        <span class="keyword">return</span> nonfairTryAcquire(acquires);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="条件变量Condition"><a href="#条件变量Condition" class="headerlink" title="条件变量Condition"></a>条件变量Condition</h1><p>Synchronized中，所有的线程都在同一个object的条件队列上等待。而ReentrantLock中，每个condition都维护了一个条件队列。我们先看看在同步器定义的ConditionObject对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionObject</span> <span class="keyword">implements</span> <span class="title">Condition</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</div><div class="line">    <span class="comment">// 条件队列的头节点</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Node firstWaiter;</div><div class="line">    <span class="comment">// 条件队列的尾节点</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Node lastWaiter;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们关注它的两个核心方法(条件变量Condition为了解决Object.wait/notify/notifyAll难以使用的问题)：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">signal</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure></p>
+<h2 id="await"><a href="#await" class="headerlink" title="await"></a>await</h2><p>阻塞线程<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">    <span class="comment">// 如果线程被中断，则抛出异常</span></div><div class="line">    <span class="keyword">if</span> (Thread.interrupted())</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InterruptedException();</div><div class="line">    <span class="comment">// 1. 将线程添加到条件等待队列</span></div><div class="line">    Node node = addConditionWaiter();</div><div class="line">    <span class="comment">// 2. 释放持有的锁</span></div><div class="line">    <span class="keyword">int</span> savedState = fullyRelease(node);</div><div class="line">    <span class="keyword">int</span> interruptMode = <span class="number">0</span>;</div><div class="line">    <span class="comment">// 是否在AQS的同步队列中</span></div><div class="line">    <span class="keyword">while</span> (!isOnSyncQueue(node)) &#123;</div><div class="line">        <span class="comment">// 3. 不是则挂起该线程</span></div><div class="line">        LockSupport.park(<span class="keyword">this</span>);</div><div class="line">        <span class="keyword">if</span> ((interruptMode = checkInterruptWhileWaiting(node)) != <span class="number">0</span>)</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 4. 被唤醒后，通过acquireQueued方法重新竞争锁，参考AQS</span></div><div class="line">    <span class="keyword">if</span> (acquireQueued(node, savedState) &amp;&amp; interruptMode != THROW_IE)</div><div class="line">        interruptMode = REINTERRUPT;</div><div class="line">    <span class="comment">// 清理取消节点</span></div><div class="line">    <span class="keyword">if</span> (node.nextWaiter != <span class="keyword">null</span>)</div><div class="line">        unlinkCancelledWaiters();</div><div class="line">    <span class="comment">// 报告中断信息</span></div><div class="line">    <span class="keyword">if</span> (interruptMode != <span class="number">0</span>)</div><div class="line">        reportInterruptAfterWait(interruptMode);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 1. 将线程添加到条件等待队列</span></div><div class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">addConditionWaiter</span><span class="params">()</span> </span>&#123;</div><div class="line">    Node t = lastWaiter;</div><div class="line">    <span class="comment">// 如果最后一个节点是取消状态</span></div><div class="line">    <span class="keyword">if</span> (t != <span class="keyword">null</span> &amp;&amp; t.waitStatus != Node.CONDITION) &#123;</div><div class="line">        <span class="comment">// 从队列删除取消节点</span></div><div class="line">        unlinkCancelledWaiters();</div><div class="line">        t = lastWaiter;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 线程包装成节点</span></div><div class="line">    Node node = <span class="keyword">new</span> Node(Thread.currentThread(), Node.CONDITION);</div><div class="line">    <span class="keyword">if</span> (t == <span class="keyword">null</span>)</div><div class="line">        firstWaiter = node;</div><div class="line">    <span class="keyword">else</span></div><div class="line">        t.nextWaiter = node;</div><div class="line">    lastWaiter = node;</div><div class="line">    <span class="keyword">return</span> node;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 2. 释放持有的锁</span></div><div class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">int</span> <span class="title">fullyRelease</span><span class="params">(Node node)</span> </span>&#123;</div><div class="line">    <span class="comment">// 标记是否失败，失败则将节点设为取消状态</span></div><div class="line">    <span class="keyword">boolean</span> failed = <span class="keyword">true</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">int</span> savedState = getState();</div><div class="line">        <span class="comment">// release可以参考AQS的解析</span></div><div class="line">        <span class="keyword">if</span> (release(savedState)) &#123;</div><div class="line">            failed = <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">return</span> savedState;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        <span class="keyword">if</span> (failed)</div><div class="line">            node.waitStatus = Node.CANCELLED;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="signal"><a href="#signal" class="headerlink" title="signal"></a>signal</h2><p>唤醒线程<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">signal</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// 当前线程是否持有锁</span></div><div class="line">    <span class="keyword">if</span> (!isHeldExclusively())</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalMonitorStateException();</div><div class="line">    Node first = firstWaiter;</div><div class="line">    <span class="keyword">if</span> (first != <span class="keyword">null</span>)</div><div class="line">        doSignal(first);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doSignal</span><span class="params">(Node first)</span> </span>&#123;</div><div class="line">    <span class="keyword">do</span> &#123;</div><div class="line">        <span class="keyword">if</span> ( (firstWaiter = first.nextWaiter) == <span class="keyword">null</span>)</div><div class="line">            lastWaiter = <span class="keyword">null</span>;</div><div class="line">        first.nextWaiter = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 找到底部个非取消节点，遇到取消节点就进行删除</span></div><div class="line">    &#125; <span class="keyword">while</span> (!transferForSignal(first) &amp;&amp;</div><div class="line">             (first = firstWaiter) != <span class="keyword">null</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">transferForSignal</span><span class="params">(Node node)</span> </span>&#123;</div><div class="line">    <span class="comment">// 将状态设置为0，不行就取消该节点</span></div><div class="line">    <span class="keyword">if</span> (!compareAndSetWaitStatus(node, Node.CONDITION, <span class="number">0</span>))</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    <span class="comment">// 将节点放入到同步队列中</span></div><div class="line">    Node p = enq(node);</div><div class="line">    <span class="keyword">int</span> ws = p.waitStatus;</div><div class="line">    <span class="keyword">if</span> (ws &gt; <span class="number">0</span> || !compareAndSetWaitStatus(p, ws, Node.SIGNAL))</div><div class="line">        <span class="comment">// 唤醒线程</span></div><div class="line">        LockSupport.unpark(node.thread);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>ReetrantLock还提供了其它功能，包括定时的锁等待、可中断的锁等待、公平性、以及实现非块结构的加锁、Condition，对线程的等待和唤醒等操作更加灵活。但是内置锁（Synchronized）与ReentrantLock相比有例外一个优点就是在线程转储中能给出在哪些调用帧中获得了哪些锁，并能够检测和识别发生死锁的线程。因为Reentrant的非块状特性意味着获取锁的操作不能与特定的栈帧关联起来。相比之下内置锁是JVM的内置属性，所以未来更可能提升synchronized而不是ReentrantLock的性能，而照目前的趋势来看确实如此。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://todorex.com/2018/09/11/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94AbstractQueuedSynchronizer/" target="_blank" rel="external">JDK源码分析——AbstractQueuedSynchronizer</a></li>
+<li><a href="https://www.jianshu.com/p/4358b1466ec9" target="_blank" rel="external">深入浅出ReentrantLock</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/锁/" rel="tag"># 锁</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/11/JDK源码分析/JDK源码分析——AbstractQueuedSynchronizer/" rel="next" title="JDK源码分析——AbstractQueuedSynchronizer">
+                <i class="fa fa-chevron-left"></i> JDK源码分析——AbstractQueuedSynchronizer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/me.jpeg"
+               alt="rex" />
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">138</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概览"><span class="nav-number">1.</span> <span class="nav-text">概览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#公平锁"><span class="nav-number">2.</span> <span class="nav-text">公平锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非公平锁"><span class="nav-number">3.</span> <span class="nav-text">非公平锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#条件变量Condition"><span class="nav-number">4.</span> <span class="nav-text">条件变量Condition</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#await"><span class="nav-number">4.1.</span> <span class="nav-text">await</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#signal"><span class="nav-number">4.2.</span> <span class="nav-text">signal</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
