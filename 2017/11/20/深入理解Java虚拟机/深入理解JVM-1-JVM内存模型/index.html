@@ -92,14 +92,14 @@
 <meta name="description" content="引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。">
 <meta name="keywords" content="JVM,java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解JVM_1_JVM内存模型">
+<meta property="og:title" content="深入理解JVM_1_JVM内存区域">
 <meta property="og:url" content="http://bestlixiang.site/2017/11/20/深入理解Java虚拟机/深入理解JVM-1-JVM内存模型/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。">
 <meta property="og:image" content="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaRunningDataModel.jpg">
-<meta property="og:updated_time" content="2017-12-09T12:04:23.000Z">
+<meta property="og:updated_time" content="2018-09-14T01:12:49.807Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解JVM_1_JVM内存模型">
+<meta name="twitter:title" content="深入理解JVM_1_JVM内存区域">
 <meta name="twitter:description" content="引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。">
 <meta name="twitter:image" content="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaRunningDataModel.jpg">
 
@@ -135,7 +135,7 @@
 
 
 
-  <title> 深入理解JVM_1_JVM内存模型 | rex note </title>
+  <title> 深入理解JVM_1_JVM内存区域 | rex note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -309,7 +309,7 @@
             
             
               
-                深入理解JVM_1_JVM内存模型
+                深入理解JVM_1_JVM内存区域
               
             
           </h2>
@@ -388,7 +388,7 @@
 
       
         <p>引：总是提到堆呀，栈呀，常量池呀，但是Java虚拟机内的Java模型却总是理解不清楚，这次就总结一下。<a id="more"></a></p>
-<h1 id="Java内存模型组成"><a href="#Java内存模型组成" class="headerlink" title="Java内存模型组成"></a>Java内存模型组成</h1><p>这里讲的是Java虚拟机在执行Java程序的过程中会把它所管理的内存划分五大区域。</p>
+<h1 id="Java内存区域组成"><a href="#Java内存区域组成" class="headerlink" title="Java内存区域组成"></a>Java内存区域组成</h1><p>这里讲的是Java虚拟机在执行Java程序的过程中会把它所管理的内存划分五大区域。</p>
 <ol>
 <li>程序计算器</li>
 <li>Java虚拟机栈</li>
@@ -715,7 +715,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java内存模型组成"><span class="nav-number">1.</span> <span class="nav-text">Java内存模型组成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#程序计数器"><span class="nav-number">2.</span> <span class="nav-text">程序计数器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是程序计数器"><span class="nav-number">2.1.</span> <span class="nav-text">什么是程序计数器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序计数器的作用"><span class="nav-number">2.2.</span> <span class="nav-text">程序计数器的作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序计数器的特点"><span class="nav-number">2.3.</span> <span class="nav-text">程序计数器的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">3.</span> <span class="nav-text">Java虚拟机栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java虚拟机栈"><span class="nav-number">3.1.</span> <span class="nav-text">什么是Java虚拟机栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java虚拟机栈的特点"><span class="nav-number">3.2.</span> <span class="nav-text">Java虚拟机栈的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本地方法栈"><span class="nav-number">4.</span> <span class="nav-text">本地方法栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是本地方法栈"><span class="nav-number">4.1.</span> <span class="nav-text">什么是本地方法栈</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java堆"><span class="nav-number">5.</span> <span class="nav-text">Java堆</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java堆"><span class="nav-number">5.1.</span> <span class="nav-text">什么是Java堆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java堆的特点"><span class="nav-number">5.2.</span> <span class="nav-text">Java堆的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法区"><span class="nav-number">6.</span> <span class="nav-text">方法区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是方法区"><span class="nav-number">6.1.</span> <span class="nav-text">什么是方法区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法区的特点"><span class="nav-number">6.2.</span> <span class="nav-text">方法区的特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行时常量池"><span class="nav-number">6.3.</span> <span class="nav-text">运行时常量池</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#直接内存"><span class="nav-number">7.</span> <span class="nav-text">直接内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">9.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java内存区域组成"><span class="nav-number">1.</span> <span class="nav-text">Java内存区域组成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#程序计数器"><span class="nav-number">2.</span> <span class="nav-text">程序计数器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是程序计数器"><span class="nav-number">2.1.</span> <span class="nav-text">什么是程序计数器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序计数器的作用"><span class="nav-number">2.2.</span> <span class="nav-text">程序计数器的作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序计数器的特点"><span class="nav-number">2.3.</span> <span class="nav-text">程序计数器的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">3.</span> <span class="nav-text">Java虚拟机栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java虚拟机栈"><span class="nav-number">3.1.</span> <span class="nav-text">什么是Java虚拟机栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java虚拟机栈的特点"><span class="nav-number">3.2.</span> <span class="nav-text">Java虚拟机栈的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本地方法栈"><span class="nav-number">4.</span> <span class="nav-text">本地方法栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是本地方法栈"><span class="nav-number">4.1.</span> <span class="nav-text">什么是本地方法栈</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java堆"><span class="nav-number">5.</span> <span class="nav-text">Java堆</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Java堆"><span class="nav-number">5.1.</span> <span class="nav-text">什么是Java堆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java堆的特点"><span class="nav-number">5.2.</span> <span class="nav-text">Java堆的特点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法区"><span class="nav-number">6.</span> <span class="nav-text">方法区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是方法区"><span class="nav-number">6.1.</span> <span class="nav-text">什么是方法区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法区的特点"><span class="nav-number">6.2.</span> <span class="nav-text">方法区的特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行时常量池"><span class="nav-number">6.3.</span> <span class="nav-text">运行时常量池</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#直接内存"><span class="nav-number">7.</span> <span class="nav-text">直接内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">9.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
