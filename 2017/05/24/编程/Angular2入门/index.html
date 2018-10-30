@@ -96,12 +96,12 @@
 <meta property="og:url" content="http://bestlixiang.site/2017/05/24/编程/Angular2入门/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png">
-<meta property="og:updated_time" content="2017-05-24T12:34:36.000Z">
+<meta property="og:image" content="http://blog.todorex.com/angular_overview.png">
+<meta property="og:updated_time" content="2018-10-30T12:07:14.606Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular2入门">
 <meta name="twitter:description" content="引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png">
+<meta name="twitter:image" content="http://blog.todorex.com/angular_overview.png">
 
 
 
@@ -388,19 +388,13 @@
 
       
         <p>引：由于老师暑假的项目前端代码需要用到Angular2，作为一个后端开发者也是需要了解一丢丢的。<a id="more"></a></p>
-<h2 id="Angular简介"><a href="#Angular简介" class="headerlink" title="Angular简介"></a>Angular简介</h2><p>在经过简单的了解与使用之后，感觉 到Angular2的强大与伟大，配的上说是一个优秀的前端框架。Angular2实现了前端一直提倡的组件化开发还解决了大部分项目路由混乱的问题。它还有具有MVC分层架构和依赖注入等一系列优秀的特性。现在贴上Angular2的一张架构图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/angular_overview.png" alt="Angular2架构图"><br>上图描述了Angular2中8大主要构造块的关系，他们具体的理解，可以参考这篇<a href="http://www.cnblogs.com/1wen/p/5466620.html" target="_blank" rel="external">博文</a>。如果还有什么不理解，那我们可以相信实践见真知。</p>
+<h2 id="Angular简介"><a href="#Angular简介" class="headerlink" title="Angular简介"></a>Angular简介</h2><p>在经过简单的了解与使用之后，感觉 到Angular2的强大与伟大，配的上说是一个优秀的前端框架。Angular2实现了前端一直提倡的组件化开发还解决了大部分项目路由混乱的问题。它还有具有MVC分层架构和依赖注入等一系列优秀的特性。现在贴上Angular2的一张架构图：<br><img src="http://blog.todorex.com/angular_overview.png" alt="Angular2架构图"><br>上图描述了Angular2中8大主要构造块的关系，他们具体的理解，可以参考这篇<a href="http://www.cnblogs.com/1wen/p/5466620.html" target="_blank" rel="external">博文</a>。如果还有什么不理解，那我们可以相信实践见真知。</p>
 <h2 id="Angular起步"><a href="#Angular起步" class="headerlink" title="Angular起步"></a>Angular起步</h2><p>在这次学习中，我终于理解了前辈们所说的入门一门技术就好的方法就是去看官方文档了，<a href="https://angular.cn/docs/ts/latest/" target="_blank" rel="external">Angular2的官网文档</a>里面有中文版的，相信大家一定很开心吧。当然没有中文版也是要看的，比较都是最基础的入门，不要惧怕英文。</p>
-<p>在这次按照官方文档的教程（英雄编辑器）出现了两个问题，这里也说明一下：</p>
-<ol>
-<li><p>angular-in-memory-web-apia模块不存在</p>
-</li>
-</ol>
+<p>在这次按照官方文档的教程（英雄编辑器）出现了两个问题，这里也说明一下：<br>1.</p>
+<p>angular-in-memory-web-apia模块不存在</p>
 <p>解决方法：通过命令行安装  </p>
 <pre><code>npm i angular-in-memory-web-api
-</code></pre><ol>
-<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">create(name: string): Promise&lt;Hero&gt; &#123;</div><div class="line">return this.http</div><div class="line">.post(this.heroesUrl, JSON.stringify(&#123;name: name&#125;), this.headers)</div><div class="line">.toPromise()</div><div class="line">.then(res =&gt; res.json().data as Hero)</div><div class="line">.catch(this.handleError);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
+</code></pre><p>2.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">create(name: string): Promise&lt;Hero&gt; &#123;</div><div class="line">return this.http</div><div class="line">.post(this.heroesUrl, JSON.stringify(&#123;name: name&#125;), this.headers)</div><div class="line">.toPromise()</div><div class="line">.then(res =&gt; res.json().data as Hero)</div><div class="line">.catch(this.handleError);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>这里的post方法中的第三个参数应该是this.headers,而不是像官方文档中的那样。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果遇到不懂得问候多看看文档吧，相信自己可以的，然后就是实践见真知了。</p>
 
@@ -556,7 +550,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

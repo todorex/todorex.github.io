@@ -96,12 +96,12 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/02/06/设计模式/设计模式之禅——单例模式/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：如果每个人可以走的路只有一条，如果每个人想要的东西都是一个(单例模式)，那么人应该都不会迷茫了吧。虽然解决了迷茫，但是也抹杀了多样性，有好有坏，各有所见。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/singleton.png">
-<meta property="og:updated_time" content="2018-02-06T13:37:55.000Z">
+<meta property="og:image" content="http://blog.todorex.com/designPattern/png/singleton.png">
+<meta property="og:updated_time" content="2018-10-30T12:06:26.105Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="设计模式之禅——单例模式">
 <meta name="twitter:description" content="引：如果每个人可以走的路只有一条，如果每个人想要的东西都是一个(单例模式)，那么人应该都不会迷茫了吧。虽然解决了迷茫，但是也抹杀了多样性，有好有坏，各有所见。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/singleton.png">
+<meta name="twitter:image" content="http://blog.todorex.com/designPattern/png/singleton.png">
 
 
 
@@ -389,7 +389,7 @@
       
         <p>引：如果每个人可以走的路只有一条，如果每个人想要的东西都是一个(单例模式)，那么人应该都不会迷茫了吧。虽然解决了迷茫，但是也抹杀了多样性，有好有坏，各有所见。<a id="more"></a></p>
 <h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例。——创造类</strong></p>
-<p>下面是它的通用类图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/singleton.png" alt="singleton"></p>
+<p>下面是它的通用类图：<br><img src="http://blog.todorex.com/designPattern/png/singleton.png" alt="singleton"></p>
 <p>代码实现有两种，如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 饿汉式单例 线程安全</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton = <span class="keyword">new</span> Singleton();</div><div class="line">    <span class="comment">// 限制产生多个对象</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// 通过该方法获得实例对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> singleton;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 类中其他方法尽量是static</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> doSomething &#123; ... &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 懒汉式单例 线程不安全</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton = <span class="keyword">null</span>;</div><div class="line">    <span class="comment">// 限制产生多个对象</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123; ... &#125;</div><div class="line">    <span class="comment">// 通过该方法获得实例对象</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getSingleton</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (singleton = <span class="keyword">null</span>) &#123;</div><div class="line">            singleton = <span class="keyword">new</span> Singleton();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> singleton;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 类中其他方法尽量是static</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> doSomething &#123; ... &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ol>
@@ -566,7 +566,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JVM,java," />
+  <meta name="keywords" content="java,JVM," />
 
 
 
@@ -90,7 +90,7 @@
 
 
 <meta name="description" content="引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？">
-<meta name="keywords" content="JVM,java">
+<meta name="keywords" content="java,JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解JVM_10_虚拟机字节码执行引擎">
 <meta property="og:url" content="http://bestlixiang.site/2017/12/09/深入理解Java虚拟机/深入理解JVM-10-虚拟机字节码执行引擎/index.html">
@@ -99,8 +99,8 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160605105355400">
 <meta property="og:image" content="http://img.blog.csdn.net/20160605151831616">
 <meta property="og:image" content="http://img.blog.csdn.net/20160606200822089">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/image/png/compilers.png">
-<meta property="og:updated_time" content="2017-12-09T12:04:06.000Z">
+<meta property="og:image" content="http://blog.todorex.com/image/png/compilers.png">
+<meta property="og:updated_time" content="2018-10-30T12:07:05.699Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解JVM_10_虚拟机字节码执行引擎">
 <meta name="twitter:description" content="引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？">
@@ -476,7 +476,7 @@
 <p>虚方法表中存放着各个方法的实际入口地址。如果某个方法在子类中没有被重写，那子类的虚方法表里面的地址入口和父类相同方法的地址入口是一致的，都指向父类的实现入口。如果子类重写了父类的方法，子类方法表中的地址会替换为指向子类实现版本的入口地址。在上图中，Son重写了Father的全部方法，所以Son的方法表替换了父类的地址。但是Son和Father都没有重写Object的方法，所以方法表都指向了Object的数据类型。<br>为了程序实现上的方便，具有相同签名的方法，在父类和子类的虚方法表中都应该具有一样的索引号，这样当类型变换时，仅仅需要变更查找的方法表，就可以从不同的虚方法表中按索引转换出所需的入口地址。<br>方法表一般在类加载的连接阶段进行初始化，准备了类的变量初始值后，虚拟机会把该类的方法表也初始化完毕。</p>
 <h2 id="动态类型语言支持"><a href="#动态类型语言支持" class="headerlink" title="动态类型语言支持"></a>动态类型语言支持</h2><p>动态类型语言的关键特征是它的类型检查的主体过程是在运行期间而不是编译期间，可以理解为<strong>变量无类型而变量值才有类型</strong>，Javascript就是这样的语言，而目前Java属于静态类型语言。当然Java也有它实现动态性的方法，这块知识点蛮大，就不展开说了。</p>
 <h1 id="基于栈的字节码解释执行引擎"><a href="#基于栈的字节码解释执行引擎" class="headerlink" title="基于栈的字节码解释执行引擎"></a>基于栈的字节码解释执行引擎</h1><h2 id="解释执行"><a href="#解释执行" class="headerlink" title="解释执行"></a>解释执行</h2><p>先看看编译过程流图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/png/compilers.png" alt="compilers"></p>
+<p><img src="http://blog.todorex.com/image/png/compilers.png" alt="compilers"></p>
 <ol>
 <li>上图最下面的那一条就是传统编译原理中程序代码到目标机器代码生成过程（C）</li>
 <li>上图中间那一条就是解释执行的过程（Java）</li>
@@ -524,9 +524,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JVM/" rel="tag"># JVM</a>
-          
             <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -648,7 +648,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

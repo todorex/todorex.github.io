@@ -96,16 +96,16 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/05/18/计算机网络/TCP协议/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：TCP作为传输层的一大协议，虽然没有UDP简单，但是胜在可靠。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcp.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpBuild.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpRelease.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/sendWindow.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/receiverWindow.png">
-<meta property="og:updated_time" content="2018-05-18T07:31:18.419Z">
+<meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/tcp.png">
+<meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/tcpBuild.png">
+<meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/tcpRelease.png">
+<meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/sendWindow.png">
+<meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/receiverWindow.png">
+<meta property="og:updated_time" content="2018-10-30T12:05:58.142Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TCP协议">
 <meta name="twitter:description" content="引：TCP作为传输层的一大协议，虽然没有UDP简单，但是胜在可靠。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcp.png">
+<meta name="twitter:image" content="http://blog.todorex.com/computerNetwork/png/tcp.png">
 
 
 
@@ -400,7 +400,7 @@
 <li>TCP提供全双工通信，全双工通信指的是：TCP的两端既可以作为发送端，也可以作为接收端。</li>
 <li>一条TCP连接的两端只能有两个端点，TCP只能提供点到点的通信，而UDP可以任意方式的通信。</li>
 </ol>
-<h1 id="TCP首部"><a href="#TCP首部" class="headerlink" title="TCP首部"></a>TCP首部</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcp.png" alt="tcp"></p>
+<h1 id="TCP首部"><a href="#TCP首部" class="headerlink" title="TCP首部"></a>TCP首部</h1><p><img src="http://blog.todorex.com/computerNetwork/png/tcp.png" alt="tcp"></p>
 <ol>
 <li>16位端口号:包含源端口和目的端口，客户端通常使用系统自动选择的临时端口号，而服务器则使用自主定义端口号.</li>
 <li>32位序号:一次TCP通信过程中一个传输方向上的字节流的每个字节的编号，例如:A发送给B的第一个TCP报文段中，序号值被系统初始化为某个随机值ISN，那么在该传输方向上，后续的TCP报文段中序号值将被系统设置为ISN加上该报文段所携带数据的第一个字节在整个字节流中的偏移。</li>
@@ -420,7 +420,7 @@
 <li>16位紧急指针:是一个正的偏移量.它和序号字段的值相加表示最后一个紧急数据的下一个字节的序号.</li>
 <li>选项字段，上述字段都是每个TCP头部必须要有的，而选项字段是可选的，且长度可变，最长40字节。 最常用的选项字段为MMS：最大报文长度。</li>
 </ol>
-<h1 id="TCP连接建立-三次握手"><a href="#TCP连接建立-三次握手" class="headerlink" title="TCP连接建立(三次握手)"></a>TCP连接建立(三次握手)</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpBuild.png" alt="tcpBuild"></p>
+<h1 id="TCP连接建立-三次握手"><a href="#TCP连接建立-三次握手" class="headerlink" title="TCP连接建立(三次握手)"></a>TCP连接建立(三次握手)</h1><p><img src="http://blog.todorex.com/computerNetwork/png/tcpBuild.png" alt="tcpBuild"></p>
 <p>TCP协议中，主动发起请求的一端称为<strong>客户端</strong>，被动连接的一端称为<strong>服务端</strong>。不管是客户端还是服务端，TCP连接建立完后都能发送和接收数据。</p>
 <ol>
 <li><strong>握手前</strong>：服务器和客户端都为CLOSED状态，在通信开始前，双方都得创建各自的传输控制块（TCB）。服务器创建完TCB后遍进入LISTEN状态，此时准备接收客户端发来的连接请求。</li>
@@ -431,7 +431,7 @@
 <p><strong>PS：为什么连接建立需要三次握手，而不是两次握手？</strong></p>
 <p>防止失效的连接请求报文段被服务端接收，从而产生错误，失效的连接请求指的是：若客户端向服务端发送的连接请求丢失，客户端等待应答超时后就会再次发送连接请求，此时，上一个连接请求就是失效的。</p>
 <p>若建立连接只需两次握手，服务端在收到连接请求后就进入ESTABLISHED状态。此时如果网络拥塞，客户端发送的连接请求迟迟到不了服务端，客户端便超时重发请求，此时，如果那个失效的连接请求抵达了服务端，但此时的客户端早已进入CLOSED状态，服务端将会一直等待下去，这样浪费服务端连接资源。</p>
-<h1 id="TCP连接释放-四次握手"><a href="#TCP连接释放-四次握手" class="headerlink" title="TCP连接释放(四次握手)"></a>TCP连接释放(四次握手)</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/tcpRelease.png" alt="tcpRelease"><br><strong>TCP连接发送数据</strong>是双向的，因此在四次挥手中，前两次挥手用于断开一个方向的连接，后两次挥手用于断开另一方向的连接。</p>
+<h1 id="TCP连接释放-四次握手"><a href="#TCP连接释放-四次握手" class="headerlink" title="TCP连接释放(四次握手)"></a>TCP连接释放(四次握手)</h1><p><img src="http://blog.todorex.com/computerNetwork/png/tcpRelease.png" alt="tcpRelease"><br><strong>TCP连接发送数据</strong>是双向的，因此在四次挥手中，前两次挥手用于断开一个方向的连接，后两次挥手用于断开另一方向的连接。</p>
 <ol>
 <li><strong>第一次握手</strong> ：若A认为数据发送完成，则它需要向B发送连接释放请求。该请求只有报文头，头中携带的主要参数为：FIN=1，(表示该报文段是一个连接释放请求) seq=u(u-1是A向B发送的最后一个字节的序号)。此时，A将进入FIN-WAIT-1状态。</li>
 <li><strong>第二次握手</strong> ：B收到连接释放请求后，会通知相应的应用程序，告诉它A向B这个方向的连接已经释放。此时B进入CLOSE-WAIT状态，并向A发送连接释放的应答，其报文头包含： ACK=1，(表示应答) seq=v (v-1是B向A发送的最后一个字节的序号)，ack=u+1(表示希望收到从第u+1个字节开始的报文段，并且已经成功接收了前u个字节)。A收到该应答，进入FIN-WAIT-2状态，等待B发送连接释放请求。<strong>第二次挥手完成后，A到B方向的连接已经释放，B不会再接收数据，A也不会再发送数据。但B到A方向的连接仍然存在，B可以继续向A发送数据。</strong></li>
@@ -444,7 +444,7 @@
 <h2 id="通过序列号与确认应答"><a href="#通过序列号与确认应答" class="headerlink" title="通过序列号与确认应答"></a>通过序列号与确认应答</h2><p>在TCP中，当发送端的数据到达接收主机时，接收端主机会返回一个收到消息的通知，这个消息叫做<strong>确认应答(ACK)</strong>，比如客户端发送[数据(1-1000)]，那么服务端将会回应[确认应答(下一个数1001)]。在一定时间内没有等到确认应答，发送端会认为数据已经丢失，并进行重发。</p>
 <h2 id="滑动窗口协议-连续ARQ协议"><a href="#滑动窗口协议-连续ARQ协议" class="headerlink" title="滑动窗口协议(连续ARQ协议)"></a>滑动窗口协议(连续ARQ协议)</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>先简单说说ARQ(Automatic Repeat reQuest)协议(自动重传请求协议)： 当请求失败时它会自动重传，直到请求被正确接收为止。这种机制保证了每个分组都能被正确接收。</p>
 <p>再看连续ARQ协议：在ARQ协议发送者每次只能发送一个分组，在应答到来前必须等待。而连续ARQ协议的发送者拥有一个发送窗口，发送者可以在没有得到应答的情况下连续发送窗口中的分组。</p>
-<h3 id="发送窗口"><a href="#发送窗口" class="headerlink" title="发送窗口"></a>发送窗口</h3><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/sendWindow.png" alt="sendWindow"></p>
+<h3 id="发送窗口"><a href="#发送窗口" class="headerlink" title="发送窗口"></a>发送窗口</h3><p><img src="http://blog.todorex.com/computerNetwork/png/sendWindow.png" alt="sendWindow"></p>
 <p>发送窗口的大小由接收窗口的剩余大小决定。接收者会把当前接收窗口的剩余大小写入应答TCP报文段的头部，发送者收到应答后根据该值和当前网络拥塞情况设置发送窗口的大小。发送窗口的大小是不断变化的。</p>
 <p>发送窗口(p1-p3)由三个指针构成：</p>
 <ul>
@@ -453,7 +453,7 @@
 <li>p3：p3指向发送窗口的前沿，它前面的字节尚未发送，且不允许发送。</li>
 </ul>
 <p>发送者每收到一个应答，后沿就可以向前移动指定的字节。此时若窗口大小仍然没变，前沿也可以向前移动指定字节。<br>当p2和前沿重合时，发送者必须等待确认应答。</p>
-<h3 id="接收窗口"><a href="#接收窗口" class="headerlink" title="接收窗口"></a>接收窗口</h3><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/receiverWindow.png" alt="receiverWindow"></p>
+<h3 id="接收窗口"><a href="#接收窗口" class="headerlink" title="接收窗口"></a>接收窗口</h3><p><img src="http://blog.todorex.com/computerNetwork/png/receiverWindow.png" alt="receiverWindow"></p>
 <p>接收者收到的字节会存入接收窗口，接收者会对已经正确接收的有序字节进行累计确认，发送完确认应答后，接收窗口就可以向前移动指定字节。<br>如果某些字节并未按序收到，接收者<strong>只会</strong>确认最后一个有序的字节，从而乱序的字节就会被重新发送。</p>
 <h2 id="流控制"><a href="#流控制" class="headerlink" title="流控制"></a>流控制</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>让发送端根据接收端的实际接收能力控制发送的数据量。</p>
 <h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>防止接收端在高负荷的情况下接收数据，因为这个时候如果接收端会将本应该接收的数据丢弃，就又会触发重发机制，从而导致网络流量的无端浪费。</p>
@@ -657,7 +657,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -96,12 +96,12 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/02/01/设计模式/先吹响口号-6大设计原则/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：先有6大设计原则，后有23种设计模式。让我们先吹响这先行的口号。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/srp.png">
-<meta property="og:updated_time" content="2018-02-01T04:06:16.000Z">
+<meta property="og:image" content="http://blog.todorex.com/designPattern/png/srp.png">
+<meta property="og:updated_time" content="2018-10-30T12:06:10.995Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="先吹响口号_6大设计原则">
 <meta name="twitter:description" content="引：先有6大设计原则，后有23种设计模式。让我们先吹响这先行的口号。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/srp.png">
+<meta name="twitter:image" content="http://blog.todorex.com/designPattern/png/srp.png">
 
 
 
@@ -390,7 +390,7 @@
         <p>引：先有6大设计原则，后有23种设计模式。让我们先吹响这先行的口号。<a id="more"></a></p>
 <h1 id="单一职责原则-SRP"><a href="#单一职责原则-SRP" class="headerlink" title="单一职责原则 SRP"></a>单一职责原则 SRP</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><strong>就一个类或接口而言，应该有且只有一个原因引起类的变更。</strong></p>
 <h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>关于电话通话的接口，有三个过程：拨号、通话、挂机。代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IPhone</span> </span>&#123;</div><div class="line">    <span class="comment">//拨通电话</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dial</span><span class="params">(String phoneNumber)</span></span>;</div><div class="line">    <span class="comment">//通话</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">chat</span><span class="params">(Onbject o)</span></span>;</div><div class="line">    <span class="comment">//挂机</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hangup</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>但是IPhone这个接口不是只有一个职责，它包含了两个职责：一个是协议管理，一个是数据传送。所以我们改为下面设计的类图：<br><img src="http://o6plzvjf2.bkt.clouddn.com/designPattern/png/srp.png" alt="srp"></p>
+<p>但是IPhone这个接口不是只有一个职责，它包含了两个职责：一个是协议管理，一个是数据传送。所以我们改为下面设计的类图：<br><img src="http://blog.todorex.com/designPattern/png/srp.png" alt="srp"></p>
 <h2 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h2><ul>
 <li>类的复杂性降低，实现什么职责都有清晰明确的定义</li>
 <li>可读性提高，复杂度降低，那当然可读性提高了</li>
@@ -647,7 +647,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

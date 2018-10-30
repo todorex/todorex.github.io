@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JVM,java," />
+  <meta name="keywords" content="java,JVM," />
 
 
 
@@ -90,19 +90,19 @@
 
 
 <meta name="description" content="引：总有些人会思考对象是如果创建、如何布局、以及如何访问的？对于这些问题，我们必须把讨论范围限定在具体的虚拟机和集中在某一个内存区域才有意义。基于实用原则，我们以常用的虚拟机HotSpot和常用的内存区域Java堆为例。">
-<meta name="keywords" content="JVM,java">
+<meta name="keywords" content="java,JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解JVM_2_HotSpot对象揭秘">
 <meta property="og:url" content="http://bestlixiang.site/2017/11/21/深入理解Java虚拟机/深入理解JVM-2-HotSpot对象揭秘/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：总有些人会思考对象是如果创建、如何布局、以及如何访问的？对于这些问题，我们必须把讨论范围限定在具体的虚拟机和集中在某一个内存区域才有意义。基于实用原则，我们以常用的虚拟机HotSpot和常用的内存区域Java堆为例。">
-<meta property="og:image" content="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaHandlerInvite.jpg">
-<meta property="og:image" content="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaReferenceInvite.jpg">
-<meta property="og:updated_time" content="2018-09-14T01:47:51.081Z">
+<meta property="og:image" content="http://blog.todorex.com/image/jpg/JavaHandlerInvite.jpg">
+<meta property="og:image" content="http://blog.todorex.com/image/jpg/JavaReferenceInvite.jpg">
+<meta property="og:updated_time" content="2018-10-30T12:06:56.335Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解JVM_2_HotSpot对象揭秘">
 <meta name="twitter:description" content="引：总有些人会思考对象是如果创建、如何布局、以及如何访问的？对于这些问题，我们必须把讨论范围限定在具体的虚拟机和集中在某一个内存区域才有意义。基于实用原则，我们以常用的虚拟机HotSpot和常用的内存区域Java堆为例。">
-<meta name="twitter:image" content="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaHandlerInvite.jpg">
+<meta name="twitter:image" content="http://blog.todorex.com/image/jpg/JavaHandlerInvite.jpg">
 
 
 
@@ -423,8 +423,8 @@
 <h3 id="对齐填充（可选）"><a href="#对齐填充（可选）" class="headerlink" title="对齐填充（可选）"></a>对齐填充（可选）</h3><p>起到占位符的作用，确保对象的长度为8字节的整数倍</p>
 <p>HotSpot VM的自动内存管理系统要求对象起始位置必须是8字节的整数倍，由于对象头一定是8字节的整数倍，所以利用占位符可以达到数据部分也是8字节的整数倍。从而达到对象的长度是8字节的整数倍。（有点绕口啊，哈哈）</p>
 <h2 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h2><p>我们通常都会使用Java对象，我们基本上都是通过虚拟机栈上的reference数据来操作堆上的具体对象，而栈上只是一个指向对象的引用，对象的具体访问方式取决于虚拟机，目前有以下两种访问方式：</p>
-<h3 id="通过句柄访问对象"><a href="#通过句柄访问对象" class="headerlink" title="通过句柄访问对象"></a>通过句柄访问对象</h3><p>可以看下面的图：<br><img src="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaHandlerInvite.jpg" alt="通过句柄访问对象"><br>使用句柄访问，Java堆中会划分出一块内存来作为句柄池，reference存储的就是对象的句柄地址，而句柄包含了对象实例数据与类型数据各自的具体地址信息。</p>
-<h3 id="通过直接指针访问对象"><a href="#通过直接指针访问对象" class="headerlink" title="通过直接指针访问对象"></a>通过直接指针访问对象</h3><p>可以看下面的图：<br><img src="http://ozp5jl6m4.bkt.clouddn.com/image/jpg/JavaReferenceInvite.jpg" alt="JavaHandlerInvite"><br>使用直接指针访问，<strong>Java堆对象的布局</strong>中就要考虑如何放置访问类型数据的相关信息，而reference中存储的直接就是对象地址。</p>
+<h3 id="通过句柄访问对象"><a href="#通过句柄访问对象" class="headerlink" title="通过句柄访问对象"></a>通过句柄访问对象</h3><p>可以看下面的图：<br><img src="http://blog.todorex.com/image/jpg/JavaHandlerInvite.jpg" alt="通过句柄访问对象"><br>使用句柄访问，Java堆中会划分出一块内存来作为句柄池，reference存储的就是对象的句柄地址，而句柄包含了对象实例数据与类型数据各自的具体地址信息。</p>
+<h3 id="通过直接指针访问对象"><a href="#通过直接指针访问对象" class="headerlink" title="通过直接指针访问对象"></a>通过直接指针访问对象</h3><p>可以看下面的图：<br><img src="http://blog.todorex.com/image/jpg/JavaReferenceInvite.jpg" alt="JavaHandlerInvite"><br>使用直接指针访问，<strong>Java堆对象的布局</strong>中就要考虑如何放置访问类型数据的相关信息，而reference中存储的直接就是对象地址。</p>
 <h3 id="两者对比"><a href="#两者对比" class="headerlink" title="两者对比"></a>两者对比</h3><ol>
 <li>通过句柄访问对象可以当对象被移动之后只会改变句柄中的实例数据指针，而reference本身不需要改变。</li>
 <li>使用直接指针访问可以加快Java对象的访问，HotSpot就是使用直接指针访问对象的方式。</li>
@@ -462,9 +462,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JVM/" rel="tag"># JVM</a>
-          
             <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -586,7 +586,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

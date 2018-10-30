@@ -96,14 +96,14 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/04/15/深入SSM/揭秘SpringMVC-一-SpringMVC大全解/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：现在基于所有的Web应用都离不开Spring，用了Spring，你自然会去用他家的MVC框架——SpringMVC！所以掌握SpringMVC也是非常重要的。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/springmvc.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/DispatcherServlet.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/viewResolver.png">
-<meta property="og:updated_time" content="2018-04-15T08:56:20.000Z">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/png/springmvc.png">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/png/DispatcherServlet.png">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/png/viewResolver.png">
+<meta property="og:updated_time" content="2018-10-30T12:00:55.866Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="揭秘SpringMVC(一)_.SpringMVC大全解">
 <meta name="twitter:description" content="引：现在基于所有的Web应用都离不开Spring，用了Spring，你自然会去用他家的MVC框架——SpringMVC！所以掌握SpringMVC也是非常重要的。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/springmvc.png">
+<meta name="twitter:image" content="http://blog.todorex.com/deeplearningSSH/png/springmvc.png">
 
 
 
@@ -391,7 +391,7 @@
       
         <p>引：现在基于所有的Web应用都离不开Spring，用了Spring，你自然会去用他家的MVC框架——SpringMVC！所以掌握SpringMVC也是非常重要的。<a id="more"></a></p>
 <h1 id="SpringMVC请求处理流程总览"><a href="#SpringMVC请求处理流程总览" class="headerlink" title="SpringMVC请求处理流程总览"></a>SpringMVC请求处理流程总览</h1><p>我们可以用下面一张图来介绍SpringMVC的核心组件和请求处理流程：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/springmvc.png" alt="springmvc"></p>
+<p><img src="http://blog.todorex.com/deeplearningSSH/png/springmvc.png" alt="springmvc"></p>
 <p>流程中出现的核心组件如下：</p>
 <ol>
 <li>DispatcherServlet是springmvc中的前端控制器，负责接收request并将request转发给对应的处理组件.</li>
@@ -415,7 +415,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;servlet &gt;</div><div class="line">    &lt;servlet-name &gt;spring-mvc&lt;/servlet-name&gt;</div><div class="line">    &lt;!-- DispatcherServlet类，这个类在spring-mvc的包下面 --&gt;</div><div class="line">    &lt;servlet-class &gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;</div><div class="line">    &lt;!-- 初始化参数，这里主要是读取SpringMVC的一些配置信息，比如：</div><div class="line">    配置注解驱动，静态资源映射，视图解析器，自动扫描装配等相关信息。</div><div class="line">    --&gt;</div><div class="line">    &lt;init-param &gt;</div><div class="line">      &lt;param-name &gt;contextConfigLocation&lt;/param-name&gt;</div><div class="line">      &lt;param-value &gt;classpath:/spring-mvc.xml&lt;/param-value&gt;</div><div class="line">    &lt;/init-param&gt;</div><div class="line">    &lt;!-- 启动时加载 --&gt;</div><div class="line">    &lt;load-on-startup &gt;1&lt;/load-on-startup&gt;</div><div class="line">  &lt;/servlet&gt;</div><div class="line">  &lt;servlet-mapping &gt;</div><div class="line">    &lt;servlet-name &gt;spring-mvc&lt;/servlet-name&gt;</div><div class="line">    &lt;url-pattern &gt;/&lt;/url-pattern&gt;</div><div class="line">  &lt;/servlet-mapping&gt;</div></pre></td></tr></table></figure>
 </li>
 <li><p>进入DispatchServlet的分析，先看它的类图：</p>
-<p> <img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/DispatcherServlet.png" alt="DispatchServlet"></p>
+<p> <img src="http://blog.todorex.com/deeplearningSSH/png/DispatcherServlet.png" alt="DispatchServlet"></p>
 <p> 它是一个Servlet的子类，那么我们就要专注于它的init、service（后续分析）、doGet、doPost等相关方法，在它的父类HttpServeltBean，我们找到了init方法，如下：</p>
  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> ServletException </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="comment">// 获取Servlet中的init参数，并创建了一个BeanWapper对象，由子类真正执行BeanWrapper的初始化工作</span></div><div class="line">        <span class="comment">// 但是HttpServeltBean的子类并没有覆盖其initBeanWrapper方法，所以创建的BeanWrapper没有用</span></div><div class="line">        PropertyValues pvs = <span class="keyword">new</span> HttpServletBean.ServletConfigPropertyValues(<span class="keyword">this</span>.getServletConfig(), <span class="keyword">this</span>.requiredProperties);</div><div class="line">        BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(<span class="keyword">this</span>);</div><div class="line">        ResourceLoader resourceLoader = <span class="keyword">new</span> ServletContextResourceLoader(<span class="keyword">this</span>.getServletContext());</div><div class="line">        bw.registerCustomEditor(Resource.class, <span class="keyword">new</span> ResourceEditor(resourceLoader, <span class="keyword">this</span>.getEnvironment()));</div><div class="line">        <span class="keyword">this</span>.initBeanWrapper(bw);</div><div class="line">        bw.setPropertyValues(pvs, <span class="keyword">true</span>);</div><div class="line">    &#125; <span class="keyword">catch</span> (BeansException var4) &#123;</div><div class="line">        <span class="keyword">this</span>.logger.error(<span class="string">"Failed to set bean properties on servlet '"</span> + <span class="keyword">this</span>.getServletName() + <span class="string">"'"</span>, var4);</div><div class="line">        <span class="keyword">throw</span> var4;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 这里进要进入到Framework的initServletBean方法了</span></div><div class="line">    <span class="keyword">this</span>.initServletBean();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p> 从上面的init方法中，我们由它的initServletBean方法进入到FrameworkServlet的initServletBean方法，如下：</p>
@@ -444,7 +444,7 @@
 <li>ViewResolver会根据用户的请求的ViewName创建合适的模板引擎（解析器）来渲染最终的页面。ViewResolver会根据ViewName创建一个View对象，调用View对象的render方法渲染页面。</li>
 </ul>
 <p>我们重点关注这个ViewResolver，先看他的类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/viewResolver.png" alt="ViewResolver"></p>
+<p><img src="http://blog.todorex.com/deeplearningSSH/png/viewResolver.png" alt="ViewResolver"></p>
 <p>我们从UrlBaseViewResolver对象的loadView方法-&gt;buildView方法可以看到如下代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> AbstractUrlBasedView <span class="title">buildView</span><span class="params">(String viewName)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    AbstractUrlBasedView view = (AbstractUrlBasedView)BeanUtils.instantiateClass(<span class="keyword">this</span>.getViewClass());</div><div class="line">    view.setUrl(<span class="keyword">this</span>.getPrefix() + viewName + <span class="keyword">this</span>.getSuffix());</div><div class="line">    String contentType = <span class="keyword">this</span>.getContentType();</div><div class="line">    <span class="keyword">if</span>(contentType != <span class="keyword">null</span>) &#123;</div><div class="line">        view.setContentType(contentType);</div><div class="line">    &#125;</div><div class="line">    ... 省略</div><div class="line">    <span class="keyword">return</span> view;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>结合类图可以发现不同的解析器生成的View对象是不一样的。</p>
@@ -604,7 +604,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

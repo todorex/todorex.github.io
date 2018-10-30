@@ -96,19 +96,19 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/04/10/深入SSM/揭秘Spring-一-Spring架构/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/spring.gif">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/ccb.gif">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/rootBeanDefinition.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/XmlBeanDefinitionReader.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/defaultListableBeanFactory.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/AbstractRefreshableWebApplicationContext.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/resource.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/cc.png">
-<meta property="og:updated_time" content="2018-04-10T11:34:13.000Z">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/gif/spring.gif">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/gif/ccb.gif">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/png/rootBeanDefinition.png">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/png/XmlBeanDefinitionReader.png">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/png/defaultListableBeanFactory.png">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/png/AbstractRefreshableWebApplicationContext.png">
+<meta property="og:image" content="https://blog.todorex.com/resource.png">
+<meta property="og:image" content="http://blog.todorex.com/deeplearningSSH/png/cc.png">
+<meta property="og:updated_time" content="2018-10-30T12:00:07.638Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="揭秘Spring(一)_Spring架构">
 <meta name="twitter:description" content="引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/spring.gif">
+<meta name="twitter:image" content="http://blog.todorex.com/deeplearningSSH/gif/spring.gif">
 
 
 
@@ -396,22 +396,22 @@
       
         <p>引：Spring作为现在最优秀的框架之一，被广泛得使用在Web场景中。很多人只会使用，但是却不知道Spring整个体系架构。<a id="more"></a></p>
 <h1 id="Spring的骨骼架构"><a href="#Spring的骨骼架构" class="headerlink" title="Spring的骨骼架构"></a>Spring的骨骼架构</h1><p>Spring总共有十几个组件，但是真正核心的组件只有几个，如下图为Spring框架开始以来拥有的总体架构图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/spring.gif" alt="spring"></p>
+<p><img src="http://blog.todorex.com/deeplearningSSH/gif/spring.gif" alt="spring"></p>
 <p>从上图可以看出，在Spring框架中的 <strong>核心组件</strong> 只有三个：core、context、bean。他们构建起整个Spring的骨骼架构，没有他们就不可能有AOP、Web等上层的 <strong>特性功能</strong> 。</p>
 <h2 id="Spring的设计理念"><a href="#Spring的设计理念" class="headerlink" title="Spring的设计理念"></a>Spring的设计理念</h2><p>上面说了三个核心组件，但是最重要就是Bean组件了，用过Spring的人都知道，我们所有的类基本上都会交给Spring托管，也就是说Spring就是面向Bean的编程。Bean在Spring中的作用就像Object对OOP的意义一样，没有对象的概念就没有面向对象的概念，在Spring中没有Bean也就没有Spring存在的意义。</p>
 <p><strong>使用Spring最大的原因：</strong> 是他解决了一个非常关键的问题，它可以让你把对象之间的依赖关系解耦，其中的关系交由<strong>IOC容器</strong>（Bean关系的集合）来管理，核心就是<strong>依赖注入机制</strong>。Spring也正是通过把对象包装在Bean中达到管理这些对象及做一些列额外操作的目的。</p>
 <p><strong>一般框架设计理念：</strong> 先构建一个数据结构，然后根据这个数据结构设计它的生存环境，并让它在这个环境中按照一定的规律不停的运动，在他不停运动的过程中设计它们与环境或者与其他个体完成信息交换。</p>
 <h2 id="核心组件如何协同工作"><a href="#核心组件如何协同工作" class="headerlink" title="核心组件如何协同工作"></a>核心组件如何协同工作</h2><p>参考《深入分析Java Web技术内幕》一书中有个形象的比喻：Spring框架就像一场演出，Bean相当于演员，Context相当于演出的舞台背景、Core相当于演出的道具（把演员联系起来）。如果想演出足够新颖，就需要Spring提供的其他特色功能了。</p>
 <p>回到Spring：Bean包装的是Object，而Object必然有数据，如何给这些数据提供生成环境就是Context要解决的事情，对于Context来说就是要发现每个Bean之间的关系，为他们建立这种关系并且维护好这种关系，而发现、建立和维护每个Bean之间的关系维护这种关系就需要Core组件了，Core组件其实就是发现、建立和维护每个Bean之间的关系所需要的一些列工具。最后我们发现Context就是一个Bean关系的集合，这个关系集合就叫<strong>IOC容器</strong>，当建立起IOC容器，Spring就可以工作了。他们的关系可以用下图来描述：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/gif/ccb.gif" alt="ccb"></p>
+<p><img src="http://blog.todorex.com/deeplearningSSH/gif/ccb.gif" alt="ccb"></p>
 <h1 id="核心组件解析"><a href="#核心组件解析" class="headerlink" title="核心组件解析"></a>核心组件解析</h1><h2 id="Bean组件"><a href="#Bean组件" class="headerlink" title="Bean组件"></a>Bean组件</h2><p>Bean 组件在 Spring 的 org.springframework.beans 包下。这个包下的所有类主要解决了三件事：<strong>Bean 的定义、 Bean 的解析以及对Bean 的创建</strong>。对 Spring 的使用者来说唯一需要关心的就是 Bean 的创建，其他两个由 Spring 在内部帮你完成了，对你来说是透明的。</p>
 <h3 id="Bean的定义"><a href="#Bean的定义" class="headerlink" title="Bean的定义"></a>Bean的定义</h3><p>Bean 的定义主要有 BeanDefinition 描述，如下图（RootBeanDefinition类图）说明了这些类的层次关系：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/rootBeanDefinition.png" alt="rootBeanDefinition"></p>
+<p><img src="http://blog.todorex.com/deeplearningSSH/png/rootBeanDefinition.png" alt="rootBeanDefinition"></p>
 <p>Bean 的定义就是完整的描述了在 Spring 的配置的Bean中所有的信息。当 Spring 成功解析你定义的一个Bean后，在 Spring 的内部他就被转化成 BeanDefinition 对象，它可以定义为SINGLETON还是PROTOTYPE。以后所有的操作都是对这个对象完成的。</p>
 <h3 id="Bean的解析"><a href="#Bean的解析" class="headerlink" title="Bean的解析"></a>Bean的解析</h3><p>Bean 的解析过程非常复杂，功能被分的很细，因为这里需要被扩展的地方很多，必须保证有足够的灵活性，以应对可能的变化。Bean 的解析方式有很多种，这也就导致配置方式有很多种（之后会介绍各种Bean的配置方法，如xml，扫描，注解、java配置）。这里就介绍一下最早的解析XML配置，它的过程主要通过下图中的类(XmlBeanDefinitionReader)完成：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/XmlBeanDefinitionReader.png" alt="XmlBeanDefinitionReader"></p>
+<p><img src="http://blog.todorex.com/deeplearningSSH/png/XmlBeanDefinitionReader.png" alt="XmlBeanDefinitionReader"></p>
 <h3 id="Bean的创建"><a href="#Bean的创建" class="headerlink" title="Bean的创建"></a>Bean的创建</h3><p>Spring Bean 的创建是典型的工厂模式，我们可以通过DefaultListableBeanFactory这个类来了解Spring的工厂模式，工厂模式的顶级接口是 BeanFactory，下图是这个工厂的继承层次关系：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/defaultListableBeanFactory.png" alt="image"></p>
+<p><img src="http://blog.todorex.com/deeplearningSSH/png/defaultListableBeanFactory.png" alt="image"></p>
 <p>BeanFactory 有三个子类：ListableBeanFactory、HierarchicalBeanFactory 和 AutowireCapableBeanFactory。但是从上图中我们可以发现最终的默认实现类是 DefaultListableBeanFactory，他实现了所有的接口。</p>
 <p>框架核心：那为何要定义这么多层次的接口呢？</p>
 <p>查阅这些接口的源码和说明发现，每个接口都有他使用的场合，它主要是为了区分在 Spring 内部在操作过程中对象的传递和转化过程中，对对象的数据访问所做的限制，具体如下：</p>
@@ -423,7 +423,7 @@
 <p>这四个接口共同定义了 Bean 的集合、Bean 之间的关系、以及 Bean 行为。</p>
 <h2 id="Context组件"><a href="#Context组件" class="headerlink" title="Context组件"></a>Context组件</h2><p>Context 在 Spring 的 org.springframework.context 包下，<strong>Context 组件在 Spring 中的作用实际上就是给Spring提供一个运行时的环境，用以保存各个对象的状态</strong> 。下面看一下这个环境是如何构建的。</p>
 <p>ApplicationContext 是 Context 的顶级父类，他除了能标识一个应用环境的基本信息外，他还继承了六个接口，这六个接口主要是扩展了 Context 的功能。下面是 Context 相关的类结构图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/AbstractRefreshableWebApplicationContext.png" alt="Context"></p>
+<p><img src="http://blog.todorex.com/deeplearningSSH/png/AbstractRefreshableWebApplicationContext.png" alt="Context"></p>
 <p>从上图中可以看出 ApplicationContext 继承了BeanFactory，这也说明了 Spring 容器中运行的主体对象是 Bean，另外 ApplicationContext 继承了 ResourceLoader 接口，使得 ApplicationContext 可以访问到任何外部资源（就是Core里面的工具了，这将在 Core 中详细说明）。</p>
 <p>ApplicationContext 的子类主要包含两个方面：</p>
 <ul>
@@ -439,10 +439,10 @@
 </ul>
 <p>Context 作为 Spring 的 <strong>IOC 容器</strong>，基本上整合了 Spring 的大部分功能，或者说是大部分功能的基础。</p>
 <h2 id="Core组件"><a href="#Core组件" class="headerlink" title="Core组件"></a>Core组件</h2><p>Core 组件在Spring 的org.springframework.core包下，它作为 Spring的核心组件，他其中包含了很多的关键类，其中一个重要组成部分就是定义了资源（Resource）的访问方式。这种<strong>把所有资源都抽象成一个接口的方式</strong>很值得在以后的设计中拿来学习。下面就重要看一下这个部分在 Spring 的作用。我们通过下图（ Resource 相关的类结构图）来理解：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/resource.png" alt="resource"></p>
+<p><img src="https://blog.todorex.com/resource.png" alt="resource"></p>
 <p>从上图可以看出 Resource 接口封装了各种可能的资源类型，也就是对使用者来说屏蔽了文件类型的不同。对资源的提供者来说，如何把资源包装起来交给其他人用这也是一个问题(所以产生了很多方式)，我们看到 Resource 接口继承了 InputStreamSource 接口，这个接口中有个 getInputStream 方法，返回的是 InputStream 类。这样所有的资源都被可以通过 InputStream 这个类来获取，所以也屏蔽了资源的提供者。另外还有一个问题就是加载资源的问题，也就是资源的加载者要统一，从上图中可以看出这个任务是由 ResourceLoader 接口完成，他屏蔽了所有的资源加载者的差异，只需要实现这个接口就可以加载所有的资源，他的默认实现是 DefaultResourceLoader。</p>
 <p>那Context 和 Resource 是如何建立关系的？下面是他们的类关系图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/deeplearningSSH/png/cc.png" alt="cc"></p>
+<p><img src="http://blog.todorex.com/deeplearningSSH/png/cc.png" alt="cc"></p>
 <p>从上图可以看出，Context 是把资源的加载、解析和描述工作委托给了 ResourcePatternResolver 类来完成，他相当于一个接头人，他把资源的加载、解析和资源的定义整合在一起便于其他组件使用。Core 组件中还有很多类似的方式。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《深入分析Java Web技术内幕》</li>
@@ -599,7 +599,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

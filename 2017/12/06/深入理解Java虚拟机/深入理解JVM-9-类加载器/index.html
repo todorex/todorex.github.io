@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JVM,java," />
+  <meta name="keywords" content="java,JVM," />
 
 
 
@@ -90,20 +90,20 @@
 
 
 <meta name="description" content="引：之前一直在说类加载，类加载就需要类加载器，类加载最初是为了满足Java Applet，现在基本已经死掉了，但是类加载却在类层次划分、OSGi、热部署、代码加密等领域大放异彩，成为Java体系中一块重要的基石，可谓失之桑榆，收之东隅。">
-<meta name="keywords" content="JVM,java">
+<meta name="keywords" content="java,JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解JVM_9_类加载器">
 <meta property="og:url" content="http://bestlixiang.site/2017/12/06/深入理解Java虚拟机/深入理解JVM-9-类加载器/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：之前一直在说类加载，类加载就需要类加载器，类加载最初是为了满足Java Applet，现在基本已经死掉了，但是类加载却在类层次划分、OSGi、热部署、代码加密等领域大放异彩，成为Java体系中一块重要的基石，可谓失之桑榆，收之东隅。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/image/parentsDelegationModel.jpg">
+<meta property="og:image" content="http://blog.todorex.com/image/parentsDelegationModel.jpg">
 <meta property="og:image" content="http://static.zybuluo.com/Rico123/8ty4pk8xgubfhq123dhxg68m/%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8A%A0%E8%BD%BD%E7%B1%BB%E7%9A%84%E8%BF%87%E7%A8%8B">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/image/jpg/ExtClassLoader.jpg">
-<meta property="og:updated_time" content="2017-12-09T12:04:08.000Z">
+<meta property="og:image" content="http://blog.todorex.com/image/jpg/ExtClassLoader.jpg">
+<meta property="og:updated_time" content="2018-10-30T12:07:03.191Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解JVM_9_类加载器">
 <meta name="twitter:description" content="引：之前一直在说类加载，类加载就需要类加载器，类加载最初是为了满足Java Applet，现在基本已经死掉了，但是类加载却在类层次划分、OSGi、热部署、代码加密等领域大放异彩，成为Java体系中一块重要的基石，可谓失之桑榆，收之东隅。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/image/parentsDelegationModel.jpg">
+<meta name="twitter:image" content="http://blog.todorex.com/image/parentsDelegationModel.jpg">
 
 
 
@@ -404,7 +404,7 @@
 <li>扩展类加载器：这个加载器由sun.misc.Launcher$ExtClassLoader实现，它负责加载<java_home>\lib\ext目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以使用扩展类加载器。</java_home></li>
 <li>应用程序类加载器：这个类加载器由sun.misc.Launcher$AppClassLoader实现，也称系统类加载器。它负责加载用户所指定的类路径java -classpath或-Djava.class.path的所有类，开发者可以直接使用这个类加载器，如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</li>
 </ol>
-<h2 id="类加载器的双亲委派模型"><a href="#类加载器的双亲委派模型" class="headerlink" title="类加载器的双亲委派模型"></a>类加载器的双亲委派模型</h2><h3 id="模型图"><a href="#模型图" class="headerlink" title="模型图"></a>模型图</h3><p><img src="http://o6plzvjf2.bkt.clouddn.com/image/parentsDelegationModel.jpg" alt="Parents Delegation Model"></p>
+<h2 id="类加载器的双亲委派模型"><a href="#类加载器的双亲委派模型" class="headerlink" title="类加载器的双亲委派模型"></a>类加载器的双亲委派模型</h2><h3 id="模型图"><a href="#模型图" class="headerlink" title="模型图"></a>模型图</h3><p><img src="http://blog.todorex.com/image/parentsDelegationModel.jpg" alt="Parents Delegation Model"></p>
 <p>双亲委派模型要求除了顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器。这里的类加载器之间的父子关系一般不会以继承的关系来实现，而是都使用组合关系来复用父加载器的代码。（组合就是在一个类中调用另一个类的代码）</p>
 <h3 id="工作过程"><a href="#工作过程" class="headerlink" title="工作过程"></a>工作过程</h3><p>我相信这张图最清楚了：</p>
 <p><img src="http://static.zybuluo.com/Rico123/8ty4pk8xgubfhq123dhxg68m/%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8A%A0%E8%BD%BD%E7%B1%BB%E7%9A%84%E8%BF%87%E7%A8%8B" alt="双亲委派模型工作流程"></p>
@@ -420,7 +420,7 @@
 </li>
 </ol>
 <p>从该函数我们可以得知双亲委派模型会先递归去查找父加载器是否已经加载过该类了。如果父加载器都没有加载过该类，则开始调用fandClass<br>()尝试去加载该类。由于启动类加载器不可知，我们可以去看看扩展类加载器的findClass()。我们可以看到下面的类图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/image/jpg/ExtClassLoader.jpg" alt="ExtClassLoader"></p>
+<p><img src="http://blog.todorex.com/image/jpg/ExtClassLoader.jpg" alt="ExtClassLoader"></p>
 <p>我接着我想去看看ExtClassLoader类里面的findClass()方法，结果发现没有，只要去他的父类URLClassLoader去找找，还好找到了，可以看看下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(<span class="keyword">final</span> String name)</div><div class="line">    <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">&#123;</div><div class="line">    <span class="keyword">final</span> Class&lt;?&gt; result;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        result = AccessController.doPrivileged(</div><div class="line">            <span class="keyword">new</span> PrivilegedExceptionAction&lt;Class&lt;?&gt;&gt;() &#123;</div><div class="line">                <span class="keyword">public</span> Class&lt;?&gt; run() <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">                    String path = name.replace(<span class="string">'.'</span>, <span class="string">'/'</span>).concat(<span class="string">".class"</span>);</div><div class="line">                    Resource res = ucp.getResource(path, <span class="keyword">false</span>);</div><div class="line">                    <span class="keyword">if</span> (res != <span class="keyword">null</span>) &#123;</div><div class="line">                        <span class="keyword">try</span> &#123;</div><div class="line">                             <span class="comment">//defineClass()方法是用来将byte字节流解析成JVM能够识别的Class对象</span></div><div class="line">                            <span class="keyword">return</span> defineClass(name, res);</div><div class="line">                        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name, e);</div><div class="line">                        &#125;</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;, acc);</div><div class="line">    &#125; <span class="keyword">catch</span> (java.security.PrivilegedActionException pae) &#123;</div><div class="line">        <span class="keyword">throw</span> (ClassNotFoundException) pae.getException();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>其实AppClassLoader的findClass()也是继承自URLCLassLoader，所以都是一样的，我们再结合最开始的loadClass()就可以很好的理解了上面双亲委派模型的工作流程了。</p>
 <h3 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h3><p>java随着它的类加载一起具备了一种带有优先级的层次关系，它能保证一个类在程序中各种类加载器环境中都是同一个类。</p>
@@ -466,9 +466,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JVM/" rel="tag"># JVM</a>
-          
             <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -590,7 +590,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

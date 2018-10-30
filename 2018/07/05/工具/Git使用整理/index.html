@@ -96,15 +96,15 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/07/05/工具/Git使用整理/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E5%B8%83%E5%BC%8F.jpg">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%8C%BA%E5%9F%9F.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E6%94%AF.jpg">
-<meta property="og:updated_time" content="2018-07-10T13:29:20.198Z">
+<meta property="og:image" content="http://blog.todorex.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg">
+<meta property="og:image" content="http://blog.todorex.com/tool/git/%E5%88%86%E5%B8%83%E5%BC%8F.jpg">
+<meta property="og:image" content="http://blog.todorex.com/tool/git/%E5%8C%BA%E5%9F%9F.png">
+<meta property="og:image" content="http://blog.todorex.com/tool/git/%E5%88%86%E6%94%AF.jpg">
+<meta property="og:updated_time" content="2018-10-30T11:51:59.100Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git使用整理">
 <meta name="twitter:description" content="引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg">
+<meta name="twitter:image" content="http://blog.todorex.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg">
 
 
 
@@ -392,14 +392,14 @@
       
         <p>引：虽然日常使用git，但是有些时候总是会忘记一些操作，难免会面向搜索引擎查找。所以这里就总结一下。<a id="more"></a></p>
 <h1 id="版本控制系统"><a href="#版本控制系统" class="headerlink" title="版本控制系统"></a>版本控制系统</h1><p>谈到Git，就需要先说说版本控制系统。<strong>版本控制系统</strong>就是能自动帮我们记录每次文件的改动的一个软件，而Git就是它的一种实现。想想我们写论文还是写代码，是不是有了他就很方便了，再也不用自己手动备份每一次修改了。版本控制系统又分为集中式和分布式。</p>
-<h2 id="集中式（SVN）"><a href="#集中式（SVN）" class="headerlink" title="集中式（SVN）"></a>集中式（SVN）</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg" alt="集中式"></p>
+<h2 id="集中式（SVN）"><a href="#集中式（SVN）" class="headerlink" title="集中式（SVN）"></a>集中式（SVN）</h2><p><img src="http://blog.todorex.com/tool/git/%E9%9B%86%E4%B8%AD%E5%BC%8F.jpg" alt="集中式"></p>
 <p>集中式版本控制系统的版本库是集中存放在中央服务器的，而我们在干活的时候，用的都是自己的电脑，所以要先从中央服务器取得最新的版本，然后开始干活，干完活了，再把自己的活推送给中央服务器。</p>
 <p><strong>问题</strong>：必须联网才能工作；中央服务器要是出了问题，所有人都没法干活了</p>
-<h2 id="分布式（Git）"><a href="#分布式（Git）" class="headerlink" title="分布式（Git）"></a>分布式（Git）</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E5%B8%83%E5%BC%8F.jpg" alt="仓库"></p>
+<h2 id="分布式（Git）"><a href="#分布式（Git）" class="headerlink" title="分布式（Git）"></a>分布式（Git）</h2><p><img src="http://blog.todorex.com/tool/git/%E5%88%86%E5%B8%83%E5%BC%8F.jpg" alt="分布式"></p>
 <p>每个人的电脑上都是一个完整的版本库，这样，你工作的时候，就不需要联网了，因为版本库就在你自己的电脑上。在双方协作的时候，如果你在自己电脑上改了文件A，你的同事也在他的电脑上改了文件A，这时，你们俩之间只需把各自的修改推送给对方，就可以互相看到对方的修改了。</p>
 <p>在实际使用分布式版本控制系统的时候，其实很少在两人之间的电脑上推送版本库的修改，而且如果你们俩不在一个局域网内，两台电脑也互相访问不了。所以分布式版本控制系统通常也有一台充当“中央服务器”的电脑，但这个服务器的作用仅仅是用来方便“交换”大家的修改，没有它大家也一样干活，只是交换修改不方便而已。</p>
 <h1 id="Git使用"><a href="#Git使用" class="headerlink" title="Git使用"></a>Git使用</h1><h2 id="Git安装"><a href="#Git安装" class="headerlink" title="Git安装"></a>Git安装</h2><p>这里就不多说了，推荐廖雪峰的官方网站<a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137396287703354d8c6c01c904c7d9ff056ae23da865a000" target="_blank" rel="external">安装教程</a>。</p>
-<h2 id="Git区域"><a href="#Git区域" class="headerlink" title="Git区域"></a>Git区域</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%8C%BA%E5%9F%9F.png" alt="Git区域"></p>
+<h2 id="Git区域"><a href="#Git区域" class="headerlink" title="Git区域"></a>Git区域</h2><p><img src="http://blog.todorex.com/tool/git/%E5%8C%BA%E5%9F%9F.png" alt="Git区域"></p>
 <ul>
 <li>工作区（Workspace）：在计算机能看到的目录。</li>
 <li>缓存区（Index/Stage）：临时保存我们的改动。</li>
@@ -481,12 +481,12 @@
 </li>
 <li><p>后者的所有变化都将被前者抵消，并应用当前分支<br>  <code>git revert [commit]</code></p>
 </li>
-<li><p>暂时将未提交的变化移除，稍后再移入<br>  <code>git stash</code><br>  <code>git stash pop</code> </p>
+<li><p>暂时将未提交的变化移除，稍后再移入<br>  <code>git stash</code><br>  <code>git stash pop</code></p>
 </li>
 </ul>
 <h2 id="Git多人协作"><a href="#Git多人协作" class="headerlink" title="Git多人协作"></a>Git多人协作</h2><p>多人协作就会涉及到分支的概念（其实单人开发也会遇到，只是多人会更常见）</p>
 <p>我们先看看下面的图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/tool/git/%E5%88%86%E6%94%AF.jpg" alt="多人协作"></p>
+<p><img src="http://blog.todorex.com/tool/git/%E5%88%86%E6%94%AF.jpg" alt="多人协作"></p>
 <p>这张图可以很清楚让我们认识到在工作中使用git工作流的开发流程。Master分支是线上分支，我们在开发新功能的时候不会去动它，Hotfix分支是如果出了bug就拉一条bug分支快速修复合并到master分支里。我们平时开发都是先从Master分支拉出一条Develop分支，在这个分支上进行开发。每个人一般都会负责项目的一个特性功能，所以我们又会从Develop分支拉出几个Feature分支。在开发测试完成后我们形成Release分支，再次检验后将它与Master分支合并，然后我们之后Release分支拉出Develop分支进行新一轮的开发。</p>
 <h3 id="Git分支"><a href="#Git分支" class="headerlink" title="Git分支"></a>Git分支</h3><ul>
 <li><p>列出所有本地分支</p>
@@ -685,7 +685,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

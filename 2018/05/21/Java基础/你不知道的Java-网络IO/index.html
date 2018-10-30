@@ -96,15 +96,15 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/05/21/Java基础/你不知道的Java-网络IO/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：可能很多同学一看Java Java 网络IO，心里肯定会觉得这个有什么好讲的，不就是Socket吗，说对也对，因为他讲到了BIO(同步阻塞IO)，但是却不知还有NIO(同步非阻塞IO)，AIO(异步非阻塞IO)！">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/javaCore/jpg/unix_io_model.jpg">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/javaCore/jpg/bio.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/javaCore/png/fake_aio.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/javaCore/png/nioServer.png">
-<meta property="og:updated_time" content="2018-05-21T04:54:17.420Z">
+<meta property="og:image" content="http://blog.todorex.com/javaCore/jpg/unix_io_model.jpg">
+<meta property="og:image" content="http://blog.todorex.com/javaCore/jpg/bio.png">
+<meta property="og:image" content="http://blog.todorex.com/javaCore/png/fake_aio.png">
+<meta property="og:image" content="http://blog.todorex.com/javaCore/png/nioServer.png">
+<meta property="og:updated_time" content="2018-10-30T11:48:02.157Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你不知道的Java 网络IO">
 <meta name="twitter:description" content="引：可能很多同学一看Java Java 网络IO，心里肯定会觉得这个有什么好讲的，不就是Socket吗，说对也对，因为他讲到了BIO(同步阻塞IO)，但是却不知还有NIO(同步非阻塞IO)，AIO(异步非阻塞IO)！">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/javaCore/jpg/unix_io_model.jpg">
+<meta name="twitter:image" content="http://blog.todorex.com/javaCore/jpg/unix_io_model.jpg">
 
 
 
@@ -418,7 +418,7 @@
 <li>异步I/O（POSIX的aio_系列函数）</li>
 </ul>
 <p>下图是五种I/O模型的比较：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/javaCore/jpg/unix_io_model.jpg" alt="unix_io_model"></p>
+<p><img src="http://blog.todorex.com/javaCore/jpg/unix_io_model.jpg" alt="unix_io_model"></p>
 <p>POSIX把I/O操作划分成两类：</p>
 <ul>
 <li>同步I/O: 同步I/O操作<strong>导致请求阻塞</strong>，直至操作完成</li>
@@ -435,10 +435,10 @@
 </ul>
 <h1 id="BIO网络编程"><a href="#BIO网络编程" class="headerlink" title="BIO网络编程"></a>BIO网络编程</h1><p>传统的同步阻塞模型(BIO)开发中，ServerSocket负责绑定IP地址，启动监听端口；Socket负责发起连接操作。连接成功后，双方通过输入和输出流进行同步阻塞式通信。</p>
 <p>简单的描述一下BIO的服务端通信模型：采用BIO通信模型的服务端，通常由一个独立的Acceptor线程负责监听客户端的连接，它接收到客户端连接请求之后为每个客户端创建一个新的线程进行链路处理没处理完成后，通过输出流返回应答给客户端，线程销毁。即典型的一请求一应答通信模型。如下图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/javaCore/jpg/bio.png" alt="bio"></p>
+<p><img src="http://blog.todorex.com/javaCore/jpg/bio.png" alt="bio"></p>
 <p>该模型最大的问题就是缺乏弹性伸缩能力，当客户端并发访问量增加后，服务端的线程个数和客户端并发访问数呈1:1的正比关系，Java中的线程也是比较宝贵的系统资源，线程数量快速膨胀后，系统的性能将急剧下降，随着访问量的继续增大，系统最终就<strong>死掉了</strong>。</p>
 <p> <strong>为了改进这种一连接一线程的模型</strong>，我们可以使用<strong>线程池</strong>来管理这些线程（需要了解更多请参考前面提供的文章），实现1个或多个线程处理N个客户端的模型（但是底层还是使用的同步阻塞I/O），通常被称为“伪异步I/O模型“。伪异步I/O模型图如下：</p>
-<p> <img src="http://o6plzvjf2.bkt.clouddn.com/javaCore/png/fake_aio.png" alt="fake_aio"></p>
+<p> <img src="http://blog.todorex.com/javaCore/png/fake_aio.png" alt="fake_aio"></p>
 <p> 我们知道，如果使用CachedThreadPool线程池，其实除了能自动帮我们管理线程（复用），看起来也就像是1:1的客户端：线程数模型，而使用FixedThreadPool我们就有效的控制了线程的最大数量，保证了系统有限的资源的控制，实现了N:M的伪异步I/O模型。但是，正因为限制了线程数量，如果发生大量并发请求，超过最大数量的线程就只能等待，直到线程池中的有空闲的线程可以被复用。而对Socket的输入流就行读取时，会一直阻塞。  所以在读取数据较慢时（比如数据量大、网络传输慢等），大量并发的情况下，其他接入的消息，<strong>只能一直等待</strong>，这就是最大的弊端。</p>
 <p> <strong>PS：</strong> 源码都在github上。</p>
 <h1 id="NIO网络编程"><a href="#NIO网络编程" class="headerlink" title="NIO网络编程"></a>NIO网络编程</h1><p>NIO(同步非阻塞IO)提供了与传统BIO模型中的Socket和ServerSocket相对应的SocketChannel和ServerSocketChannel两种不同的套接字通道实现。<strong>新增的着两种通道都支持阻塞和非阻塞两种模式</strong>。阻塞模式使用就像传统中的支持一样，比较简单，但是性能和可靠性都不好；非阻塞模式正好与之相反。对于低负载、低并发的应用程序，可以使用同步阻塞I/O来提升开发速率和更好的维护性；对于高负载、高并发的（网络）应用，应使用NIO的非阻塞模式来开发。</p>
@@ -455,7 +455,7 @@
 <h2 id="多路复用器-Selector"><a href="#多路复用器-Selector" class="headerlink" title="多路复用器 Selector"></a>多路复用器 Selector</h2><p>Selector提供选择已经就绪的任务的能力：Selector会不断轮询注册在其上的Channel，如果某个Channel上面发生读或者写事件，这个Channel就处于就绪状态，会被Selector轮询出来，然后通过SelectionKey可以获取就绪Channel的集合，进行后续的I/O操作。</p>
 <p>一个Selector可以同时轮询多个Channel(<strong>所以是非阻塞的</strong>)，因为JDK使用了epoll()代替传统的select实现，所以没有最大连接句柄1024/2048的限制。所以，只需要一个线程负责Selector的轮询，就可以接入成千上万的客户端。</p>
 <h2 id="创建NIO服务端的通信流程"><a href="#创建NIO服务端的通信流程" class="headerlink" title="创建NIO服务端的通信流程"></a>创建NIO服务端的通信流程</h2><p>我们可以看下面这种通信序列图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/javaCore/png/nioServer.png" alt="nioServer"></p>
+<p><img src="http://blog.todorex.com/javaCore/png/nioServer.png" alt="nioServer"></p>
 <p><strong>PS：</strong> 源码都在github上。</p>
 <h1 id="AIO网络编程"><a href="#AIO网络编程" class="headerlink" title="AIO网络编程"></a>AIO网络编程</h1><p>异步的套接字通道是真正的异步非阻塞I/O，对应于UNIX网络编程中的事件驱动I/O（AIO）。他不需要过多的Selector对注册的通道进行轮询即可实现异步读写，从而简化了NIO的编程模型。</p>
 <p>AIO(异步非阻塞IO)提供了与传统BIO模型中的Socket和ServerSocket相对应的AsynchronousSocketChannel和AsynchronousServerSocketChannel两种不同的套接字通道实现。</p>
@@ -634,7 +634,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

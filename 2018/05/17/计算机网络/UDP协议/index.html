@@ -96,13 +96,13 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/05/17/计算机网络/UDP协议/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：UDP作为传输层的一大协议，虽然没有TCP可靠，但是却胜在简单。">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/udp.png">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/checksum.png">
-<meta property="og:updated_time" content="2018-05-17T07:09:07.421Z">
+<meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/udp.png">
+<meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/checksum.png">
+<meta property="og:updated_time" content="2018-10-30T12:06:04.444Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="UDP协议">
 <meta name="twitter:description" content="引：UDP作为传输层的一大协议，虽然没有TCP可靠，但是却胜在简单。">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/udp.png">
+<meta name="twitter:image" content="http://blog.todorex.com/computerNetwork/png/udp.png">
 
 
 
@@ -399,7 +399,7 @@
 <li>UDP支持一对一、一对多、多对多、多对一通信；而TCP只支持一对一通信。</li>
 <li>UDP首部开销小，只有8字节。而TCP头部至少由20字节，相比于TCP要高效很多。</li>
 </ol>
-<h1 id="UDP数据包首部"><a href="#UDP数据包首部" class="headerlink" title="UDP数据包首部"></a>UDP数据包首部</h1><p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/udp.png" alt="udp"></p>
+<h1 id="UDP数据包首部"><a href="#UDP数据包首部" class="headerlink" title="UDP数据包首部"></a>UDP数据包首部</h1><p><img src="http://blog.todorex.com/computerNetwork/png/udp.png" alt="udp"></p>
 <h2 id="UDP数据包首部解析"><a href="#UDP数据包首部解析" class="headerlink" title="UDP数据包首部解析"></a>UDP数据包首部解析</h2><ol>
 <li>16位源端口号：发送端应用程序使用的端口号，用于区分数据报来自哪个进程，多路复用一个传输层（复用：在发送端，多个应用进程公用一个传输层）。</li>
 <li>16位目的端口号：数据送往接收端哪个应用程序，利用端口号实现多路分用（分用：在接收端，传输层会根据端口号将数据分派给不同的应用进程）。</li>
@@ -408,7 +408,7 @@
 <li>数据：要发送的数据，可以为空(0字节)。</li>
 </ol>
 <h2 id="UDP检验和"><a href="#UDP检验和" class="headerlink" title="UDP检验和"></a>UDP检验和</h2><p>UDP校验和的内容超出了UDP数据报文本身的范围，实际上，它的值是通过计算UDP数据报及一个伪包头而得到的。校验和的计算方法与通用的一样，都是累加求和。<br>它的校验和的检验范围如下图：</p>
-<p><img src="http://o6plzvjf2.bkt.clouddn.com/computerNetwork/png/checksum.png" alt="checksum"></p>
+<p><img src="http://blog.todorex.com/computerNetwork/png/checksum.png" alt="checksum"></p>
 <p>伪首部并非UDP数据报中实际的有效成分。伪首部是一个虚拟的数据结构，其中的信息是从数据报所在IP分组头的分组头中提取的，既不向下传送也不向上递交，而仅仅是为计算校验和。这样的校验和，既校验了UDP用户数据的源端口号和目的端口号以及UDP用户数据报的数据部分，又检验了IP数据报的源IP地址和目的IP<br>地址。<strong>伪报头保证UDP数据单元到达正确的目的地址</strong>。</p>
 <p>校验方式：</p>
 <ol>
@@ -617,7 +617,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -96,12 +96,12 @@
 <meta property="og:url" content="http://bestlixiang.site/2017/07/15/编程/浅尝Apache-Camel/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：最近项目有一个需求就是定时将一台服务器的文件传到另一个服务器，一开始想的竟然想的是用http去下载，后来在万老师的指点下，采取用ftp服务器（源文件所在地）与ftp客户端（源文件去向）的形式来处理，自己小试了一下，还不错！">
-<meta property="og:image" content="http://o6plzvjf2.bkt.clouddn.com/camel.png">
-<meta property="og:updated_time" content="2017-07-15T01:40:22.000Z">
+<meta property="og:image" content="http://blog.todorex.com/camel.png">
+<meta property="og:updated_time" content="2018-10-30T12:05:06.517Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅尝Apache Camel">
 <meta name="twitter:description" content="引：最近项目有一个需求就是定时将一台服务器的文件传到另一个服务器，一开始想的竟然想的是用http去下载，后来在万老师的指点下，采取用ftp服务器（源文件所在地）与ftp客户端（源文件去向）的形式来处理，自己小试了一下，还不错！">
-<meta name="twitter:image" content="http://o6plzvjf2.bkt.clouddn.com/camel.png">
+<meta name="twitter:image" content="http://blog.todorex.com/camel.png">
 
 
 
@@ -390,7 +390,7 @@
         <p>引：最近项目有一个需求就是定时将一台服务器的文件传到另一个服务器，一开始想的竟然想的是用http去下载，后来在万老师的指点下，采取用ftp服务器（源文件所在地）与ftp客户端（源文件去向）的形式来处理，自己小试了一下，还不错！<a id="more"></a></p>
 <h2 id="Apache-Camel简介"><a href="#Apache-Camel简介" class="headerlink" title="Apache Camel简介"></a>Apache Camel简介</h2><p>Apache Camel是Apache基金会下的一个开源项目,它是一个基于规则路由和处理的引擎，提供企业集成模式的Java对象的实现，通过应用程序接口 或称为陈述式的Java领域特定语言(DSL)来配置路由和处理的规则。其核心的思想就是从一个from源头得到数据,通过processor处理,再发到一个to目的的。</p>
 <p>这个from和to可以是我们在项目集成中经常碰到的类型:一个FTP文件夹中的文件,一个MQ的queue（jms）,一个HTTP request/response,一个webservice等等.</p>
-<h2 id="Apache-Camel架构"><a href="#Apache-Camel架构" class="headerlink" title="Apache Camel架构"></a>Apache Camel架构</h2><p><img src="http://o6plzvjf2.bkt.clouddn.com/camel.png" alt="架构图"></p>
+<h2 id="Apache-Camel架构"><a href="#Apache-Camel架构" class="headerlink" title="Apache Camel架构"></a>Apache Camel架构</h2><p><img src="http://blog.todorex.com/camel.png" alt="架构图"></p>
 <p>其实理解起来很简单：始端》（过滤器+路由处理器）》终端</p>
 <h2 id="Apache-Camel核心概念"><a href="#Apache-Camel核心概念" class="headerlink" title="Apache Camel核心概念"></a>Apache Camel核心概念</h2><ol>
 <li><p>endpoint,所谓的endpoint,就是一种可以接收或发送数据的组件。可以支持多种协议，如jms,http,file等。</p>
@@ -401,7 +401,7 @@
 </li>
 <li><p>exchange,processor之间用exchange对象来传送数据，有点像jms,通俗一点就像上学时传的小纸条,所以：exchange对象就是processor，endpoint所有camel组件之间传送数据的小纸条:)。</p>
 </li>
-<li><p>filter，用来确定哪些东西可以传递，哪些东西不可以传递。 </p>
+<li><p>filter，用来确定哪些东西可以传递，哪些东西不可以传递。</p>
 </li>
 </ol>
 <h2 id="Apache-Camel例子（以ftp为例）"><a href="#Apache-Camel例子（以ftp为例）" class="headerlink" title="Apache Camel例子（以ftp为例）"></a>Apache Camel例子（以ftp为例）</h2><p>老师指导的例子，是结合Springboot的，放在github上了。<br><a href="https://github.com/todorex/ApacheCamel" target="_blank" rel="external">ApacheCamleDemo</a></p>
@@ -560,7 +560,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">139</span>
+                <span class="site-state-item-count">138</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
