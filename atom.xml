@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-09-13T10:15:06.002Z</updated>
+  <updated>2018-10-31T00:21:36.636Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Mac版百度网盘飞速下载</title>
+    <link href="http://bestlixiang.site/2018/10/31/%E5%B7%A5%E5%85%B7/Mac%E7%89%88%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E9%A3%9E%E9%80%9F%E4%B8%8B%E8%BD%BD/"/>
+    <id>http://bestlixiang.site/2018/10/31/工具/Mac版百度网盘飞速下载/</id>
+    <published>2018-10-31T00:17:46.000Z</published>
+    <updated>2018-10-31T00:21:36.636Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：百度网盘上有很多资源，之前在Mac上一直没有找到好的加速方法或者破解软件，这次终于找到了，请速速戳进来！！<a id="more"></a></p>
+<h1 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h1><p><a href="https://github.com/proxyee-down-org/proxyee-down" target="_blank" rel="external">Proxyee Down</a></p>
+<p>Proxyee Down 是一款开源的免费 HTTP 高速下载器，底层使用<code>netty</code>开发，支持自定义 HTTP 请求下载且支持扩展功能，可以通过安装扩展实现特殊的下载需求。</p>
+<h1 id="最近视频教程"><a href="#最近视频教程" class="headerlink" title="最近视频教程"></a>最近视频教程</h1><p>以后也可能就不新了！！</p>
+<p><a href="https://www.youtube.com/watch?v=ecZqKGaKIck" target="_blank" rel="external">快快保存，2018最新百度云不限制方法proxyee down-2018.9.19，亲测速度达10M</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：百度网盘上有很多资源，之前在Mac上一直没有找到好的加速方法或者破解软件，这次终于找到了，请速速戳进来！！
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>JDK源码分析——ReentrantReadWriteLock</title>
@@ -772,83 +795,6 @@
     
     
       <category term="Java" scheme="http://bestlixiang.site/tags/Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>SpringBoot+Git+Jenkins+Docker实现CI/CD</title>
-    <link href="http://bestlixiang.site/2018/07/18/%E8%BF%90%E7%BB%B4/SpringBoot-Git-Jenkins-Docker%E5%AE%9E%E7%8E%B0CI-CD/"/>
-    <id>http://bestlixiang.site/2018/07/18/运维/SpringBoot-Git-Jenkins-Docker实现CI-CD/</id>
-    <published>2018-07-18T01:03:46.000Z</published>
-    <updated>2018-10-30T12:11:25.963Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：现在DevOps这么运行，你没有理由不去了解，不去实践，这次就以Springboot为底，利用Git，jenkins，Docker实现持续集成和持续部署！<a id="more"></a></p>
-<h1 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h1><p>下面是常用的开发流程图：</p>
-<p><img src="http://blog.todorex.com/cicd/devops.jpg" alt="dev"></p>
-<p>我们简单说说这张图：首先我们会将代码文件、测试文件以及Dockerfile都存在代码仓库里，版本控制利用git，这里代码仓库有很多选择，比如github、码云(本次使用)、Coding以及自己搭建的gitlab。然后由持续集成工具进行自动化构建，包括了测试、编译、打包、构建镜像、推送镜像到仓库（有很多选择，如docker官方仓库，时速运、自己搭建的Registry）、启动服务等操作，持续集成工具也有很多选择，比如Jenkins(这次使用)、Gitlab CI、Trivas CI。这里使用的容器是Docker，这里Docker的编排工具可以选择Swarm，也可以是K8S。</p>
-<p>本次实现流程如下：</p>
-<ol>
-<li>push代码到码云触发WebHook</li>
-<li>Jenkins从码云拉取代码</li>
-<li>maven构建代码</li>
-<li>build镜像</li>
-<li>push镜像到镜像仓库</li>
-<li>部署服务</li>
-</ol>
-<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>关于Jdk、Git、Maven的配置这里就不说，自己面向搜索引擎。这里主要说Jenkins和码云的配置。</p>
-<h2 id="Jenkins安装配置"><a href="#Jenkins安装配置" class="headerlink" title="Jenkins安装配置"></a>Jenkins安装配置</h2><ol>
-<li><a href="https://jenkins.io/download/" target="_blank" rel="external">下载Jenkins</a>（采用war包安装）</li>
-<li>将war包放入Tomcat的webapps目录下</li>
-<li>进入YourHostIp:8080/jenkins路径下进行Jenkins的初始化，我们进入 <strong>用户自定义插件</strong> 安装界面，你可以根据自己的构建方式选择需要安装的插件，本次使用的Pipelines方式进行构建，Pipelines方式是Jenkins2推荐的方式，所以我们构建Pipelines相关的插件进行安装，当然待会进入Jenkins安装也行。</li>
-<li>配置用户名和密码</li>
-<li>全局工具配置（从系统管理进入全局工具配置，配置Jdk、Git、Maven）</li>
-<li><p>安全配置（从系统管理进入全局安全配置）,如下图：</p>
-<p><img src="http://blog.todorex.com/cici/jenkins_security.jpg" alt="jenkins_security"></p>
-</li>
-</ol>
-<h2 id="Jenkins构建任务"><a href="#Jenkins构建任务" class="headerlink" title="Jenkins构建任务"></a>Jenkins构建任务</h2><ol>
-<li>新建任务，构建一个流水线任务（Pipeline）</li>
-<li><p>在配置里构建触发器，如下图：</p>
-<p> <img src="http://blog.todorex.com/cicd/jenkins_webhooks_url.jpg" alt="jenkins_webhooks_url"></p>
-</li>
-<li><p>构建Pipeline脚本（Pipeline脚本写法见参考）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">  #!groovy</div><div class="line">  pipeline&#123;</div><div class="line">    agent any</div><div class="line">    //定义仓库地址</div><div class="line">    environment &#123;</div><div class="line">        REPOSITORY=&quot;https://gitee.com/todorex/springboot_docker_git_jenkins_demo.git&quot;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    stages &#123;</div><div class="line"></div><div class="line">        stage(&apos;获取代码&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start fetch code from git:$&#123;REPOSITORY&#125;&quot;</div><div class="line">                // 清空当前目录</div><div class="line">                deleteDir()</div><div class="line">                // 拉取代码    </div><div class="line">                git &quot;$&#123;REPOSITORY&#125;&quot;</div><div class="line">                // 清空之前的容器</div><div class="line">                sh &apos;docker stop $(docker ps -a -q)&apos;</div><div class="line">                sh &apos;docker rm $(docker ps -a -q)&apos;</div><div class="line">            &#125;</div><div class="line">        &#125;       </div><div class="line"></div><div class="line">        stage(&apos;Maven 构建&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start compile&quot;</div><div class="line">                // 切换目录</div><div class="line">                dir(&apos;demo&apos;) &#123;</div><div class="line">                    // 重新打包</div><div class="line">                    sh &apos;mvn -Dmaven.test.skip=true -U clean install&apos;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        stage(&apos;构建镜像&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start build image&quot;</div><div class="line">                dir(&apos;demo&apos;) &#123;</div><div class="line">                    // build镜像</div><div class="line">                    sh &apos;docker build -t todorex/springboot_docker_git_jenkins_demo:1.0 .&apos;</div><div class="line">                    // 登录镜像仓库</div><div class="line">                    sh &apos;docker login -u your_username -p your_password&apos;</div><div class="line">                    // 推送镜像到镜像仓库</div><div class="line">                    sh &apos;docker push todorex/springboot_docker_git_jenkins_demo:1.0&apos;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        stage(&apos;启动服务&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start demo&quot;</div><div class="line">                // 部署服务</div><div class="line">                sh &apos;docker run -d -p 8888:8888 --name=demo todorex/springboot_docker_git_jenkins_demo:1.0&apos;</div><div class="line">            &#125;</div><div class="line">        &#125;                </div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="SSH的配置"><a href="#SSH的配置" class="headerlink" title="SSH的配置"></a>SSH的配置</h2><p>为了避免jenkins拉取代码时需要输入密码，这里需要配置SSH免密码拉取。如下图：</p>
-<p><img src="http://blog.todorex.com/cicd/gitee_ssh.jpg" alt="gitee_ssh"></p>
-<h2 id="WebHooks配置"><a href="#WebHooks配置" class="headerlink" title="WebHooks配置"></a>WebHooks配置</h2><p>当你每次对代码仓库进行push操作时，会自动通知jenkins进行构建<br><img src="http://blog.todorex.com/cicd/gitee_webhooks.jpg" alt="gitee_webhooks"></p>
-<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>这次项目的代码仓库为：<a href="https://gitee.com/todorex/springboot_docker_git_jenkins_demo" target="_blank" rel="external">springboot_docker_git_jenkins_demo</a></p>
-<p>关于Dockerfile以及docker-compose.yml的编写，自己也去面向搜索引擎看看吧。</p>
-<p>当我们push代码之后，jenkins就会自动帮我们进行构建。如下图：<br><img src="http://blog.todorex.com/cicd/jenkins_test.jpg" alt="jenkins_test"></p>
-<p>PS：第一次比较慢是因为要安装Maven依赖，后面就好了。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里只是展示了一个CI/CD的开发流程，关于具体技术细节，无论是Jenkins还是Docker都需要深入学习，加油，骚年！</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="http://niocoder.com/2018/04/22/SpringBoot+Docker+Git+Jenkins%E5%AE%9E%E7%8E%B0%E7%AE%80%E6%98%93%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%92%8C%E9%83%A8%E7%BD%B2/" target="_blank" rel="external">SpringBoot+Docker+Git+Jenkins实现简易的持续集成和持续部署</a></li>
-<li><a href="http://www.cnblogs.com/fengjian2016/p/8227532.html" target="_blank" rel="external">Jenkins pipeline：pipeline 语法详解</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：现在DevOps这么运行，你没有理由不去了解，不去实践，这次就以Springboot为底，利用Git，jenkins，Docker实现持续集成和持续部署！
-    
-    </summary>
-    
-      <category term="运维" scheme="http://bestlixiang.site/categories/%E8%BF%90%E7%BB%B4/"/>
-    
-    
-      <category term="SpringBoot" scheme="http://bestlixiang.site/tags/SpringBoot/"/>
-    
-      <category term="Git" scheme="http://bestlixiang.site/tags/Git/"/>
-    
-      <category term="Jenkins" scheme="http://bestlixiang.site/tags/Jenkins/"/>
-    
-      <category term="Docker" scheme="http://bestlixiang.site/tags/Docker/"/>
-    
-      <category term="CI" scheme="http://bestlixiang.site/tags/CI/"/>
-    
-      <category term="CD" scheme="http://bestlixiang.site/tags/CD/"/>
     
   </entry>
   
