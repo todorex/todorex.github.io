@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="java,JVM," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="java,JVM,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2017/12/12/深入理解Java虚拟机/深入理解JVM-12-晚期（运行期）优化/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：之前说过Java中的JIT即时编译器在运行期的优化对于程序运行来说更重要，那我们就来看看这个即时编译器。本文提及的编译器、即时编译器都是指HotSpot虚拟机内的即时编译器，虚拟机也特指HotSpot虚拟机。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-12-12T14:19:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解JVM_12_晚期（运行期）优化">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/12/12/深入理解Java虚拟机/深入理解JVM-12-晚期（运行期）优化/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/12/12/深入理解Java虚拟机/深入理解JVM-12-晚期（运行期）优化/">
 
 
 
@@ -136,7 +137,7 @@
   <title> 深入理解JVM_12_晚期（运行期）优化 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/12/12/深入理解Java虚拟机/深入理解JVM-12-晚期（运行期）优化/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
                     <span itemprop="name">深入理解Java虚拟机</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -420,9 +419,9 @@
 <h3 id="Server-Compiler"><a href="#Server-Compiler" class="headerlink" title="Server Compiler"></a>Server Compiler</h3><p>它是专门面向服务端的典型应用并为服务器端的性能配置特别调整过的编译器，也是一个充分优化过的高级编译器。它会执行所有经典的优化工作。它的寄存器分配器是一个全局图着色分配器，可以充分利用某些处理器架构上的大寄存器集合。</p>
 <h3 id="查看及分析即时编译结果"><a href="#查看及分析即时编译结果" class="headerlink" title="查看及分析即时编译结果"></a>查看及分析即时编译结果</h3><p>这一块我没有去实践，但是这里写一个结论：在Java中空循环不能用作程序延时的手段，因为空循环会被优化消除。</p>
 <h1 id="编译优化技术"><a href="#编译优化技术" class="headerlink" title="编译优化技术"></a>编译优化技术</h1><p>Java程序员有一个共识：以编译方式执行本地代码比解释方式更快。这主要是因为虚拟机设计团队几乎把对代码的所有优化措施都集中在编译器之中了。关于HotSpot的优化技术列表可以参考《深入理解Java虚拟机》一书，这里也根据书上举的几个例子来看看其中的优化技术。</p>
-<h2 id="公共子表达式消除"><a href="#公共子表达式消除" class="headerlink" title="公共子表达式消除"></a>公共子表达式消除</h2><p>含义是：如果一个表达式E已经计算过了，并且从先前的计算到现在E中所有的变量的值都没有发生变化，那么E的这次出现就成为了公共子表达式。对于这种表达式，没有必要花时间再对它进行计算，只需要直接用前面计算过的表达式结果代替E即可。可以看看下面的优化历程：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"><span class="keyword">int</span> d = (c * b) * <span class="number">12</span> + a + (a + b * c);</div><div class="line"></div><div class="line"><span class="comment">// 编译器检测到“c * b”和“b * c”是一样的表达式，这条表达式就变成下面这样了</span></div><div class="line"><span class="keyword">int</span> d = E * <span class="number">12</span> + a + (a + E);</div><div class="line"></div><div class="line"><span class="comment">// 编译器还可能进行代数简化，把表达式变为：</span></div><div class="line"><span class="keyword">int</span> d = E * <span class="number">13</span> + a * <span class="number">2</span>;</div></pre></td></tr></table></figure></p>
+<h2 id="公共子表达式消除"><a href="#公共子表达式消除" class="headerlink" title="公共子表达式消除"></a>公共子表达式消除</h2><p>含义是：如果一个表达式E已经计算过了，并且从先前的计算到现在E中所有的变量的值都没有发生变化，那么E的这次出现就成为了公共子表达式。对于这种表达式，没有必要花时间再对它进行计算，只需要直接用前面计算过的表达式结果代替E即可。可以看看下面的优化历程：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 源代码</span></span><br><span class="line"><span class="keyword">int</span> d = (c * b) * <span class="number">12</span> + a + (a + b * c);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译器检测到“c * b”和“b * c”是一样的表达式，这条表达式就变成下面这样了</span></span><br><span class="line"><span class="keyword">int</span> d = E * <span class="number">12</span> + a + (a + E);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译器还可能进行代数简化，把表达式变为：</span></span><br><span class="line"><span class="keyword">int</span> d = E * <span class="number">13</span> + a * <span class="number">2</span>;</span><br></pre></td></tr></table></figure></p>
 <p>大家肯定能发现，最后的表达式计算起来就可以节省时间了。</p>
-<h2 id="数组边界检查消除"><a href="#数组边界检查消除" class="headerlink" title="数组边界检查消除"></a>数组边界检查消除</h2><p>含义：虚拟机执行子系统每次数组的读写都带有一次隐含的条件判断操作，这对于拥有大量 数组访问的程序代码，无疑是一种性能负担。解决思路除了将数组边界检查优化尽可能把运行期检查提到编译期完成之外，还有另一种思路——隐式异常处理（try - catch）。可以看看代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 源代码</span></div><div class="line"><span class="keyword">if</span> (foo != <span class="keyword">null</span>) &#123;</div><div class="line">    <span class="keyword">return</span> foo.value</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointException();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 编译器转换代码</span></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    <span class="keyword">return</span> foo.value;</div><div class="line">&#125; <span class="keyword">catch</span>(segment_fault) &#123;</div><div class="line">    uncommon_trap();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="数组边界检查消除"><a href="#数组边界检查消除" class="headerlink" title="数组边界检查消除"></a>数组边界检查消除</h2><p>含义：虚拟机执行子系统每次数组的读写都带有一次隐含的条件判断操作，这对于拥有大量 数组访问的程序代码，无疑是一种性能负担。解决思路除了将数组边界检查优化尽可能把运行期检查提到编译期完成之外，还有另一种思路——隐式异常处理（try - catch）。可以看看代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 源代码</span></span><br><span class="line"><span class="keyword">if</span> (foo != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> foo.value</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NullPointException();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编译器转换代码</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> foo.value;</span><br><span class="line">&#125; <span class="keyword">catch</span>(segment_fault) &#123;</span><br><span class="line">    uncommon_trap();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这样可以避免每次去做非空检查。</p>
 <h2 id="方法内联"><a href="#方法内联" class="headerlink" title="方法内联"></a>方法内联</h2><p>它除了消除方法调用成本之外，它更重要的是位其他优化手段建立良好的基础，如果不做内联，就发现不了无用代码。。内联具有两种情况：</p>
 <ol>
@@ -525,7 +524,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -569,7 +568,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -579,10 +578,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -715,7 +712,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

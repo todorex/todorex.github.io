@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Mybatis," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="Mybatis,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/04/16/深入SSM/揭秘Mybatis-一-Mybatis架构/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：从JDBC到Hibernate再到Mybatis，你可能会使用很多框架，但是你却不知道框架为你解决什么了或是不知道它的整个架构，我们这里就是帮你解决这些问题！">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2062729-58069e90e9c66d5d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
 <meta property="og:updated_time" content="2018-04-16T07:38:52.000Z">
 <meta name="twitter:card" content="summary">
@@ -129,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/04/16/深入SSM/揭秘Mybatis-一-Mybatis架构/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/04/16/深入SSM/揭秘Mybatis-一-Mybatis架构/">
 
 
 
@@ -138,7 +139,7 @@
   <title> 揭秘Mybatis(一)_Mybatis架构 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -163,13 +164,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -199,7 +200,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -209,7 +210,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -219,7 +220,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -232,7 +233,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -253,9 +254,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -287,16 +286,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/16/深入SSM/揭秘Mybatis-一-Mybatis架构/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -335,7 +334,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -346,7 +345,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/深入SSM/" itemprop="url" rel="index">
                     <span itemprop="name">深入SSM</span>
                   </a>
@@ -368,7 +367,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -417,11 +416,11 @@
 <h2 id="接口层"><a href="#接口层" class="headerlink" title="接口层"></a>接口层</h2><p>接口调用方式主要有以下两种：</p>
 <ol>
 <li><p>基于StatementId(命名空间+语句id)，范例如下：</p>
- <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List&lt;?&gt;|<span class="keyword">int</span>|<span class="keyword">void</span> sqlSession select|update|delete|insert(statementId,params)</div></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;?&gt;|<span class="keyword">int</span>|<span class="keyword">void</span> sqlSession select|update|delete|insert(statementId,params)</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>基于Mapper接口</p>
 <p> MyBatis 将配置文件中的每一个<mapper> 节点抽象为一个 Mapper 接口,这个接口中声明的方法和<mapper> 节点中的<select|update|delete|insert> 节点项对应，即<select|update|delete|insert> 节点的id值为Mapper 接口中的方法名称，parameterType 值表示Mapper 对应方法的入参类型，而resultMap 值则对应了Mapper 接口表示的返回值类型或者返回结果集的元素类型。范例如下：</select|update|delete|insert></select|update|delete|insert></mapper></mapper></p>
- <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;mapper namespace="com.todorex.UserMapper"&gt;</div><div class="line">    &lt;select id="selectList" resultType="com.todorex.User"&gt;</div><div class="line">        select * from user</div><div class="line">    &lt;/select&gt;</div><div class="line">&lt;/mapper&gt;</div><div class="line"></div><div class="line">public interface UserMapper &#123;</div><div class="line"></div><div class="line">    List&lt;User&gt; selectList();</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;mapper namespace=<span class="string">"com.todorex.UserMapper"</span>&gt;</span><br><span class="line">    &lt;select id=<span class="string">"selectList"</span> resultType=<span class="string">"com.todorex.User"</span>&gt;</span><br><span class="line">        select * from user</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserMapper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function">List&lt;User&gt; <span class="title">selectList</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p> 根据MyBatis 的配置规范配置好后，通过SqlSession.getMapper(UserMapper.class)方法，MyBatis会根据相应的接口声明的方法信息，通过<strong>动态代理机 制</strong> 生成一个Mapper 实例，我们调用Mapper接口的某一个方法时，MyBatis会根据这个方法的方法名和参数类型，确定StatementId，底层还是通过StatementId来实现对数据库的操作，MyBatis引用Mapper接口这种调用方式是为了满足面向接口编程的需 要。<strong>（其实还有一个原因是在于，面向接口的编程，使得用户在接口上可以使用注解来配置SQL语句，这样就可以脱离XML配置文件）</strong>。</p>
 </li>
 </ol>
@@ -457,9 +456,9 @@
 <li><p>基于Java API 的方式</p>
 </li>
 </ul>
-<p>范例可以查看官方使用手册：<a href="http://www.mybatis.org/mybatis-3/zh/getting-started.html" target="_blank" rel="external">Mybatis官方使用手册</a></p>
+<p>范例可以查看官方使用手册：<a href="http://www.mybatis.org/mybatis-3/zh/getting-started.html" target="_blank" rel="noopener">Mybatis官方使用手册</a></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://www.jianshu.com/p/ec40a82cae28" target="_blank" rel="external">终结篇：MyBatis原理深入解析（一）</a></li>
+<li><a href="https://www.jianshu.com/p/ec40a82cae28" target="_blank" rel="noopener">终结篇：MyBatis原理深入解析（一）</a></li>
 </ol>
 
       
@@ -544,7 +543,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -588,7 +587,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -598,10 +597,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -734,7 +731,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="并发," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="并发,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/01/24/Java并发编程实战/Java并发-11-构建自定义同步工具/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：创建状态依赖的类的最简单的方法通常是在类库中现有状态依赖类的基础上进行构造。但如果类库没有提供你需要的功能，我们还可以使用Java语言和类库提供的底层机制来构造自己的同步机制，包括内置的条件队列、显式的Condition对象以及AbstractQueuedSynchronizer框架。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-01-24T09:28:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java并发_11_构建自定义同步工具">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/01/24/Java并发编程实战/Java并发-11-构建自定义同步工具/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/01/24/Java并发编程实战/Java并发-11-构建自定义同步工具/">
 
 
 
@@ -136,7 +137,7 @@
   <title> Java并发_11_构建自定义同步工具 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/01/24/Java并发编程实战/Java并发-11-构建自定义同步工具/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/Java并发编程实战/" itemprop="url" rel="index">
                     <span itemprop="name">Java并发编程实战</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -395,7 +394,7 @@
 <li>对象的内置锁与内部条件是相互关联的，要调用对象X中的条件队列的任何一个方法，必须持有对象X上的锁。</li>
 <li>Object.wait会自动释放锁，并请求操作系统挂起当前线程，从而使其它线程能够获得这个锁并修改对象的状态。当被挂起的线路醒来时，它将在返回之前重新获取锁。（需要重新竞争，并没有优先获取权）</li>
 </ul>
-<p>使用条件队列构造有界缓存示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//未加任何约束的缓冲队列</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseBoundedBuffer</span>&lt;<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> V[] buf;<span class="comment">//缓存</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> tail;<span class="comment">//队尾</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> head;<span class="comment">//队首</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;<span class="comment">//元素个数</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">BaseBoundedBuffer</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.buf = (V[]) <span class="keyword">new</span> Object[capacity];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">doPut</span><span class="params">(V v)</span> </span>&#123;<span class="comment">//入队</span></div><div class="line">        buf[tail] = v;<span class="comment">//在队尾添加</span></div><div class="line">        <span class="keyword">if</span> (++tail == buf.length)<span class="comment">//如果满了，从头开始</span></div><div class="line">            tail = <span class="number">0</span>;</div><div class="line">        ++count;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> V <span class="title">doTake</span><span class="params">()</span> </span>&#123;<span class="comment">//出队</span></div><div class="line">        V v = buf[head];<span class="comment">//从队首取出</span></div><div class="line">        buf[head] = <span class="keyword">null</span>;<span class="comment">//GC</span></div><div class="line">        <span class="keyword">if</span> (++head == buf.length)<span class="comment">//如果到尾了，则从头开始</span></div><div class="line">            head = <span class="number">0</span>;</div><div class="line">        --count;</div><div class="line">        <span class="keyword">return</span> v;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isFull</span><span class="params">()</span> </span>&#123;<span class="comment">//队列是否满</span></div><div class="line">        <span class="keyword">return</span> count == buf.length;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;<span class="comment">//队列是否空</span></div><div class="line">        <span class="keyword">return</span> count == <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@ThreadSafe</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BoundedBuffer</span>&lt;<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">BaseBoundedBuffer</span>&lt;<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="comment">// 条件谓词：not-full(!isFull())</span></div><div class="line">    <span class="comment">// 条件谓词：not-empty(!isEmpty())</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BoundedBuffer</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123; <span class="keyword">super</span>(size); &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 阻塞并直到: not-full</span></div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">synchronized</span>  <span class="keyword">void</span> <span class="title">put</span><span class="params">(V v)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">while</span> (isFull())<span class="comment">//如果满，则等待</span></div><div class="line">            wait();</div><div class="line">        doPut(v);</div><div class="line">        notifyAll();<span class="comment">//并在放入后马上通知其他线程</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 阻塞并直到: not-empty</span></div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">synchronized</span>  V <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">while</span> (isEmpty())<span class="comment">//如果为空，则等待</span></div><div class="line">            wait();</div><div class="line">        V v = doTake();</div><div class="line">        notifyAll();</div><div class="line">        <span class="keyword">return</span> v;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用条件队列构造有界缓存示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//未加任何约束的缓冲队列</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseBoundedBuffer</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> V[] buf;<span class="comment">//缓存</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> tail;<span class="comment">//队尾</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> head;<span class="comment">//队首</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count;<span class="comment">//元素个数</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">BaseBoundedBuffer</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.buf = (V[]) <span class="keyword">new</span> Object[capacity];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">doPut</span><span class="params">(V v)</span> </span>&#123;<span class="comment">//入队</span></span><br><span class="line">        buf[tail] = v;<span class="comment">//在队尾添加</span></span><br><span class="line">        <span class="keyword">if</span> (++tail == buf.length)<span class="comment">//如果满了，从头开始</span></span><br><span class="line">            tail = <span class="number">0</span>;</span><br><span class="line">        ++count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> V <span class="title">doTake</span><span class="params">()</span> </span>&#123;<span class="comment">//出队</span></span><br><span class="line">        V v = buf[head];<span class="comment">//从队首取出</span></span><br><span class="line">        buf[head] = <span class="keyword">null</span>;<span class="comment">//GC</span></span><br><span class="line">        <span class="keyword">if</span> (++head == buf.length)<span class="comment">//如果到尾了，则从头开始</span></span><br><span class="line">            head = <span class="number">0</span>;</span><br><span class="line">        --count;</span><br><span class="line">        <span class="keyword">return</span> v;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isFull</span><span class="params">()</span> </span>&#123;<span class="comment">//队列是否满</span></span><br><span class="line">        <span class="keyword">return</span> count == buf.length;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;<span class="comment">//队列是否空</span></span><br><span class="line">        <span class="keyword">return</span> count == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@ThreadSafe</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BoundedBuffer</span>&lt;<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">BaseBoundedBuffer</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">// 条件谓词：not-full(!isFull())</span></span><br><span class="line">    <span class="comment">// 条件谓词：not-empty(!isEmpty())</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BoundedBuffer</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123; <span class="keyword">super</span>(size); &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 阻塞并直到: not-full</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">synchronized</span>  <span class="keyword">void</span> <span class="title">put</span><span class="params">(V v)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (isFull())<span class="comment">//如果满，则等待</span></span><br><span class="line">            wait();</span><br><span class="line">        doPut(v);</span><br><span class="line">        notifyAll();<span class="comment">//并在放入后马上通知其他线程</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 阻塞并直到: not-empty</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">synchronized</span>  V <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (isEmpty())<span class="comment">//如果为空，则等待</span></span><br><span class="line">            wait();</span><br><span class="line">        V v = doTake();</span><br><span class="line">        notifyAll();</span><br><span class="line">        <span class="keyword">return</span> v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="条件谓词"><a href="#条件谓词" class="headerlink" title="条件谓词"></a>条件谓词</h2><p><strong>条件谓词</strong>是使某个操作成为状态依赖操作的前提条件。在有界缓存中，只有当缓存不为空时，take方法才能执行，否则必须等待。对take方法来说，它的条件谓词就是“缓存不为空”，take方法在执行之前必须首先测试该条件谓词。</p>
 <p><strong>条件等待存在的三元关系：</strong> 包括加锁、wait方法和一个条件谓词。在条件谓词中包含多个包含多个状态变量，而状态变量由一个锁来保护，因此在测试条件谓词之前必须先持有这个锁，锁对象与条件队列对象（即调用wait和notify等方法所在的对象）必须是同一个对象。</p>
 <p><strong>每一次wait调用都会隐式地与特定的条件谓词关联起来。当调用某个特定条件谓词的wait时，调用者必须已经持有与条件队列相关的锁，并且这个锁必须保护着构成条件谓词的状态变量。</strong></p>
@@ -420,9 +419,9 @@
 <h1 id="显式的Condition对象"><a href="#显式的Condition对象" class="headerlink" title="显式的Condition对象"></a>显式的Condition对象</h1><p>内置条件队列的局限性：每个内置锁都只能有一个相关联的条件队列，因而在像BoundBuffer这种类中，多个线程可能在同一个条件队列上等待不同的条件谓词，并且在最常见的加锁模式下公开条件队列对象。</p>
 <p>显示条件队列的优势：可以编写一个带有多个条件谓词的并发对象，或者获得除了条件队列可见性之外的更多控制权，这是一种灵活的选择；对于每个Lock，可以有任意数量的Condition对象。Condition对象继承了相关的Lock对象的公平性，对于公平的锁，线程会依照FIFO顺序从Condition await中释放。</p>
 <p><strong>特别注意：Condition对象中，三个与条件队列相关的API是：await,signal,signalAll。</strong></p>
-<p>下面是使用显示的Condition对象实现的有界缓存:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionBoundedBuffer</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">protected</span> <span class="keyword">final</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition notFull    = lock.newCondition();<span class="comment">//条件：count &lt; items.length</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty  = lock.newCondition();<span class="comment">//条件：count &gt; 0</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> T[] items = (T[]) <span class="keyword">new</span> Object[<span class="number">100</span>];</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> tail, head, count;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(T x)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">while</span> (count == items.length)</div><div class="line">                notFull.await();<span class="comment">//等到条件count &lt; items.length满足</span></div><div class="line">            items[tail] = x;</div><div class="line">            <span class="keyword">if</span> (++tail == items.length)</div><div class="line">                tail = <span class="number">0</span>;</div><div class="line">            ++count;</div><div class="line">            notEmpty.signal();<span class="comment">//通知读取等待线程</span></div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">while</span> (count == <span class="number">0</span>)</div><div class="line">                notEmpty.await();<span class="comment">//等到条件count &gt; 0满足</span></div><div class="line">            T x = items[head];</div><div class="line">            items[head] = <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">if</span> (++head == items.length)</div><div class="line">                head = <span class="number">0</span>;</div><div class="line">            --count;</div><div class="line">            notFull.signal();<span class="comment">//通知写入等待线程</span></div><div class="line">            <span class="keyword">return</span> x;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面是使用显示的Condition对象实现的有界缓存:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionBoundedBuffer</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">final</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition notFull    = lock.newCondition();<span class="comment">//条件：count &lt; items.length</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty  = lock.newCondition();<span class="comment">//条件：count &gt; 0</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> T[] items = (T[]) <span class="keyword">new</span> Object[<span class="number">100</span>];</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> tail, head, count;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(T x)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (count == items.length)</span><br><span class="line">                notFull.await();<span class="comment">//等到条件count &lt; items.length满足</span></span><br><span class="line">            items[tail] = x;</span><br><span class="line">            <span class="keyword">if</span> (++tail == items.length)</span><br><span class="line">                tail = <span class="number">0</span>;</span><br><span class="line">            ++count;</span><br><span class="line">            notEmpty.signal();<span class="comment">//通知读取等待线程</span></span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (count == <span class="number">0</span>)</span><br><span class="line">                notEmpty.await();<span class="comment">//等到条件count &gt; 0满足</span></span><br><span class="line">            T x = items[head];</span><br><span class="line">            items[head] = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (++head == items.length)</span><br><span class="line">                head = <span class="number">0</span>;</span><br><span class="line">            --count;</span><br><span class="line">            notFull.signal();<span class="comment">//通知写入等待线程</span></span><br><span class="line">            <span class="keyword">return</span> x;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h1 id="AbstractQueuedSynchronizer"><a href="#AbstractQueuedSynchronizer" class="headerlink" title="AbstractQueuedSynchronizer"></a>AbstractQueuedSynchronizer</h1><p>AbstractQueuedSynchronizer是一个用于构建锁和同步器的框架，许多同步器都可以通过AQS很容易并且高效地构造出来。例如：ReentrantLock、Semaphore、CountDownLatch、ReentrantReadWriteLock、SynchronousQueue和FutureTask。</p>
-<p>下面是AQS中获取操作和释放操作的标准形式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">acquire</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">while</span> (当前状态不允许获取操作)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (需要阻塞获取请求)</div><div class="line">        &#123;</div><div class="line">            如果当前线程不在队列中，则将其插入队列</div><div class="line">            阻塞当前线程</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            返回失败</div><div class="line">    &#125;</div><div class="line">    可能更新同步器的状态</div><div class="line">    如果线程位于队列中，则将其移出队列</div><div class="line">    返回成功</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">release</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    更新同步器的状态</div><div class="line">    <span class="keyword">if</span> (新的状态允许某个被阻塞的线程获取成功)</div><div class="line">        解除队列中一个或多个线程的阻塞状态</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面是AQS中获取操作和释放操作的标准形式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">acquire</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (当前状态不允许获取操作)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (需要阻塞获取请求)</span><br><span class="line">        &#123;</span><br><span class="line">            如果当前线程不在队列中，则将其插入队列</span><br><span class="line">            阻塞当前线程</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            返回失败</span><br><span class="line">    &#125;</span><br><span class="line">    可能更新同步器的状态</span><br><span class="line">    如果线程位于队列中，则将其移出队列</span><br><span class="line">    返回成功</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">release</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    更新同步器的状态</span><br><span class="line">    <span class="keyword">if</span> (新的状态允许某个被阻塞的线程获取成功)</span><br><span class="line">        解除队列中一个或多个线程的阻塞状态</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>要实现一个依赖状态的类——如果没有满足依赖状态的前提条件，那么这个类的方法必须阻塞，那么最好的方式是基于现有类库来构建，例如Semaphore.BlockingQueue或CountDownLatch。然而，有时候现有的类库不能提供足够的功能，在这种情况下，可以使用内置的条件队列、显式的Condition对象或者AbstractQueuedSynchronizer来构建自己的同步器。内置条件队列与内置锁是紧密绑定在一起的，这是因为管理状态依赖性的机制必须与确保状态一致性的机制关联起来。同样，显式的Condition与显式地Lock也是紧密地绑定在一起的，并且与内置条件队列相比，还提供了一个扩展的功能集，包括每个锁对应于多个等待线程集，可中断或不可中断的条件等待，公平或非公平的队列操作，以及基于时限的等待。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《Java并发编程实战》</li>
@@ -510,7 +509,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -554,7 +553,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -564,10 +563,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -700,7 +697,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

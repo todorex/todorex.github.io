@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Netty," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="Netty,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/08/06/Netty源码/Netty源码之新连接接入/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：之前对服务端和NioEventLoop都有了一定的分析，相信大家的服务端应该已经虚位以待了。好的，我们现在就开始分析新连接接入。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-08-06T08:13:39.319Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty源码之新连接接入">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/08/06/Netty源码/Netty源码之新连接接入/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/08/06/Netty源码/Netty源码之新连接接入/">
 
 
 
@@ -136,7 +137,7 @@
   <title> Netty源码之新连接接入 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/08/06/Netty源码/Netty源码之新连接接入/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/Netty源码/" itemprop="url" rel="index">
                     <span itemprop="name">Netty源码</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -387,10 +386,10 @@
       
         <p>引：之前对服务端和NioEventLoop都有了一定的分析，相信大家的服务端应该已经虚位以待了。好的，我们现在就开始分析<strong>新连接接入</strong>。<a id="more"></a></p>
 <h1 id="新连接检测"><a href="#新连接检测" class="headerlink" title="新连接检测"></a>新连接检测</h1><p>用过NIO的人都会知道新连接检测应该在处理select出来的SelectedKey中出现，所以我们就从这开始：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSelectedKey</span><span class="params">(SelectionKey k, AbstractNioChannel ch)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> AbstractNioChannel.NioUnsafe unsafe = ch.unsafe();</div><div class="line">    eventLoop = ch.eventLoop();</div><div class="line">    <span class="keyword">int</span> readyOps = k.readyOps();</div><div class="line">    <span class="keyword">if</span> ((readyOps &amp; SelectionKey.OP_CONNECT) != <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">int</span> ops = k.interestOps();</div><div class="line">        ops &amp;= ~SelectionKey.OP_CONNECT;</div><div class="line">        k.interestOps(ops);</div><div class="line">        unsafe.finishConnect();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> ((readyOps &amp; SelectionKey.OP_WRITE) != <span class="number">0</span>) &#123;</div><div class="line">        ch.unsafe().forceFlush();</div><div class="line">    &#125;</div><div class="line">	<span class="comment">// 会进入到这里(接收连接)</span></div><div class="line">    <span class="keyword">if</span> ((readyOps &amp; (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != <span class="number">0</span> || readyOps == <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// step 2</span></div><div class="line">        unsafe.read();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2 AbstractNioMessageChannel</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> ChannelConfig config = config();</div><div class="line">    <span class="keyword">final</span> ChannelPipeline pipeline = pipeline();</div><div class="line">    <span class="comment">// 控制读取连接的速率，默认一次读取16个连接</span></div><div class="line">    <span class="keyword">final</span> RecvByteBufAllocator.Handle allocHandle = unsafe().recvBufAllocHandle();</div><div class="line">    allocHandle.reset(config);</div><div class="line">    <span class="keyword">do</span> &#123;</div><div class="line">        <span class="comment">// step 3</span></div><div class="line">        <span class="keyword">int</span> localRead = doReadMessages(readBuf);</div><div class="line">        <span class="comment">// 对连接数增加</span></div><div class="line">        allocHandle.incMessagesRead(localRead);</div><div class="line">    &#125; <span class="keyword">while</span> ( allocHandle . continueReading ());</div><div class="line"></div><div class="line">    <span class="keyword">int</span> size = readBuf.size();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</div><div class="line">        readPending = <span class="keyword">false</span>;</div><div class="line">        <span class="comment">// 触发读事件，绑定到NioEventLoop</span></div><div class="line">        pipeline.fireChannelRead(readBuf.get(i));</div><div class="line">    &#125;</div><div class="line">    readBuf.clear();</div><div class="line">    allocHandle.readComplete();</div><div class="line">    pipeline.fireChannelReadComplete();</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 3</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">doReadMessages</span><span class="params">(List &lt; Object &gt; buf)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// 熟悉的accept方法，熟悉的javaChannel()拿到serverSocketChannel</span></div><div class="line">    <span class="comment">// step 4</span></div><div class="line">    SocketChannel ch = SocketUtils.accept(javaChannel());</div><div class="line">    <span class="comment">// 封装成NioSocketChannel，进入创建部分</span></div><div class="line">    buf.add(<span class="keyword">new</span> NioSocketChannel(<span class="keyword">this</span>, ch));</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 4</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SocketChannel <span class="title">accept</span><span class="params">(<span class="keyword">final</span> ServerSocketChannel serverSocketChannel)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    	<span class="comment">// 返回SocketChannel(新出来的AccessController还需要研究)</span></div><div class="line">        <span class="keyword">return</span> AccessController.doPrivileged(<span class="keyword">new</span> PrivilegedExceptionAction &lt; SocketChannel &gt; () &#123;<span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> SocketChannel <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">                <span class="keyword">return</span> serverSocketChannel.accept();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step 1</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSelectedKey</span><span class="params">(SelectionKey k, AbstractNioChannel ch)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> AbstractNioChannel.NioUnsafe unsafe = ch.unsafe();</span><br><span class="line">    eventLoop = ch.eventLoop();</span><br><span class="line">    <span class="keyword">int</span> readyOps = k.readyOps();</span><br><span class="line">    <span class="keyword">if</span> ((readyOps &amp; SelectionKey.OP_CONNECT) != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> ops = k.interestOps();</span><br><span class="line">        ops &amp;= ~SelectionKey.OP_CONNECT;</span><br><span class="line">        k.interestOps(ops);</span><br><span class="line">        unsafe.finishConnect();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ((readyOps &amp; SelectionKey.OP_WRITE) != <span class="number">0</span>) &#123;</span><br><span class="line">        ch.unsafe().forceFlush();</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 会进入到这里(接收连接)</span></span><br><span class="line">    <span class="keyword">if</span> ((readyOps &amp; (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != <span class="number">0</span> || readyOps == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// step 2</span></span><br><span class="line">        unsafe.read();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 2 AbstractNioMessageChannel</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> ChannelConfig config = config();</span><br><span class="line">    <span class="keyword">final</span> ChannelPipeline pipeline = pipeline();</span><br><span class="line">    <span class="comment">// 控制读取连接的速率，默认一次读取16个连接</span></span><br><span class="line">    <span class="keyword">final</span> RecvByteBufAllocator.Handle allocHandle = unsafe().recvBufAllocHandle();</span><br><span class="line">    allocHandle.reset(config);</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="comment">// step 3</span></span><br><span class="line">        <span class="keyword">int</span> localRead = doReadMessages(readBuf);</span><br><span class="line">        <span class="comment">// 对连接数增加</span></span><br><span class="line">        allocHandle.incMessagesRead(localRead);</span><br><span class="line">    &#125; <span class="keyword">while</span> ( allocHandle . continueReading ());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> size = readBuf.size();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">        readPending = <span class="keyword">false</span>;</span><br><span class="line">        <span class="comment">// 触发读事件，绑定到NioEventLoop</span></span><br><span class="line">        pipeline.fireChannelRead(readBuf.get(i));</span><br><span class="line">    &#125;</span><br><span class="line">    readBuf.clear();</span><br><span class="line">    allocHandle.readComplete();</span><br><span class="line">    pipeline.fireChannelReadComplete();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 3</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">doReadMessages</span><span class="params">(List &lt; Object &gt; buf)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// 熟悉的accept方法，熟悉的javaChannel()拿到serverSocketChannel</span></span><br><span class="line">    <span class="comment">// step 4</span></span><br><span class="line">    SocketChannel ch = SocketUtils.accept(javaChannel());</span><br><span class="line">    <span class="comment">// 封装成NioSocketChannel，进入创建部分</span></span><br><span class="line">    buf.add(<span class="keyword">new</span> NioSocketChannel(<span class="keyword">this</span>, ch));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 4</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SocketChannel <span class="title">accept</span><span class="params">(<span class="keyword">final</span> ServerSocketChannel serverSocketChannel)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    	<span class="comment">// 返回SocketChannel(新出来的AccessController还需要研究)</span></span><br><span class="line">        <span class="keyword">return</span> AccessController.doPrivileged(<span class="keyword">new</span> PrivilegedExceptionAction &lt; SocketChannel &gt; () &#123;<span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> SocketChannel <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> serverSocketChannel.accept();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>检测完毕！！！</p>
-<h1 id="创建Channel"><a href="#创建Channel" class="headerlink" title="创建Channel"></a>创建Channel</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1 NioSocketChannel</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">NioSocketChannel</span><span class="params">(Channel parent, SocketChannel socket)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>(parent, socket);</div><div class="line">    <span class="comment">// 同样创建一个config，这里设置了禁止Nagle算法(让数据尽快发出去，而不是让小数据包变大再发)</span></div><div class="line">    config = <span class="keyword">new</span> NioSocketChannelConfig(<span class="keyword">this</span>, socket.socket());</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2 AbstractNioByteChannel</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractNioByteChannel</span><span class="params">(Channel parent, SelectableChannel ch)</span> </span>&#123;</div><div class="line">    <span class="comment">// 这里要准备绑定读事件了</span></div><div class="line">    <span class="comment">// step 3</span></div><div class="line">    <span class="keyword">super</span>(parent, ch, SelectionKey.OP_READ);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 3</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractNioChannel</span><span class="params">(Channel parent, SelectableChannel ch, <span class="keyword">int</span> readInterestOp)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 4</span></div><div class="line">    <span class="keyword">super</span>(parent);</div><div class="line">    <span class="keyword">this</span>.ch = ch;</div><div class="line">    <span class="comment">// 设定为对读事件感兴趣</span></div><div class="line">    <span class="keyword">this</span>.readInterestOp = readInterestOp;</div><div class="line">	<span class="comment">// 设置为非阻塞</span></div><div class="line">    ch.configureBlocking(<span class="keyword">false</span>);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 4</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractChannel</span><span class="params">(Channel parent)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.parent = parent;</div><div class="line">    <span class="comment">// 也给自己分配这些东西</span></div><div class="line">    id = newId();</div><div class="line">    unsafe = newUnsafe();</div><div class="line">    pipeline = newChannelPipeline();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="Channel注册绑定"><a href="#Channel注册绑定" class="headerlink" title="Channel注册绑定"></a>Channel注册绑定</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// step 1 DefaultChannelPipeline</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> ChannelPipeline <span class="title">fireChannelRead</span><span class="params">(Object msg)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 2</span></div><div class="line">    AbstractChannelHandlerContext.invokeChannelRead(head, msg);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 2</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">invokeChannelRead</span><span class="params">(<span class="keyword">final</span> AbstractChannelHandlerContext next, Object msg)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> Object m = next.pipeline.touch(ObjectUtil.checkNotNull(msg, <span class="string">"msg"</span>), next);</div><div class="line">    <span class="comment">// 还是那个线程生成器</span></div><div class="line">    EventExecutor executor = next.executor();</div><div class="line">    <span class="comment">// step 3</span></div><div class="line">    next.invokeChannelRead(m);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 3</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">invokeChannelRead</span><span class="params">(Object msg)</span> </span>&#123;</div><div class="line">    <span class="comment">// step 4 它会一直讲事件传播到再服务端启动过程中添加到Pipeline的ServerBootstrapAcceptor</span></div><div class="line">    ((ChannelInboundHandler) handler()).channelRead(<span class="keyword">this</span>, msg);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 4 ServerBootstrap里的ServerBootstrapAcceptor</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> Channel child = (Channel) msg;</div><div class="line">	<span class="comment">// 设置一系列信息</span></div><div class="line">    child.pipeline().addLast(childHandler);</div><div class="line">    setChannelOptions(child, childOptions, logger);</div><div class="line">    <span class="keyword">for</span> (Entry &lt; AttributeKey &lt; ?&gt;, Object &gt; e: childAttrs) &#123;</div><div class="line">        child.attr((AttributeKey &lt; Object &gt; ) e.getKey()).set(e.getValue());</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 忽略细节，关注register方法(这里是childGroup)</span></div><div class="line">    <span class="comment">// step 5</span></div><div class="line">    childGroup.register(child);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 5 MultithreadEventLoopGroup</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">register</span><span class="params">(Channel channel)</span> </span>&#123;</div><div class="line">    <span class="comment">// 这里的next方法会去拿到之前ServerChannel初始化的EventLoop数组的一个</span></div><div class="line">    <span class="comment">// step 6</span></div><div class="line">    <span class="keyword">return</span> next().register(channel);</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 6 SingleThreadEventLoop</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">register</span><span class="params">(Channel channel)</span> </span>&#123;</div><div class="line">    <span class="comment">// 看到这里会发现注册流程基本和ServerSocketChanne是一样的</span></div><div class="line">    <span class="comment">// step 7</span></div><div class="line">    <span class="keyword">return</span> register(<span class="keyword">new</span> DefaultChannelPromise(channel, <span class="keyword">this</span>));</div><div class="line">&#125;</div><div class="line"><span class="comment">// step 7</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">register</span><span class="params">(<span class="keyword">final</span> ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="comment">// 看到这里，剩下的基本上就可以参考服务端启动流程了</span></div><div class="line">    promise.channel().unsafe().register(<span class="keyword">this</span>, promise);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="创建Channel"><a href="#创建Channel" class="headerlink" title="创建Channel"></a>创建Channel</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step 1 NioSocketChannel</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">NioSocketChannel</span><span class="params">(Channel parent, SocketChannel socket)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(parent, socket);</span><br><span class="line">    <span class="comment">// 同样创建一个config，这里设置了禁止Nagle算法(让数据尽快发出去，而不是让小数据包变大再发)</span></span><br><span class="line">    config = <span class="keyword">new</span> NioSocketChannelConfig(<span class="keyword">this</span>, socket.socket());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 2 AbstractNioByteChannel</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractNioByteChannel</span><span class="params">(Channel parent, SelectableChannel ch)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这里要准备绑定读事件了</span></span><br><span class="line">    <span class="comment">// step 3</span></span><br><span class="line">    <span class="keyword">super</span>(parent, ch, SelectionKey.OP_READ);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 3</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractNioChannel</span><span class="params">(Channel parent, SelectableChannel ch, <span class="keyword">int</span> readInterestOp)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// step 4</span></span><br><span class="line">    <span class="keyword">super</span>(parent);</span><br><span class="line">    <span class="keyword">this</span>.ch = ch;</span><br><span class="line">    <span class="comment">// 设定为对读事件感兴趣</span></span><br><span class="line">    <span class="keyword">this</span>.readInterestOp = readInterestOp;</span><br><span class="line">	<span class="comment">// 设置为非阻塞</span></span><br><span class="line">    ch.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 4</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractChannel</span><span class="params">(Channel parent)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.parent = parent;</span><br><span class="line">    <span class="comment">// 也给自己分配这些东西</span></span><br><span class="line">    id = newId();</span><br><span class="line">    unsafe = newUnsafe();</span><br><span class="line">    pipeline = newChannelPipeline();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Channel注册绑定"><a href="#Channel注册绑定" class="headerlink" title="Channel注册绑定"></a>Channel注册绑定</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// step 1 DefaultChannelPipeline</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> ChannelPipeline <span class="title">fireChannelRead</span><span class="params">(Object msg)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// step 2</span></span><br><span class="line">    AbstractChannelHandlerContext.invokeChannelRead(head, msg);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 2</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">invokeChannelRead</span><span class="params">(<span class="keyword">final</span> AbstractChannelHandlerContext next, Object msg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Object m = next.pipeline.touch(ObjectUtil.checkNotNull(msg, <span class="string">"msg"</span>), next);</span><br><span class="line">    <span class="comment">// 还是那个线程生成器</span></span><br><span class="line">    EventExecutor executor = next.executor();</span><br><span class="line">    <span class="comment">// step 3</span></span><br><span class="line">    next.invokeChannelRead(m);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 3</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">invokeChannelRead</span><span class="params">(Object msg)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// step 4 它会一直讲事件传播到再服务端启动过程中添加到Pipeline的ServerBootstrapAcceptor</span></span><br><span class="line">    ((ChannelInboundHandler) handler()).channelRead(<span class="keyword">this</span>, msg);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 4 ServerBootstrap里的ServerBootstrapAcceptor</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Channel child = (Channel) msg;</span><br><span class="line">	<span class="comment">// 设置一系列信息</span></span><br><span class="line">    child.pipeline().addLast(childHandler);</span><br><span class="line">    setChannelOptions(child, childOptions, logger);</span><br><span class="line">    <span class="keyword">for</span> (Entry &lt; AttributeKey &lt; ?&gt;, Object &gt; e: childAttrs) &#123;</span><br><span class="line">        child.attr((AttributeKey &lt; Object &gt; ) e.getKey()).set(e.getValue());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 忽略细节，关注register方法(这里是childGroup)</span></span><br><span class="line">    <span class="comment">// step 5</span></span><br><span class="line">    childGroup.register(child);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 5 MultithreadEventLoopGroup</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">register</span><span class="params">(Channel channel)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这里的next方法会去拿到之前ServerChannel初始化的EventLoop数组的一个</span></span><br><span class="line">    <span class="comment">// step 6</span></span><br><span class="line">    <span class="keyword">return</span> next().register(channel);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 6 SingleThreadEventLoop</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">register</span><span class="params">(Channel channel)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 看到这里会发现注册流程基本和ServerSocketChanne是一样的</span></span><br><span class="line">    <span class="comment">// step 7</span></span><br><span class="line">    <span class="keyword">return</span> register(<span class="keyword">new</span> DefaultChannelPromise(channel, <span class="keyword">this</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// step 7</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">register</span><span class="params">(<span class="keyword">final</span> ChannelPromise promise)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 看到这里，剩下的基本上就可以参考服务端启动流程了</span></span><br><span class="line">    promise.channel().unsafe().register(<span class="keyword">this</span>, promise);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
 <li><code>ServerSocketChannel</code>绑定的EventLoop轮询到有新的连接进入</li>
 <li>通过封装jdk底层的channel创建 <code>NioSocketChannel</code>以及一系列的netty核心组件</li>
@@ -398,7 +397,7 @@
 <li>注册读事件，开始新连接的读写（可以参考服务端启动流程）</li>
 </ol>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://www.jianshu.com/p/0242b1d4dd21" target="_blank" rel="external">netty源码分析之新连接接入全解析</a></li>
+<li><a href="https://www.jianshu.com/p/0242b1d4dd21" target="_blank" rel="noopener">netty源码分析之新连接接入全解析</a></li>
 </ol>
 
       
@@ -483,7 +482,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -527,7 +526,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -537,10 +536,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -673,7 +670,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

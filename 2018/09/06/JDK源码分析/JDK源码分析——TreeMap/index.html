@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="HashMap," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="HashMap,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/09/06/JDK源码分析/JDK源码分析——TreeMap/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：你想利用的Map高效的查找效率，又想拥有一个有序的Map，这个时候就需要用到TreeMap了!">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-09-07T02:19:19.435Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK源码分析——TreeMap">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/09/06/JDK源码分析/JDK源码分析——TreeMap/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/09/06/JDK源码分析/JDK源码分析——TreeMap/">
 
 
 
@@ -136,7 +137,7 @@
   <title> JDK源码分析——TreeMap | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/09/06/JDK源码分析/JDK源码分析——TreeMap/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/JDK源码分析/" itemprop="url" rel="index">
                     <span itemprop="name">JDK源码分析</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -386,20 +385,20 @@
 
       
         <p>引：你想利用的Map高效的查找效率，又想拥有一个有序的Map，这个时候就需要用到TreeMap了!<a id="more"></a></p>
-<p>详细注释：<a href="https://github.com/todorex/JDK" target="_blank" rel="external">源码分析地址</a></p>
+<p>详细注释：<a href="https://github.com/todorex/JDK" target="_blank" rel="noopener">源码分析地址</a></p>
 <h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>TreeMap集合是基于红黑树（Red-Black tree）的 NavigableMap实现。该Map根据其键的自然顺序进行排序，或者根据创建Map时提供的 Comparator 进行排序，具体取决于使用的构造方法。你可以根据自己的需要选择排序的方式。</p>
 <p>关于不同步都和之前解析的非同步容器类似。</p>
-<h1 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h1><p>在概览中说到我们可以在它构造时传递Comparator来决定排序的方法，所以我们就看看这个构造方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 比较器</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Comparator&lt;? <span class="keyword">super</span> K&gt; comparator;</div><div class="line"><span class="comment">// 根节点</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> Entry&lt;K,V&gt; root;</div><div class="line"><span class="comment">// 集合大小</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">int</span> size = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">TreeMap</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> K&gt; comparator)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.comparator = comparator;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="增"><a href="#增" class="headerlink" title="增"></a>增</h1><p>我们看出在构造方法中只是设置了属性，并没有真正构建红黑树，那么它一定在第一次put操作里。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">    <span class="comment">// 获取根节点</span></div><div class="line">    Entry&lt;K,V&gt; t = root;</div><div class="line">    <span class="comment">// 如果根节点为空，则该元素置为根节点</span></div><div class="line">    <span class="keyword">if</span> (t == <span class="keyword">null</span>) &#123;</div><div class="line">        compare(key, key); <span class="comment">// type (and possibly null) check</span></div><div class="line">        <span class="comment">// 新建节点</span></div><div class="line">        root = <span class="keyword">new</span> Entry&lt;&gt;(key, value, <span class="keyword">null</span>);</div><div class="line">        <span class="comment">// 改变集合大小和修改次数</span></div><div class="line">        size = <span class="number">1</span>;</div><div class="line">        modCount++;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">int</span> cmp;</div><div class="line">    Entry&lt;K,V&gt; parent;</div><div class="line">    <span class="comment">// split comparator and comparable paths</span></div><div class="line">    <span class="comment">// 获得key比较器</span></div><div class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cpr = comparator;</div><div class="line">    <span class="comment">// 如果比较器对象不为空，也就是自定义了比较器</span></div><div class="line">    <span class="keyword">if</span> (cpr != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">            <span class="comment">// 循环比较并确定元素应插入的位置(也就是找到该元素的父节点)</span></div><div class="line">            parent = t;</div><div class="line">            cmp = cpr.compare(key, t.key);</div><div class="line">            <span class="comment">// 待插入元素的key小于当前位置元素的key，则查询左子树</span></div><div class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">                t = t.left;</div><div class="line">            <span class="comment">// 待插入元素的key大于当前位置元素的key，则查询右子树</span></div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</div><div class="line">                t = t.right;</div><div class="line">            <span class="comment">// 相等则替换其value</span></div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> t.setValue(value);</div><div class="line">        &#125; <span class="keyword">while</span> (t != <span class="keyword">null</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 如果比较器对象为空，使用默认的比较机制</span></div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// 默认机制下不允许设置 null key</span></div><div class="line">        <span class="keyword">if</span> (key == <span class="keyword">null</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">        <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">            Comparable&lt;? <span class="keyword">super</span> K&gt; k = (Comparable&lt;? <span class="keyword">super</span> K&gt;) key;</div><div class="line">        <span class="comment">// 和上面的循环做同样的事</span></div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">            parent = t;</div><div class="line">            cmp = k.compareTo(t.key);</div><div class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">                t = t.left;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</div><div class="line">                t = t.right;</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> t.setValue(value);</div><div class="line">        &#125; <span class="keyword">while</span> (t != <span class="keyword">null</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 根据key找到父节点后新建一个节点</span></div><div class="line">    Entry&lt;K,V&gt; e = <span class="keyword">new</span> Entry&lt;&gt;(key, value, parent);</div><div class="line">    <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">        parent.left = e;</div><div class="line">    <span class="keyword">else</span></div><div class="line">        parent.right = e;</div><div class="line">    <span class="comment">// 调整红黑树</span></div><div class="line">    fixAfterInsertion(e);</div><div class="line">    size++;</div><div class="line">    modCount++;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h1><p>在概览中说到我们可以在它构造时传递Comparator来决定排序的方法，所以我们就看看这个构造方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 比较器</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Comparator&lt;? <span class="keyword">super</span> K&gt; comparator;</span><br><span class="line"><span class="comment">// 根节点</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> Entry&lt;K,V&gt; root;</span><br><span class="line"><span class="comment">// 集合大小</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">int</span> size = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">TreeMap</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> K&gt; comparator)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.comparator = comparator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="增"><a href="#增" class="headerlink" title="增"></a>增</h1><p>我们看出在构造方法中只是设置了属性，并没有真正构建红黑树，那么它一定在第一次put操作里。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取根节点</span></span><br><span class="line">    Entry&lt;K,V&gt; t = root;</span><br><span class="line">    <span class="comment">// 如果根节点为空，则该元素置为根节点</span></span><br><span class="line">    <span class="keyword">if</span> (t == <span class="keyword">null</span>) &#123;</span><br><span class="line">        compare(key, key); <span class="comment">// type (and possibly null) check</span></span><br><span class="line">        <span class="comment">// 新建节点</span></span><br><span class="line">        root = <span class="keyword">new</span> Entry&lt;&gt;(key, value, <span class="keyword">null</span>);</span><br><span class="line">        <span class="comment">// 改变集合大小和修改次数</span></span><br><span class="line">        size = <span class="number">1</span>;</span><br><span class="line">        modCount++;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> cmp;</span><br><span class="line">    Entry&lt;K,V&gt; parent;</span><br><span class="line">    <span class="comment">// split comparator and comparable paths</span></span><br><span class="line">    <span class="comment">// 获得key比较器</span></span><br><span class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cpr = comparator;</span><br><span class="line">    <span class="comment">// 如果比较器对象不为空，也就是自定义了比较器</span></span><br><span class="line">    <span class="keyword">if</span> (cpr != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="comment">// 循环比较并确定元素应插入的位置(也就是找到该元素的父节点)</span></span><br><span class="line">            parent = t;</span><br><span class="line">            cmp = cpr.compare(key, t.key);</span><br><span class="line">            <span class="comment">// 待插入元素的key小于当前位置元素的key，则查询左子树</span></span><br><span class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</span><br><span class="line">                t = t.left;</span><br><span class="line">            <span class="comment">// 待插入元素的key大于当前位置元素的key，则查询右子树</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</span><br><span class="line">                t = t.right;</span><br><span class="line">            <span class="comment">// 相等则替换其value</span></span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> t.setValue(value);</span><br><span class="line">        &#125; <span class="keyword">while</span> (t != <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果比较器对象为空，使用默认的比较机制</span></span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 默认机制下不允许设置 null key</span></span><br><span class="line">        <span class="keyword">if</span> (key == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">            Comparable&lt;? <span class="keyword">super</span> K&gt; k = (Comparable&lt;? <span class="keyword">super</span> K&gt;) key;</span><br><span class="line">        <span class="comment">// 和上面的循环做同样的事</span></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            parent = t;</span><br><span class="line">            cmp = k.compareTo(t.key);</span><br><span class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</span><br><span class="line">                t = t.left;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</span><br><span class="line">                t = t.right;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> t.setValue(value);</span><br><span class="line">        &#125; <span class="keyword">while</span> (t != <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据key找到父节点后新建一个节点</span></span><br><span class="line">    Entry&lt;K,V&gt; e = <span class="keyword">new</span> Entry&lt;&gt;(key, value, parent);</span><br><span class="line">    <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</span><br><span class="line">        parent.left = e;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        parent.right = e;</span><br><span class="line">    <span class="comment">// 调整红黑树</span></span><br><span class="line">    fixAfterInsertion(e);</span><br><span class="line">    size++;</span><br><span class="line">    modCount++;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>大概的流程如下：</p>
 <ol>
 <li>判断根节点是否为空，为空，则该节点就是根节点</li>
 <li>根据比较器(可能是外部传进来的，也可能是默认的)，找到父节点。</li>
 <li>插入节点之后，就需要用红黑树的修正了。</li>
 </ol>
-<h1 id="删"><a href="#删" class="headerlink" title="删"></a>删</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">remove</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    <span class="comment">// 利用比较器二分查找</span></div><div class="line">    Entry&lt;K,V&gt; p = getEntry(key);</div><div class="line">    <span class="keyword">if</span> (p == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    V oldValue = p.value;</div><div class="line"></div><div class="line">    <span class="comment">// 红黑树删除</span></div><div class="line">    deleteEntry(p);</div><div class="line">    <span class="keyword">return</span> oldValue;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getEntry</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    <span class="comment">// Offload comparator-based version for sake of performance</span></div><div class="line">    <span class="keyword">if</span> (comparator != <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">return</span> getEntryUsingComparator(key);</div><div class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">        Comparable&lt;? <span class="keyword">super</span> K&gt; k = (Comparable&lt;? <span class="keyword">super</span> K&gt;) key;</div><div class="line">    Entry&lt;K,V&gt; p = root;</div><div class="line">    <span class="comment">// 普通的二分查找</span></div><div class="line">    <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">int</span> cmp = k.compareTo(p.key);</div><div class="line">        <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">            p = p.left;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</div><div class="line">            p = p.right;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            <span class="keyword">return</span> p;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getEntryUsingComparator</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">        K k = (K) key;</div><div class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cpr = comparator;</div><div class="line">    <span class="comment">// 普通的二分查找</span></div><div class="line">    <span class="keyword">if</span> (cpr != <span class="keyword">null</span>) &#123;</div><div class="line">        Entry&lt;K,V&gt; p = root;</div><div class="line">        <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">int</span> cmp = cpr.compare(k, p.key);</div><div class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</div><div class="line">                p = p.left;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</div><div class="line">                p = p.right;</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> p;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="改"><a href="#改" class="headerlink" title="改"></a>改</h1><p>找到该key对应的节点，然后替换该值<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> V <span class="title">replace</span><span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">    <span class="comment">// 找到节点</span></div><div class="line">    Entry&lt;K,V&gt; p = getEntry(key);</div><div class="line">    <span class="comment">// 替换值</span></div><div class="line">    <span class="keyword">if</span> (p!=<span class="keyword">null</span>) &#123;</div><div class="line">        V oldValue = p.value;</div><div class="line">        p.value = value;</div><div class="line">        <span class="keyword">return</span> oldValue;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="查"><a href="#查" class="headerlink" title="查"></a>查</h1><p>一批以getFirstEntry()，getLastEntry()为基础的获取头和尾元素的方法，其中包括：firstKey()，lastKey()；firstEntry()，lastEntry()；pollFirstEntry()，pollLastEntry()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//  返回第一个节点(值最小的节点)</span></div><div class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getFirstEntry</span><span class="params">()</span> </span>&#123;</div><div class="line">    Entry&lt;K,V&gt; p = root;</div><div class="line">    <span class="keyword">if</span> (p != <span class="keyword">null</span>)</div><div class="line">        <span class="comment">// 一直遍历左子树</span></div><div class="line">        <span class="keyword">while</span> (p.left != <span class="keyword">null</span>)</div><div class="line">            p = p.left;</div><div class="line">    <span class="keyword">return</span> p;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 返回最后一个节点(值最大的节点)</span></div><div class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getLastEntry</span><span class="params">()</span> </span>&#123;</div><div class="line">    Entry&lt;K,V&gt; p = root;</div><div class="line">    <span class="keyword">if</span> (p != <span class="keyword">null</span>)</div><div class="line">        <span class="comment">// 一直遍历右子树</span></div><div class="line">        <span class="keyword">while</span> (p.right != <span class="keyword">null</span>)</div><div class="line">            p = p.right;</div><div class="line">    <span class="keyword">return</span> p;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="删"><a href="#删" class="headerlink" title="删"></a>删</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">remove</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 利用比较器二分查找</span></span><br><span class="line">    Entry&lt;K,V&gt; p = getEntry(key);</span><br><span class="line">    <span class="keyword">if</span> (p == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    V oldValue = p.value;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 红黑树删除</span></span><br><span class="line">    deleteEntry(p);</span><br><span class="line">    <span class="keyword">return</span> oldValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getEntry</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Offload comparator-based version for sake of performance</span></span><br><span class="line">    <span class="keyword">if</span> (comparator != <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> getEntryUsingComparator(key);</span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">        Comparable&lt;? <span class="keyword">super</span> K&gt; k = (Comparable&lt;? <span class="keyword">super</span> K&gt;) key;</span><br><span class="line">    Entry&lt;K,V&gt; p = root;</span><br><span class="line">    <span class="comment">// 普通的二分查找</span></span><br><span class="line">    <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> cmp = k.compareTo(p.key);</span><br><span class="line">        <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</span><br><span class="line">            p = p.left;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</span><br><span class="line">            p = p.right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getEntryUsingComparator</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">        K k = (K) key;</span><br><span class="line">    Comparator&lt;? <span class="keyword">super</span> K&gt; cpr = comparator;</span><br><span class="line">    <span class="comment">// 普通的二分查找</span></span><br><span class="line">    <span class="keyword">if</span> (cpr != <span class="keyword">null</span>) &#123;</span><br><span class="line">        Entry&lt;K,V&gt; p = root;</span><br><span class="line">        <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> cmp = cpr.compare(k, p.key);</span><br><span class="line">            <span class="keyword">if</span> (cmp &lt; <span class="number">0</span>)</span><br><span class="line">                p = p.left;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (cmp &gt; <span class="number">0</span>)</span><br><span class="line">                p = p.right;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> p;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="改"><a href="#改" class="headerlink" title="改"></a>改</h1><p>找到该key对应的节点，然后替换该值<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">replace</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 找到节点</span></span><br><span class="line">    Entry&lt;K,V&gt; p = getEntry(key);</span><br><span class="line">    <span class="comment">// 替换值</span></span><br><span class="line">    <span class="keyword">if</span> (p!=<span class="keyword">null</span>) &#123;</span><br><span class="line">        V oldValue = p.value;</span><br><span class="line">        p.value = value;</span><br><span class="line">        <span class="keyword">return</span> oldValue;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="查"><a href="#查" class="headerlink" title="查"></a>查</h1><p>一批以getFirstEntry()，getLastEntry()为基础的获取头和尾元素的方法，其中包括：firstKey()，lastKey()；firstEntry()，lastEntry()；pollFirstEntry()，pollLastEntry()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  返回第一个节点(值最小的节点)</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getFirstEntry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Entry&lt;K,V&gt; p = root;</span><br><span class="line">    <span class="keyword">if</span> (p != <span class="keyword">null</span>)</span><br><span class="line">        <span class="comment">// 一直遍历左子树</span></span><br><span class="line">        <span class="keyword">while</span> (p.left != <span class="keyword">null</span>)</span><br><span class="line">            p = p.left;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回最后一个节点(值最大的节点)</span></span><br><span class="line"><span class="function"><span class="keyword">final</span> Entry&lt;K,V&gt; <span class="title">getLastEntry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Entry&lt;K,V&gt; p = root;</span><br><span class="line">    <span class="keyword">if</span> (p != <span class="keyword">null</span>)</span><br><span class="line">        <span class="comment">// 一直遍历右子树</span></span><br><span class="line">        <span class="keyword">while</span> (p.right != <span class="keyword">null</span>)</span><br><span class="line">            p = p.right;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -483,7 +482,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -527,7 +526,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -537,10 +536,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -673,7 +670,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

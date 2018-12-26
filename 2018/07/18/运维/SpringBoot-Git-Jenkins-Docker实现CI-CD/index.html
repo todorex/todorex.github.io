@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="SpringBoot,Git,Jenkins,Docker,CI,CD," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="SpringBoot,Git,Jenkins,Docker,CI,CD,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/07/18/运维/SpringBoot-Git-Jenkins-Docker实现CI-CD/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：现在DevOps这么运行，你没有理由不去了解，不去实践，这次就以Springboot为底，利用Git，jenkins，Docker实现持续集成和持续部署！">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://blog.todorex.com/cicd/devops.jpg">
 <meta property="og:image" content="http://blog.todorex.com/cici/jenkins_security.jpg">
 <meta property="og:image" content="http://blog.todorex.com/cicd/jenkins_webhooks_url.jpg">
@@ -134,7 +135,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/07/18/运维/SpringBoot-Git-Jenkins-Docker实现CI-CD/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/07/18/运维/SpringBoot-Git-Jenkins-Docker实现CI-CD/">
 
 
 
@@ -143,7 +144,7 @@
   <title> SpringBoot+Git+Jenkins+Docker实现CI/CD | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -168,13 +169,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -204,7 +205,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -214,7 +215,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -224,7 +225,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -237,7 +238,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -258,9 +259,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -292,16 +291,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/07/18/运维/SpringBoot-Git-Jenkins-Docker实现CI-CD/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -340,7 +339,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -351,7 +350,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/运维/" itemprop="url" rel="index">
                     <span itemprop="name">运维</span>
                   </a>
@@ -373,7 +372,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -407,7 +406,7 @@
 </ol>
 <h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>关于Jdk、Git、Maven的配置这里就不说，自己面向搜索引擎。这里主要说Jenkins和码云的配置。</p>
 <h2 id="Jenkins安装配置"><a href="#Jenkins安装配置" class="headerlink" title="Jenkins安装配置"></a>Jenkins安装配置</h2><ol>
-<li><a href="https://jenkins.io/download/" target="_blank" rel="external">下载Jenkins</a>（采用war包安装）</li>
+<li><a href="https://jenkins.io/download/" target="_blank" rel="noopener">下载Jenkins</a>（采用war包安装）</li>
 <li>将war包放入Tomcat的webapps目录下</li>
 <li>进入YourHostIp:8080/jenkins路径下进行Jenkins的初始化，我们进入 <strong>用户自定义插件</strong> 安装界面，你可以根据自己的构建方式选择需要安装的插件，本次使用的Pipelines方式进行构建，Pipelines方式是Jenkins2推荐的方式，所以我们构建Pipelines相关的插件进行安装，当然待会进入Jenkins安装也行。</li>
 <li>配置用户名和密码</li>
@@ -422,20 +421,20 @@
 <p> <img src="http://blog.todorex.com/cicd/jenkins_webhooks_url.jpg" alt="jenkins_webhooks_url"></p>
 </li>
 <li><p>构建Pipeline脚本（Pipeline脚本写法见参考）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">  #!groovy</div><div class="line">  pipeline&#123;</div><div class="line">    agent any</div><div class="line">    //定义仓库地址</div><div class="line">    environment &#123;</div><div class="line">        REPOSITORY=&quot;https://gitee.com/todorex/springboot_docker_git_jenkins_demo.git&quot;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    stages &#123;</div><div class="line"></div><div class="line">        stage(&apos;获取代码&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start fetch code from git:$&#123;REPOSITORY&#125;&quot;</div><div class="line">                // 清空当前目录</div><div class="line">                deleteDir()</div><div class="line">                // 拉取代码    </div><div class="line">                git &quot;$&#123;REPOSITORY&#125;&quot;</div><div class="line">                // 清空之前的容器</div><div class="line">                sh &apos;docker stop $(docker ps -a -q)&apos;</div><div class="line">                sh &apos;docker rm $(docker ps -a -q)&apos;</div><div class="line">            &#125;</div><div class="line">        &#125;       </div><div class="line"></div><div class="line">        stage(&apos;Maven 构建&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start compile&quot;</div><div class="line">                // 切换目录</div><div class="line">                dir(&apos;demo&apos;) &#123;</div><div class="line">                    // 重新打包</div><div class="line">                    sh &apos;mvn -Dmaven.test.skip=true -U clean install&apos;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        stage(&apos;构建镜像&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start build image&quot;</div><div class="line">                dir(&apos;demo&apos;) &#123;</div><div class="line">                    // build镜像</div><div class="line">                    sh &apos;docker build -t todorex/springboot_docker_git_jenkins_demo:1.0 .&apos;</div><div class="line">                    // 登录镜像仓库</div><div class="line">                    sh &apos;docker login -u your_username -p your_password&apos;</div><div class="line">                    // 推送镜像到镜像仓库</div><div class="line">                    sh &apos;docker push todorex/springboot_docker_git_jenkins_demo:1.0&apos;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        stage(&apos;启动服务&apos;)&#123;</div><div class="line">            steps &#123;</div><div class="line">                echo &quot;start demo&quot;</div><div class="line">                // 部署服务</div><div class="line">                sh &apos;docker run -d -p 8888:8888 --name=demo todorex/springboot_docker_git_jenkins_demo:1.0&apos;</div><div class="line">            &#125;</div><div class="line">        &#125;                </div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">  #!groovy</span><br><span class="line">  pipeline&#123;</span><br><span class="line">    agent any</span><br><span class="line">    //定义仓库地址</span><br><span class="line">    environment &#123;</span><br><span class="line">        REPOSITORY=&quot;https://gitee.com/todorex/springboot_docker_git_jenkins_demo.git&quot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line"></span><br><span class="line">        stage(&apos;获取代码&apos;)&#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;start fetch code from git:$&#123;REPOSITORY&#125;&quot;</span><br><span class="line">                // 清空当前目录</span><br><span class="line">                deleteDir()</span><br><span class="line">                // 拉取代码    </span><br><span class="line">                git &quot;$&#123;REPOSITORY&#125;&quot;</span><br><span class="line">                // 清空之前的容器</span><br><span class="line">                sh &apos;docker stop $(docker ps -a -q)&apos;</span><br><span class="line">                sh &apos;docker rm $(docker ps -a -q)&apos;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;       </span><br><span class="line"></span><br><span class="line">        stage(&apos;Maven 构建&apos;)&#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;start compile&quot;</span><br><span class="line">                // 切换目录</span><br><span class="line">                dir(&apos;demo&apos;) &#123;</span><br><span class="line">                    // 重新打包</span><br><span class="line">                    sh &apos;mvn -Dmaven.test.skip=true -U clean install&apos;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(&apos;构建镜像&apos;)&#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;start build image&quot;</span><br><span class="line">                dir(&apos;demo&apos;) &#123;</span><br><span class="line">                    // build镜像</span><br><span class="line">                    sh &apos;docker build -t todorex/springboot_docker_git_jenkins_demo:1.0 .&apos;</span><br><span class="line">                    // 登录镜像仓库</span><br><span class="line">                    sh &apos;docker login -u your_username -p your_password&apos;</span><br><span class="line">                    // 推送镜像到镜像仓库</span><br><span class="line">                    sh &apos;docker push todorex/springboot_docker_git_jenkins_demo:1.0&apos;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(&apos;启动服务&apos;)&#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                echo &quot;start demo&quot;</span><br><span class="line">                // 部署服务</span><br><span class="line">                sh &apos;docker run -d -p 8888:8888 --name=demo todorex/springboot_docker_git_jenkins_demo:1.0&apos;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;                </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h2 id="SSH的配置"><a href="#SSH的配置" class="headerlink" title="SSH的配置"></a>SSH的配置</h2><p>为了避免jenkins拉取代码时需要输入密码，这里需要配置SSH免密码拉取。如下图：</p>
 <p><img src="http://blog.todorex.com/cicd/gitee_ssh.jpg" alt="gitee_ssh"></p>
 <h2 id="WebHooks配置"><a href="#WebHooks配置" class="headerlink" title="WebHooks配置"></a>WebHooks配置</h2><p>当你每次对代码仓库进行push操作时，会自动通知jenkins进行构建<br><img src="http://blog.todorex.com/cicd/gitee_webhooks.jpg" alt="gitee_webhooks"></p>
-<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>这次项目的代码仓库为：<a href="https://gitee.com/todorex/springboot_docker_git_jenkins_demo" target="_blank" rel="external">springboot_docker_git_jenkins_demo</a></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>这次项目的代码仓库为：<a href="https://gitee.com/todorex/springboot_docker_git_jenkins_demo" target="_blank" rel="noopener">springboot_docker_git_jenkins_demo</a></p>
 <p>关于Dockerfile以及docker-compose.yml的编写，自己也去面向搜索引擎看看吧。</p>
 <p>当我们push代码之后，jenkins就会自动帮我们进行构建。如下图：<br><img src="http://blog.todorex.com/cicd/jenkins_test.jpg" alt="jenkins_test"></p>
 <p>PS：第一次比较慢是因为要安装Maven依赖，后面就好了。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里只是展示了一个CI/CD的开发流程，关于具体技术细节，无论是Jenkins还是Docker都需要深入学习，加油，骚年！</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="http://niocoder.com/2018/04/22/SpringBoot+Docker+Git+Jenkins%E5%AE%9E%E7%8E%B0%E7%AE%80%E6%98%93%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%92%8C%E9%83%A8%E7%BD%B2/" target="_blank" rel="external">SpringBoot+Docker+Git+Jenkins实现简易的持续集成和持续部署</a></li>
-<li><a href="http://www.cnblogs.com/fengjian2016/p/8227532.html" target="_blank" rel="external">Jenkins pipeline：pipeline 语法详解</a></li>
+<li><a href="http://niocoder.com/2018/04/22/SpringBoot+Docker+Git+Jenkins%E5%AE%9E%E7%8E%B0%E7%AE%80%E6%98%93%E7%9A%84%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%92%8C%E9%83%A8%E7%BD%B2/" target="_blank" rel="noopener">SpringBoot+Docker+Git+Jenkins实现简易的持续集成和持续部署</a></li>
+<li><a href="http://www.cnblogs.com/fengjian2016/p/8227532.html" target="_blank" rel="noopener">Jenkins pipeline：pipeline 语法详解</a></li>
 </ol>
 
       
@@ -530,7 +529,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -574,7 +573,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -584,10 +583,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -720,7 +717,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

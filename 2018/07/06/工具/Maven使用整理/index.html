@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Java,Maven," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="Java,Maven,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/07/06/工具/Maven使用整理/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：使用Java语言来开发你的项目，基本上都少不了Maven，因为有了它真是太方便了！">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-07-06T14:06:36.068Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Maven使用整理">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/07/06/工具/Maven使用整理/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/07/06/工具/Maven使用整理/">
 
 
 
@@ -136,7 +137,7 @@
   <title> Maven使用整理 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/07/06/工具/Maven使用整理/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/工具/" itemprop="url" rel="index">
                     <span itemprop="name">工具</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -386,25 +385,25 @@
 
       
         <p>引：使用Java语言来开发你的项目，基本上都少不了Maven，因为有了它真是太方便了！<a id="more"></a></p>
-<h1 id="什么是Maven"><a href="#什么是Maven" class="headerlink" title="什么是Maven"></a>什么是Maven</h1><p><a href="https://maven.apache.org/" target="_blank" rel="external">Maven</a>是一种用来管理Java项目的工具、但不是那种那种用来管理资源规划和调度的工具。相反，它处理的时一个具体的项目所涉及的各种任务，如编译、测试、打包以及部署。</p>
+<h1 id="什么是Maven"><a href="#什么是Maven" class="headerlink" title="什么是Maven"></a>什么是Maven</h1><p><a href="https://maven.apache.org/" target="_blank" rel="noopener">Maven</a>是一种用来管理Java项目的工具、但不是那种那种用来管理资源规划和调度的工具。相反，它处理的时一个具体的项目所涉及的各种任务，如编译、测试、打包以及部署。</p>
 <p>Maven包括以下几个部分：</p>
 <ul>
-<li><p>一组用于处理管理依赖(从<a href="http://mvnrepository.com/" target="_blank" rel="external">中央仓库</a>拉取的jar包)、<a href="http://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html" target="_blank" rel="external">目录结构</a>以及构建工作流的<strong>约定</strong>。</p>
+<li><p>一组用于处理管理依赖(从<a href="http://mvnrepository.com/" target="_blank" rel="noopener">中央仓库</a>拉取的jar包)、<a href="http://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html" target="_blank" rel="noopener">目录结构</a>以及构建工作流的<strong>约定</strong>。</p>
 <p>  基于这些约定实现的标准化可以极大地简化开发过程。例如，一个常用的目录结构使得开发者可以更加容易跟上不熟悉的项目的节奏。</p>
 </li>
-<li><p>一个用于项目配置的<a href="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html" target="_blank" rel="external">XML Schema</a>：项目对象模型(Project Object Model)，简称POM。</p>
+<li><p>一个用于项目配置的<a href="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html" target="_blank" rel="noopener">XML Schema</a>：项目对象模型(Project Object Model)，简称POM。</p>
 <p>  每一个Maven项目都拥有一个POM文件，并命名为pom.xml，包含Maven用于管理该项目的所有的配置信息。</p>
 </li>
-<li><p>一个委托外部组件来执行项目任务的<a href="https://maven.apache.org/plugins/index.html" target="_blank" rel="external">插件结构</a>。</p>
+<li><p>一个委托外部组件来执行项目任务的<a href="https://maven.apache.org/plugins/index.html" target="_blank" rel="noopener">插件结构</a>。</p>
 <p>  这简化了更新一集扩展Maven能力的过程。</p>
 </li>
 </ul>
-<h1 id="Maven安装"><a href="#Maven安装" class="headerlink" title="Maven安装"></a>Maven安装</h1><p><strong>PS：</strong> 上面提到了Maven帮我们管理依赖，是通过从中央仓库拉取jar包(依赖)来实现，但是由于Maven的中央仓库在国外，拉取会比较慢，所以我们一般会通过配置阿里云镜像来加快速度，当然你也可以<a href="https://blog.sonatype.com/" target="_blank" rel="external">Nexus</a>搭建自己的私有仓库。</p>
+<h1 id="Maven安装"><a href="#Maven安装" class="headerlink" title="Maven安装"></a>Maven安装</h1><p><strong>PS：</strong> 上面提到了Maven帮我们管理依赖，是通过从中央仓库拉取jar包(依赖)来实现，但是由于Maven的中央仓库在国外，拉取会比较慢，所以我们一般会通过配置阿里云镜像来加快速度，当然你也可以<a href="https://blog.sonatype.com/" target="_blank" rel="noopener">Nexus</a>搭建自己的私有仓库。</p>
 <ol>
-<li><a href="https://blog.csdn.net/ck4438707/article/details/53377413" target="_blank" rel="external">Maven安装教程</a></li>
-<li><a href="https://blog.csdn.net/u012424449/article/details/77853983" target="_blank" rel="external">配置阿里云镜像仓库</a></li>
+<li><a href="https://blog.csdn.net/ck4438707/article/details/53377413" target="_blank" rel="noopener">Maven安装教程</a></li>
+<li><a href="https://blog.csdn.net/u012424449/article/details/77853983" target="_blank" rel="noopener">配置阿里云镜像仓库</a></li>
 </ol>
-<h1 id="POM"><a href="#POM" class="headerlink" title="POM"></a>POM</h1><p>POM文件大纲如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;project&gt; // 根元素</div><div class="line">    &lt;groupId/&gt;</div><div class="line">    &lt;artifactId/&gt;</div><div class="line">    &lt;version/&gt; // 上面三个(GAV坐标)唯一地定义Maven项目的值</div><div class="line">    &lt;packaging/&gt; // 项目打包方式，默认值是jar</div><div class="line">    &lt;properties/&gt; // 在POM中引用的属性，一般会放版本信息</div><div class="line">    &lt;dependencies/&gt; //构建当前项目所需要的其他Maven项目</div><div class="line">    &lt;build/&gt; // 构建改项目所需要执行的任务的配置</div><div class="line">    &lt;profiles/&gt; // 为不同的用例自定义POM，一般用来配置环境的切换</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="POM"><a href="#POM" class="headerlink" title="POM"></a>POM</h1><p>POM文件大纲如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;project&gt; // 根元素</span><br><span class="line">    &lt;groupId/&gt;</span><br><span class="line">    &lt;artifactId/&gt;</span><br><span class="line">    &lt;version/&gt; // 上面三个(GAV坐标)唯一地定义Maven项目的值</span><br><span class="line">    &lt;packaging/&gt; // 项目打包方式，默认值是jar</span><br><span class="line">    &lt;properties/&gt; // 在POM中引用的属性，一般会放版本信息</span><br><span class="line">    &lt;dependencies/&gt; //构建当前项目所需要的其他Maven项目</span><br><span class="line">    &lt;build/&gt; // 构建改项目所需要执行的任务的配置</span><br><span class="line">    &lt;profiles/&gt; // 为不同的用例自定义POM，一般用来配置环境的切换</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure></p>
 <h2 id="Maven构件"><a href="#Maven构件" class="headerlink" title="Maven构件"></a>Maven构件</h2><p>任何可以被Maven的坐标系统(GAV)唯一标识的对象都是一个Maven构件。</p>
 <p>Maven构件的类型由pom文件的<packaging>元素指定。最常用的值是pom、jar、ear、war以及maven-plugin。</packaging></p>
 <h2 id="POM文件使用方式"><a href="#POM文件使用方式" class="headerlink" title="POM文件使用方式"></a>POM文件使用方式</h2><ol>
@@ -422,11 +421,11 @@
 <li><version>标识了构件的版本、例如1.1、2.0-SNAPSHOT、4.1.9.Final。</version></li>
 <li><classifier>用于区分属于相同的POM但是却被以不同方式构建的构件。例如，javadock、sources、jdk16、jdk17。</classifier></li>
 </ol>
-<p>一个完整的坐标表达式具有如下格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">actifactId:groupId:packaging:version:classifier</div></pre></td></tr></table></figure></p>
-<p>POM文件必须声明它所管理的构件的坐标，一个具有如下坐标的项目：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;groupId&gt;io.netty&lt;/groupId&gt;</div><div class="line">&lt;artifactId&gt;netty-all&lt;/artifactId&gt;</div><div class="line">&lt;version&gt;4.1.9.Final&lt;/version&gt;</div><div class="line">&lt;packaging&gt;jar&lt;/packaging&gt;</div></pre></td></tr></table></figure></p>
+<p>一个完整的坐标表达式具有如下格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">actifactId:groupId:packaging:version:classifier</span><br></pre></td></tr></table></figure></p>
+<p>POM文件必须声明它所管理的构件的坐标，一个具有如下坐标的项目：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;groupId&gt;io.netty&lt;/groupId&gt;</span><br><span class="line">&lt;artifactId&gt;netty-all&lt;/artifactId&gt;</span><br><span class="line">&lt;version&gt;4.1.9.Final&lt;/version&gt;</span><br><span class="line">&lt;packaging&gt;jar&lt;/packaging&gt;</span><br></pre></td></tr></table></figure></p>
 <p>将会产生一个具有以下格式的名称的构件：<br><code>artifactId-&lt;version&gt;.&lt;packaging&gt;</code></p>
 <h1 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h1><h2 id="依赖引入"><a href="#依赖引入" class="headerlink" title="依赖引入"></a>依赖引入</h2><p>项目的依赖是指编译和执行它所需要的外部构件。在大多数情况下，你的项目的依赖项也会有它自己的依赖。我们称这些依赖为你的项目的<strong>传递依赖</strong>。一个负责的项目可能会有一个深层级的<strong>依赖树</strong>。Maven 提供了各种用于帮助理解和管理它的工具，如执行<code>mvn dependency:tree</code>。</p>
-<p>Maven的<dependency>声明在POM的<dependencies>元素中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;dependencies&gt;</div><div class="line">  &lt;dependency&gt;</div><div class="line">    &lt;groupId/&gt;</div><div class="line">    &lt;artifactId/&gt;</div><div class="line">    &lt;version/&gt;</div><div class="line">    &lt;type/&gt;</div><div class="line">    &lt;scope/&gt;</div><div class="line">    &lt;systemPath/&gt;</div><div class="line">  &lt;/dependency&gt;</div><div class="line">&lt;/dependencies&gt;</div></pre></td></tr></table></figure></dependencies></dependency></p>
+<p>Maven的<dependency>声明在POM的<dependencies>元素中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">  &lt;dependency&gt;</span><br><span class="line">    &lt;groupId/&gt;</span><br><span class="line">    &lt;artifactId/&gt;</span><br><span class="line">    &lt;version/&gt;</span><br><span class="line">    &lt;type/&gt;</span><br><span class="line">    &lt;scope/&gt;</span><br><span class="line">    &lt;systemPath/&gt;</span><br><span class="line">  &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure></dependencies></dependency></p>
 <p>在<dependency>声明中，GAV坐标是必不可少的。type和scope元素对于那些值不分别是默认值jar和compile的依赖来说也是必须的。</dependency></p>
 <p>关于scope指的是依赖范围，即classpath，Maven里有3类依赖范围：</p>
 <ul>
@@ -465,7 +464,7 @@
 <li>deploy：将包复制到远程仓库中，可以供其他开发人员使用</li>
 </ol>
 <h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><p>虽然Maven协调了所有构建生命周期阶段的执行，但是他并没有直接实现它们，而是将他们委托给了<strong>插件</strong>。这些插件是maven-plugin类型的构件(打包为JAR文件)。Maven为标准构件生命周期所定义的所有任务都提供了插件，但更多的是由第三方生产的，用于处理各种自定义的任务。</p>
-<h2 id="插件目标"><a href="#插件目标" class="headerlink" title="插件目标"></a>插件目标</h2><p>每个插件都有很多功能，每个插件功能对应了插件一个目标。如我们之前分析依赖的maven-dependency-plugin，它就有十多个目标，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 命令行冒号前面是插件，冒号后面是目标（功能）</div><div class="line">mvn dependency:analyze</div><div class="line">mvn dependency:tree</div><div class="line">mvn dependency:list</div></pre></td></tr></table></figure></p>
+<h2 id="插件目标"><a href="#插件目标" class="headerlink" title="插件目标"></a>插件目标</h2><p>每个插件都有很多功能，每个插件功能对应了插件一个目标。如我们之前分析依赖的maven-dependency-plugin，它就有十多个目标，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 命令行冒号前面是插件，冒号后面是目标（功能）</span><br><span class="line">mvn dependency:analyze</span><br><span class="line">mvn dependency:tree</span><br><span class="line">mvn dependency:list</span><br></pre></td></tr></table></figure></p>
 <h2 id="插件绑定"><a href="#插件绑定" class="headerlink" title="插件绑定"></a>插件绑定</h2><p>Maven的生命周期与插件相互绑定，用以完成实际的构建任务。</p>
 <h3 id="内置绑定"><a href="#内置绑定" class="headerlink" title="内置绑定"></a>内置绑定</h3><p>为了让用户几乎不用任何配置就能构建Maven项目，Maven为一些主要的生命周期阶段绑定了很多插件的目标，如：</p>
 <ol>
@@ -475,23 +474,23 @@
 <li>maven-jar-plugin:jar绑定package默认</li>
 <li>maven-install-plugin:install绑定了install</li>
 </ol>
-<h3 id="自定义绑定"><a href="#自定义绑定" class="headerlink" title="自定义绑定"></a>自定义绑定</h3><p>除了内置绑定之外，用户还能够自己选择将某个插件目标绑定到生命周期的某个阶段上。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;build&gt;</div><div class="line">    &lt;plugins&gt;</div><div class="line">        &lt;plugin&gt;</div><div class="line">           &lt;!--引入插件--&gt;</div><div class="line">           &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;maven-source-plugin&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;3.0.1&lt;/version&gt;</div><div class="line">            &lt;!--构建任务--&gt;</div><div class="line">            &lt;executions&gt;</div><div class="line">                &lt;execution&gt;</div><div class="line">                    &lt;id&gt;attach-source&lt;/id&gt;</div><div class="line">                    &lt;!--绑定阶段--&gt;</div><div class="line">                    &lt;phase&gt;verify&lt;/phase&gt;</div><div class="line">                    &lt;!--绑定目标--&gt;</div><div class="line">                    &lt;goals&gt;</div><div class="line">                        &lt;goal&gt;jar-no-fork&lt;/goal&gt;</div><div class="line">                    &lt;/goals&gt;</div><div class="line">                &lt;/execution&gt;</div><div class="line">            &lt;/executions&gt;</div><div class="line">        &lt;/plugin&gt;</div><div class="line">    &lt;/plugins&gt;</div><div class="line">&lt;/build&gt;</div></pre></td></tr></table></figure></p>
-<p>很多插件的目标在编写是就已经定义了默认绑定阶段，可以利用maven-help-plugin查看插件详细信息，了解插件目标的默认绑定阶段。运行命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn help:describe -Dplugin=org.apache.maven.plugins:maven-source-plugin:3.0.1</div></pre></td></tr></table></figure></p>
+<h3 id="自定义绑定"><a href="#自定义绑定" class="headerlink" title="自定义绑定"></a>自定义绑定</h3><p>除了内置绑定之外，用户还能够自己选择将某个插件目标绑定到生命周期的某个阶段上。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;build&gt;</span><br><span class="line">    &lt;plugins&gt;</span><br><span class="line">        &lt;plugin&gt;</span><br><span class="line">           &lt;!--引入插件--&gt;</span><br><span class="line">           &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;maven-source-plugin&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;3.0.1&lt;/version&gt;</span><br><span class="line">            &lt;!--构建任务--&gt;</span><br><span class="line">            &lt;executions&gt;</span><br><span class="line">                &lt;execution&gt;</span><br><span class="line">                    &lt;id&gt;attach-source&lt;/id&gt;</span><br><span class="line">                    &lt;!--绑定阶段--&gt;</span><br><span class="line">                    &lt;phase&gt;verify&lt;/phase&gt;</span><br><span class="line">                    &lt;!--绑定目标--&gt;</span><br><span class="line">                    &lt;goals&gt;</span><br><span class="line">                        &lt;goal&gt;jar-no-fork&lt;/goal&gt;</span><br><span class="line">                    &lt;/goals&gt;</span><br><span class="line">                &lt;/execution&gt;</span><br><span class="line">            &lt;/executions&gt;</span><br><span class="line">        &lt;/plugin&gt;</span><br><span class="line">    &lt;/plugins&gt;</span><br><span class="line">&lt;/build&gt;</span><br></pre></td></tr></table></figure></p>
+<p>很多插件的目标在编写是就已经定义了默认绑定阶段，可以利用maven-help-plugin查看插件详细信息，了解插件目标的默认绑定阶段。运行命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn help:describe -Dplugin=org.apache.maven.plugins:maven-source-plugin:3.0.1</span><br></pre></td></tr></table></figure></p>
 <p>如果多个目标被绑定到同一个阶段的时候，这些插件声明的先后顺序决定了目标的执行顺序。</p>
 <h2 id="插件配置"><a href="#插件配置" class="headerlink" title="插件配置"></a>插件配置</h2><h3 id="命令行插件配置"><a href="#命令行插件配置" class="headerlink" title="命令行插件配置"></a>命令行插件配置</h3><p>很多插件目标的参数都是支持命令行配置的，用户可以在Maven命令中使用-D参数，并伴随参数键=参数值的形式来配置插件目标的参数，如上<code>mvn help</code>。</p>
-<h3 id="POM中插件全局配置"><a href="#POM中插件全局配置" class="headerlink" title="POM中插件全局配置"></a>POM中插件全局配置</h3><p>为了避免插件参数重复书写，我们可以在pom进行全局配置，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;plugin&gt;</div><div class="line">    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;3.0.1&lt;/version&gt;</div><div class="line">    &lt;configuration&gt;</div><div class="line">        &lt;!--编译Java1.8版本的源文件--&gt;</div><div class="line">        &lt;source&gt;1.8&lt;/source&gt;</div><div class="line">        &lt;!--生成与JVM1.8兼容的字节码文件--&gt;</div><div class="line">        &lt;target&gt;1.8&lt;/target&gt;</div><div class="line">    &lt;/configuration&gt;</div><div class="line">&lt;/plugin&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="POM中插件全局配置"><a href="#POM中插件全局配置" class="headerlink" title="POM中插件全局配置"></a>POM中插件全局配置</h3><p>为了避免插件参数重复书写，我们可以在pom进行全局配置，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.0.1&lt;/version&gt;</span><br><span class="line">    &lt;configuration&gt;</span><br><span class="line">        &lt;!--编译Java1.8版本的源文件--&gt;</span><br><span class="line">        &lt;source&gt;1.8&lt;/source&gt;</span><br><span class="line">        &lt;!--生成与JVM1.8兼容的字节码文件--&gt;</span><br><span class="line">        &lt;target&gt;1.8&lt;/target&gt;</span><br><span class="line">    &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
 <h2 id="插件管理"><a href="#插件管理" class="headerlink" title="插件管理"></a>插件管理</h2><p>POM的<pluginmanagement>元素可以包含被其他项目使用的<plugin>声明（但不拉取），这样的POM的子项目会自动继承这些声明。</plugin></pluginmanagement></p>
 <p>引用了<pluginmanagement>元素的项目可以使用它所声明的依赖，而不需要指定他们的<version>坐标，如果<pluginmanagement>中的<version>在稍后改变，则所有应用它的pom都会改变。</version></pluginmanagement></version></pluginmanagement></p>
 <p><strong>最佳实践</strong>：在原POM中的所有版本都利用<properties>元素控制。</properties></p>
 <h1 id="聚合和继承"><a href="#聚合和继承" class="headerlink" title="聚合和继承"></a>聚合和继承</h1><h2 id="聚合"><a href="#聚合" class="headerlink" title="聚合"></a>聚合</h2><p>如果我们想要一次构建两个项目，而不是到两个模块的目录下分别执行mvn命令，那么我们可以使用<strong>Maven聚合</strong>。</p>
-<p>我们先创建一个聚合构件（除了pom文件（packaging需要为pom），其他可以都不要），然后在聚合构件目录下创建两个构件，并在聚合构件下利用<modules>来声明，每个module的值都是一个当前目录的相对目录，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;modules&gt;</div><div class="line">    &lt;module&gt;email&lt;/module&gt;</div><div class="line">    &lt;module&gt;user&lt;/module&gt;</div><div class="line">&lt;/modules&gt;</div></pre></td></tr></table></figure></modules></p>
+<p>我们先创建一个聚合构件（除了pom文件（packaging需要为pom），其他可以都不要），然后在聚合构件目录下创建两个构件，并在聚合构件下利用<modules>来声明，每个module的值都是一个当前目录的相对目录，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;modules&gt;</span><br><span class="line">    &lt;module&gt;email&lt;/module&gt;</span><br><span class="line">    &lt;module&gt;user&lt;/module&gt;</span><br><span class="line">&lt;/modules&gt;</span><br></pre></td></tr></table></figure></modules></p>
 <h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>如果两个项目有重复的依赖或插件，我们可以使用<strong>继承</strong>。</p>
-<p>我们先创建一个父构件（除了pom文件（packaging需要为pom），其他可以都不要），然后在父构件目录下创建两个子构件，并在子构件下利用<parent>来声明继承关系，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;parent&gt;</div><div class="line">    &lt;groupId/&gt;</div><div class="line">    &lt;artifactId/&gt;</div><div class="line">    &lt;version/&gt;</div><div class="line">    &lt;relativePath&gt;父pom的相对路径&lt;/relativePath&gt;</div><div class="line">&lt;/parent&gt;</div></pre></td></tr></table></figure></parent></p>
+<p>我们先创建一个父构件（除了pom文件（packaging需要为pom），其他可以都不要），然后在父构件目录下创建两个子构件，并在子构件下利用<parent>来声明继承关系，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">    &lt;groupId/&gt;</span><br><span class="line">    &lt;artifactId/&gt;</span><br><span class="line">    &lt;version/&gt;</span><br><span class="line">    &lt;relativePath&gt;父pom的相对路径&lt;/relativePath&gt;</span><br><span class="line">&lt;/parent&gt;</span><br></pre></td></tr></table></figure></parent></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://blog.csdn.net/ck4438707/article/details/53377413" target="_blank" rel="external">Maven安装教程</a></li>
-<li><a href="https://blog.csdn.net/u012424449/article/details/77853983" target="_blank" rel="external">配置阿里云镜像仓库</a></li>
+<li><a href="https://blog.csdn.net/ck4438707/article/details/53377413" target="_blank" rel="noopener">Maven安装教程</a></li>
+<li><a href="https://blog.csdn.net/u012424449/article/details/77853983" target="_blank" rel="noopener">配置阿里云镜像仓库</a></li>
 <li>《Maven实战》</li>
-<li><a href="https://www.cnblogs.com/dreamroute/p/6729147.html" target="_blank" rel="external">Maven <resource>标签</resource></a></li>
+<li><a href="https://www.cnblogs.com/dreamroute/p/6729147.html" target="_blank" rel="noopener">Maven <resource>标签</resource></a></li>
 </ol>
 
       
@@ -578,7 +577,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -622,7 +621,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -632,10 +631,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -768,7 +765,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

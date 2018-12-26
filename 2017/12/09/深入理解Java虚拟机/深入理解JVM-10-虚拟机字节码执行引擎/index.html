@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="java,JVM," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="java,JVM,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2017/12/09/深入理解Java虚拟机/深入理解JVM-10-虚拟机字节码执行引擎/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：我们知道方法的代码的字节码是放在方法区的Code属性表里面，但是里面的字节码是怎么执行我们却不知道，这里通过理解虚拟机字节码执行引擎去看看这些字节码是怎么走的？">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://img.blog.csdn.net/20160605105355400">
 <meta property="og:image" content="http://img.blog.csdn.net/20160605151831616">
 <meta property="og:image" content="http://img.blog.csdn.net/20160606200822089">
@@ -132,7 +133,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/12/09/深入理解Java虚拟机/深入理解JVM-10-虚拟机字节码执行引擎/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/12/09/深入理解Java虚拟机/深入理解JVM-10-虚拟机字节码执行引擎/">
 
 
 
@@ -141,7 +142,7 @@
   <title> 深入理解JVM_10_虚拟机字节码执行引擎 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -166,13 +167,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -202,7 +203,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -212,7 +213,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -222,7 +223,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -235,7 +236,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -256,9 +257,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -290,16 +289,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/12/09/深入理解Java虚拟机/深入理解JVM-10-虚拟机字节码执行引擎/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -338,7 +337,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -349,7 +348,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
                     <span itemprop="name">深入理解Java虚拟机</span>
                   </a>
@@ -371,7 +370,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -409,21 +408,21 @@
 <li>reference类型在虚拟机中至少要实现能从该引用中直接或间接地查找到对象在Java堆中的数据存放的起始地址索引以及从该引用直接或者间接查找到对象所属数据类型在方法区中存储的类型信息。</li>
 <li>虚拟机通过索引定位的方式使用局部变量表，如果执行的实例方法，那局部变量表中第0位索引的Slot默认是用于传递方法所属对象实例的引用，可以使用“this”来访问，其余参数按照参数表顺序排列。</li>
 <li><p>局部变量表中的Slot是可以重用的，当某个变量除了它的作用域，那这个变量所对应的Slot就可以复用了，Slot的复用会直接影响到系统的垃圾收集行为，如下代码所示：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例1</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line"></div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 例1</span><br><span class="line">// VM args : -verbose:gc</span><br><span class="line"></span><br><span class="line">public class StackFrameTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</span><br><span class="line"></span><br><span class="line">        System.gc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p> 输出结果：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68209K-&gt;66072K(125952K), 0.0019584 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069900 secs]</div></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例2</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        &#123;</div><div class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        &#125;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[GC (System.gc())  68209K-&gt;66072K(125952K), 0.0019584 secs]</span><br><span class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069900 secs]</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 例2</span><br><span class="line">// VM args : -verbose:gc</span><br><span class="line"></span><br><span class="line">public class StackFrameTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#123;</span><br><span class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</span><br><span class="line">        &#125;</span><br><span class="line">        System.gc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p> 输出结果</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0010138 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069811 secs]</div></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 例3</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        &#123;</div><div class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        &#125;</div><div class="line">        int a = 0;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0010138 secs]</span><br><span class="line">[Full GC (System.gc())  66072K-&gt;65962K(125952K), 0.0069811 secs]</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 例3</span><br><span class="line">// VM args : -verbose:gc</span><br><span class="line"></span><br><span class="line">public class StackFrameTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#123;</span><br><span class="line">            byte[] placeholder = new byte[64 * 1024 * 1024];</span><br><span class="line">        &#125;</span><br><span class="line">        int a = 0;</span><br><span class="line">        System.gc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p> 输出结果</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016694 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0054452 secs]</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016694 secs]</span><br><span class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0054452 secs]</span><br></pre></td></tr></table></figure>
 <p> placeholde能否被回收的根本原因是：局部变量的Slot是否还存有关于placeholder数组对象的引用。例1没有垃圾回收，例2代码虽然已经离开了placeholder的作用域，但是之后没有任何对局部变量表的读写操作，所有placeholder原来的Slot还没有被其他变量复用，所以GC Roots一部分的局部变量表仍然保持着对它的关联，当例3修改了局部变量表，那么就会进行垃圾回收了。</p>
 <p> 这里解释一个编码建议：<strong>不使用的对象应手动赋值null</strong></p>
 <p> 我们看看下面的代码：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 例1</div><div class="line">// VM args : -verbose:gc</div><div class="line"></div><div class="line">public class StackFrameTest &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</div><div class="line">        placeholder = null;</div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 例1</span><br><span class="line">// VM args : -verbose:gc</span><br><span class="line"></span><br><span class="line">public class StackFrameTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        byte[] placeholder = new byte[64 * 1024 * 1024];</span><br><span class="line">        placeholder = null;</span><br><span class="line">        System.gc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p> 输出结果：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016915 secs]</div><div class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0058140 secs]</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[GC (System.gc())  68875K-&gt;66072K(125952K), 0.0016915 secs]</span><br><span class="line">[Full GC (System.gc())  66072K-&gt;426K(125952K), 0.0058140 secs]</span><br></pre></td></tr></table></figure>
 <p> 我们可以看到当placeholder赋值为null，会发生垃圾回收。</p>
 </li>
 <li><p>局部变量表没有赋初始值不能使用。</p>
@@ -454,7 +453,7 @@
 <li>虚方法：与非虚方法相反</li>
 </ol>
 <p>解析调用一定是个静态的过程，在编译器就完全确定，在类装载的解析阶段就会把涉及的符号引用全部转变为可确定的直接引用，不会延迟到运行期再去完成。而分派调用则可能是静态也可能是动态的，根据分派的宗数量（方法的接收者与方法的参数统称为方法的总量）可分为单分派和多分派，这两种分派方式地组合可分为静态单分派、静态多分派、动态单分派、动态多分派。</p>
-<h2 id="分派"><a href="#分派" class="headerlink" title="分派"></a>分派</h2><h3 id="静态分派"><a href="#静态分派" class="headerlink" title="静态分派"></a>静态分派</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Human man = <span class="keyword">new</span> Man();</div></pre></td></tr></table></figure>
+<h2 id="分派"><a href="#分派" class="headerlink" title="分派"></a>分派</h2><h3 id="静态分派"><a href="#静态分派" class="headerlink" title="静态分派"></a>静态分派</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Human man = <span class="keyword">new</span> Man();</span><br></pre></td></tr></table></figure>
 <p>上面代码中Human称为变量的静态类型，或者叫做外观类型，后面的Man称为实际类型，静态类型是编译器可知，实际类型是运行期才能确定的。虚拟机在重载时是通过参数的静态类型而不是实际类型来作为判断依据的。</p>
 <p>所有依赖静态类型来定位方法执行版本的分派动作称为静态分派，静态分派的典型应用是方法重载。静态分派发生在编译阶段，因此确定静态分派的动作实际上不是由虚拟机来执行的，另外，编译器虽然能确定出方法的重载版本，当在很多情况下这个重载版本不是“唯一的”，往往只能确定一个“更加合适的”版本，具体例子可以看看《深入理解Java虚拟机》。</p>
 <h3 id="动态分派"><a href="#动态分派" class="headerlink" title="动态分派"></a>动态分派</h3><p>在运行期根据实际类型确定方法执行版本的分派过程称为动态分派，典型应用是方法重写。它主要是通过invokevirturl指令来实现的。invokevirtual指令的运行时解析过程大致分为如下几个步骤：</p>
@@ -464,8 +463,8 @@
 <li>否则，按照继承关系从下往上依次对C的各个父类进行第2步的搜索和验证过程。</li>
 <li>如果始终没有找到合适的方法，则抛出java.lang.AbstractMethodError异常。</li>
 </ol>
-<h3 id="单分派和多分派"><a href="#单分派和多分派" class="headerlink" title="单分派和多分派"></a>单分派和多分派</h3><p>单分派是根据一个宗量对目标方法进行选择，多分派则是根据一个宗量对目标方法进行选择。我们结合下面的代码来理解：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dispatch</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">QQ</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">_360</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Father</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"father choose qq"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"father choose _360"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"son choose qq"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</div><div class="line">            System.out.println(<span class="string">"son choose _360"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Father father = <span class="keyword">new</span> Father();</div><div class="line">        Father son = <span class="keyword">new</span> Son();</div><div class="line">        father.hardChoice(<span class="keyword">new</span> _360());</div><div class="line">        son.hardChoice(<span class="keyword">new</span> QQ());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">father choose _360</div><div class="line">son choose qq</div></pre></td></tr></table></figure></p>
+<h3 id="单分派和多分派"><a href="#单分派和多分派" class="headerlink" title="单分派和多分派"></a>单分派和多分派</h3><p>单分派是根据一个宗量对目标方法进行选择，多分派则是根据一个宗量对目标方法进行选择。我们结合下面的代码来理解：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dispatch</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">QQ</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">_360</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Father</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"father choose qq"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"father choose _360"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(QQ arg)</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"son choose qq"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hardChoice</span><span class="params">(_360 arg)</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"son choose _360"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Father father = <span class="keyword">new</span> Father();</span><br><span class="line">        Father son = <span class="keyword">new</span> Son();</span><br><span class="line">        father.hardChoice(<span class="keyword">new</span> _360());</span><br><span class="line">        son.hardChoice(<span class="keyword">new</span> QQ());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">father choose _360</span><br><span class="line">son choose qq</span><br></pre></td></tr></table></figure></p>
 <ol>
 <li>编译阶段编译器的选择过程（静态分派过程）：这时选择目标方法的依据有两点：一是静态类型是Father还是Son，二是方法参数是QQ还是360。因为是根据两个宗量进行选择，所有Java语言的静态分派属于多分派类型。</li>
 <li>运行阶段虚拟机的选择过程（动态分派过程）：由于编译器已经已经决定目标方法的签名必须为hardChoice(QQ)，所以这时参数的静态类型，实际类型都对方法的选择不会构成影响，唯一可以影响虚拟机选择的因素只有此方法的接受者的实际类型是Father还是Son,因为只有一个宗量作为选择依据，所以Java语言的动态分派属于单分派类型。</li>
@@ -493,7 +492,7 @@
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>其实这里谈的主要还是解释执行，其中有一点很重要就是分派的概念，明白invokevirtual指令的执行过程。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《深入理解Java虚拟机》</li>
-<li><a href="http://blog.csdn.net/u012877472/article/details/51585297" target="_blank" rel="external">虚拟机字节码执行引擎</a></li>
+<li><a href="http://blog.csdn.net/u012877472/article/details/51585297" target="_blank" rel="noopener">虚拟机字节码执行引擎</a></li>
 </ol>
 
       
@@ -580,7 +579,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -624,7 +623,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -634,10 +633,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -770,7 +767,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

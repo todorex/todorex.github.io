@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="java,设计模式," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="java,设计模式,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/03/07/设计模式/设计模式之禅——责任链模式/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：一个问题对应一个解决方法，你一般需要去找到对应的方法，现在有一种方法就是你不管遇到什么问题只要交给第一个解决方法就可以了，美滋滋，这就是责任链模式。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://blog.todorex.com/designPattern/png/chain.png">
 <meta property="og:updated_time" content="2018-10-30T12:08:06.605Z">
 <meta name="twitter:card" content="summary">
@@ -129,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/03/07/设计模式/设计模式之禅——责任链模式/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/03/07/设计模式/设计模式之禅——责任链模式/">
 
 
 
@@ -138,7 +139,7 @@
   <title> 设计模式之禅——责任链模式 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -163,13 +164,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -199,7 +200,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -209,7 +210,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -219,7 +220,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -232,7 +233,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -253,9 +254,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -287,16 +286,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/03/07/设计模式/设计模式之禅——责任链模式/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -335,7 +334,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -346,7 +345,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/设计模式/" itemprop="url" rel="index">
                     <span itemprop="name">设计模式</span>
                   </a>
@@ -368,7 +367,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -391,7 +390,7 @@
 <h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><strong>使多个对象都有机会处理请求，从而避免了请求的发送者和接受者之间的耦合关系。将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理它为止。——行为类</strong></p>
 <p>责任链模式的重点在“链”上，由一条链去处理相似的请求在链中决定谁来处理这个请求，并返回相应的结果。其通用类图如下：</p>
 <p><img src="http://blog.todorex.com/designPattern/png/chain.png" alt="chain"></p>
-<p>责任链模式的核心在链上，“链”是由多个处理者ConcreteHandle组成的，它的通用源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 抽象处理者</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Handler nextHandler;</div><div class="line">    <span class="comment">// 每个处理者都必须对请求做出处理</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Response <span class="title">handleMessage</span><span class="params">(Request request)</span> </span>&#123; <span class="comment">// final关键字参考模板模式的模板方法</span></div><div class="line">        <span class="comment">//  判断是否是自己的处理级别</span></div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.getHandlerLevel().equals(request.getRequestLevel())) &#123;</div><div class="line">            response = <span class="keyword">this</span>.echo(request);</div><div class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// 不属于自己的处理级别</span></div><div class="line">            <span class="comment">// 判断是否有下一个处理者</span></div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.nextHandler != <span class="keyword">null</span>) &#123;</div><div class="line">                response = <span class="keyword">this</span>.nextHandler.handleMessage(request);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 没有适当处理者，业务自行处理</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> response;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置下一个处理者</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNext</span><span class="params">(Handler _handler)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.nextHandler = _handler;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 每个处理者都有一个处理级别</span></div><div class="line">    <span class="function">protect <span class="keyword">abstract</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span></span>;</div><div class="line">    <span class="comment">//每个处理者都必须实现处理任务</span></div><div class="line">    <span class="function">protect <span class="keyword">abstract</span> Response <span class="title">echo</span><span class="params">(Request request)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 具体处理者</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Concretehandler1</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义自己的处理逻辑</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">echo</span><span class="params">(Request request)</span> </span>&#123;</div><div class="line">        <span class="comment">// 完成处理逻辑</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置自己的处理级别</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 设置自己的处理级别</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Concretehandler2</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义自己的处理逻辑</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">echo</span><span class="params">(Request request)</span> </span>&#123;</div><div class="line">        <span class="comment">// 完成处理逻辑</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置自己的处理级别</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 设置自己的处理级别</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Concretehandler3</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义自己的处理逻辑</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">echo</span><span class="params">(Request request)</span> </span>&#123;</div><div class="line">        <span class="comment">// 完成处理逻辑</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置自己的处理级别</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 设置自己的处理级别</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 模式中有关框架代码</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Level</span> </span>&#123;</div><div class="line">    <span class="comment">// 定义一个请求和处理等级</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Request</span> </span>&#123;</div><div class="line">    <span class="comment">// 请求的等级</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Level <span class="title">getRequestLevel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">publci <span class="class"><span class="keyword">class</span> <span class="title">Request</span> </span>&#123;</div><div class="line">    <span class="comment">// 处理者返回的数据</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 场景类</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="comment">// 声明所有的处理节点</span></div><div class="line">        Handler handler1 = <span class="keyword">new</span> ConcreteHandler1();</div><div class="line">        Handler handler2 = <span class="keyword">new</span> ConcreteHandler2();</div><div class="line">        Handler handler3 = <span class="keyword">new</span> ConcreteHandler3();</div><div class="line">        <span class="comment">// 设置链中的阶段顺序1--&gt;2--&gt;3</span></div><div class="line">        handler1.setNext(handler2);</div><div class="line">        handler2.setNext(handler3);</div><div class="line">        <span class="comment">// 提交请求，返回结果</span></div><div class="line">        Response response = handler1.handlerMessage(<span class="keyword">new</span> Request());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>责任链模式的核心在链上，“链”是由多个处理者ConcreteHandle组成的，它的通用源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 抽象处理者</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Handler nextHandler;</span><br><span class="line">    <span class="comment">// 每个处理者都必须对请求做出处理</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Response <span class="title">handleMessage</span><span class="params">(Request request)</span> </span>&#123; <span class="comment">// final关键字参考模板模式的模板方法</span></span><br><span class="line">        <span class="comment">//  判断是否是自己的处理级别</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.getHandlerLevel().equals(request.getRequestLevel())) &#123;</span><br><span class="line">            response = <span class="keyword">this</span>.echo(request);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// 不属于自己的处理级别</span></span><br><span class="line">            <span class="comment">// 判断是否有下一个处理者</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.nextHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">                response = <span class="keyword">this</span>.nextHandler.handleMessage(request);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 没有适当处理者，业务自行处理</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置下一个处理者</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNext</span><span class="params">(Handler _handler)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.nextHandler = _handler;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 每个处理者都有一个处理级别</span></span><br><span class="line">    <span class="function">protect <span class="keyword">abstract</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">//每个处理者都必须实现处理任务</span></span><br><span class="line">    <span class="function">protect <span class="keyword">abstract</span> Response <span class="title">echo</span><span class="params">(Request request)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体处理者</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Concretehandler1</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 定义自己的处理逻辑</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">echo</span><span class="params">(Request request)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 完成处理逻辑</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置自己的处理级别</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 设置自己的处理级别</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Concretehandler2</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 定义自己的处理逻辑</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">echo</span><span class="params">(Request request)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 完成处理逻辑</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置自己的处理级别</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 设置自己的处理级别</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Concretehandler3</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 定义自己的处理逻辑</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Response <span class="title">echo</span><span class="params">(Request request)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 完成处理逻辑</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置自己的处理级别</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Level <span class="title">getHandlerLevel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 设置自己的处理级别</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模式中有关框架代码</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Level</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 定义一个请求和处理等级</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Request</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 请求的等级</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Level <span class="title">getRequestLevel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">publci <span class="class"><span class="keyword">class</span> <span class="title">Request</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 处理者返回的数据</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 场景类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 声明所有的处理节点</span></span><br><span class="line">        Handler handler1 = <span class="keyword">new</span> ConcreteHandler1();</span><br><span class="line">        Handler handler2 = <span class="keyword">new</span> ConcreteHandler2();</span><br><span class="line">        Handler handler3 = <span class="keyword">new</span> ConcreteHandler3();</span><br><span class="line">        <span class="comment">// 设置链中的阶段顺序1--&gt;2--&gt;3</span></span><br><span class="line">        handler1.setNext(handler2);</span><br><span class="line">        handler2.setNext(handler3);</span><br><span class="line">        <span class="comment">// 提交请求，返回结果</span></span><br><span class="line">        Response response = handler1.handlerMessage(<span class="keyword">new</span> Request());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>在实际应用中，一般会有一个封装类对责任模式进行封装，直接返回链中的第一个处理者，具体链的设置不需要高层模块关系，这样，简化了高层次模式的调用，减少模块间的耦合，提高系统的灵活性。</p>
 <h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>将请求和处理分开，请求者可以不用知道谁处理的，处理者可以不用知道请求的全貌，两者解耦。</p>
 <h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ol>
@@ -491,7 +490,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -535,7 +534,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -545,10 +544,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -681,7 +678,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

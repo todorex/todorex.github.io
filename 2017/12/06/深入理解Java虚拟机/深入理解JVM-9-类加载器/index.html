@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="java,JVM," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="java,JVM,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2017/12/06/深入理解Java虚拟机/深入理解JVM-9-类加载器/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：之前一直在说类加载，类加载就需要类加载器，类加载最初是为了满足Java Applet，现在基本已经死掉了，但是类加载却在类层次划分、OSGi、热部署、代码加密等领域大放异彩，成为Java体系中一块重要的基石，可谓失之桑榆，收之东隅。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://blog.todorex.com/image/parentsDelegationModel.jpg">
 <meta property="og:image" content="http://static.zybuluo.com/Rico123/8ty4pk8xgubfhq123dhxg68m/%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8A%A0%E8%BD%BD%E7%B1%BB%E7%9A%84%E8%BF%87%E7%A8%8B">
 <meta property="og:image" content="http://blog.todorex.com/image/jpg/ExtClassLoader.jpg">
@@ -131,7 +132,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/12/06/深入理解Java虚拟机/深入理解JVM-9-类加载器/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/12/06/深入理解Java虚拟机/深入理解JVM-9-类加载器/">
 
 
 
@@ -140,7 +141,7 @@
   <title> 深入理解JVM_9_类加载器 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -165,13 +166,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -201,7 +202,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -211,7 +212,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -221,7 +222,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -234,7 +235,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -255,9 +256,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -289,16 +288,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/12/06/深入理解Java虚拟机/深入理解JVM-9-类加载器/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -337,7 +336,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -348,7 +347,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
                     <span itemprop="name">深入理解Java虚拟机</span>
                   </a>
@@ -370,7 +369,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -392,8 +391,8 @@
         <p>引：之前一直在说类加载，类加载就需要类加载器，类加载最初是为了满足Java Applet，现在基本已经死掉了，但是类加载却在类层次划分、OSGi、热部署、代码加密等领域大放异彩，成为Java体系中一块重要的基石，可谓失之桑榆，收之东隅。<a id="more"></a></p>
 <h1 id="什么是类加载器？"><a href="#什么是类加载器？" class="headerlink" title="什么是类加载器？"></a>什么是类加载器？</h1><p>虚拟机设计团队把类加载阶段的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让应用程序自己去决定如何去获取所需要的类，实现这个动作的代码模块称为“类加载器”。</p>
 <h1 id="同一个Class文件，不同的类"><a href="#同一个Class文件，不同的类" class="headerlink" title="同一个Class文件，不同的类"></a>同一个Class文件，不同的类</h1><p>对于任意一个类，都需要由加载它的类加载器和这个类本身一同确立其在Java虚拟机中的唯一性，每一个类加载器，都拥有一个独立的类名称空间。换个说法：比较两个类是否“相等”，只是在这两个类是由同一个类加载器加载的前提下才有意义，如果这两个类源于同一个Class文件，被同一个虚拟机加载，只要加载他们的类加载器不同，那这两个类就必定不相等。</p>
-<p>这里的相等包括：代表类的Class对象的equals()方法、isAssignableFrom()方法、isInstance()方法返回结果，下面的代码展示了不同的类加载器对instanceof关键字运算的结果的影响。(下面的代码属于破坏双亲委派模型，只是为了验证类的命名空间)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoaderTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line"></div><div class="line">        ClassLoader myLoader = <span class="keyword">new</span> ClassLoader() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    String fileName = name.substring(name.lastIndexOf(<span class="string">"."</span>) + <span class="number">1</span>) + <span class="string">".class"</span>;</div><div class="line"></div><div class="line">                    InputStream is = getClass().getResourceAsStream(fileName);</div><div class="line">                    <span class="keyword">if</span> (is == <span class="keyword">null</span>) &#123;</div><div class="line">                        <span class="keyword">return</span> <span class="keyword">super</span>.loadClass(name);</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[is.available()];</div><div class="line">                    is.read(b);</div><div class="line">                    <span class="keyword">return</span> defineClass(name,b,<span class="number">0</span>,b.length);</div><div class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        Object obj = myLoader.loadClass(<span class="string">"com.todorex.demo.ClassLoaderTest"</span>).newInstance();</div><div class="line"></div><div class="line">        System.out.println(obj.getClass());</div><div class="line"></div><div class="line">        System.out.println(obj <span class="keyword">instanceof</span> com.todorex.demo.ClassLoaderTest );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">class com.todorex.demo.ClassLoaderTest</div><div class="line">false</div></pre></td></tr></table></figure></p>
+<p>这里的相等包括：代表类的Class对象的equals()方法、isAssignableFrom()方法、isInstance()方法返回结果，下面的代码展示了不同的类加载器对instanceof关键字运算的结果的影响。(下面的代码属于破坏双亲委派模型，只是为了验证类的命名空间)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoaderTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        ClassLoader myLoader = <span class="keyword">new</span> ClassLoader() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    String fileName = name.substring(name.lastIndexOf(<span class="string">"."</span>) + <span class="number">1</span>) + <span class="string">".class"</span>;</span><br><span class="line"></span><br><span class="line">                    InputStream is = getClass().getResourceAsStream(fileName);</span><br><span class="line">                    <span class="keyword">if</span> (is == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">super</span>.loadClass(name);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[is.available()];</span><br><span class="line">                    is.read(b);</span><br><span class="line">                    <span class="keyword">return</span> defineClass(name,b,<span class="number">0</span>,b.length);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        Object obj = myLoader.loadClass(<span class="string">"com.todorex.demo.ClassLoaderTest"</span>).newInstance();</span><br><span class="line"></span><br><span class="line">        System.out.println(obj.getClass());</span><br><span class="line"></span><br><span class="line">        System.out.println(obj <span class="keyword">instanceof</span> com.todorex.demo.ClassLoaderTest );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">class com.todorex.demo.ClassLoaderTest</span><br><span class="line">false</span><br></pre></td></tr></table></figure></p>
 <p>这里的false就证明了两个类虽然来自于同一个Class文件，但是由于使用的类加载器不同，就依然是两个独立的类。</p>
 <h1 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h1><h2 id="类加载器的类型"><a href="#类加载器的类型" class="headerlink" title="类加载器的类型"></a>类加载器的类型</h2><h3 id="Java虚拟机角度"><a href="#Java虚拟机角度" class="headerlink" title="Java虚拟机角度"></a>Java虚拟机角度</h3><ol>
 <li>启动类加载器，它本身是由C++语言实现，或者底层的关键方法是用C实现的。</li>
@@ -416,12 +415,12 @@
 </ol>
 <p>我们可以从代码看看他是怎么实现的？</p>
 <ol>
-<li>先看ClassLoader函数的loadClass函数<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</div><div class="line">      <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">  &#123;</div><div class="line">      <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</div><div class="line">          <span class="comment">// 先从缓存查找该class对象，找到就不用重新加载</span></div><div class="line">          Class&lt;?&gt; c = findLoadedClass(name);</div><div class="line">          <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">              <span class="keyword">long</span> t0 = System.nanoTime();</div><div class="line">              <span class="keyword">try</span> &#123;</div><div class="line">                  <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</div><div class="line">                      <span class="comment">//如果找不到，则委托给父类加载器去加载</span></div><div class="line">                      c = parent.loadClass(name, <span class="keyword">false</span>);</div><div class="line">                  &#125; <span class="keyword">else</span> &#123;</div><div class="line">                  <span class="comment">//如果没有父类，则委托给启动加载器去加载</span></div><div class="line">                      c = findBootstrapClassOrNull(name);</div><div class="line">                  &#125;</div><div class="line">              &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">                  <span class="comment">// ClassNotFoundException thrown if class not found</span></div><div class="line">                  <span class="comment">// from the non-null parent class loader</span></div><div class="line">              &#125;</div><div class="line"></div><div class="line">              <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">                  <span class="comment">// If still not found, then invoke findClass in order</span></div><div class="line">                  <span class="comment">// 如果都没有找到，则通过自定义实现的findClass去查找并加载</span></div><div class="line">                  c = findClass(name);</div><div class="line"></div><div class="line">                  <span class="comment">// this is the defining class loader; record the stats</span></div><div class="line">                  sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</div><div class="line">                  sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</div><div class="line">                  sun.misc.PerfCounter.getFindClasses().increment();</div><div class="line">              &#125;</div><div class="line">          &#125;</div><div class="line">          <span class="keyword">if</span> (resolve) &#123;<span class="comment">//是否需要在加载时进行解析</span></div><div class="line">              resolveClass(c);</div><div class="line">          &#125;</div><div class="line">          <span class="keyword">return</span> c;</div><div class="line">      &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<li>先看ClassLoader函数的loadClass函数<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</span><br><span class="line">      <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">  &#123;</span><br><span class="line">      <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">          <span class="comment">// 先从缓存查找该class对象，找到就不用重新加载</span></span><br><span class="line">          Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">          <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">              <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">              <span class="keyword">try</span> &#123;</span><br><span class="line">                  <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                      <span class="comment">//如果找不到，则委托给父类加载器去加载</span></span><br><span class="line">                      c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">                  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                  <span class="comment">//如果没有父类，则委托给启动加载器去加载</span></span><br><span class="line">                      c = findBootstrapClassOrNull(name);</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                  <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">                  <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">              &#125;</span><br><span class="line"></span><br><span class="line">              <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">                  <span class="comment">// If still not found, then invoke findClass in order</span></span><br><span class="line">                  <span class="comment">// 如果都没有找到，则通过自定义实现的findClass去查找并加载</span></span><br><span class="line">                  c = findClass(name);</span><br><span class="line"></span><br><span class="line">                  <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">                  sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">                  sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">                  sun.misc.PerfCounter.getFindClasses().increment();</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">if</span> (resolve) &#123;<span class="comment">//是否需要在加载时进行解析</span></span><br><span class="line">              resolveClass(c);</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">return</span> c;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>从该函数我们可以得知双亲委派模型会先递归去查找父加载器是否已经加载过该类了。如果父加载器都没有加载过该类，则开始调用fandClass<br>()尝试去加载该类。由于启动类加载器不可知，我们可以去看看扩展类加载器的findClass()。我们可以看到下面的类图：</p>
 <p><img src="http://blog.todorex.com/image/jpg/ExtClassLoader.jpg" alt="ExtClassLoader"></p>
-<p>我接着我想去看看ExtClassLoader类里面的findClass()方法，结果发现没有，只要去他的父类URLClassLoader去找找，还好找到了，可以看看下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(<span class="keyword">final</span> String name)</div><div class="line">    <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">&#123;</div><div class="line">    <span class="keyword">final</span> Class&lt;?&gt; result;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        result = AccessController.doPrivileged(</div><div class="line">            <span class="keyword">new</span> PrivilegedExceptionAction&lt;Class&lt;?&gt;&gt;() &#123;</div><div class="line">                <span class="keyword">public</span> Class&lt;?&gt; run() <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">                    String path = name.replace(<span class="string">'.'</span>, <span class="string">'/'</span>).concat(<span class="string">".class"</span>);</div><div class="line">                    Resource res = ucp.getResource(path, <span class="keyword">false</span>);</div><div class="line">                    <span class="keyword">if</span> (res != <span class="keyword">null</span>) &#123;</div><div class="line">                        <span class="keyword">try</span> &#123;</div><div class="line">                             <span class="comment">//defineClass()方法是用来将byte字节流解析成JVM能够识别的Class对象</span></div><div class="line">                            <span class="keyword">return</span> defineClass(name, res);</div><div class="line">                        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name, e);</div><div class="line">                        &#125;</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;, acc);</div><div class="line">    &#125; <span class="keyword">catch</span> (java.security.PrivilegedActionException pae) &#123;</div><div class="line">        <span class="keyword">throw</span> (ClassNotFoundException) pae.getException();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我接着我想去看看ExtClassLoader类里面的findClass()方法，结果发现没有，只要去他的父类URLClassLoader去找找，还好找到了，可以看看下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(<span class="keyword">final</span> String name)</span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">final</span> Class&lt;?&gt; result;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        result = AccessController.doPrivileged(</span><br><span class="line">            <span class="keyword">new</span> PrivilegedExceptionAction&lt;Class&lt;?&gt;&gt;() &#123;</span><br><span class="line">                <span class="keyword">public</span> Class&lt;?&gt; run() <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">                    String path = name.replace(<span class="string">'.'</span>, <span class="string">'/'</span>).concat(<span class="string">".class"</span>);</span><br><span class="line">                    Resource res = ucp.getResource(path, <span class="keyword">false</span>);</span><br><span class="line">                    <span class="keyword">if</span> (res != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                             <span class="comment">//defineClass()方法是用来将byte字节流解析成JVM能够识别的Class对象</span></span><br><span class="line">                            <span class="keyword">return</span> defineClass(name, res);</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name, e);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, acc);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (java.security.PrivilegedActionException pae) &#123;</span><br><span class="line">        <span class="keyword">throw</span> (ClassNotFoundException) pae.getException();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>其实AppClassLoader的findClass()也是继承自URLCLassLoader，所以都是一样的，我们再结合最开始的loadClass()就可以很好的理解了上面双亲委派模型的工作流程了。</p>
 <h3 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h3><p>java随着它的类加载一起具备了一种带有优先级的层次关系，它能保证一个类在程序中各种类加载器环境中都是同一个类。</p>
 <h3 id="双亲委派模型的“双亲”"><a href="#双亲委派模型的“双亲”" class="headerlink" title="双亲委派模型的“双亲”"></a>双亲委派模型的“双亲”</h3><p>在Java虚拟机英文文章里双亲委派模型的英文是Parent-Delegation Model，不知道为什么中文翻译会称他为双亲委派模型，可能是他一般都会找到一个爸爸去委托去处理吧。</p>
@@ -434,8 +433,8 @@
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>有时候分析东西查看源码是必要的，还要利用一些工具去分析他们的继承关系。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《深入理解Java虚拟机》</li>
-<li><a href="http://blog.csdn.net/javazejian/article/details/73413292" target="_blank" rel="external">深入理解Java类加载器(ClassLoader)</a></li>
-<li><a href="http://blog.csdn.net/justloveyou_/article/details/72217806" target="_blank" rel="external">深入理解Java类加载器(一)：Java类加载原理解析</a></li>
+<li><a href="http://blog.csdn.net/javazejian/article/details/73413292" target="_blank" rel="noopener">深入理解Java类加载器(ClassLoader)</a></li>
+<li><a href="http://blog.csdn.net/justloveyou_/article/details/72217806" target="_blank" rel="noopener">深入理解Java类加载器(一)：Java类加载原理解析</a></li>
 </ol>
 
       
@@ -522,7 +521,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -566,7 +565,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -576,10 +575,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -712,7 +709,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

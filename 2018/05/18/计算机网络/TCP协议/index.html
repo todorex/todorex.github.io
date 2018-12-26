@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="TCP," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="TCP,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/05/18/计算机网络/TCP协议/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：TCP作为传输层的一大协议，虽然没有UDP简单，但是胜在可靠。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/tcp.png">
 <meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/tcpBuild.png">
 <meta property="og:image" content="http://blog.todorex.com/computerNetwork/png/tcpRelease.png">
@@ -133,7 +134,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/05/18/计算机网络/TCP协议/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/05/18/计算机网络/TCP协议/">
 
 
 
@@ -142,7 +143,7 @@
   <title> TCP协议 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -167,13 +168,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -203,7 +204,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -213,7 +214,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -223,7 +224,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -236,7 +237,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -257,9 +258,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -291,16 +290,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/05/18/计算机网络/TCP协议/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -339,7 +338,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -350,7 +349,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/计算机网络/" itemprop="url" rel="index">
                     <span itemprop="name">计算机网络</span>
                   </a>
@@ -372,7 +371,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -439,7 +438,7 @@
 <li><strong>第四次握手</strong> ：A收到释放请求后，向B发送确认应答，此时A进入TIME-WAIT状态。该状态会持续2MSL(报文最大生存时间)时间，若该时间段内没有B的重发请求的话，就进入CLOSED状态，撤销TCB。当B收到确认应答后，也便进入CLOSED状态，撤销TCB。</li>
 </ol>
 <h1 id="TCP的可靠传输"><a href="#TCP的可靠传输" class="headerlink" title="TCP的可靠传输"></a>TCP的可靠传输</h1><p>TCP采用了校验和、连接管理、序列号、确认应答，重发控制、滑动窗口协议（连续ARQ协议、流控制、拥塞控制）等机制来保证它的可靠性。</p>
-<h2 id="校验和"><a href="#校验和" class="headerlink" title="校验和"></a>校验和</h2><p>TCP和UDP校验和的方式一致，可以参照另一篇博客——<a href="http://todorex.com/2018/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/UDP%E5%8D%8F%E8%AE%AE/" target="_blank" rel="external">UDP协议</a></p>
+<h2 id="校验和"><a href="#校验和" class="headerlink" title="校验和"></a>校验和</h2><p>TCP和UDP校验和的方式一致，可以参照另一篇博客——<a href="http://todorex.com/2018/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/UDP%E5%8D%8F%E8%AE%AE/" target="_blank" rel="noopener">UDP协议</a></p>
 <h2 id="连接管理"><a href="#连接管理" class="headerlink" title="连接管理"></a>连接管理</h2><p>其实就是利用建立连接时的三次握手来提高可靠性。</p>
 <h2 id="通过序列号与确认应答"><a href="#通过序列号与确认应答" class="headerlink" title="通过序列号与确认应答"></a>通过序列号与确认应答</h2><p>在TCP中，当发送端的数据到达接收主机时，接收端主机会返回一个收到消息的通知，这个消息叫做<strong>确认应答(ACK)</strong>，比如客户端发送[数据(1-1000)]，那么服务端将会回应[确认应答(下一个数1001)]。在一定时间内没有等到确认应答，发送端会认为数据已经丢失，并进行重发。</p>
 <h2 id="滑动窗口协议-连续ARQ协议"><a href="#滑动窗口协议-连续ARQ协议" class="headerlink" title="滑动窗口协议(连续ARQ协议)"></a>滑动窗口协议(连续ARQ协议)</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>先简单说说ARQ(Automatic Repeat reQuest)协议(自动重传请求协议)： 当请求失败时它会自动重传，直到请求被正确接收为止。这种机制保证了每个分组都能被正确接收。</p>
@@ -502,9 +501,9 @@
 <li>QQ文件传输</li>
 </ul>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://blog.csdn.net/u010425776/article/details/55006347?locationNum=2&amp;fps=1" target="_blank" rel="external">计算机网络传输层知识点全覆盖</a></li>
-<li><a href="https://blog.csdn.net/whoamiyang/article/details/50890801" target="_blank" rel="external">TCP协议详解—学习笔记</a></li>
-<li><a href="https://blog.csdn.net/corcplusplusorjava/article/details/46954433" target="_blank" rel="external">TCP协议</a></li>
+<li><a href="https://blog.csdn.net/u010425776/article/details/55006347?locationNum=2&amp;fps=1" target="_blank" rel="noopener">计算机网络传输层知识点全覆盖</a></li>
+<li><a href="https://blog.csdn.net/whoamiyang/article/details/50890801" target="_blank" rel="noopener">TCP协议详解—学习笔记</a></li>
+<li><a href="https://blog.csdn.net/corcplusplusorjava/article/details/46954433" target="_blank" rel="noopener">TCP协议</a></li>
 </ol>
 
       
@@ -589,7 +588,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -633,7 +632,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -643,10 +642,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -779,7 +776,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="并发," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="并发,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/01/22/Java并发编程实战/Java并发-6-取消与关闭/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：任务和线程的启动很容易，在大多数时候，我们都会让他们运行直到结束，然而，有时候我们希望提前结束任务或线程，但是Java没有提供任何机制来安全地终止线程，只是提供了中断，这是一种协作机制，能够使一个线程终止另一个线程的工作。所以需要我们能很完善地处理失败、关闭和取消等过程。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-01-22T06:13:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java并发_6_取消与关闭">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/01/22/Java并发编程实战/Java并发-6-取消与关闭/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/01/22/Java并发编程实战/Java并发-6-取消与关闭/">
 
 
 
@@ -136,7 +137,7 @@
   <title> Java并发_6_取消与关闭 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/01/22/Java并发编程实战/Java并发-6-取消与关闭/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/Java并发编程实战/" itemprop="url" rel="index">
                     <span itemprop="name">Java并发编程实战</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -394,11 +393,11 @@
 <li>关闭。在立即关闭的过程中，当前的任务则可能被取消。</li>
 </ol>
 <p>在Java中没有一种安全的抢占式方法来停止线程，因此也就没有安全的抢占式方法来停止任务，只有一些协作式的机制，使请求取消的任务和代码都遵循一种协商好的协议。</p>
-<p>其中一种协作机制能设置某个“已请求取消”标志，而任务将定期地查看该标志。如果设置了这个标志，那么任务将提前结束。代码如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="title">implement</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">// 为了使这个过程能可靠得工作，标志cancelled必须为volatile类型</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> cancelled;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">while</span>(!cancelled) &#123;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        cancelled = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h2><p>如果在上面代码中while里面出现了一个阻塞的方法，那么在调用cancel方法来设置cancelled状态，当却检查不到标志，因为它无法从阻塞的方法恢复过来。如下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeProducer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;BigInteger&gt; queue;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> cancelled = <span class="keyword">false</span>;</div><div class="line"></div><div class="line">    BrokenPrimeProducer(BlockingQueue&lt;BigInteger&gt; queue) &#123;</div><div class="line">        <span class="keyword">this</span>.queue = queue;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            BigInteger p = BigInteger.ONE;</div><div class="line">            <span class="keyword">while</span> (!cancelled) &#123;</div><div class="line">                <span class="comment">// 如果生产者的速度超过消费者的处理速度，队列将被填满，put方法会被阻塞</span></div><div class="line">                queue.put(p = p.nextProbablePrime());</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        cancelled = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>所以我们会想到一些线程中断这种协作机制，它利用了特殊的<strong>阻塞库</strong>用来是实现任务取消，注意：如果在取消之外的其他操作中使用中断，都是<strong>不合适</strong>的，并且很难支撑起更大的应用。下面是Thread的中断方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 每个线程都有一个boolean类型的中断状态，当中断线程时，这个线程的中断状态将被设置为true</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="comment">// 中断目标线程</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">interrupt</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="comment">// 清除当前线程的中断状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">interrupted</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="comment">// 返回目标线程的中断状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isInterrupted</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其中一种协作机制能设置某个“已请求取消”标志，而任务将定期地查看该标志。如果设置了这个标志，那么任务将提前结束。代码如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Task</span> <span class="title">implement</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 为了使这个过程能可靠得工作，标志cancelled必须为volatile类型</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> cancelled;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(!cancelled) &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cancelled = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h2><p>如果在上面代码中while里面出现了一个阻塞的方法，那么在调用cancel方法来设置cancelled状态，当却检查不到标志，因为它无法从阻塞的方法恢复过来。如下面的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeProducer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;BigInteger&gt; queue;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> cancelled = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    BrokenPrimeProducer(BlockingQueue&lt;BigInteger&gt; queue) &#123;</span><br><span class="line">        <span class="keyword">this</span>.queue = queue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            BigInteger p = BigInteger.ONE;</span><br><span class="line">            <span class="keyword">while</span> (!cancelled) &#123;</span><br><span class="line">                <span class="comment">// 如果生产者的速度超过消费者的处理速度，队列将被填满，put方法会被阻塞</span></span><br><span class="line">                queue.put(p = p.nextProbablePrime());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cancelled = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所以我们会想到一些线程中断这种协作机制，它利用了特殊的<strong>阻塞库</strong>用来是实现任务取消，注意：如果在取消之外的其他操作中使用中断，都是<strong>不合适</strong>的，并且很难支撑起更大的应用。下面是Thread的中断方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每个线程都有一个boolean类型的中断状态，当中断线程时，这个线程的中断状态将被设置为true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 中断目标线程</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">interrupt</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 清除当前线程的中断状态</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">interrupted</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回目标线程的中断状态</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isInterrupted</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>阻塞库的方法，如Thread.sleep和Object.wait等都会检查线程何时中断，并且在发生中断时返回。响应中断执行的操作包括：清除中断状态，抛出InterruptedException。JVM不保证阻塞方法检测到中断的速度，但通常响应速度还是非常快的。</p>
-<p>注意：调用interrupt并不意味着立即停止目标线程正在进行的工作，而只是传递了请求中断的消息。然后由线程在下一个合适的时刻中断自己（这些时刻也被称为取消点）。有些方法，例如wait、sleep和join等，将严格处理这种请求，当他们收到中断请求或者在开始执行时发现某个已被设置好的中断状态，将抛出一个异常。示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeProducer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;BigInteger&gt; queue;</div><div class="line"></div><div class="line">    BrokenPrimeProducer(BlockingQueue&lt;BigInteger&gt; queue) &#123;</div><div class="line">        <span class="keyword">this</span>.queue = queue;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            BigInteger p = BigInteger.ONE;</div><div class="line">            <span class="comment">// 在阻塞的put方法调用中以及在循环开始处查询中断状态时，都会检查中断标志</span></div><div class="line">            <span class="keyword">while</span> (!Thread.currentThread().isInterrupted()) &#123;</div><div class="line">                queue.put(p = p.nextProbablePrime());</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        interrupt();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意：调用interrupt并不意味着立即停止目标线程正在进行的工作，而只是传递了请求中断的消息。然后由线程在下一个合适的时刻中断自己（这些时刻也被称为取消点）。有些方法，例如wait、sleep和join等，将严格处理这种请求，当他们收到中断请求或者在开始执行时发现某个已被设置好的中断状态，将抛出一个异常。示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeProducer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;BigInteger&gt; queue;</span><br><span class="line"></span><br><span class="line">    BrokenPrimeProducer(BlockingQueue&lt;BigInteger&gt; queue) &#123;</span><br><span class="line">        <span class="keyword">this</span>.queue = queue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            BigInteger p = BigInteger.ONE;</span><br><span class="line">            <span class="comment">// 在阻塞的put方法调用中以及在循环开始处查询中断状态时，都会检查中断标志</span></span><br><span class="line">            <span class="keyword">while</span> (!Thread.currentThread().isInterrupted()) &#123;</span><br><span class="line">                queue.put(p = p.nextProbablePrime());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        interrupt();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="中断策略"><a href="#中断策略" class="headerlink" title="中断策略"></a>中断策略</h2><p>最合理的中断策略是某种形式的线程级取消操作或者服务级取消操作：尽快退出，在必要时清理，通知某个<strong>所有者</strong>该线程已经退出。此外还可以建立其他的中断策略，例如暂停服务或重新开始服务。</p>
 <p>任务不应该对执行该任务的线程的中断策略做出假设。无论任务把中断视为取消，还是其他某个中断响应操作，都应该小心的保存线程的中断状态，如果除了将InterruptException传递给调用者外还需要执行其他操作，那么应该在捕获InterruptException之后恢复中断状态。</p>
 <p><strong>线程只能由其所有者中断，所有者可以将线程的中断策略信息封装到某个合适的取消机制中，例如关闭方法中。</strong></p>
@@ -408,7 +407,7 @@
 <li>恢复中断状态：从而使调用栈中的上层代码能够对其进行处理。</li>
 </ul>
 <p><strong>只有是实现了线程中断策略的代码才可以屏蔽中断请求。在常规的任务和库代码中都不应该屏蔽中断请求。</strong></p>
-<h2 id="通过Future来实现取消"><a href="#通过Future来实现取消" class="headerlink" title="通过Future来实现取消"></a>通过Future来实现取消</h2><p>使用ExecuorService.submit方法将返回一个Future来描述任务，Future有一个cancel方法。cancle方法有一个参数mayInterruptIfRunning,如果设置为true，那么就表示取消操作是否成功（这只是表示任务是否能够接受中断，而不是表示任务是否能够检测并处理中断）。如果为false，表示如果任务还没有运行，那么就不要运行它。代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TimedRun</span> </span>&#123;  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ExecutorService taskExec = Executors.newCachedThreadPool();  </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">timedRun</span><span class="params">(Runnable r,<span class="keyword">long</span> timeout, TimeUnit unit)</span>  </span></div><div class="line">            <span class="keyword">throws</span> InterruptedException &#123;  </div><div class="line">        Future&lt;?&gt; task = taskExec.submit(r);  </div><div class="line">        <span class="keyword">try</span> &#123;  </div><div class="line">            task.get(timeout, unit);  </div><div class="line">        &#125; <span class="keyword">catch</span> (TimeoutException e) &#123;  </div><div class="line">            <span class="comment">// 接下来任务将被取消  </span></div><div class="line">        &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;  </div><div class="line">            <span class="comment">// 如果在任务执行和中抛出了异常，那么重新抛出该异常  </span></div><div class="line">            <span class="keyword">throw</span> launderThrowable(e.getCause());  </div><div class="line">        &#125; <span class="keyword">finally</span> &#123;  </div><div class="line">            <span class="comment">//如果任务已经结束，那么执行取消操作也不会带来任何影响  </span></div><div class="line">            task.cancel(<span class="keyword">true</span>); <span class="comment">// 如果任务正在运行，那么将被中断  </span></div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="通过Future来实现取消"><a href="#通过Future来实现取消" class="headerlink" title="通过Future来实现取消"></a>通过Future来实现取消</h2><p>使用ExecuorService.submit方法将返回一个Future来描述任务，Future有一个cancel方法。cancle方法有一个参数mayInterruptIfRunning,如果设置为true，那么就表示取消操作是否成功（这只是表示任务是否能够接受中断，而不是表示任务是否能够检测并处理中断）。如果为false，表示如果任务还没有运行，那么就不要运行它。代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TimedRun</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ExecutorService taskExec = Executors.newCachedThreadPool();  </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">timedRun</span><span class="params">(Runnable r,<span class="keyword">long</span> timeout, TimeUnit unit)</span>  </span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> InterruptedException </span>&#123;  </span><br><span class="line">        Future&lt;?&gt; task = taskExec.submit(r);  </span><br><span class="line">        <span class="keyword">try</span> &#123;  </span><br><span class="line">            task.get(timeout, unit);  </span><br><span class="line">        &#125; <span class="keyword">catch</span> (TimeoutException e) &#123;  </span><br><span class="line">            <span class="comment">// 接下来任务将被取消  </span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;  </span><br><span class="line">            <span class="comment">// 如果在任务执行和中抛出了异常，那么重新抛出该异常  </span></span><br><span class="line">            <span class="keyword">throw</span> launderThrowable(e.getCause());  </span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;  </span><br><span class="line">            <span class="comment">//如果任务已经结束，那么执行取消操作也不会带来任何影响  </span></span><br><span class="line">            task.cancel(<span class="keyword">true</span>); <span class="comment">// 如果任务正在运行，那么将被中断  </span></span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="处理不可中断的阻塞"><a href="#处理不可中断的阻塞" class="headerlink" title="处理不可中断的阻塞"></a>处理不可中断的阻塞</h2><p>在java库中，很多阻塞的方法都是通过提前返回或者是抛出InterruptedException来响应中断请求的，然而并非所有的可阻塞方法或者阻塞机制都能响应中断。</p>
 <p>比如一个线程由于执行同步的Socket IO 或者等待获得内置锁而阻塞，那么中断请求只能设置线程的中断状态，除此之外没有其他任何作用，对于那些执行不可中断操作而被阻塞的线程，可以使用类似于中断的手段来停止这些线程，但这要求我们必须知道线程阻塞的原因，然后通过重写<strong>非标准的取消操作</strong>。</p>
 <h1 id="停止基础线程的服务"><a href="#停止基础线程的服务" class="headerlink" title="停止基础线程的服务"></a>停止基础线程的服务</h1><p>应用程序通常会创建多个线程的服务，例如线程池。正确地封装原则是：除非拥有某个线程，否则不能对该线程进行操控，线程池是其工作线程的所有者，如果要中断这些线程，那么应该使用线程池。线程的所有权是不可以传递的：应用程序可以拥有服务，服务可以拥有工作者线程，但应用程序并不能拥有工作者线程，因此应用程序不能直接停止工作者线程。相反，服务应用提供生命周期方法来关闭它自己以及它所拥有的线程，在ExecutorService中提供了shutdown和shutdownNow方法。</p>
@@ -434,9 +433,9 @@
 </ol>
 <h1 id="处理非正常的线程终止"><a href="#处理非正常的线程终止" class="headerlink" title="处理非正常的线程终止"></a>处理非正常的线程终止</h1><p>在并发程序中,是无法做到一直观察控制台的, 例如:你的web应用部署到服务器上,难道你要派个人一直去观察控制台?</p>
 <p>任何代码都可能抛出一个RuntimeExecption,每当调用另一个方法时,都要对它的行为保持怀疑,不要盲目地认为它一定会抛出在方法原型中声明的某个已检查异常。对调用的代码越不熟悉,就越应该对其代码行为保持怀疑。</p>
-<h2 id="典型的线程池工作者线程结构"><a href="#典型的线程池工作者线程结构" class="headerlink" title="典型的线程池工作者线程结构"></a>典型的线程池工作者线程结构</h2><p>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">    Throwable <span class="keyword">throw</span> = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span>&#123;</div><div class="line">        <span class="keyword">while</span>(!isInterrupted)&#123;</div><div class="line">            runTask(getTaskFromWorkQueue());</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (Throwable e)&#123;</div><div class="line">        thrown = e;</div><div class="line">    &#125; <span class="keyword">finally</span>&#123;</div><div class="line">        threadExited(<span class="keyword">this</span>,thrown);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="典型的线程池工作者线程结构"><a href="#典型的线程池工作者线程结构" class="headerlink" title="典型的线程池工作者线程结构"></a>典型的线程池工作者线程结构</h2><p>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Throwable <span class="keyword">throw</span> = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(!isInterrupted)&#123;</span><br><span class="line">            runTask(getTaskFromWorkQueue());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e)&#123;</span><br><span class="line">        thrown = e;</span><br><span class="line">    &#125; <span class="keyword">finally</span>&#123;</span><br><span class="line">        threadExited(<span class="keyword">this</span>,thrown);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>如果任务抛出了一个未检查的异常,那么它将使线程终结,但会首先通知框架该线程已经终结.然后,框架可能会用新的线程来代替这个工作线程。</p>
-<h2 id="将异常写入日志的UncaughtExecptionHandler"><a href="#将异常写入日志的UncaughtExecptionHandler" class="headerlink" title="将异常写入日志的UncaughtExecptionHandler"></a>将异常写入日志的UncaughtExecptionHandler</h2><p>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span>.<span class="title">UncaughtExecptionHandler</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">uncaughtException</span><span class="params">(Thread t,Throwable e)</span></span>&#123;</div><div class="line">        Logger logger = Logger.getAnonymousLogger();</div><div class="line">        Logger.log(Level.SEVERE,<span class="string">"Thread terminated with exception: "</span>+ t.getName(),e);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="将异常写入日志的UncaughtExecptionHandler"><a href="#将异常写入日志的UncaughtExecptionHandler" class="headerlink" title="将异常写入日志的UncaughtExecptionHandler"></a>将异常写入日志的UncaughtExecptionHandler</h2><p>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span>.<span class="title">UncaughtExecptionHandler</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">uncaughtException</span><span class="params">(Thread t,Throwable e)</span></span>&#123;</span><br><span class="line">        Logger logger = Logger.getAnonymousLogger();</span><br><span class="line">        Logger.log(Level.SEVERE,<span class="string">"Thread terminated with exception: "</span>+ t.getName(),e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>在运行时间较长的应用程序中,通常会为所有线程的未捕获异常指定同一个异常处理器,并且该异常处理器至少会将异常信息记录到日志中。</p>
 <h1 id="JVM关闭"><a href="#JVM关闭" class="headerlink" title="JVM关闭"></a>JVM关闭</h1><p>JVM既可以正常关闭，也可以强行关闭。正常关闭的触发方式有多种，包括：当最后一个“正常（非守护）”线程结束时，或者调用了System.exit时，或者通过其他特定于平台的方法关闭时（例如发送了SIGINT信号或Ctrl-C）。虽然可以通过这些标准方法来正常关闭JVM，但也可以通过调用Runtime.halt或者在操作系统中“杀死”JVM进程来强行关闭JVM。</p>
 <h2 id="关闭钩子"><a href="#关闭钩子" class="headerlink" title="关闭钩子"></a>关闭钩子</h2><p>在正常关闭中，JVM首先调用所有已注册的关闭钩子，关闭钩子是指通过Runtime.addShutdownHook注册的但尚未开始的线程。JVM不能保证关闭钩子的调用顺序。在关闭应用程序线程时,如果有线程仍然在运行,那么这些线程接下来将与关闭进程并发执行.</p>
@@ -535,7 +534,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -579,7 +578,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -589,10 +588,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -725,7 +722,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="并发," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="并发,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/01/24/Java并发编程实战/Java并发-10-显示锁/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：Java5.0以后提供了一种新的协调对共享对象的访问机制——ReentrantLock。它并不是用来替代内置锁的方法，而是当内置加锁不适用时，作为一种可选择的高级功能。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-01-24T06:23:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java并发_10_显示锁">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/01/24/Java并发编程实战/Java并发-10-显示锁/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/01/24/Java并发编程实战/Java并发-10-显示锁/">
 
 
 
@@ -136,7 +137,7 @@
   <title> Java并发_10_显示锁 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/01/24/Java并发编程实战/Java并发-10-显示锁/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/Java并发编程实战/" itemprop="url" rel="index">
                     <span itemprop="name">Java并发编程实战</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -386,13 +385,13 @@
 
       
         <p>引：Java5.0以后提供了一种新的协调对共享对象的访问机制——ReentrantLock。它并不是用来替代内置锁的方法，而是当内置加锁不适用时，作为一种可选择的高级功能。<a id="more"></a></p>
-<h1 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h1><p>ReentrantLock实现了Lock接口，并提供了与synchronized相同的互斥性和内存可见性，但是通常能提供更好的活跃性或性能。下面是Lock接口代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Lock</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lockInterruptibly</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">()</span></span>;</div><div class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span></span>;</div><div class="line">    <span class="function">Condition <span class="title">newCondition</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h1><p>ReentrantLock实现了Lock接口，并提供了与synchronized相同的互斥性和内存可见性，但是通常能提供更好的活跃性或性能。下面是Lock接口代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Lock</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lockInterruptibly</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">Condition <span class="title">newCondition</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>为什么要创建一种与内置锁如此相似的新加锁价值？是由于内置锁具有以下的局限性：</p>
 <ul>
 <li>无法中断一个正在等待获取锁的线程。</li>
 <li>内置锁必须在获取锁的代码块中释放，这就简化了编码工作，并且与异常处理操作实现了很好的互动，但却无法实现非阻塞结构的加锁规则。   </li>
 </ul>
-<p>下面是Lock接口的标准使用形式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line">...</div><div class="line">lock.lock();</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    <span class="comment">//更新对象状态</span></div><div class="line">    <span class="comment">//捕获异常，并在必要时恢复不变性条件</span></div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">    lock.unlock(); <span class="comment">//“定时炸弹”，一定要记得释放Lock</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面是Lock接口的标准使用形式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">...</span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//更新对象状态</span></span><br><span class="line">    <span class="comment">//捕获异常，并在必要时恢复不变性条件</span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    lock.unlock(); <span class="comment">//“定时炸弹”，一定要记得释放Lock</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="轮询锁与定时锁"><a href="#轮询锁与定时锁" class="headerlink" title="轮询锁与定时锁"></a>轮询锁与定时锁</h2><p>可定时的与可轮询的锁获取模式是由tryLock方法实现的，与无条件的锁获取模式相比，它具有更完善的错误恢复机制。在内置锁中，死锁是一个严重的问题，恢复程序的唯一办法是重新启动程序，而防止死锁的唯一方法就是在构造程序时避免出现不一致的锁顺序。可定时的与可轮询的的锁提供了另一种选择，避免死锁的发生。通过重新获取及释放锁来避免死锁。</p>
 <h2 id="可中断的锁操作获取操作"><a href="#可中断的锁操作获取操作" class="headerlink" title="可中断的锁操作获取操作"></a>可中断的锁操作获取操作</h2><p>可中断的锁操作获取操作是有lockInterruptibly或者tryLock方法实现的，如果在可中断的锁获取操作中抛出了InterruptedException，那么可以使用标准的try-finally加锁模式。</p>
 <h2 id="非块结构的加锁"><a href="#非块结构的加锁" class="headerlink" title="非块结构的加锁"></a>非块结构的加锁</h2><p>我们通过Lock的使用结构可以知道，我们通过ReentrantLock可以灵活的实现锁的粒度。</p>
@@ -402,7 +401,7 @@
 <h1 id="读-写锁"><a href="#读-写锁" class="headerlink" title="读-写锁"></a>读-写锁</h1><p>在读-写锁的加锁策略中，允许多个读操作同时进行，但每次只允许一个写操作。</p>
 <p>ReentrantReadWriteLock为读锁和写锁都提供了可重入的加锁语义。ReentrantReadWriteLock在构造时可以选择是一个非公平的锁（默认）还是一个公平的锁。在公平的锁中，等待时间最长的线程将优先获得锁。在非公平的锁中，线程获得访问许可的顺序是不确定的。写线程可以降级为读线程，但是读线程不可以升级为写线程（因为多个读线程都不会放弃自己的读取锁而导致死锁）。</p>
 <p><strong>适用场景：</strong> 当锁的持有时间较长并且大部分操作都不会修改被守护的资源时，那么读-写锁能提高并发性。如果写操作也很频繁，那可能独占锁更合适一些，因为写操作太多，竞争会很激烈，再加上协调读写锁，性能反而不如独占锁了。</p>
-<p>下面展示用读-写锁来包装Map：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadWriteMap</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;K, V&gt; map;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReadWriteLock lock = <span class="keyword">new</span> ReentrantReadWriteLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock r = lock.readLock();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock w = lock.writeLock();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ReadWriteMap</span><span class="params">(Map&lt;K, V&gt; map)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.map = map;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">put</span> <span class="params">(K key, V value)</span> </span>&#123;</div><div class="line">        w.lock();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">return</span> map. put(key, value);</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            w.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 对remove(),putAll(),clear()等方法执行同样的操作</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</div><div class="line">        r.lock();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">return</span> map.get(key);</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            r.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 对其他只读的Map方法执行相同的操作</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面展示用读-写锁来包装Map：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadWriteMap</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;K, V&gt; map;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ReadWriteLock lock = <span class="keyword">new</span> ReentrantReadWriteLock();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock r = lock.readLock();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock w = lock.writeLock();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ReadWriteMap</span><span class="params">(Map&lt;K, V&gt; map)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.map = map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">put</span> <span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">        w.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> map. put(key, value);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            w.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 对remove(),putAll(),clear()等方法执行同样的操作</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        r.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> map.get(key);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            r.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 对其他只读的Map方法执行相同的操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
 <li>与内置锁相比，显示的Lock提供了一些扩展功能，在处理锁的不可用性方法有着更高的灵活性。但ReentrantLock不能完全替代synchronized，只有在synchronized无法满足需求时，才应该使用它。</li>
 <li>读-写锁运行多个读线程并发地访问被保护的对象，当访问以读取操作为主的数据结构时，它能提高程序的可伸缩性。</li>
@@ -493,7 +492,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -537,7 +536,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -547,10 +546,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -683,7 +680,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

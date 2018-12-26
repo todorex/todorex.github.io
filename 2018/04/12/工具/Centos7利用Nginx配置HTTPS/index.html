@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Linux,HTTPS," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="Linux,HTTPS,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/04/12/工具/Centos7利用Nginx配置HTTPS/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：最近在做一个微信小程序项目，坑爹的小程序不仅需要https协议，而且还要是80端口才能访问后台，这里总结一下Nginx的安装过程与HTTPS的配置。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-04-12T08:54:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Centos7利用Nginx配置HTTPS">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/04/12/工具/Centos7利用Nginx配置HTTPS/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/04/12/工具/Centos7利用Nginx配置HTTPS/">
 
 
 
@@ -136,7 +137,7 @@
   <title> Centos7利用Nginx配置HTTPS | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/04/12/工具/Centos7利用Nginx配置HTTPS/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/工具/" itemprop="url" rel="index">
                     <span itemprop="name">工具</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -387,36 +386,36 @@
       
         <p>引：最近在做一个微信小程序项目，坑爹的小程序不仅需要https协议，而且还要是80端口才能访问后台，这里总结一下Nginx的安装过程与HTTPS的配置。<a id="more"></a></p>
 <h1 id="Ngnix的安装"><a href="#Ngnix的安装" class="headerlink" title="Ngnix的安装"></a>Ngnix的安装</h1><p>由于后面Nginx需要添加模块，所以我们采用<strong>源码安装</strong>，具体安装方法可以参考 <a href="http://bestlixiang.site/2018/04/08/%E8%B5%B0%E8%BF%9BLinux/%E8%B5%B0%E8%BF%9BLinux_%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85-%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/">走进Linux_软件安装</a> 中的源码安装一节。</p>
-<p>这里需要注意的我们在 <strong>产生makefile文件的时候</strong> 需要加一些configure arguments，以便安装相关模块。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-file-aio --with-http_realip_module</div></pre></td></tr></table></figure></p>
-<p>安装完之后可以利用下面的命令查看Ngnix版本及其编译参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/usr/local/nginx/sbin/nginx -V</div><div class="line"></div><div class="line">// 输出如下结果就是对的</div><div class="line">nginx version: nginx/1.11.6</div><div class="line">built by gcc 4.8.5 20150623 (Red Hat 4.8.5-16) (GCC)</div><div class="line">built with OpenSSL 1.0.2k-fips  26 Jan 2017</div><div class="line">TLS SNI support enabled</div><div class="line">configure arguments: --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-file-aio --with-http_realip_module</div></pre></td></tr></table></figure></p>
-<p>然后我们测试新的nginx程序是否正确：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/usr/local/nginx/sbin/nginx -t</div><div class="line"></div><div class="line">// 输出如下结果J就表面安装成功</div><div class="line">nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok</div><div class="line">nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful</div></pre></td></tr></table></figure></p>
+<p>这里需要注意的我们在 <strong>产生makefile文件的时候</strong> 需要加一些configure arguments，以便安装相关模块。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-file-aio --with-http_realip_module</span><br></pre></td></tr></table></figure></p>
+<p>安装完之后可以利用下面的命令查看Ngnix版本及其编译参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -V</span><br><span class="line"></span><br><span class="line">// 输出如下结果就是对的</span><br><span class="line">nginx version: nginx/1.11.6</span><br><span class="line">built by gcc 4.8.5 20150623 (Red Hat 4.8.5-16) (GCC)</span><br><span class="line">built with OpenSSL 1.0.2k-fips  26 Jan 2017</span><br><span class="line">TLS SNI support enabled</span><br><span class="line">configure arguments: --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-file-aio --with-http_realip_module</span><br></pre></td></tr></table></figure></p>
+<p>然后我们测试新的nginx程序是否正确：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -t</span><br><span class="line"></span><br><span class="line">// 输出如下结果J就表面安装成功</span><br><span class="line">nginx: the configuration file /usr/local/nginx/conf/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /usr/local/nginx/conf/nginx.conf test is successful</span><br></pre></td></tr></table></figure></p>
 <h1 id="配置HTTPS"><a href="#配置HTTPS" class="headerlink" title="配置HTTPS"></a>配置HTTPS</h1><h2 id="SSL证书申请"><a href="#SSL证书申请" class="headerlink" title="SSL证书申请"></a>SSL证书申请</h2><p>SSL证书遵守 SSL（Secure Sockets Layer 安全套接层）协议，由受信任的数字证书颁发机构CA，在验证服务器身份后颁发，具有服务器身份验证和数据传输加密功能，也就是说你想要使用https就需要拥有SSL证书。</p>
-<p>这里我们使用openssl证书来举例，<a href="https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=10_4" target="_blank" rel="external">微信小程序官网也是使用openssl来进行HTTPS服务器配置</a>。</p>
+<p>这里我们使用openssl证书来举例，<a href="https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=10_4" target="_blank" rel="noopener">微信小程序官网也是使用openssl来进行HTTPS服务器配置</a>。</p>
 <ol>
 <li><p>生成私钥</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 进入nginx的安装目录</div><div class="line">cd /usr/local/nginx</div><div class="line"></div><div class="line">// 创建一个存放私钥的文件夹（自定义）</div><div class="line">mkdir key</div><div class="line"></div><div class="line">// 进入key文件夹</div><div class="line">cd key</div><div class="line"></div><div class="line">// 生成私钥</div><div class="line">openssl genrsa -out server.key 2048</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 进入nginx的安装目录</span><br><span class="line">cd /usr/local/nginx</span><br><span class="line"></span><br><span class="line">// 创建一个存放私钥的文件夹（自定义）</span><br><span class="line">mkdir key</span><br><span class="line"></span><br><span class="line">// 进入key文件夹</span><br><span class="line">cd key</span><br><span class="line"></span><br><span class="line">// 生成私钥</span><br><span class="line">openssl genrsa -out server.key 2048</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>生成csr文件</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">// CSR 是Certificate Signing Request的缩写，即证书签名请求，</div><div class="line">// 这不是证书，可以简单理解成公钥，生成证书时要把这个提交给权威的证书颁发机构。</div><div class="line"></div><div class="line"></div><div class="line">// 生成csr文件</div><div class="line">openssl req -new -key server.key -out certreq.csr</div><div class="line"></div><div class="line">// 输入上面的命令后会要求你输入一些信息：</div><div class="line">Country Name： CN        //您所在国家的ISO标准代号，中国为CN</div><div class="line">State or Province Name：guandong //您单位所在地省/自治区/直辖市</div><div class="line">Locality Name：shenzhen      //您单位所在地的市/县/区</div><div class="line">Organization Name： Tencent Technology (Shenzhen) Company Limited    //您单位/机构/企业合法的名称</div><div class="line">Organizational Unit Name： R&amp;D         //部门名称</div><div class="line">Common Name： www.example.com     //通用名，网站域名。此项必须与您访问提供SSL服务的服务器时所应用的域名完全匹配。</div><div class="line">Email Address：      //您的邮件地址，不必输入，直接回车跳过</div><div class="line">&quot;extra&quot;attributes  // 以下信息不必输入，回车跳过直到命令执行完毕。</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// CSR 是Certificate Signing Request的缩写，即证书签名请求，</span><br><span class="line">// 这不是证书，可以简单理解成公钥，生成证书时要把这个提交给权威的证书颁发机构。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 生成csr文件</span><br><span class="line">openssl req -new -key server.key -out certreq.csr</span><br><span class="line"></span><br><span class="line">// 输入上面的命令后会要求你输入一些信息：</span><br><span class="line">Country Name： CN        //您所在国家的ISO标准代号，中国为CN</span><br><span class="line">State or Province Name：guandong //您单位所在地省/自治区/直辖市</span><br><span class="line">Locality Name：shenzhen      //您单位所在地的市/县/区</span><br><span class="line">Organization Name： Tencent Technology (Shenzhen) Company Limited    //您单位/机构/企业合法的名称</span><br><span class="line">Organizational Unit Name： R&amp;D         //部门名称</span><br><span class="line">Common Name： www.example.com     //通用名，网站域名。此项必须与您访问提供SSL服务的服务器时所应用的域名完全匹配。</span><br><span class="line">Email Address：      //您的邮件地址，不必输入，直接回车跳过</span><br><span class="line">&quot;extra&quot;attributes  // 以下信息不必输入，回车跳过直到命令执行完毕。</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>生成crt证书</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// CRT 即 certificate的缩写，即证书。</div><div class="line">openssl x509 -req -days 365 -in certreq.csr -signkey server.key -out certreq.crt</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// CRT 即 certificate的缩写，即证书。</span><br><span class="line">openssl x509 -req -days 365 -in certreq.csr -signkey server.key -out certreq.crt</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h2 id="Nginx配置SSL加密"><a href="#Nginx配置SSL加密" class="headerlink" title="Nginx配置SSL加密"></a>Nginx配置SSL加密</h2><p>想要https就要监听443端口，nginx.conf已经预留出了server，只要我们把注释去掉开启即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">// 编辑Ngnix配置文件</div><div class="line">vim /usr/local/nginx/conf/nginx.conf</div><div class="line"></div><div class="line">// 修改监听443端口的Server，使其如下：</div><div class="line">server &#123;</div><div class="line">    listen 443 ssl;</div><div class="line">    server_name www.example.com;</div><div class="line">    ssl on;</div><div class="line">    # ssl_certificate证书其实是个公钥，它会被发送到连接服务器的每个客户端</div><div class="line">    ssl_certificate /usr/local/nginx/key/certreq.crt;</div><div class="line">    # ssl_certificate_key私钥是用来解密的，所以它的权限要得到保护但nginx的主进程能够读取</div><div class="line">    ssl_certificate_key /usr/local/nginx/key/server.key;</div><div class="line">    ssl_session_timeout  5m;</div><div class="line">    # 指定SSL服务器端支持的协议版本</div><div class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</div><div class="line">    # 选择加密算法</div><div class="line">    ssl_ciphers  HIGH:!aNULL:!MD5;</div><div class="line">    # ssl_ciphers  ALL：!ADH：!EXPORT56：RC4+RSA：+HIGH：+MEDIUM：+LOW：+SSLv2：+EXP;</div><div class="line">    # 在使用SSLv3和TLS协议时指定服务器的加密算法要优先于客户端的加密算法</div><div class="line">    ssl_prefer_server_ciphers   on;</div><div class="line">    # 虽然我们要使用HTTPS，但是服务器的程序接收的还是HTTP，所以要做个反向代理</div><div class="line">    location /&#123;</div><div class="line">        proxy_pass http://localhost:8080;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 编辑Ngnix配置文件</span><br><span class="line">vim /usr/local/nginx/conf/nginx.conf</span><br><span class="line"></span><br><span class="line">// 修改监听443端口的Server，使其如下：</span><br><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl;</span><br><span class="line">    server_name www.example.com;</span><br><span class="line">    ssl on;</span><br><span class="line">    # ssl_certificate证书其实是个公钥，它会被发送到连接服务器的每个客户端</span><br><span class="line">    ssl_certificate /usr/local/nginx/key/certreq.crt;</span><br><span class="line">    # ssl_certificate_key私钥是用来解密的，所以它的权限要得到保护但nginx的主进程能够读取</span><br><span class="line">    ssl_certificate_key /usr/local/nginx/key/server.key;</span><br><span class="line">    ssl_session_timeout  5m;</span><br><span class="line">    # 指定SSL服务器端支持的协议版本</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    # 选择加密算法</span><br><span class="line">    ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">    # ssl_ciphers  ALL：!ADH：!EXPORT56：RC4+RSA：+HIGH：+MEDIUM：+LOW：+SSLv2：+EXP;</span><br><span class="line">    # 在使用SSLv3和TLS协议时指定服务器的加密算法要优先于客户端的加密算法</span><br><span class="line">    ssl_prefer_server_ciphers   on;</span><br><span class="line">    # 虽然我们要使用HTTPS，但是服务器的程序接收的还是HTTP，所以要做个反向代理</span><br><span class="line">    location /&#123;</span><br><span class="line">        proxy_pass http://localhost:8080;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>这样虽然可以利用https来访问我们的ip，但是对于浏览器还是不受信任的。</strong></p>
 <h2 id="导入证书"><a href="#导入证书" class="headerlink" title="导入证书"></a>导入证书</h2><p>如果你是找一个知名的SSL证书颁发机构如VeriSign、Wosign、StartSSL签发的证书，<strong>并且浏览器已经内置并信任了这些根证书</strong>，如果你是自建证书（向我们刚才那样）或获得二级证书授权，那么就<strong>需要将证书添加到浏览器</strong>，这样在访问站点时才不会显示不安全连接。<strong>不够买证书微信小程序会不支持。</strong> 证书生成的方法有很多，这里说两种：</p>
 <ol>
 <li><p>购买阿里云的免费证书</p>
 </li>
-<li><p>购买<a href="http://note.youdao.com/" target="_blank" rel="external">GETSSL官网</a>证书</p>
+<li><p>购买<a href="http://note.youdao.com/" target="_blank" rel="noopener">GETSSL官网</a>证书</p>
 </li>
 </ol>
-<p>购买好证书并下载后（可以将证书和私钥放到之前的key目录）需要从新配置nginx.conf文件，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen 443 ssl;</div><div class="line">    server_name www.example.com;</div><div class="line">    ssl on;</div><div class="line">    # pem是crt的一种，内容是BASE64编码，Apache和*NIX服务器偏向于使用这种编码格式</div><div class="line">    ssl_certificate /usr/local/nginx/key/*.pem;</div><div class="line">    ssl_certificate_key /usr/local/nginx/key/*.key;</div><div class="line">    ssl_session_timeout  5m;</div><div class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</div><div class="line">    ssl_ciphers  HIGH:!aNULL:!MD5;</div><div class="line">    ssl_prefer_server_ciphers   on;</div><div class="line">    location /&#123;</div><div class="line">        proxy_pass http://localhost:8080;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>购买好证书并下载后（可以将证书和私钥放到之前的key目录）需要从新配置nginx.conf文件，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl;</span><br><span class="line">    server_name www.example.com;</span><br><span class="line">    ssl on;</span><br><span class="line">    # pem是crt的一种，内容是BASE64编码，Apache和*NIX服务器偏向于使用这种编码格式</span><br><span class="line">    ssl_certificate /usr/local/nginx/key/*.pem;</span><br><span class="line">    ssl_certificate_key /usr/local/nginx/key/*.key;</span><br><span class="line">    ssl_session_timeout  5m;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">    ssl_prefer_server_ciphers   on;</span><br><span class="line">    location /&#123;</span><br><span class="line">        proxy_pass http://localhost:8080;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://blog.csdn.net/w410589502/article/details/72833283" target="_blank" rel="external"> linux nginx配置https</a></li>
-<li><a href="https://www.cnblogs.com/yjmyzz/p/openssl-tutorial.html" target="_blank" rel="external">openssl、x509、crt、cer、key、csr、ssl、tls 这些都是什么鬼?</a></li>
+<li><a href="https://blog.csdn.net/w410589502/article/details/72833283" target="_blank" rel="noopener"> linux nginx配置https</a></li>
+<li><a href="https://www.cnblogs.com/yjmyzz/p/openssl-tutorial.html" target="_blank" rel="noopener">openssl、x509、crt、cer、key、csr、ssl、tls 这些都是什么鬼?</a></li>
 </ol>
 
       
@@ -503,7 +502,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -547,7 +546,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -557,10 +556,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -693,7 +690,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

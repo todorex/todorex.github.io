@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="sping,jpa," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="sping,jpa,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2017/06/15/编程/jpa实体映射关系/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：其实距离自己上次写数据库操作已经1个多月了，之前接触的就是Hibernate，这次接触jpa，就把几种对应关系理清。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-10-30T12:04:41.703Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jpa实体映射关系">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/06/15/编程/jpa实体映射关系/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/06/15/编程/jpa实体映射关系/">
 
 
 
@@ -136,7 +137,7 @@
   <title> jpa实体映射关系 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/06/15/编程/jpa实体映射关系/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/编程/" itemprop="url" rel="index">
                     <span itemprop="name">编程</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -388,17 +387,17 @@
         <p>引：其实距离自己上次写数据库操作已经1个多月了，之前接触的就是Hibernate，这次接触jpa，就把几种对应关系理清。<a id="more"></a></p>
 <h1 id="映射策略"><a href="#映射策略" class="headerlink" title="映射策略"></a>映射策略</h1><p>注：这次举的例子都是User和Car的</p>
 <h2 id="外键关联"><a href="#外键关联" class="headerlink" title="外键关联"></a>外键关联</h2><p>简介：两个表的关系定义在其中一个表中</p>
-<h3 id="OneToOne"><a href="#OneToOne" class="headerlink" title="@OneToOne"></a>@OneToOne</h3><p>方法一：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OneToOne</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line"><span class="meta">@JoinColumn</span>(name = <span class="string">"user_id"</span>)</div><div class="line"><span class="keyword">private</span> Car car;</div></pre></td></tr></table></figure></p>
-<p>通过在Car表中加入一个外键，实现两者关系。<br>方法二：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OneToOne</span>(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = <span class="string">"Car"</span>)</div><div class="line"><span class="keyword">private</span> User user;</div></pre></td></tr></table></figure></p>
+<h3 id="OneToOne"><a href="#OneToOne" class="headerlink" title="@OneToOne"></a>@OneToOne</h3><p>方法一：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OneToOne</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</span><br><span class="line"><span class="meta">@JoinColumn</span>(name = <span class="string">"user_id"</span>)</span><br><span class="line"><span class="keyword">private</span> Car car;</span><br></pre></td></tr></table></figure></p>
+<p>通过在Car表中加入一个外键，实现两者关系。<br>方法二：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OneToOne</span>(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = <span class="string">"Car"</span>)</span><br><span class="line"><span class="keyword">private</span> User user;</span><br></pre></td></tr></table></figure></p>
 <p>通过在Car类中用MappedBy声明让User进行维护。</p>
-<h3 id="OneToMany"><a href="#OneToMany" class="headerlink" title="@OneToMany"></a>@OneToMany</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OneToMany</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line"><span class="meta">@JoinColumn</span>(name = <span class="string">"user_id"</span>)</div><div class="line"><span class="keyword">private</span> Set&lt;Car&gt; cars;</div></pre></td></tr></table></figure>
+<h3 id="OneToMany"><a href="#OneToMany" class="headerlink" title="@OneToMany"></a>@OneToMany</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OneToMany</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</span><br><span class="line"><span class="meta">@JoinColumn</span>(name = <span class="string">"user_id"</span>)</span><br><span class="line"><span class="keyword">private</span> Set&lt;Car&gt; cars;</span><br></pre></td></tr></table></figure>
 <p>通过在Car表中加入一个外键，实现一对多关系。</p>
-<h3 id="ManyToMany"><a href="#ManyToMany" class="headerlink" title="@ManyToMany"></a>@ManyToMany</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OneToMany</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line"><span class="keyword">private</span> Set&lt;Car&gt; cars;</div></pre></td></tr></table></figure>
+<h3 id="ManyToMany"><a href="#ManyToMany" class="headerlink" title="@ManyToMany"></a>@ManyToMany</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OneToMany</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</span><br><span class="line"><span class="keyword">private</span> Set&lt;Car&gt; cars;</span><br></pre></td></tr></table></figure>
 <p>这个是采用默认的表关联</p>
 <h2 id="表关联"><a href="#表关联" class="headerlink" title="表关联"></a>表关联</h2><p>简介：两个表的关系通过一张中间表来来关联</p>
-<h3 id="OneToMany-1"><a href="#OneToMany-1" class="headerlink" title="@OneToMany"></a>@OneToMany</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OneToMany</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line"><span class="meta">@JoinTable</span>(name = <span class="string">"user_car"</span>,</div><div class="line">joinColumns=&#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"user_id"</span>)&#125;,</div><div class="line">inverseJoinColumns = &#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"car_id"</span>)&#125;)</div><div class="line"><span class="keyword">private</span> Set&lt;Car&gt; cars;</div></pre></td></tr></table></figure>
+<h3 id="OneToMany-1"><a href="#OneToMany-1" class="headerlink" title="@OneToMany"></a>@OneToMany</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OneToMany</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</span><br><span class="line"><span class="meta">@JoinTable</span>(name = <span class="string">"user_car"</span>,</span><br><span class="line">joinColumns=&#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"user_id"</span>)&#125;,</span><br><span class="line">inverseJoinColumns = &#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"car_id"</span>)&#125;)</span><br><span class="line"><span class="keyword">private</span> Set&lt;Car&gt; cars;</span><br></pre></td></tr></table></figure>
 <p>通过JoinTable来确定一张中间表，joinColumns里面放父表的属性，inverseJoinColumns放子表的属性</p>
-<h3 id="ManyToMany-1"><a href="#ManyToMany-1" class="headerlink" title="@ManyToMany"></a>@ManyToMany</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@ManyToMany</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</div><div class="line"><span class="meta">@JoinTable</span>(name = <span class="string">"user_car"</span>,</div><div class="line">joinColumns=&#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"user_id"</span>)&#125;,</div><div class="line">inverseJoinColumns = &#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"car_id"</span>)&#125;)</div><div class="line"><span class="keyword">private</span> Set&lt;Car&gt; cars;</div></pre></td></tr></table></figure>
+<h3 id="ManyToMany-1"><a href="#ManyToMany-1" class="headerlink" title="@ManyToMany"></a>@ManyToMany</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ManyToMany</span>(cascade=CascadeType.ALL, fetch=FetchType.EAGER)</span><br><span class="line"><span class="meta">@JoinTable</span>(name = <span class="string">"user_car"</span>,</span><br><span class="line">joinColumns=&#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"user_id"</span>)&#125;,</span><br><span class="line">inverseJoinColumns = &#123;<span class="meta">@JoinColumn</span>(name = <span class="string">"car_id"</span>)&#125;)</span><br><span class="line"><span class="keyword">private</span> Set&lt;Car&gt; cars;</span><br></pre></td></tr></table></figure>
 <p>解释如@OneToMany</p>
 <h2 id="一些属性"><a href="#一些属性" class="headerlink" title="一些属性"></a>一些属性</h2><h3 id="cascade属性"><a href="#cascade属性" class="headerlink" title="cascade属性"></a>cascade属性</h3><ol>
 <li>CascadeType.PERSIST：级联新建</li>
@@ -497,7 +496,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -541,7 +540,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -551,10 +550,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -687,7 +684,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="并发," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="并发,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2018/01/22/Java并发编程实战/Java并发-7-线程池的使用/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：之前介绍了Executor任务执行框架的使用，它不仅简化了任务与线程的生命周期管理，而且还提供了一种简单灵活的方式将任务的提交和任务的执行策略解耦开来。但是深入下去，我们需要对线程池进行配置和调优，并且分析再使用任务执行框架时需要注意的各种危险。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-01-22T09:40:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java并发_7_线程池的使用">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2018/01/22/Java并发编程实战/Java并发-7-线程池的使用/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2018/01/22/Java并发编程实战/Java并发-7-线程池的使用/">
 
 
 
@@ -136,7 +137,7 @@
   <title> Java并发_7_线程池的使用 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2018/01/22/Java并发编程实战/Java并发-7-线程池的使用/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/Java并发编程实战/" itemprop="url" rel="index">
                     <span itemprop="name">Java并发编程实战</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -403,8 +402,8 @@
 <p>只要避免过大和过小两种极端情况，如果线程池过大，那么大量的线程将在相对很少的CPU和内存资源上发生竞争，这不仅会导致更高的内存使用量，而且还可能耗尽资源。如果线程池过小，那么导致许多空闲的处理器无法执行工作，从而降低吞吐率。</p>
 <p>要想正确设置线程池的大小，必须分析计算环境、资源预算和任务的特性。</p>
 <p>对于计算密集型的任务，在拥有N个处理器的系统上，当线程池的大小为N + 1时，通常能实现最优的利用率。</p>
-<p>对于包含I/O操作或者其他阻塞操作的任务，由于线程并不会一直执行，因此线程池的规模应该更大。要正确地设置线程池的大小，必须估算出任务的等待时间与计算时间的比值。有个公式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">N = CPU的数量 = Runtime.getRuntime().availableProcessors();</div><div class="line">U = 预期CPU利用率</div><div class="line">W/C = 等待时间,计算时间之比（wait time / compute time）</div><div class="line">线程池的最优大小 = N * U * （<span class="number">1</span> + W/C）</div></pre></td></tr></table></figure></p>
-<h1 id="配置ThreadPoolExecutor"><a href="#配置ThreadPoolExecutor" class="headerlink" title="配置ThreadPoolExecutor"></a>配置ThreadPoolExecutor</h1><p>如果newCachedThreadPool、newFixedTheadPool和newScheduledTheadPool等工厂方法返回的ThreadPoolExecutor无法满足需求，可以通过ThreadPoolExecutor的构造函数来实例化一个对象，并根据自己需求来定制。构造函数如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize, //线程池的基本大小</span></span></div><div class="line">                          <span class="keyword">int</span> maximumPoolSize, //最大大小</div><div class="line">                          <span class="keyword">long</span> keepAliveTime, //存活时间</div><div class="line">                          TimeUnit unit, //时间单位</div><div class="line">                          BlockingQueue&lt;Runnable&gt; workQueue, //工作队列</div><div class="line">                          ThreadFactory threadFactory, //线程工厂</div><div class="line">                          RejectedExecutionHandler handler) &#123;...&#125;</div></pre></td></tr></table></figure></p>
+<p>对于包含I/O操作或者其他阻塞操作的任务，由于线程并不会一直执行，因此线程池的规模应该更大。要正确地设置线程池的大小，必须估算出任务的等待时间与计算时间的比值。有个公式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">N = CPU的数量 = Runtime.getRuntime().availableProcessors();</span><br><span class="line">U = 预期CPU利用率</span><br><span class="line">W/C = 等待时间,计算时间之比（wait time / compute time）</span><br><span class="line">线程池的最优大小 = N * U * （<span class="number">1</span> + W/C）</span><br></pre></td></tr></table></figure></p>
+<h1 id="配置ThreadPoolExecutor"><a href="#配置ThreadPoolExecutor" class="headerlink" title="配置ThreadPoolExecutor"></a>配置ThreadPoolExecutor</h1><p>如果newCachedThreadPool、newFixedTheadPool和newScheduledTheadPool等工厂方法返回的ThreadPoolExecutor无法满足需求，可以通过ThreadPoolExecutor的构造函数来实例化一个对象，并根据自己需求来定制。构造函数如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize, //线程池的基本大小</span></span></span><br><span class="line"><span class="function"><span class="params">                          <span class="keyword">int</span> maximumPoolSize, //最大大小</span></span></span><br><span class="line"><span class="function"><span class="params">                          <span class="keyword">long</span> keepAliveTime, //存活时间</span></span></span><br><span class="line"><span class="function"><span class="params">                          TimeUnit unit, //时间单位</span></span></span><br><span class="line"><span class="function"><span class="params">                          BlockingQueue&lt;Runnable&gt; workQueue, //工作队列</span></span></span><br><span class="line"><span class="function"><span class="params">                          ThreadFactory threadFactory, //线程工厂</span></span></span><br><span class="line"><span class="function"><span class="params">                          RejectedExecutionHandler handler)</span> </span>&#123;...&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="线程的创建与销毁"><a href="#线程的创建与销毁" class="headerlink" title="线程的创建与销毁"></a>线程的创建与销毁</h2><p>通过调节线程池的基本大小和存活时间，可以帮助线程池回收空闲线程占有的资源，从而使得这些资源可以用于执行其他工作。</p>
 <h2 id="管理队列任务"><a href="#管理队列任务" class="headerlink" title="管理队列任务"></a>管理队列任务</h2><p>如果新请求的到达速率超过了线程池的处理速率，那么新到来的请求将会在一个由Executor管理的Runnable队列中等待，而不会像线程那样去竞争CPU资源。</p>
 <p>ThreadPoolExecutor允许提供一个BlockingQueue来保存等待执行的任务。基本的任务排队方法有3种：无界队列、有界队列和同步移交。</p>
@@ -505,7 +504,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -549,7 +548,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -559,10 +558,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -695,7 +692,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>

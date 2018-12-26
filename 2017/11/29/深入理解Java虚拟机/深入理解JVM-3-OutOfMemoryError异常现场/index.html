@@ -6,15 +6,15 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -32,7 +32,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -66,23 +66,23 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="java,JVM," />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-
-
-
-  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml" />
+  <meta name="keywords" content="java,JVM,">
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
 
 
 
@@ -96,6 +96,7 @@
 <meta property="og:url" content="http://bestlixiang.site/2017/11/29/深入理解Java虚拟机/深入理解JVM-3-OutOfMemoryError异常现场/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:description" content="引：之前面对JVM运行内存的分析，总会提到出现OutMemoryError异常，接下来我们详细看下常出现这种异常的现场。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-09-14T01:49:27.501Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解JVM_3_OutOfMemoryError异常现场">
@@ -127,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/2017/11/29/深入理解Java虚拟机/深入理解JVM-3-OutOfMemoryError异常现场/"/>
+  <link rel="canonical" href="http://bestlixiang.site/2017/11/29/深入理解Java虚拟机/深入理解JVM-3-OutOfMemoryError异常现场/">
 
 
 
@@ -136,7 +137,7 @@
   <title> 深入理解JVM_3_OutOfMemoryError异常现场 | rex note </title>
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
 
@@ -161,13 +162,13 @@
   <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">rex note</span>
         <span class="logo-line-after"><i></i></span>
@@ -197,7 +198,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -207,7 +208,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -217,7 +218,7 @@
         <li class="menu-item menu-item-tags">
           <a href="/tags" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
             标签
           </a>
@@ -230,7 +231,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
             搜索
           </a>
@@ -251,9 +252,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocapitalize="off" autocomplete="off" autocorrect="off"
-             placeholder="搜索..." spellcheck="false"
-             type="text" id="local-search-input">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,16 +284,16 @@
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2017/11/29/深入理解Java虚拟机/深入理解JVM-3-OutOfMemoryError异常现场/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="rex">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/uploads/me.jpeg">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="rex note">
     </span>
 
@@ -333,7 +332,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -344,7 +343,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
                     <span itemprop="name">深入理解Java虚拟机</span>
                   </a>
@@ -366,7 +365,7 @@
           
             <span class="post-meta-divider">|</span>
             <span class="page-pv">本文总阅读量
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
             </span>
           
 
@@ -387,8 +386,8 @@
       
         <p>引：之前面对JVM运行内存的分析，总会提到出现OutMemoryError异常，接下来我们详细看下常出现这种异常的现场。<a id="more"></a></p>
 <h1 id="Java堆溢出"><a href="#Java堆溢出" class="headerlink" title="Java堆溢出"></a>Java堆溢出</h1><p>我们通过限制Java堆的大小为20MB,不可扩张（将堆得最小值-Xms参数与最大值-Xmx参数设置为一样即可避免堆自动扩展），通过参数-XX：+HeapDumpOnOutOfMemoryError可以让虚拟机在出现内存溢出异常时Dump（备份）出当前的内存堆转储快照以便时候分析处理。</p>
-<p>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//VM Args: -Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HeapOOM</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span>  <span class="title">OOMobject</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        List&lt;OOMobject&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            list.add(<span class="keyword">new</span> OOMobject());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">java.lang.OutOfMemoryError: Java heap space</div><div class="line">Dumping heap to java_pid81611.hprof ...</div><div class="line">Heap dump file created [27573572 bytes in 0.121 secs]</div><div class="line">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: Java heap space</div><div class="line">	at java.util.Arrays.copyOf(Arrays.java:3210)...</div></pre></td></tr></table></figure></p>
+<p>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//VM Args: -Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HeapOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span>  <span class="title">OOMobject</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;OOMobject&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            list.add(<span class="keyword">new</span> OOMobject());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">java.lang.OutOfMemoryError: Java heap space</span><br><span class="line">Dumping heap to java_pid81611.hprof ...</span><br><span class="line">Heap dump file created [27573572 bytes in 0.121 secs]</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: Java heap space</span><br><span class="line">	at java.util.Arrays.copyOf(Arrays.java:3210)...</span><br></pre></td></tr></table></figure></p>
 <p>我们很容易在输出结果中看到Java heap space OOM出现在堆中。我们要解决这个区域的异常主要是通过内存映像分析工具（很多）对Dump出来的堆转储快照进行分析，重点确认是<strong>内存泄漏（Memory leak）</strong>还是<strong>内存溢出（Memory Overflow</strong>）。</p>
 <ol>
 <li><p>内存泄漏：被分配的内存的对象不会被回收，永久占据内存。</p>
@@ -404,33 +403,33 @@
 <li>OutOfMemoryError异常：如果虚拟机在扩展栈使无法申请到足够的内存空间，将抛出此异常。</li>
 </ol>
 <p>我个人想如果单线程中栈的内存大小等于总内存大小，那么上面两种异常应该是等价的吧，但是基本上是不可能的。所以单线程中出现得基本上都是StackOverflowError异常。</p>
-<p>单线程代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// VM args: -Xss128k</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HeapOOM</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span>  <span class="title">OOMobject</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        List&lt;OOMobject&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            list.add(<span class="keyword">new</span> OOMobject());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">stack lenth:18855</div><div class="line">Exception in thread &quot;main&quot; java.lang.StackOverflowError</div><div class="line">	at com.todorex.demo.JavaVMStackSOF.stackLeak(JavaVMStackSOF.java:10)</div></pre></td></tr></table></figure></p>
+<p>单线程代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// VM args: -Xss128k</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HeapOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span>  <span class="title">OOMobject</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;OOMobject&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            list.add(<span class="keyword">new</span> OOMobject());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">stack lenth:18855</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.StackOverflowError</span><br><span class="line">	at com.todorex.demo.JavaVMStackSOF.stackLeak(JavaVMStackSOF.java:10)</span><br></pre></td></tr></table></figure></p>
 <p>这里抄一下书的结论：在单个线程下，无论是由于栈帧太大还是虚拟机容量太小，当内存无法分配的时候，虚拟机抛出的都是StackOverflowError异常。</p>
-<p>多线程代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// VM args: -Xss2M</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaVMStackOOM</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dontStop</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stackLeakByThread</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            Thread thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">                <span class="meta">@Override</span></div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    dontStop();</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line">            thread.start();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        JavaVMStackOOM javaVMStackOOM = <span class="keyword">new</span> JavaVMStackOOM();</div><div class="line">        javaVMStackOOM.stackLeakByThread();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>多线程代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// VM args: -Xss2M</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaVMStackOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dontStop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stackLeakByThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            Thread thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    dontStop();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            thread.start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        JavaVMStackOOM javaVMStackOOM = <span class="keyword">new</span> JavaVMStackOOM();</span><br><span class="line">        javaVMStackOOM.stackLeakByThread();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>我在自己的机器上没有运行出来，可能需要点时间，不过机器变卡了，我想其实这里解释一下就好，它应该会抛出OutOfMemoryError异常。</p>
 <p>解释：首先操作系统分给每个进程的内存是有限制的，所以总的方法栈的大小也是有限制的，但是每个线程都需要方法栈，所以线程建立的越多，剩余的方法栈内存就越小，一直创建线程，进程所拥有的内存终将被耗尽，到最后就会抛出OutOfMemoryError异常。</p>
 <p>注意：线程数和方法栈大小是成反比的，所以在开发多线程的应用时应该特别注意，如果不能减少线程数或者更换64位虚拟机的情况下，就只能通过减少最大堆和减少栈容量来换取更多的线程了。</p>
-<h1 id="方法区（元空间）和运行时常量池溢出"><a href="#方法区（元空间）和运行时常量池溢出" class="headerlink" title="方法区（元空间）和运行时常量池溢出"></a>方法区（元空间）和运行时常量池溢出</h1><h2 id="运行时常量池溢出"><a href="#运行时常量池溢出" class="headerlink" title="运行时常量池溢出"></a>运行时常量池溢出</h2><p>在之前的博客也提到过在jdk1.6以及之前运行时常量池是放在方法区中的，存的是对象，所以可以设置虚拟机参数-XX:PermSize和-XX:MaxPermSize来限制方法区的大小，来模拟常量池溢出，但是jdk1.7及以后运行时常量池被移除了方法区，常量池存储的不再是对象，而是对象的引用，真正的对象存储在堆中，我们改变虚拟机参数为：-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError运行下面程序：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// VM args:-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RuntimeConstantPoolOOM</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            list.add(String.valueOf(i++).intern());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">java.lang.OutOfMemoryError: GC overhead limit exceeded</div><div class="line">Dumping heap to java_pid10818.hprof ...</div><div class="line">Heap dump file created [25172419 bytes in 0.251 secs]</div></pre></td></tr></table></figure></p>
+<h1 id="方法区（元空间）和运行时常量池溢出"><a href="#方法区（元空间）和运行时常量池溢出" class="headerlink" title="方法区（元空间）和运行时常量池溢出"></a>方法区（元空间）和运行时常量池溢出</h1><h2 id="运行时常量池溢出"><a href="#运行时常量池溢出" class="headerlink" title="运行时常量池溢出"></a>运行时常量池溢出</h2><p>在之前的博客也提到过在jdk1.6以及之前运行时常量池是放在方法区中的，存的是对象，所以可以设置虚拟机参数-XX:PermSize和-XX:MaxPermSize来限制方法区的大小，来模拟常量池溢出，但是jdk1.7及以后运行时常量池被移除了方法区，常量池存储的不再是对象，而是对象的引用，真正的对象存储在堆中，我们改变虚拟机参数为：-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError运行下面程序：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// VM args:-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RuntimeConstantPoolOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            list.add(String.valueOf(i++).intern());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java.lang.OutOfMemoryError: GC overhead limit exceeded</span><br><span class="line">Dumping heap to java_pid10818.hprof ...</span><br><span class="line">Heap dump file created [25172419 bytes in 0.251 secs]</span><br></pre></td></tr></table></figure></p>
 <p>上面结果提示GC开销超过限制，默认的话，如果你98%的时间都花在GC上并且回收了才不到2%的空间的话，虚拟机就会抛这个异常。</p>
-<p>其实我们之前也提起过在JDK1.8及以后，字符串常量池从永久代移到到元空间中，元空间与永久代之间最大的区别在于：元空间并不在虚拟机中，而是使用本地内存。因此，默认情况下，元空间的大小仅受本地内存限制，但可以通过以下参数来指定元空间的大小：-XX:MetaspaceSize，初始空间大小，达到该值就会触发垃圾收集进行类型卸载，同时GC会对该值进行调整，如果释放了大量的空间，就适当降低该值；如果释放了很少的空间，那么在不超过MaxMetaspaceSize时，适当提高该值。-XX:MaxMetaspaceSize，最大空间，默认是没有限制的。除了上面两个指定大小的选项以外，还有两个与 GC 相关的属性：-XX:MinMetaspaceFreeRatio，在GC之后，最小的Metaspace剩余空间容量的百分比，减少为分配空间所导致的垃圾收集，-XX:MaxMetaspaceFreeRatio，在GC之后，最大的Metaspace剩余空间容量的百分比，减少为释放空间所导致的垃圾收集，具体验证代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// VM args: -XX:MetaspaceSize=4M -XX:MaxMetaspaceSize=4M</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RuntimeConstantPoolOOM</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            list.add(String.valueOf(i++).intern());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Error occurred during initialization of VM</div><div class="line">OutOfMemoryError: Metaspace</div></pre></td></tr></table></figure></p>
-<p>关于这个字符串常量池的实现问题，还真的会出现一个很意思的问题或者说是一个很奇怪的问题。代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// jdk:1.8</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RuntimeConstantPoolOOM</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">        String str1 = <span class="keyword">new</span> StringBuilder(<span class="string">"计算机"</span>).append(<span class="string">"软件"</span>).toString();</div><div class="line">        System.out.println(str1.intern() == str1);</div><div class="line"></div><div class="line">        String str2 = <span class="keyword">new</span> StringBuilder(<span class="string">"ja"</span>).append(<span class="string">"va"</span>).toString();</div><div class="line">        System.out.println(str2.intern() == str2);</div><div class="line"></div><div class="line">        String str3 = <span class="keyword">new</span> StringBuilder(<span class="string">"ma"</span>).append(<span class="string">"in"</span>).toString();</div><div class="line">        System.out.println(str3.intern() == str3);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">true</div><div class="line">false</div><div class="line">false</div></pre></td></tr></table></figure></p>
+<p>其实我们之前也提起过在JDK1.8及以后，字符串常量池从永久代移到到元空间中，元空间与永久代之间最大的区别在于：元空间并不在虚拟机中，而是使用本地内存。因此，默认情况下，元空间的大小仅受本地内存限制，但可以通过以下参数来指定元空间的大小：-XX:MetaspaceSize，初始空间大小，达到该值就会触发垃圾收集进行类型卸载，同时GC会对该值进行调整，如果释放了大量的空间，就适当降低该值；如果释放了很少的空间，那么在不超过MaxMetaspaceSize时，适当提高该值。-XX:MaxMetaspaceSize，最大空间，默认是没有限制的。除了上面两个指定大小的选项以外，还有两个与 GC 相关的属性：-XX:MinMetaspaceFreeRatio，在GC之后，最小的Metaspace剩余空间容量的百分比，减少为分配空间所导致的垃圾收集，-XX:MaxMetaspaceFreeRatio，在GC之后，最大的Metaspace剩余空间容量的百分比，减少为释放空间所导致的垃圾收集，具体验证代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// VM args: -XX:MetaspaceSize=4M -XX:MaxMetaspaceSize=4M</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RuntimeConstantPoolOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            list.add(String.valueOf(i++).intern());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Error occurred during initialization of VM</span><br><span class="line">OutOfMemoryError: Metaspace</span><br></pre></td></tr></table></figure></p>
+<p>关于这个字符串常量池的实现问题，还真的会出现一个很意思的问题或者说是一个很奇怪的问题。代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// jdk:1.8</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RuntimeConstantPoolOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        String str1 = <span class="keyword">new</span> StringBuilder(<span class="string">"计算机"</span>).append(<span class="string">"软件"</span>).toString();</span><br><span class="line">        System.out.println(str1.intern() == str1);</span><br><span class="line"></span><br><span class="line">        String str2 = <span class="keyword">new</span> StringBuilder(<span class="string">"ja"</span>).append(<span class="string">"va"</span>).toString();</span><br><span class="line">        System.out.println(str2.intern() == str2);</span><br><span class="line"></span><br><span class="line">        String str3 = <span class="keyword">new</span> StringBuilder(<span class="string">"ma"</span>).append(<span class="string">"in"</span>).toString();</span><br><span class="line">        System.out.println(str3.intern() == str3);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">true</span><br><span class="line">false</span><br><span class="line">false</span><br></pre></td></tr></table></figure></p>
 <p>jdk1.6中，intern()方法会把首次遇到的字符串实例复制在永久代，返回的也是永久代中这个字符串实例的引用，而由StringBuilder创建的字符串实例在Java堆上，所以必然不是同一个引用。而在jdk1.7及以后，intern()的实现不会再复制实例，只是在常量池中记录首次出现得实例的引用，因此intern()返回的由StringBuilder创建的那个字符串是同一个实例，而关于上面的运行结果，我想java和main之前都是在字符串常量池中都有他的引用了，所以返回的都是false。</p>
-<h2 id="方法区溢出"><a href="#方法区溢出" class="headerlink" title="方法区溢出"></a>方法区溢出</h2><p>方法区用于存放Class的相关信息，如类名，访问修饰符，常量池，字段描述，方法描述等，基本的思路是运行时产生大量的类去填充方法区，下面是借助CGLib（cglib和asm的依赖有个坑，选择cglib2.2,asm3.1亲测可用）来操作字节码运行时生成大量的动态类，这种场景在Spring，Hibernate中经常出现，需要多注意，本人使用的JDK1.8，所以测试的是方法区的变迁元空间，代码实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// VM args:-XX:MetaspaceSize=4M -XX:MaxMetaspaceSize=4M</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaMethodAreaOOM</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[]args)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            Enhancer enhancer = <span class="keyword">new</span> Enhancer();</div><div class="line">            enhancer.setSuperclass(OOMObject.class);</div><div class="line">            enhancer.setUseCache(<span class="keyword">false</span>);</div><div class="line">            enhancer.setCallback(<span class="keyword">new</span> MethodInterceptor() &#123;</div><div class="line">                <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object o, Method method, Object[] objects, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">                    <span class="keyword">return</span> methodProxy.invokeSuper(o, objects);</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line">            OOMObject oomObject = (OOMObject) enhancer.create();</div><div class="line">            oomObject.sayHi();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">OOMObject</span></span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHi</span><span class="params">()</span></span>&#123;</div><div class="line">            System.out.println(<span class="string">"hi"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>结果输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Error occurred during initialization of VM</div><div class="line">OutOfMemoryError: Metaspace</div></pre></td></tr></table></figure></p>
+<h2 id="方法区溢出"><a href="#方法区溢出" class="headerlink" title="方法区溢出"></a>方法区溢出</h2><p>方法区用于存放Class的相关信息，如类名，访问修饰符，常量池，字段描述，方法描述等，基本的思路是运行时产生大量的类去填充方法区，下面是借助CGLib（cglib和asm的依赖有个坑，选择cglib2.2,asm3.1亲测可用）来操作字节码运行时生成大量的动态类，这种场景在Spring，Hibernate中经常出现，需要多注意，本人使用的JDK1.8，所以测试的是方法区的变迁元空间，代码实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// VM args:-XX:MetaspaceSize=4M -XX:MaxMetaspaceSize=4M</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaMethodAreaOOM</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[]args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line">            enhancer.setSuperclass(OOMObject.class);</span><br><span class="line">            enhancer.setUseCache(<span class="keyword">false</span>);</span><br><span class="line">            enhancer.setCallback(<span class="keyword">new</span> MethodInterceptor() &#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object o, Method method, Object[] objects, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                    <span class="keyword">return</span> methodProxy.invokeSuper(o, objects);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            OOMObject oomObject = (OOMObject) enhancer.create();</span><br><span class="line">            oomObject.sayHi();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">OOMObject</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHi</span><span class="params">()</span></span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"hi"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Error occurred during initialization of VM</span><br><span class="line">OutOfMemoryError: Metaspace</span><br></pre></td></tr></table></figure></p>
 <p>这类异常经常出现在web应用中，需要多注意。</p>
-<h1 id="本机直接内存溢出"><a href="#本机直接内存溢出" class="headerlink" title="本机直接内存溢出"></a>本机直接内存溢出</h1><p>DirectMemory容量可通过-XX:MaxDirectMemorySize指定，如果不指定，则默认与Java堆最大值（-Xmx指定）一样，在《深入理解Java虚拟机》中用了以下代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// VM args:-Xmx20M -XX:MaxDirectMemorySize=10M</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DirectMemoryOOM</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span>*<span class="number">1024</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line">        Field unsafeField = Unsafe.class.getDeclaredFields()[<span class="number">0</span>];</div><div class="line">        unsafeField.setAccessible(<span class="keyword">true</span>);</div><div class="line">        Unsafe unsafe = (Unsafe) unsafeField.get(<span class="keyword">null</span>);</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            unsafe.allocateMemory(_1MB);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="本机直接内存溢出"><a href="#本机直接内存溢出" class="headerlink" title="本机直接内存溢出"></a>本机直接内存溢出</h1><p>DirectMemory容量可通过-XX:MaxDirectMemorySize指定，如果不指定，则默认与Java堆最大值（-Xmx指定）一样，在《深入理解Java虚拟机》中用了以下代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// VM args:-Xmx20M -XX:MaxDirectMemorySize=10M</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DirectMemoryOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span>*<span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        Field unsafeField = Unsafe.class.getDeclaredFields()[<span class="number">0</span>];</span><br><span class="line">        unsafeField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        Unsafe unsafe = (Unsafe) unsafeField.get(<span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            unsafe.allocateMemory(_1MB);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>但是在自己电脑中没有运行成功，反而让自己的电脑死机了，这个地方还是没有弄懂？？？？？？，希望懂的大佬给我点支持。</p>
 <p>这个异常在使用NIO中可能会出现，所以在使用的时候需要多注意。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在总结得过程中，知道了各个内存区域可能会出现OOM的情况，重要的是了解了方法区在jdk1.6到1.7到1.8的变迁，有兴趣的人可以深入了解。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li>《深入理解Java虚拟机》</li>
-<li><a href="http://blog.csdn.net/zghwaicsdn/article/details/50957474" target="_blank" rel="external">CGLIB介绍与原理</a></li>
-<li><a href="http://www.cnblogs.com/paddix/p/5309550.html" target="_blank" rel="external">Java8内存模型—永久代(PermGen)和元空间(Metaspace)</a></li>
-<li><a href="http://www.sczyh30.com/posts/Java/jvm-metaspace/" target="_blank" rel="external">深入探究JVM | 探秘Metaspace</a></li>
+<li><a href="http://blog.csdn.net/zghwaicsdn/article/details/50957474" target="_blank" rel="noopener">CGLIB介绍与原理</a></li>
+<li><a href="http://www.cnblogs.com/paddix/p/5309550.html" target="_blank" rel="noopener">Java8内存模型—永久代(PermGen)和元空间(Metaspace)</a></li>
+<li><a href="http://www.sczyh30.com/posts/Java/jvm-metaspace/" target="_blank" rel="noopener">深入探究JVM | 探秘Metaspace</a></li>
 </ol>
 
       
@@ -517,7 +516,7 @@
   <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
   <a class="jiathis_counter_style"></a>
 </div>
-<script type="text/javascript" >
+<script type="text/javascript">
   var jiathis_config={
     hideMore:false
   }
@@ -561,7 +560,7 @@
 
       
         <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
             文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
@@ -571,10 +570,8 @@
       
 
       <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/uploads/me.jpeg"
-               alt="rex" />
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
           <p class="site-author-name" itemprop="name">rex</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
@@ -707,7 +704,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" >
+        <div class="copyright">
   
   &copy;  2017 - 
   <span itemprop="copyrightYear">2018</span>
