@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2018-12-26T10:16:24.213Z</updated>
+  <updated>2018-12-26T10:30:30.504Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -20,9 +20,20 @@
     <link href="http://bestlixiang.site/2018/12/26/%E5%88%86%E5%B8%83%E5%BC%8F/Raft%E7%AE%97%E6%B3%95/"/>
     <id>http://bestlixiang.site/2018/12/26/分布式/Raft算法/</id>
     <published>2018-12-26T13:14:13.000Z</published>
-    <updated>2018-12-26T10:16:24.213Z</updated>
+    <updated>2018-12-26T10:30:30.504Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：占坑！！！！ 不同于Paxos算法直接从分布式一致性问题出发推导出来，Raft算法则是从多副本状态机的角度提出，用于管理多副本状态机的日志复制。自己目前也理解得还不透彻，所以留下链接，待后续加深理解之后再做整理。<a id="more"></a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="http://thesecretlivesofdata.com/raft/" target="_blank" rel="external">Raft: Understandable Distributed Consensus</a></li>
+<li><a href="https://www.jianshu.com/p/096ae57d1fe0" target="_blank" rel="external">Raft一致性算法笔记</a></li>
+<li><a href="https://www.jianshu.com/p/1f5cb602dc71" target="_blank" rel="external">分布式系统学习2-Raft算法分析与实现</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/32052223" target="_blank" rel="external">Raft算法详解</a> [可以继续看他的相关博客]</li>
+</ol>
+]]></content>
     
     <summary type="html">
+    
+      &lt;p&gt;引：占坑！！！！ 不同于Paxos算法直接从分布式一致性问题出发推导出来，Raft算法则是从多副本状态机的角度提出，用于管理多副本状态机的日志复制。自己目前也理解得还不透彻，所以留下链接，待后续加深理解之后再做整理。
     
     </summary>
     
