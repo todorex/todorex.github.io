@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://bestlixiang.site/2018/12/27/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</loc>
+    <lastmod>2018-12-27T05:16:46.141Z</lastmod>
+    <data>
+        <display>
+        <title>分布式锁</title>
+        <pubTime>2018-12-27T05:15:43.000Z</pubTime>
+        
+        <tag>分布式锁</tag>
+         
+         
+           
+             
+              <breadCrumb title="分布式" url="http://bestlixiang.site/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://bestlixiang.site/2018/12/27/%E5%88%86%E5%B8%83%E5%BC%8F/consistent%20hashing%20algorithm%20/</loc>
     <lastmod>2018-12-26T12:04:02.312Z</lastmod>
     <data>
@@ -550,9 +570,9 @@
         <title>深入理解JVM_13_Java内存模型与线程</title>
         <pubTime>2017-12-13T15:27:12.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -572,9 +592,9 @@
         <title>深入理解JVM_11_早期（编译期）优化</title>
         <pubTime>2017-12-10T13:36:22.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -594,9 +614,9 @@
         <title>深入理解JVM_10_虚拟机字节码执行引擎</title>
         <pubTime>2017-12-09T11:55:21.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -616,9 +636,9 @@
         <title>深入理解JVM_9_类加载器</title>
         <pubTime>2017-12-06T02:59:56.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -638,9 +658,9 @@
         <title>深入理解JVM_8_虚拟机类加载机制</title>
         <pubTime>2017-12-02T07:22:11.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -660,9 +680,9 @@
         <title>深入理解JVM_2_HotSpot对象揭秘</title>
         <pubTime>2017-11-21T03:11:05.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -682,9 +702,9 @@
         <title>深入理解JVM_1_JVM内存区域</title>
         <pubTime>2017-11-20T10:41:36.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -1288,9 +1308,9 @@
         <title>深入理解JVM_3_OutOfMemoryError异常现场</title>
         <pubTime>2017-11-29T07:24:08.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -2646,9 +2666,9 @@
         <title>深入理解JVM_14_线程安全与锁优化</title>
         <pubTime>2017-12-14T09:57:38.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -2668,9 +2688,9 @@
         <title>深入理解JVM_12_晚期（运行期）优化</title>
         <pubTime>2017-12-12T14:18:20.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -2690,9 +2710,9 @@
         <title>深入理解JVM_4_垃圾收集策略</title>
         <pubTime>2017-11-29T11:33:14.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -2712,9 +2732,9 @@
         <title>深入理解JVM_5_内存分配策略</title>
         <pubTime>2017-11-30T06:31:15.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -2734,9 +2754,9 @@
         <title>深入理解JVM_6_JVM调优实战</title>
         <pubTime>2017-11-30T13:46:19.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
@@ -2756,9 +2776,9 @@
         <title>深入理解JVM_7_探秘类文件</title>
         <pubTime>2017-12-01T12:52:36.000Z</pubTime>
         
-        <tag>JVM</tag>
-         
         <tag>java</tag>
+         
+        <tag>JVM</tag>
          
          
            
