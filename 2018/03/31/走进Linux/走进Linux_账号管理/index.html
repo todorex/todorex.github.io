@@ -560,7 +560,7 @@
 </li>
 </ul>
 <h1 id="账号管理"><a href="#账号管理" class="headerlink" title="账号管理"></a>账号管理</h1><p>管理账号主要是新增、删除与更改用户的相关信息。</p>
-<h2 id="新增与删除用户"><a href="#新增与删除用户" class="headerlink" title="新增与删除用户"></a>新增与删除用户</h2><p>账号可以使用useradd命令来新建用户，密码的给予则是使用passwd命令。下面是范例：（里面有很多参数，自己可以去了解）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 新增</span><br><span class="line">useradd leonard</span><br><span class="line">ll -d /home/leonard/</span><br><span class="line"><span class="meta">#</span> 默认会创建用户主文件夹，且权限为700，这是重点</span><br><span class="line"><span class="meta">#</span> drwx------ 2 leonard leonard 4096 3月  31 09:36 /home/leonard/</span><br><span class="line"></span><br><span class="line">grep leonard /etc/passwd /etc/shadow /etc/group</span><br><span class="line"><span class="meta">#</span> /etc/passwd:leonard:x:1001:1001::/home/leonard:/bin/bash</span><br><span class="line"><span class="meta">#</span> /etc/shadow:leonard:!!:17621:0:99999:7:::</span><br><span class="line"><span class="meta">#</span> /etc/group:leonard:x:1001:</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 不加账号，默认修改自己的密码</span><br><span class="line">passwd leonard</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 显示账号的相关信息</span><br><span class="line">chage leonard</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 修改账号的相关信息</span><br><span class="line">usermod leonard</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 删除账号，-r：连主文件夹一起删除</span><br><span class="line">userdel leonard</span><br></pre></td></tr></table></figure></p>
+<h2 id="新增与删除用户"><a href="#新增与删除用户" class="headerlink" title="新增与删除用户"></a>新增与删除用户</h2><p>账号可以使用useradd命令来新建用户，密码的给予则是使用passwd命令。下面是范例：（里面有很多参数，自己可以去了解）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 新增</span></span><br><span class="line">useradd leonard</span><br><span class="line">ll -d /home/leonard/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认会创建用户主文件夹，且权限为700，这是重点</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> drwx------ 2 leonard leonard 4096 3月  31 09:36 /home/leonard/</span></span><br><span class="line"></span><br><span class="line">grep leonard /etc/passwd /etc/shadow /etc/group</span><br><span class="line"><span class="meta">#</span><span class="bash"> /etc/passwd:leonard:x:1001:1001::/home/leonard:/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> /etc/shadow:leonard:!!:17621:0:99999:7:::</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> /etc/group:leonard:x:1001:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 不加账号，默认修改自己的密码</span></span><br><span class="line">passwd leonard</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示账号的相关信息</span></span><br><span class="line">chage leonard</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改账号的相关信息</span></span><br><span class="line">usermod leonard</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除账号，-r：连主文件夹一起删除</span></span><br><span class="line">userdel leonard</span><br></pre></td></tr></table></figure></p>
 <p>其实系统已经帮我们设置好了非常多的默认值，所以我们可以简单的使用“useradd 账号”来创建用户，Centos这些默认值主要会帮我们处理下面几个项目：</p>
 <ul>
 <li>在/etc/passwd 里面创建一行与账号相关的数据，包括创建UID/GID/主文件夹等；</li>
@@ -781,7 +781,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">145</span>
+                <span class="site-state-item-count">146</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -792,7 +792,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -906,7 +906,7 @@
         <div class="copyright">
   
   &copy;  2017 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
