@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2019-04-25T12:57:43.140Z</updated>
+  <updated>2019-04-26T12:25:06.543Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JVM源码——劝退待起航</title>
+    <link href="http://bestlixiang.site/2019/04/26/JVM%E6%BA%90%E7%A0%81/JVM%E6%BA%90%E7%A0%81%E2%80%94%E2%80%94%E5%8A%9D%E9%80%80%E5%BE%85%E8%B5%B7%E8%88%AA/"/>
+    <id>http://bestlixiang.site/2019/04/26/JVM源码/JVM源码——劝退待起航/</id>
+    <published>2019-04-26T12:15:14.000Z</published>
+    <updated>2019-04-26T12:25:06.543Z</updated>
+    
+    <content type="html"><![CDATA[<p>原以为可以平结自己略懂的C++去看JVM源码，但是等到自己真正去打开源码，就算是对着博客看，也是十分吃力，还看了知乎R大对看JVM源码的看法。SO，我被自己和R大劝退了，可能目前的自己还不适合去看，希望自己以后<strong>有需要有梦想</strong>再来看！<a id="more"></a><br><img src="https://upload-images.jianshu.io/upload_images/10354196-a3eeb7ecd08d51cf.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="劝退.jpeg"></p>
+<h1 id="劝退"><a href="#劝退" class="headerlink" title="劝退"></a>劝退</h1><p><a href="https://www.zhihu.com/question/20097631" target="_blank" rel="noopener">R大关于 <strong>Java JVM怎么学习啊？从哪方面入手？</strong>的回答</a></p>
+<p>这完全取决于题主是为什么要学习JVM，想学到多深。前面 <a href="//www.zhihu.com/people/05f661615136170935175f54719ff0a0">@曹旭东</a> 和 <a href="//www.zhihu.com/people/7a082a33732215bdd02df94467fe6b1f">@Scott</a> 说得很对。<br>如果感觉摸不清东南西北的话请试试从我在豆瓣上发的豆单开始吧：<a href="https://link.zhihu.com/?target=http%3A//book.douban.com/doulist/2545443/" target="_blank" rel="noopener">从表到里学习JVM实现</a><br>如果一上来就想通过阅读OpenJDK里的HotSpot VM的源码来入手学习JVM，那么我推荐先读读我之前写的一个演示稿：<a href="https://link.zhihu.com/?target=http%3A//rednaxelafx.iteye.com/blog/1426530" target="_blank" rel="noopener">为啥别读HotSpot VM的源码</a></p>
+<p>虽然说现在不看了，但是自己还是留在几个JVM解析相关博客：</p>
+<ol>
+<li><a href="https://www.jianshu.com/nb/12554212" target="_blank" rel="noopener">JVM源码分析</a></li>
+<li><a href="https://hunterzhao.io/categories/#" target="_blank" rel="noopener">JVM源码揭秘</a></li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>但行好事，莫问前程</p>
+<p>状态：感觉什么都懂一点，又感觉什么都不懂 —— 不够深入</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;原以为可以平结自己略懂的C++去看JVM源码，但是等到自己真正去打开源码，就算是对着博客看，也是十分吃力，还看了知乎R大对看JVM源码的看法。SO，我被自己和R大劝退了，可能目前的自己还不适合去看，希望自己以后&lt;strong&gt;有需要有梦想&lt;/strong&gt;再来看！
+    
+    </summary>
+    
+      <category term="JVM源码" scheme="http://bestlixiang.site/categories/JVM%E6%BA%90%E7%A0%81/"/>
+    
+    
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
+    
+  </entry>
   
   <entry>
     <title>JVM源码——Mac下编译JDK</title>
@@ -924,42 +956,6 @@
     
     
       <category term="ArrayList" scheme="http://bestlixiang.site/tags/ArrayList/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>RPC知识</title>
-    <link href="http://bestlixiang.site/2018/08/10/%E5%BE%AE%E6%9C%8D%E5%8A%A1/RPC%E7%9F%A5%E8%AF%86/"/>
-    <id>http://bestlixiang.site/2018/08/10/微服务/RPC知识/</id>
-    <published>2018-08-10T06:17:52.000Z</published>
-    <updated>2018-08-10T06:22:16.009Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：转自<a href="https://www.cnkirito.moe" target="_blank" rel="noopener">徐靖峰|个人博客</a>的<a href="https://www.cnkirito.moe/categories/RPC/" target="_blank" rel="noopener">RPC专栏</a>，了解这些才能去看看RPC框架！！！<a id="more"></a></p>
-<h1 id="RPC系列博客"><a href="#RPC系列博客" class="headerlink" title="RPC系列博客"></a>RPC系列博客</h1><ol>
-<li><a href="https://www.cnkirito.moe/easy-know-rpc/" target="_blank" rel="noopener">简单了解RPC实现原理</a></li>
-<li><a href="https://www.cnkirito.moe/rpc-serialize-1/" target="_blank" rel="noopener">深入理解RPC之序列化篇–Kryo</a></li>
-<li><a href="深入理解RPC之序列化篇--总结篇">深入理解RPC之序列化篇–总结篇</a></li>
-<li><a href="https://www.cnkirito.moe/rpc-dynamic-proxy/" target="_blank" rel="noopener">深入理解RPC之动态代理篇</a></li>
-<li><a href="https://www.cnkirito.moe/rpc-transport/" target="_blank" rel="noopener">深入理解 RPC 之传输篇</a></li>
-<li><a href="https://www.cnkirito.moe/motan-async/" target="_blank" rel="noopener">Motan中使用异步RPC接口</a></li>
-<li><a href="https://www.cnkirito.moe/rpc-protocol/" target="_blank" rel="noopener">深入理解RPC之协议篇</a></li>
-<li><a href="https://www.cnkirito.moe/rpc-registry/" target="_blank" rel="noopener">深入理解RPC之服务注册与发现篇</a></li>
-<li><a href="https://www.cnkirito.moe/rpc-cluster/" target="_blank" rel="noopener">深入理解 RPC 之集群篇</a></li>
-<li><a href="https://www.cnkirito.moe/rpc-interface-design/" target="_blank" rel="noopener">设计RPC接口时，你有考虑过这些吗？</a></li>
-</ol>
-<h1 id="简单RPC"><a href="#简单RPC" class="headerlink" title="简单RPC"></a>简单RPC</h1><p>可以参考<a href="https://github.com/todorex/rex_rpc" target="_blank" rel="noopener">todorex/rex_rpc</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：转自&lt;a href=&quot;https://www.cnkirito.moe&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;徐靖峰|个人博客&lt;/a&gt;的&lt;a href=&quot;https://www.cnkirito.moe/categories/RPC/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;RPC专栏&lt;/a&gt;，了解这些才能去看看RPC框架！！！
-    
-    </summary>
-    
-      <category term="微服务" scheme="http://bestlixiang.site/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
-    
-    
-      <category term="rpc" scheme="http://bestlixiang.site/tags/rpc/"/>
     
   </entry>
   
