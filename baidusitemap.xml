@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://bestlixiang.site/2019/06/09/RocketMQ%E6%BA%90%E7%A0%81/RocketMQ%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94Namesrv/</loc>
+    <lastmod>2019-06-09T10:19:31.294Z</lastmod>
+    <data>
+        <display>
+        <title>RocketMQ源码分析——Namesrv</title>
+        <pubTime>2019-06-09T10:17:12.000Z</pubTime>
+        
+        <tag>RocketMQ</tag>
+         
+         
+           
+             
+              <breadCrumb title="RocketMQ源码" url="http://bestlixiang.site/categories/RocketMQ%E6%BA%90%E7%A0%81/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://bestlixiang.site/2019/06/09/DDD/DDD%20Flag/</loc>
     <lastmod>2019-06-09T05:02:49.015Z</lastmod>
     <data>
@@ -1774,9 +1794,9 @@
         <title>“线性时间排序（未完，待续）”</title>
         <pubTime>2017-05-10T02:11:16.000Z</pubTime>
         
-        <tag>线性时间排序</tag>
-         
         <tag>算法导论</tag>
+         
+        <tag>线性时间排序</tag>
          
          
            
