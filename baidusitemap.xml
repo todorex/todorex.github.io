@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://bestlixiang.site/2019/06/09/DDD/DDD%20Flag/</loc>
+    <lastmod>2019-06-09T05:02:49.015Z</lastmod>
+    <data>
+        <display>
+        <title>DDD Flag</title>
+        <pubTime>2019-06-09T05:52:42.000Z</pubTime>
+        
+        <tag>DDD</tag>
+         
+         
+           
+             
+              <breadCrumb title="DDD" url="http://bestlixiang.site/categories/DDD/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://bestlixiang.site/2019/06/09/%E8%B5%9E/%E5%86%8D%E7%9C%8B%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/</loc>
     <lastmod>2019-06-09T03:23:59.594Z</lastmod>
     <data>
@@ -248,9 +268,9 @@
         <title>SpringBoot+Git+Jenkins+Docker实现CI/CD</title>
         <pubTime>2018-07-18T01:03:46.000Z</pubTime>
         
-        <tag>Git</tag>
-         
         <tag>SpringBoot</tag>
+         
+        <tag>Git</tag>
          
         <tag>Jenkins</tag>
          
@@ -1382,11 +1402,11 @@
         <title>HelloWorld_SSMLogin</title>
         <pubTime>2018-04-17T10:55:22.000Z</pubTime>
         
-        <tag>Mybatis</tag>
-         
         <tag>Spring</tag>
          
         <tag>SpringMVC</tag>
+         
+        <tag>Mybatis</tag>
          
          
            

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2019-06-09T03:23:59.594Z</updated>
+  <updated>2019-06-09T05:02:49.015Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>DDD Flag</title>
+    <link href="http://bestlixiang.site/2019/06/09/DDD/DDD%20Flag/"/>
+    <id>http://bestlixiang.site/2019/06/09/DDD/DDD Flag/</id>
+    <published>2019-06-09T05:52:42.000Z</published>
+    <updated>2019-06-09T05:02:49.015Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：上周看完了Eric Evans 的《领域驱动设计—软件核心复杂性应对之道》，影响比较深的就是是这样一句话——软件的核心是其为用户解决领域相关问题的能力。<a id="more"></a></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>看花是花，看花不是花，看花是花。这是一个过程。我想所有人在学习一个东西都是这样一个过程。在忙于CRUD的过程中，我最初看待业务只是觉得他就是一个自然的业务逻辑，照着写就完事了，这处于第一步；当看完《领域驱动设计—软件核心复杂性应对之道》之后，发现在进行业务编码的时候我们更应该往领域上靠近，最好能形成一套领域模式，但是原来的业务逻辑已经不是简单的业务逻辑了，这是第二步，而我好像就处于这一步；但是我相信以后能熟练的使用领域驱动设计的时候，那时候业务又是业务了，达到第三步。Flag here！</p>
+<h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><ol>
+<li><a href="https://tech.meituan.com/2017/12/22/ddd-in-practice.html" target="_blank" rel="noopener">领域驱动设计在互联网业务开发中的实践</a></li>
+<li><a href="http://www.sohu.com/a/191769788_748431" target="_blank" rel="noopener">交易系统 - 领域驱动设计浅析 </a></li>
+</ol>
+<p>第二个是自己目前的重点，希望接下来能好好理解并且实践！！！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：上周看完了Eric Evans 的《领域驱动设计—软件核心复杂性应对之道》，影响比较深的就是是这样一句话——软件的核心是其为用户解决领域相关问题的能力。
+    
+    </summary>
+    
+      <category term="DDD" scheme="http://bestlixiang.site/categories/DDD/"/>
+    
+    
+      <category term="DDD" scheme="http://bestlixiang.site/tags/DDD/"/>
+    
+  </entry>
   
   <entry>
     <title>再看单元测试</title>
@@ -960,41 +989,6 @@
     
     
       <category term="HashMap" scheme="http://bestlixiang.site/tags/HashMap/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JDK源码分析——HashSet</title>
-    <link href="http://bestlixiang.site/2018/09/06/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94HashSet/"/>
-    <id>http://bestlixiang.site/2018/09/06/JDK源码分析/JDK源码分析——HashSet/</id>
-    <published>2018-09-06T00:04:49.000Z</published>
-    <updated>2018-09-06T00:24:30.281Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：如果用来有个去重的需求，你肯定会想到用HashSet，那我们看看它的实现！<a id="more"></a></p>
-<p>详细注释：<a href="https://github.com/todorex/JDK" target="_blank" rel="noopener">源码分析地址</a></p>
-<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>它是由哈希表（实际上是一个<strong>HashMap</strong>实例）支持，是不是有点意思？它不保证set的迭代顺序，有且只允许一个null元素，当然其他元素不能重复。</p>
-<p>它不是同步容器。如果多个线程同时访问一个哈希set，而其中至少一个线程修改了该 set，那么它必须保持外部同步。这通常是通过对自然封装该set的对象执行同步操作来完成的。如果不存在这样的对象，则应该使用 Collections.synchronizedSet 方法来“包装” set。最好在创建时完成这一操作，以防止对该set进行意外的不同步访问。</p>
-<p>所有这个类的方法返回的迭代器都是快速失败的 ：如果映射在迭代器创建之后的任何时间被结构地修改，除了通过迭代器自己的remove方法之外，迭代器将抛出一个ConcurrentModificationException。（老生长谈）</p>
-<h1 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h1><p>关于HashSet的操作(下面都是)，基本上都是直接调用底层HashMap的相关方法来完成。所以在后面参考找到自己关于HashMap的文章。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 真的操作的执行者</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> HashMap&lt;E,Object&gt; map;</span><br><span class="line"><span class="comment">// 定义一个"虚拟"的Object对象作为HashMap的value</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object PRESENT = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 构造HashMap</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashSet</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</span><br><span class="line">    map = <span class="keyword">new</span> HashMap&lt;&gt;(initialCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="增"><a href="#增" class="headerlink" title="增"></a>增</h1><p>在HashMap新增一个键值对<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT)==<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="删"><a href="#删" class="headerlink" title="删"></a>删</h1><p>在HashMap删除一个键值对<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.remove(o)==PRESENT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="查"><a href="#查" class="headerlink" title="查"></a>查</h1><p>在HashMap查找key是否存在<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.containsKey(o);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>水文一篇，只要记住一点，就是只要理解了HashMap，HashSet is so easy！！</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="http://todorex.com/2018/09/03/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94HashMap/" target="_blank" rel="noopener">JDK源码分析——HashMap</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：如果用来有个去重的需求，你肯定会想到用HashSet，那我们看看它的实现！
-    
-    </summary>
-    
-      <category term="JDK源码分析" scheme="http://bestlixiang.site/categories/JDK%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    
-    
-      <category term="HashSet" scheme="http://bestlixiang.site/tags/HashSet/"/>
     
   </entry>
   
