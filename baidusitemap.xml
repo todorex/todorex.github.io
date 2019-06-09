@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://bestlixiang.site/2019/06/09/%E8%B5%9E/%E5%86%8D%E7%9C%8B%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/</loc>
+    <lastmod>2019-06-09T03:23:59.594Z</lastmod>
+    <data>
+        <display>
+        <title>再看单元测试</title>
+        <pubTime>2019-06-09T03:18:46.000Z</pubTime>
+        
+        <tag>单元测试</tag>
+         
+         
+           
+             
+              <breadCrumb title="赞" url="http://bestlixiang.site/categories/%E8%B5%9E/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://bestlixiang.site/2019/06/08/RocketMQ%E6%BA%90%E7%A0%81/RocketMQ%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2019-06-08T07:38:45.257Z</lastmod>
     <data>
@@ -228,9 +248,9 @@
         <title>SpringBoot+Git+Jenkins+Docker实现CI/CD</title>
         <pubTime>2018-07-18T01:03:46.000Z</pubTime>
         
-        <tag>SpringBoot</tag>
-         
         <tag>Git</tag>
+         
+        <tag>SpringBoot</tag>
          
         <tag>Jenkins</tag>
          
@@ -650,9 +670,9 @@
         <title>动态规划</title>
         <pubTime>2017-05-17T11:52:35.000Z</pubTime>
         
-        <tag>算法导论</tag>
-         
         <tag>java</tag>
+         
+        <tag>算法导论</tag>
          
          
            
@@ -1316,9 +1336,9 @@
         <title>Git使用整理</title>
         <pubTime>2018-07-05T11:29:14.000Z</pubTime>
         
-        <tag>Git</tag>
-         
         <tag>IDEA</tag>
+         
+        <tag>Git</tag>
          
          
            
@@ -1362,11 +1382,11 @@
         <title>HelloWorld_SSMLogin</title>
         <pubTime>2018-04-17T10:55:22.000Z</pubTime>
         
+        <tag>Mybatis</tag>
+         
         <tag>Spring</tag>
          
         <tag>SpringMVC</tag>
-         
-        <tag>Mybatis</tag>
          
          
            
@@ -1712,9 +1732,9 @@
         <title>贪心算法</title>
         <pubTime>2017-05-17T14:41:13.000Z</pubTime>
         
-        <tag>算法导论</tag>
-         
         <tag>java</tag>
+         
+        <tag>算法导论</tag>
          
          
            
@@ -1734,9 +1754,9 @@
         <title>“线性时间排序（未完，待续）”</title>
         <pubTime>2017-05-10T02:11:16.000Z</pubTime>
         
-        <tag>算法导论</tag>
-         
         <tag>线性时间排序</tag>
+         
+        <tag>算法导论</tag>
          
          
            

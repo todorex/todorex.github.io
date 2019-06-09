@@ -91,7 +91,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="rex note">
-<meta property="og:url" content="http://bestlixiang.site/tags/SpringBoot/index.html">
+<meta property="og:url" content="http://bestlixiang.site/tags/Springboot/index.html">
 <meta property="og:site_name" content="rex note">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
@@ -123,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://bestlixiang.site/tags/SpringBoot/">
+  <link rel="canonical" href="http://bestlixiang.site/tags/Springboot/">
 
 
 
 
 
-  <title> 标签: SpringBoot | rex note </title>
+  <title> 标签: Springboot | rex note </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -273,7 +273,7 @@
   <div id="posts" class="posts-collapse">
     <div class="collection-title">
       <h2>
-        SpringBoot
+        Springboot
         <small>标签</small>
       </h2>
     </div>
@@ -286,69 +286,17 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2018/07/18/运维/SpringBoot-Git-Jenkins-Docker实现CI-CD/" itemprop="url">
+            <a class="post-title-link" href="/2017/07/15/编程/浅尝Apache-Camel/" itemprop="url">
               
-                <span itemprop="name">SpringBoot+Git+Jenkins+Docker实现CI/CD</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-07-18T09:03:46+08:00" content="2018-07-18">
-          07-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/04/25/HelloWorld/HelloWorld-SpringBoot-Angular/" itemprop="url">
-              
-                <span itemprop="name">HelloWorld_SpringBoot Angular</span>
+                <span itemprop="name">浅尝Apache Camel</span>
               
             </a>
         
       </h2>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-04-25T19:31:14+08:00" content="2018-04-25">
-          04-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/04/21/深入SSM/揭秘SpringBoot-一-SpringBoot运行原理/" itemprop="url">
-              
-                <span itemprop="name">揭秘SpringBoot(一)_SpringBoot运行原理</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-04-21T13:11:48+08:00" content="2018-04-21">
-          04-21
+        <time class="post-time" itemprop="dateCreated" datetime="2017-07-15T09:38:42+08:00" content="2017-07-15">
+          07-15
         </time>
       </div>
 
@@ -400,7 +348,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">149</span>
+                <span class="site-state-item-count">150</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -411,7 +359,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -422,7 +370,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">77</span>
+                <span class="site-state-item-count">78</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -773,6 +721,88 @@
             str += "</ul>";
             if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
             if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+ fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+"><i class="fa fa-search fa-5x" /></div>' }
             $resultContent.innerHTML = str;
           });
           proceedsearch();
