@@ -1,0 +1,983 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="RocketMQ,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="引：前面我们说过了Producer和Consumer是如何发送消息的，当我们了解完Broker的消息存储之后，我们就可以看看Broker是如何接收发来的消息啦~">
+<meta name="keywords" content="RocketMQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RocketMQ源码分析——Broker接收发送消息">
+<meta property="og:url" content="http://bestlixiang.site/2019/06/26/RocketMQ源码/RocketMQ源码分析——Broke接收发送消息/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：前面我们说过了Producer和Consumer是如何发送消息的，当我们了解完Broker的消息存储之后，我们就可以看看Broker是如何接收发来的消息啦~">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/10354196-8900cd8452e3e0a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-06-25T23:59:31.271Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RocketMQ源码分析——Broker接收发送消息">
+<meta name="twitter:description" content="引：前面我们说过了Producer和Consumer是如何发送消息的，当我们了解完Broker的消息存储之后，我们就可以看看Broker是如何接收发来的消息啦~">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/10354196-8900cd8452e3e0a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2019/06/26/RocketMQ源码/RocketMQ源码分析——Broke接收发送消息/">
+
+
+
+
+
+  <title> RocketMQ源码分析——Broker接收发送消息 | rex note </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2019/06/26/RocketMQ源码/RocketMQ源码分析——Broke接收发送消息/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                RocketMQ源码分析——Broker接收发送消息
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-26T07:30:53+08:00">
+                2019-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/RocketMQ源码/" itemprop="url" rel="index">
+                    <span itemprop="name">RocketMQ源码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：前面我们说过了Producer和Consumer是如何发送消息的，当我们了解完Broker的消息存储之后，我们就可以看看Broker是如何接收发来的消息啦~<a id="more"></a></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在分析完Producer和Consumer之后，我们知道无论是消费者还是生产者来说，Broker都是接受消息的一方，同时我们知道RocketMQ是通过Netty实现通信的，对应接收消息，我们很容易就会想到一定是一个ChannelHandler在处理，而在RocketMQ的设计中对应是<code>NettyRequestProcessor</code>，所以我们就可以分析一下接收消息的几种类型啦，有几种消息类型，就有几种Processor，如下图：<br><img src="https://upload-images.jianshu.io/upload_images/10354196-8900cd8452e3e0a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="broker-processor.png"></p>
+<p>我们看到有很多种消息类型，我们这次只分析<code>SendMessage</code>。</p>
+<h1 id="SendMessage"><a href="#SendMessage" class="headerlink" title="SendMessage"></a>SendMessage</h1><p>对于SendMessage有下面这几种可能：单条消息、批量消息、RETRY消息。Retry消息即consumer消费失败，要求broker重发的消息。失败的原因有两种，一种是业务端代码处理失败；还有一种是消息在consumer的缓存队列中待的时间超时，consumer会将消息从队列中移除，然后退回给Broker重发。</p>
+<h1 id="SendMessageProcessor"><a href="#SendMessageProcessor" class="headerlink" title="SendMessageProcessor"></a>SendMessageProcessor</h1><p>我们肯定会找到<code>org.apache.rocketmq.broker.processor.SendMessageProcessor#processRequest()</code>这个方法，因为它实现自<code>NettyRequestProcessor</code>接口的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> RemotingCommand <span class="title">processRequest</span><span class="params">(ChannelHandlerContext ctx,</span></span></span><br><span class="line"><span class="function"><span class="params">                                      RemotingCommand request)</span> <span class="keyword">throws</span> RemotingCommandException </span>&#123;</span><br><span class="line">    SendMessageContext mqtraceContext;</span><br><span class="line">    <span class="keyword">switch</span> (request.getCode()) &#123;</span><br><span class="line">        <span class="keyword">case</span> RequestCode.CONSUMER_SEND_MSG_BACK:</span><br><span class="line">            <span class="comment">// RETRY消息</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.consumerSendMsgBack(ctx, request);</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            SendMessageRequestHeader requestHeader = parseRequestHeader(request);</span><br><span class="line">            <span class="keyword">if</span> (requestHeader == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            mqtraceContext = buildMsgContext(ctx, requestHeader);</span><br><span class="line">            <span class="keyword">this</span>.executeSendMessageHookBefore(ctx, request, mqtraceContext);</span><br><span class="line"></span><br><span class="line">            RemotingCommand response;</span><br><span class="line">            <span class="keyword">if</span> (requestHeader.isBatch()) &#123;</span><br><span class="line">                <span class="comment">// 批量发送</span></span><br><span class="line">                response = <span class="keyword">this</span>.sendBatchMessage(ctx, request, mqtraceContext, requestHeader);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 单条消息</span></span><br><span class="line">                response = <span class="keyword">this</span>.sendMessage(ctx, request, mqtraceContext, requestHeader);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">this</span>.executeSendMessageHookAfter(response, mqtraceContext);</span><br><span class="line">            <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Consumer的RETRY消息"><a href="#Consumer的RETRY消息" class="headerlink" title="Consumer的RETRY消息"></a>Consumer的RETRY消息</h1><p>对于Consumer的RETRY消息，我们可以找到<code>org.apache.rocketmq.broker.processor.SendMessageProcessor#consumerSendMsgBack()</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> RemotingCommand <span class="title">consumerSendMsgBack</span><span class="params">(<span class="keyword">final</span> ChannelHandlerContext ctx, <span class="keyword">final</span> RemotingCommand request)</span></span></span><br><span class="line"><span class="function">       <span class="keyword">throws</span> RemotingCommandException </span>&#123;</span><br><span class="line">       <span class="keyword">final</span> RemotingCommand response = RemotingCommand.createResponseCommand(<span class="keyword">null</span>);</span><br><span class="line">       <span class="keyword">final</span> ConsumerSendMsgBackRequestHeader requestHeader =</span><br><span class="line">           (ConsumerSendMsgBackRequestHeader)request.decodeCommandCustomHeader(ConsumerSendMsgBackRequestHeader.class);</span><br><span class="line"></span><br><span class="line"> 			<span class="comment">// ...</span></span><br><span class="line">			<span class="comment">// consumer group是否存在</span></span><br><span class="line">       SubscriptionGroupConfig subscriptionGroupConfig =</span><br><span class="line">           <span class="keyword">this</span>.brokerController.getSubscriptionGroupManager().findSubscriptionGroupConfig(requestHeader.getGroup());</span><br><span class="line">       <span class="keyword">if</span> (<span class="keyword">null</span> == subscriptionGroupConfig) &#123;</span><br><span class="line">           response.setCode(ResponseCode.SUBSCRIPTION_GROUP_NOT_EXIST);</span><br><span class="line">           response.setRemark(<span class="string">"subscription group not exist, "</span> + requestHeader.getGroup() + <span class="string">" "</span></span><br><span class="line">               + FAQUrl.suggestTodo(FAQUrl.SUBSCRIPTION_GROUP_NOT_EXIST));</span><br><span class="line">           <span class="keyword">return</span> response;</span><br><span class="line">       &#125;</span><br><span class="line">			<span class="comment">// ... </span></span><br><span class="line">       <span class="comment">// 获得重试队列Topic和queue</span></span><br><span class="line">       String newTopic = MixAll.getRetryTopic(requestHeader.getGroup());</span><br><span class="line">       <span class="keyword">int</span> queueIdInt = Math.abs(<span class="keyword">this</span>.random.nextInt() % <span class="number">99999999</span>) % subscriptionGroupConfig.getRetryQueueNums();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">int</span> topicSysFlag = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">if</span> (requestHeader.isUnitMode()) &#123;</span><br><span class="line">           topicSysFlag = TopicSysFlag.buildSysFlag(<span class="keyword">false</span>, <span class="keyword">true</span>);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       TopicConfig topicConfig = <span class="keyword">this</span>.brokerController.getTopicConfigManager().createTopicInSendMessageBackMethod(</span><br><span class="line">           newTopic,</span><br><span class="line">           subscriptionGroupConfig.getRetryQueueNums(),</span><br><span class="line">     	<span class="comment">// ...</span></span><br><span class="line">			<span class="comment">// 根据offset找到MessageExt</span></span><br><span class="line">       MessageExt msgExt = <span class="keyword">this</span>.brokerController.getMessageStore().lookMessageByOffset(requestHeader.getOffset());</span><br><span class="line">       <span class="keyword">if</span> (<span class="keyword">null</span> == msgExt) &#123;</span><br><span class="line">           response.setCode(ResponseCode.SYSTEM_ERROR);</span><br><span class="line">           response.setRemark(<span class="string">"look message by offset failed, "</span> + requestHeader.getOffset());</span><br><span class="line">           <span class="keyword">return</span> response;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">final</span> String retryTopic = msgExt.getProperty(MessageConst.PROPERTY_RETRY_TOPIC);</span><br><span class="line">       <span class="keyword">if</span> (<span class="keyword">null</span> == retryTopic) &#123;</span><br><span class="line">           MessageAccessor.putProperty(msgExt, MessageConst.PROPERTY_RETRY_TOPIC, msgExt.getTopic());</span><br><span class="line">       &#125;</span><br><span class="line">       msgExt.setWaitStoreMsgOK(<span class="keyword">false</span>);</span><br><span class="line">			<span class="comment">// 查看延迟等级</span></span><br><span class="line">       <span class="comment">//  messageDelayLevel = "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h"</span></span><br><span class="line">       <span class="keyword">int</span> delayLevel = requestHeader.getDelayLevel();</span><br><span class="line">			<span class="comment">// 最大重复次数16次</span></span><br><span class="line">       <span class="keyword">int</span> maxReconsumeTimes = subscriptionGroupConfig.getRetryMaxTimes();</span><br><span class="line">       <span class="keyword">if</span> (request.getVersion() &gt;= MQVersion.Version.V3_4_9.ordinal()) &#123;</span><br><span class="line">           maxReconsumeTimes = requestHeader.getMaxReconsumeTimes();</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 如果大于重试次数，则放入DLQ死信队列</span></span><br><span class="line">       <span class="keyword">if</span> (msgExt.getReconsumeTimes() &gt;= maxReconsumeTimes</span><br><span class="line">           || delayLevel &lt; <span class="number">0</span>) &#123;</span><br><span class="line">         	<span class="comment">// 将topic和queueid设置为死信队列的</span></span><br><span class="line">           newTopic = MixAll.getDLQTopic(requestHeader.getGroup());</span><br><span class="line">           queueIdInt = Math.abs(<span class="keyword">this</span>.random.nextInt() % <span class="number">99999999</span>) % DLQ_NUMS_PER_GROUP;</span><br><span class="line"></span><br><span class="line">           topicConfig = <span class="keyword">this</span>.brokerController.getTopicConfigManager().createTopicInSendMessageBackMethod(newTopic,</span><br><span class="line">               DLQ_NUMS_PER_GROUP,</span><br><span class="line">               PermName.PERM_WRITE, <span class="number">0</span></span><br><span class="line">           );</span><br><span class="line">           <span class="keyword">if</span> (<span class="keyword">null</span> == topicConfig) &#123;</span><br><span class="line">               response.setCode(ResponseCode.SYSTEM_ERROR);</span><br><span class="line">               response.setRemark(<span class="string">"topic["</span> + newTopic + <span class="string">"] not exist"</span>);</span><br><span class="line">               <span class="keyword">return</span> response;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">     			<span class="comment">// 加三个等级的延迟</span></span><br><span class="line">           <span class="keyword">if</span> (<span class="number">0</span> == delayLevel) &#123;</span><br><span class="line">               delayLevel = <span class="number">3</span> + msgExt.getReconsumeTimes();</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           msgExt.setDelayTimeLevel(delayLevel);</span><br><span class="line">       &#125;</span><br><span class="line">			<span class="comment">// 将msgExt转化为MessageExtBrokerInner</span></span><br><span class="line">       MessageExtBrokerInner msgInner = <span class="keyword">new</span> MessageExtBrokerInner();</span><br><span class="line">       msgInner.setTopic(newTopic);</span><br><span class="line">       msgInner.setBody(msgExt.getBody());</span><br><span class="line">       msgInner.setFlag(msgExt.getFlag());</span><br><span class="line">       MessageAccessor.setProperties(msgInner, msgExt.getProperties());</span><br><span class="line">       msgInner.setPropertiesString(MessageDecoder.messageProperties2String(msgExt.getProperties()));</span><br><span class="line">       msgInner.setTagsCode(MessageExtBrokerInner.tagsString2tagsCode(<span class="keyword">null</span>, msgExt.getTags()));</span><br><span class="line"></span><br><span class="line">       msgInner.setQueueId(queueIdInt);</span><br><span class="line">       msgInner.setSysFlag(msgExt.getSysFlag());</span><br><span class="line">       msgInner.setBornTimestamp(msgExt.getBornTimestamp());</span><br><span class="line">       msgInner.setBornHost(msgExt.getBornHost());</span><br><span class="line">       msgInner.setStoreHost(<span class="keyword">this</span>.getStoreHost());</span><br><span class="line">       msgInner.setReconsumeTimes(msgExt.getReconsumeTimes() + <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">       String originMsgId = MessageAccessor.getOriginMessageId(msgExt);</span><br><span class="line">       MessageAccessor.setOriginMessageId(msgInner, UtilAll.isBlank(originMsgId) ? msgExt.getMsgId() : originMsgId);</span><br><span class="line">       <span class="comment">// 存储消息</span></span><br><span class="line">       PutMessageResult putMessageResult = <span class="keyword">this</span>.brokerController.getMessageStore().putMessage(msgInner);</span><br><span class="line">       <span class="keyword">if</span> (putMessageResult != <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="keyword">switch</span> (putMessageResult.getPutMessageStatus()) &#123;</span><br><span class="line">               <span class="keyword">case</span> PUT_OK:</span><br><span class="line">                   String backTopic = msgExt.getTopic();</span><br><span class="line">                   String correctTopic = msgExt.getProperty(MessageConst.PROPERTY_RETRY_TOPIC);</span><br><span class="line">                   <span class="keyword">if</span> (correctTopic != <span class="keyword">null</span>) &#123;</span><br><span class="line">                       backTopic = correctTopic;</span><br><span class="line">                   &#125;</span><br><span class="line"></span><br><span class="line">                   <span class="keyword">this</span>.brokerController.getBrokerStatsManager().incSendBackNums(requestHeader.getGroup(), backTopic);</span><br><span class="line"></span><br><span class="line">                   response.setCode(ResponseCode.SUCCESS);</span><br><span class="line">                   response.setRemark(<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">                   <span class="keyword">return</span> response;</span><br><span class="line">               <span class="keyword">default</span>:</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           response.setCode(ResponseCode.SYSTEM_ERROR);</span><br><span class="line">           response.setRemark(putMessageResult.getPutMessageStatus().name());</span><br><span class="line">           <span class="keyword">return</span> response;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       response.setCode(ResponseCode.SYSTEM_ERROR);</span><br><span class="line">       response.setRemark(<span class="string">"putMessageResult is null"</span>);</span><br><span class="line">       <span class="keyword">return</span> response;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Producer的单条消息"><a href="#Producer的单条消息" class="headerlink" title="Producer的单条消息"></a>Producer的单条消息</h1><p>对于Producer的单条消息，我们可以找到<code>org.apache.rocketmq.broker.processor.SendMessageProcessor#sendMessage()</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> RemotingCommand <span class="title">sendMessage</span><span class="params">(<span class="keyword">final</span> ChannelHandlerContext ctx,</span></span></span><br><span class="line"><span class="function"><span class="params">                                    <span class="keyword">final</span> RemotingCommand request,</span></span></span><br><span class="line"><span class="function"><span class="params">                                    <span class="keyword">final</span> SendMessageContext sendMessageContext,</span></span></span><br><span class="line"><span class="function"><span class="params">                                    <span class="keyword">final</span> SendMessageRequestHeader requestHeader)</span> <span class="keyword">throws</span> RemotingCommandException </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> RemotingCommand response = RemotingCommand.createResponseCommand(SendMessageResponseHeader.class);</span><br><span class="line">    <span class="keyword">final</span> SendMessageResponseHeader responseHeader = (SendMessageResponseHeader)response.readCustomHeader();</span><br><span class="line"></span><br><span class="line">    response.setOpaque(request.getOpaque());</span><br><span class="line"></span><br><span class="line">    response.addExtField(MessageConst.PROPERTY_MSG_REGION, <span class="keyword">this</span>.brokerController.getBrokerConfig().getRegionId());</span><br><span class="line">    response.addExtField(MessageConst.PROPERTY_TRACE_SWITCH, String.valueOf(<span class="keyword">this</span>.brokerController.getBrokerConfig().isTraceOn()));</span><br><span class="line"></span><br><span class="line">    log.debug(<span class="string">"receive SendMessage request command, &#123;&#125;"</span>, request);</span><br><span class="line">    <span class="comment">// 判断当前时间broker是否提供服务，不提供则返回code为SYSTEM_ERROR的response</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">long</span> startTimstamp = <span class="keyword">this</span>.brokerController.getBrokerConfig().getStartAcceptSendRequestTimeStamp();</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.brokerController.getMessageStore().now() &lt; startTimstamp) &#123;</span><br><span class="line">        response.setCode(ResponseCode.SYSTEM_ERROR);</span><br><span class="line">        response.setRemark(String.format(<span class="string">"broker unable to service, until %s"</span>, UtilAll.timeMillisToHumanString2(startTimstamp)));</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    response.setCode(-<span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 检查topic和queue，如果不存在且broker设置中允许自动创建，则自动创建</span></span><br><span class="line">    <span class="keyword">super</span>.msgCheck(ctx, requestHeader, response);</span><br><span class="line">    <span class="keyword">if</span> (response.getCode() != -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">byte</span>[] body = request.getBody();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> queueIdInt = requestHeader.getQueueId();</span><br><span class="line">    <span class="comment">// 获取topic的配置</span></span><br><span class="line">    TopicConfig topicConfig = <span class="keyword">this</span>.brokerController.getTopicConfigManager().selectTopicConfig(requestHeader.getTopic());</span><br><span class="line">    <span class="comment">// 如果消息中的queueId小于0，则随机选取一个queue</span></span><br><span class="line">    <span class="keyword">if</span> (queueIdInt &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        queueIdInt = Math.abs(<span class="keyword">this</span>.random.nextInt() % <span class="number">99999999</span>) % topicConfig.getWriteQueueNums();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 重新封装request中的message成MessageExtBrokerInner</span></span><br><span class="line">    MessageExtBrokerInner msgInner = <span class="keyword">new</span> MessageExtBrokerInner();</span><br><span class="line">    msgInner.setTopic(requestHeader.getTopic());</span><br><span class="line">    msgInner.setQueueId(queueIdInt);</span><br><span class="line">    <span class="comment">// 对于RETRY消息的一些处理</span></span><br><span class="line">    <span class="keyword">if</span> (!handleRetryAndDLQ(requestHeader, response, request, msgInner, topicConfig)) &#123;</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 转化消息为MessageExtBrokerInner</span></span><br><span class="line">    msgInner.setBody(body);</span><br><span class="line">    msgInner.setFlag(requestHeader.getFlag());</span><br><span class="line">    MessageAccessor.setProperties(msgInner, MessageDecoder.string2messageProperties(requestHeader.getProperties()));</span><br><span class="line">    msgInner.setPropertiesString(requestHeader.getProperties());</span><br><span class="line">    msgInner.setBornTimestamp(requestHeader.getBornTimestamp());</span><br><span class="line">    msgInner.setBornHost(ctx.channel().remoteAddress());</span><br><span class="line">    msgInner.setStoreHost(<span class="keyword">this</span>.getStoreHost());</span><br><span class="line">    msgInner.setReconsumeTimes(requestHeader.getReconsumeTimes() == <span class="keyword">null</span> ? <span class="number">0</span> : requestHeader.getReconsumeTimes());</span><br><span class="line">    PutMessageResult putMessageResult = <span class="keyword">null</span>;</span><br><span class="line">    Map&lt;String, String&gt; oriProps = MessageDecoder.string2messageProperties(requestHeader.getProperties());</span><br><span class="line">    String traFlag = oriProps.get(MessageConst.PROPERTY_TRANSACTION_PREPARED);</span><br><span class="line">    <span class="keyword">if</span> (traFlag != <span class="keyword">null</span> &amp;&amp; Boolean.parseBoolean(traFlag)) &#123;</span><br><span class="line">        <span class="comment">// 是否拒绝事务消息</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.brokerController.getBrokerConfig().isRejectTransactionMessage()) &#123;</span><br><span class="line">            response.setCode(ResponseCode.NO_PERMISSION);</span><br><span class="line">            response.setRemark(</span><br><span class="line">                <span class="string">"the broker["</span> + <span class="keyword">this</span>.brokerController.getBrokerConfig().getBrokerIP1()</span><br><span class="line">                    + <span class="string">"] sending transaction message is forbidden"</span>);</span><br><span class="line">            <span class="keyword">return</span> response;</span><br><span class="line">        &#125;</span><br><span class="line">        putMessageResult = <span class="keyword">this</span>.brokerController.getTransactionalMessageService().prepareMessage(msgInner);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 调用MessageStore接口存储消息，这里就到我们之前分析的消息存储哪里了</span></span><br><span class="line">        putMessageResult = <span class="keyword">this</span>.brokerController.getMessageStore().putMessage(msgInner);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 根据存储结果设置repsonse状态，更新broker统计信息，成功则回复producer，更新context上下文</span></span><br><span class="line">    <span class="keyword">return</span> handlePutMessageResult(putMessageResult, response, request, msgInner, responseHeader, sendMessageContext, ctx, queueIdInt);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>其实我有个问题就是对于Producer的单条信息，为了要判断重试次数？？ 问题先放在这，等以后知道了，再来回答！！</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><p><a href="https://www.jianshu.com/p/0b4b1147366f" target="_blank" rel="noopener">RocketMQ源码解析(八)-Broker#消息发送</a></p>
+</li>
+<li><p><a href="https://www.jianshu.com/p/925a628f3f80" target="_blank" rel="noopener">RocketMQ消费失败消息深入分析（consumer,broker的具体处理逻辑）</a></p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RocketMQ/" rel="tag"># RocketMQ</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/22/RocketMQ源码/RocketMQ源码分析——Broker消息存储/" rel="next" title="RocketMQ源码分析——Broker消息存储">
+                <i class="fa fa-chevron-left"></i> RocketMQ源码分析——Broker消息存储
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">158</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SendMessage"><span class="nav-number">2.</span> <span class="nav-text">SendMessage</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SendMessageProcessor"><span class="nav-number">3.</span> <span class="nav-text">SendMessageProcessor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Consumer的RETRY消息"><span class="nav-number">4.</span> <span class="nav-text">Consumer的RETRY消息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Producer的单条消息"><span class="nav-number">5.</span> <span class="nav-text">Producer的单条消息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题"><span class="nav-number">6.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
