@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2019-06-28T23:44:58.315Z</updated>
+  <updated>2019-06-29T15:19:51.204Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,36 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据库调优</title>
+    <link href="http://bestlixiang.site/2019/06/29/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%B0%83%E4%BC%98/"/>
+    <id>http://bestlixiang.site/2019/06/29/数据库/数据库调优/</id>
+    <published>2019-06-29T15:18:04.000Z</published>
+    <updated>2019-06-29T15:19:51.204Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：我恨自己当有问题出现时，没有立刻去把握它！今天看了很多关于Mysql索引优化器的东西，但是没有拿到结果！留下一些链接，希望下次出现索引优化的问题或者慢查询的问题，自己能好好分析一波！<a id="more"></a></p>
+<h1 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h1><ol>
+<li><a href="https://dev.mysql.com/doc/internals/en/optimizer-tracing-typical-usage.html" target="_blank" rel="noopener">mysql手册</a></li>
+<li><a href="[https://iluoy.com/articles/203#TRACE%E5%88%86%E6%9E%908](https://iluoy.com/articles/203#TRACE分析8">mysql之通过trace分析优化器如何选择执行计划</a>)</li>
+<li><a href="https://www.kancloud.cn/taobaomysql/monthly/81380" target="_blank" rel="noopener">MySQL · 答疑解惑 · MySQL 优化器 range 的代价计算</a></li>
+<li><a href="https://blog.csdn.net/angry_mills/article/details/87720396" target="_blank" rel="noopener">[官方] mysql 性能优化文档（中英文自译）</a></li>
+<li><a href="https://blog.csdn.net/why15732625998/article/details/80388236" target="_blank" rel="noopener"> EXPLAIN用法和结果分析</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：我恨自己当有问题出现时，没有立刻去把握它！今天看了很多关于Mysql索引优化器的东西，但是没有拿到结果！留下一些链接，希望下次出现索引优化的问题或者慢查询的问题，自己能好好分析一波！
+    
+    </summary>
+    
+      <category term="数据库" scheme="http://bestlixiang.site/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="数据库" scheme="http://bestlixiang.site/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+  </entry>
   
   <entry>
     <title>RocketMQ源码分析——接收拉消息</title>
@@ -1079,65 +1109,6 @@
     
     
       <category term="Paxos" scheme="http://bestlixiang.site/tags/Paxos/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>分布式系统基础</title>
-    <link href="http://bestlixiang.site/2018/12/26/%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80/"/>
-    <id>http://bestlixiang.site/2018/12/26/分布式/分布式系统基础/</id>
-    <published>2018-12-26T02:25:37.000Z</published>
-    <updated>2018-12-26T06:08:14.367Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：自己这一段时间都在学习分布式系统相关的东西，但是都不成系统，所以这里将会总结目前学习的分布式系统相关内容，这里讲会总结分布式系统的相关概念，持续更新…。<a id="more"></a></p>
-<h1 id="CAP理论"><a href="#CAP理论" class="headerlink" title="CAP理论"></a>CAP理论</h1><p>2000年7月，加州大学伯克利分校的Eric Brewer教授在ACM PODC会议上提出CAP猜想。2年后，麻省理工学院的Seth Gilbert和Nancy Lynch从理论上证明了CAP。之后，CAP理论正式成为分布式计算领域的公认定理。</p>
-<p>CAP理论为：一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。</p>
-<p>下面举个例子：</p>
-<p>假设有两台机器A、B，两者之间互相同步保持数据的一致性。现在B由于网络原因不能与A通信(Network Partition)，假设某个client向A写入数据，现在有两种选择：</p>
-<ul>
-<li>A拒绝写入，这样能保证与B的一致性，但是牺牲了可用性</li>
-<li>A允许写入，但是这样就不能保证与B的一致性了</li>
-</ul>
-<p>Network Partition是必然的，网络非常可能出现问题（断线、超时），因此CAP理论一般只能AP或CP，而CA一般较难实现。</p>
-<ul>
-<li>CP: 要实现一致性，则需要一定的一致性算法，一般是基于多数派表决的，如Paxos和Raft</li>
-<li>AP: 要实现可用性，则要有一定的策略决议到底用哪个数据，并且数据一般要进行冗余备份(replication)</li>
-</ul>
-<p>当然，在上面的例子中，A可以先允许写入，等B的网络恢复以后再同步至B（根据CAP原理这样不能保证强一致性了，但是可以考虑实现<strong>最终一致性</strong>）。</p>
-<p>下图刚好展示了CA,CP,AP系统是如何实现的：</p>
-<p><img src="http://book.mixu.net/distsys/images/CAP.png" alt="CAP"></p>
-<ul>
-<li>利用2PC协议属于CA，如，mysql等，他们主要通过复制的方式来保证数据的安全性。</li>
-<li>利用Gossip协议属于AP，如，redis-cluster、cassandra，Eureka他们是通过实现“最终一致性”来保证AP。</li>
-<li>利用Paxos协议属于CP，如redis（多master），hbase，这些数据库集群，节点有可能会因为无法确保数据的一致性而拒绝提供服务。</li>
-</ul>
-<h1 id="BASE理论"><a href="#BASE理论" class="headerlink" title="BASE理论"></a>BASE理论</h1><p>BASE理论是由eBay的架构师Dan Pritchett源于对大规模分布式系统的实践总结，在ACM上发表文章提出BASE理论，BASE理论是对CAP理论的延伸，核心思想是即使无法做到强一致性（Strong Consistency，CAP的一致性就是强一致性），但应用可以采用适合的方式达到最终一致性（Eventual Consitency）。</p>
-<p>BASE理论为：基本可用（Basically Available）、软状态（ Soft State）、最终一致性（ Eventual Consistency）。</p>
-<h2 id="基本可用"><a href="#基本可用" class="headerlink" title="基本可用"></a>基本可用</h2><p>基本可用是指分布式系统在出现故障的时候，允许损失部分可用性，即保证核心可用。</p>
-<p>电商大促时，为了应对访问量激增，部分用户可能会被引导到降级页面，服务层也可能只提供降级服务。这就是损失部分可用性的体现。</p>
-<h2 id="软状态"><a href="#软状态" class="headerlink" title="软状态"></a>软状态</h2><p>软状态是指允许系统存在中间状态，而该中间状态不会影响系统整体可用性。</p>
-<p>分布式存储中一般一份数据至少会有三个副本，允许不同节点间副本同步的延时就是软状态的体现。mysql replication的异步复制也是一种体现。</p>
-<h2 id="最终一致性"><a href="#最终一致性" class="headerlink" title="最终一致性"></a>最终一致性</h2><p>最终一致性是指系统中的所有数据副本经过一定时间后，最终能够达到一致的状态。弱一致性和强一致性相反，最终一致性是弱一致性的一种特殊情况。</p>
-<h2 id="ACID和BASE的区别与联系"><a href="#ACID和BASE的区别与联系" class="headerlink" title="ACID和BASE的区别与联系"></a>ACID和BASE的区别与联系</h2><p>ACID是传统数据库常用的设计理念，追求<strong>强一致性模型</strong>。</p>
-<p>BASE支持的是大型分布式系统，牺牲掉对一致性的约束（但实现<strong>最终一致性</strong>），来换取一定的可用性。</p>
-<p>ACID和BASE代表了两种截然相反的设计哲学。</p>
-<p>在英文中，ACID和BASE分别是“酸”和“碱”，看似对立，实则是分别对CAP三特性的不同取舍。在分布式系统设计的场景中，系统组件对一致性要求是不同的，因此ACID和BASE又会结合使用。</p>
-<h1 id="FLP-Impossibility"><a href="#FLP-Impossibility" class="headerlink" title="FLP Impossibility"></a>FLP Impossibility</h1><h1 id="Lease机制"><a href="#Lease机制" class="headerlink" title="Lease机制"></a>Lease机制</h1><h1 id="Quorum机制"><a href="#Quorum机制" class="headerlink" title="Quorum机制"></a>Quorum机制</h1><h1 id="Consensus问题"><a href="#Consensus问题" class="headerlink" title="Consensus问题"></a>Consensus问题</h1><h1 id="时序问题"><a href="#时序问题" class="headerlink" title="时序问题"></a>时序问题</h1><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://www.sczyh30.com/posts/Distributed-System/distributed-system-base/#%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%B0%86%E5%86%9B%E9%97%AE%E9%A2%98" target="_blank" rel="noopener">分布式系统基础总结</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/35608244" target="_blank" rel="noopener">分布式系统中的FLP不可能原理、CAP理论与BASE理论</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：自己这一段时间都在学习分布式系统相关的东西，但是都不成系统，所以这里将会总结目前学习的分布式系统相关内容，这里讲会总结分布式系统的相关概念，持续更新…。
-    
-    </summary>
-    
-      <category term="分布式" scheme="http://bestlixiang.site/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
-    
-    
-      <category term="分布式" scheme="http://bestlixiang.site/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
     
   </entry>
   
