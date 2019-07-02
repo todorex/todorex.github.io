@@ -1,0 +1,1018 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Tomcat,ClassLoader,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="引：相信大家对于Java类加载的认识最开始都是来自于《深入理解Java虚拟机》，可能觉得就一个双亲委派机制嘛，没什么东西！但是具体到实际应用，对于类加载器却有所不同，今天我们就跟着Tomcat源码来分析一下它的类加载机制！">
+<meta name="keywords" content="Tomcat,ClassLoader">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tomcat源码分析——类加载机制">
+<meta property="og:url" content="http://bestlixiang.site/2019/07/02/Tomcat源码/Tomcat源码分析——类加载机制/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：相信大家对于Java类加载的认识最开始都是来自于《深入理解Java虚拟机》，可能觉得就一个双亲委派机制嘛，没什么东西！但是具体到实际应用，对于类加载器却有所不同，今天我们就跟着Tomcat源码来分析一下它的类加载机制！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/10354196-fff334f481929cad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/462/format/webp">
+<meta property="og:updated_time" content="2019-07-02T10:23:43.354Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tomcat源码分析——类加载机制">
+<meta name="twitter:description" content="引：相信大家对于Java类加载的认识最开始都是来自于《深入理解Java虚拟机》，可能觉得就一个双亲委派机制嘛，没什么东西！但是具体到实际应用，对于类加载器却有所不同，今天我们就跟着Tomcat源码来分析一下它的类加载机制！">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/10354196-fff334f481929cad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/462/format/webp">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2019/07/02/Tomcat源码/Tomcat源码分析——类加载机制/">
+
+
+
+
+
+  <title> Tomcat源码分析——类加载机制 | rex note </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2019/07/02/Tomcat源码/Tomcat源码分析——类加载机制/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tomcat源码分析——类加载机制
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-02T15:32:48+08:00">
+                2019-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tomcat源码/" itemprop="url" rel="index">
+                    <span itemprop="name">Tomcat源码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：相信大家对于Java类加载的认识最开始都是来自于《深入理解Java虚拟机》，可能觉得就一个<strong>双亲委派机制</strong>嘛，没什么东西！但是具体到实际应用，对于类加载器却有所不同，今天我们就跟着Tomcat源码来分析一下它的类加载机制！<a id="more"></a></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这个说到Tomcat源码，在看源码之前，我们都需要先理解它的架构与一些设计原理，如果图快，可以从最后的参考中快速消化一下Tomcat的架构，但是如果是想系统看一下看Tomcat的全貌，我建议可以好好去看看《深入剖析Tomcat》，虽然他对应的版本对于现在来说有点老了，但是核心思想是不变的，相信很多人看完之后会和我一样有一种恍然大悟的感觉。关于怎么看Tomcat源码也可以在最后的参考中找到相关链接。</p>
+<h1 id="Java类加载机制"><a href="#Java类加载机制" class="headerlink" title="Java类加载机制"></a>Java类加载机制</h1><p>在说Tomcat的类加载机制之前，我们一定要先看看Java自己的类加载机制，之前自己对《深入理解Java虚拟机》中描述的Java类加载机制一篇总结文章，可以先看看：<a href="http://todorex.com/2017/12/06/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-9-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/" target="_blank" rel="noopener">深入理解JVM<em>9</em>类加载器</a></p>
+<h1 id="Tomcat类加载机制"><a href="#Tomcat类加载机制" class="headerlink" title="Tomcat类加载机制"></a>Tomcat类加载机制</h1><p>Tomcat使用类加载器的原因有3条：(待会会在源码中看出)</p>
+<ol>
+<li>为了在载入类指定某些规则</li>
+<li>为了缓存已经载入的类</li>
+<li>为了实现类的预加载，方便使用</li>
+</ol>
+<h2 id="设计图"><a href="#设计图" class="headerlink" title="设计图"></a>设计图</h2><p><img src="https://upload-images.jianshu.io/upload_images/10354196-fff334f481929cad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/462/format/webp" alt="Tomcat类加载机制设计"></p>
+<ul>
+<li>commonLoader：Tomcat最基本的类加载器，加载路径中的class可以被Tomcat容器本身以及各个Webapp访问；</li>
+<li>catalinaLoader：Tomcat容器私有的类加载器，加载路径中的class对于Webapp不可见；</li>
+<li>sharedLoader：各个Webapp共享的类加载器，加载路径中的class对于所有Webapp可见，但是对于Tomcat容器不可见；</li>
+<li>WebappClassLoader：各个Webapp私有的类加载器，加载路径中的class只对当前Webapp可见；</li>
+<li>JasperLoader: 每一个JSP文件对应一个Jsp类加载器，实现热加载；</li>
+</ul>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><h3 id="Tomcat启动"><a href="#Tomcat启动" class="headerlink" title="Tomcat启动"></a>Tomcat启动</h3><p>如果看过Tomcat的架构和设计，就应该知道Tomcat的启动时运行<code>main</code>方法作为入口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line">    <span class="comment">// daemon就是bootstrap，当初始化完成之后会赋值给daemon</span></span><br><span class="line">    <span class="keyword">if</span> (daemon == <span class="keyword">null</span>) &#123;</span><br><span class="line">        Bootstrap bootstrap = <span class="keyword">new</span> Bootstrap();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 初始化</span></span><br><span class="line">            bootstrap.init();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">            handleThrowable(t);</span><br><span class="line">            t.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        daemon = bootstrap;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// 设置线程上下文类加载器继续加载，保持一致</span></span><br><span class="line">        Thread.currentThread().setContextClassLoader(daemon.catalinaLoader);</span><br><span class="line">    &#125;</span><br><span class="line">  	<span class="comment">// 省略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们需要知道daemon初始化干了什么：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">      <span class="comment">// Tomcat 自己的类加载器结构</span></span><br><span class="line">      initClassLoaders();</span><br><span class="line">      <span class="comment">// 将 catalinaLoader 类加载器设置为当前线程上下文类加载器.</span></span><br><span class="line">      Thread.currentThread().setContextClassLoader(catalinaLoader);</span><br><span class="line">      <span class="comment">// 并设置线程安全类加载器进行类加载</span></span><br><span class="line">      SecurityClassLoad.securityClassLoad(catalinaLoader);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Load our startup class and call its process() method</span></span><br><span class="line">      <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">          log.debug(<span class="string">"Loading startup class"</span>);</span><br><span class="line">      <span class="comment">// 加载启动对象</span></span><br><span class="line">      Class&lt;?&gt; startupClass = catalinaLoader.loadClass(<span class="string">"org.apache.catalina.startup.Catalina"</span>);</span><br><span class="line">      Object startupInstance = startupClass.getConstructor().newInstance();</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Set the shared extensions class loader</span></span><br><span class="line">      <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">          log.debug(<span class="string">"Setting startup class properties"</span>);</span><br><span class="line">      <span class="comment">// 使用反射调用该实例的setParentClassLoader 方法, 参数为 sharedLoader</span></span><br><span class="line">      <span class="comment">// 表示该实例的父类加载器为 sharedLoader. </span></span><br><span class="line">    	<span class="comment">// 这里暗含了后面生成的WebappClassLoader的parent就是sharedLoader</span></span><br><span class="line">      String methodName = <span class="string">"setParentClassLoader"</span>;</span><br><span class="line">      Class&lt;?&gt; paramTypes[] = <span class="keyword">new</span> Class[<span class="number">1</span>];</span><br><span class="line">      paramTypes[<span class="number">0</span>] = Class.forName(<span class="string">"java.lang.ClassLoader"</span>);</span><br><span class="line">      Object paramValues[] = <span class="keyword">new</span> Object[<span class="number">1</span>];</span><br><span class="line">      paramValues[<span class="number">0</span>] = sharedLoader;</span><br><span class="line">      Method method =</span><br><span class="line">          startupInstance.getClass().getMethod(methodName, paramTypes);</span><br><span class="line">      method.invoke(startupInstance, paramValues);</span><br><span class="line">      <span class="comment">// 设置 catalinaDaemon 为该实例</span></span><br><span class="line">      catalinaDaemon = startupInstance;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 关键来了</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initClassLoaders</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">          <span class="comment">// tomcat公用的类加载器 parent为null 违背了java自己的类加载机制</span></span><br><span class="line">          commonLoader = createClassLoader(<span class="string">"common"</span>, <span class="keyword">null</span>);</span><br><span class="line">          <span class="keyword">if</span>( commonLoader == <span class="keyword">null</span> ) &#123;</span><br><span class="line">              <span class="comment">// no config file, default to this loader - we might be in a 'single' env.</span></span><br><span class="line">              <span class="comment">// 找不到配置文件中的 key 的时候或者 key 对应的 value 为空的时候回返回 null</span></span><br><span class="line">              <span class="comment">// 如果返回 null, 那么就设置默认的类加载器为 common 类加载器.</span></span><br><span class="line">              commonLoader=<span class="keyword">this</span>.getClass().getClassLoader();</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="comment">// 调试可知：</span></span><br><span class="line">          <span class="comment">// 可以找不到配置文件中的 key, 所以他们直接返回父类加载器, 也就是说(默认情况下), 他们三个使用的是同一个类加载器.</span></span><br><span class="line">          catalinaLoader = createClassLoader(<span class="string">"server"</span>, commonLoader);</span><br><span class="line">          sharedLoader = createClassLoader(<span class="string">"shared"</span>, commonLoader);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">          handleThrowable(t);</span><br><span class="line">          log.error(<span class="string">"Class loader creation threw exception"</span>, t);</span><br><span class="line">          System.exit(<span class="number">1</span>);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建commonLoader</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> ClassLoader <span class="title">createClassLoader</span><span class="params">(String name, ClassLoader parent)</span></span></span><br><span class="line"><span class="function">      <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">      <span class="comment">// 拿到资源（要加载类的路径）</span></span><br><span class="line">      <span class="comment">// common.loader 对应的 Value=$&#123;catalina.base&#125;/lib,$&#123;catalina.base&#125;/lib/*.jar,$&#123;catalina.home&#125;/lib,$&#123;catalina.home&#125;/lib/*.jar</span></span><br><span class="line">      String value = CatalinaProperties.getProperty(name + <span class="string">".loader"</span>);</span><br><span class="line">      <span class="comment">// 如果不存在, 返回 null</span></span><br><span class="line">      <span class="keyword">if</span> ((value == <span class="keyword">null</span>) || (value.equals(<span class="string">""</span>)))</span><br><span class="line">          <span class="keyword">return</span> parent;</span><br><span class="line">      <span class="comment">// 使用环境变量对应的目录替换字符串</span></span><br><span class="line">      value = replace(value);</span><br><span class="line">      <span class="comment">// Repository是ClassLoaderFactory 中的一个静态内部类</span></span><br><span class="line">      <span class="comment">// 有2个属性, location, type, 表示某个位置的某种类型的文件</span></span><br><span class="line">      List&lt;Repository&gt; repositories = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">      <span class="comment">// 将路径变成一个数组</span></span><br><span class="line">      String[] repositoryPaths = getPaths(value);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">for</span> (String repository : repositoryPaths) &#123;</span><br><span class="line">          <span class="comment">// Check for a JAR URL repository</span></span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">              <span class="meta">@SuppressWarnings</span>(<span class="string">"unused"</span>)</span><br><span class="line">              URL url = <span class="keyword">new</span> URL(repository);</span><br><span class="line">              repositories.add(</span><br><span class="line">                      <span class="keyword">new</span> Repository(repository, RepositoryType.URL));</span><br><span class="line">              <span class="keyword">continue</span>;</span><br><span class="line">          &#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">              <span class="comment">// Ignore</span></span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="comment">// Local repository</span></span><br><span class="line">          <span class="keyword">if</span> (repository.endsWith(<span class="string">"*.jar"</span>)) &#123;</span><br><span class="line">              repository = repository.substring</span><br><span class="line">                  (<span class="number">0</span>, repository.length() - <span class="string">"*.jar"</span>.length());</span><br><span class="line">              repositories.add(</span><br><span class="line">                      <span class="keyword">new</span> Repository(repository, RepositoryType.GLOB));</span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (repository.endsWith(<span class="string">".jar"</span>)) &#123;</span><br><span class="line">              repositories.add(</span><br><span class="line">                      <span class="keyword">new</span> Repository(repository, RepositoryType.JAR));</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              repositories.add(</span><br><span class="line">                      <span class="keyword">new</span> Repository(repository, RepositoryType.DIR));</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 根据给定的路径数组前去加载给定的 class 文件，生成URLClassLoader</span></span><br><span class="line">      <span class="keyword">return</span> ClassLoaderFactory.createClassLoader(repositories, parent);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>初始化完三个类加载之后，上面就会让catalinaLoader加载Tomcat所需要的类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">securityClassLoad</span><span class="params">(ClassLoader loader)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    securityClassLoad(loader, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">securityClassLoad</span><span class="params">(ClassLoader loader, <span class="keyword">boolean</span> requireSecurityManager)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (requireSecurityManager &amp;&amp; System.getSecurityManager() == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// securityClassLoad方法主要加载Tomcat容器所需的class</span></span><br><span class="line">    <span class="comment">// Tomcat核心class，即org.apache.catalina.core路径下的class</span></span><br><span class="line">    loadCorePackage(loader);</span><br><span class="line">    <span class="comment">// Tomcat连接器，即org.apache.coyote路径下的class</span></span><br><span class="line">    loadCoyotePackage(loader);</span><br><span class="line">    <span class="comment">// Tomcat应用类加载器, org.apache.catalina.loader.WebappClassLoader</span></span><br><span class="line">    loadLoaderPackage(loader);</span><br><span class="line">    <span class="comment">// org.apache.catalina.realm下的class</span></span><br><span class="line">    loadRealmPackage(loader);</span><br><span class="line">    <span class="comment">// org.apache.catalina.servlets下的class</span></span><br><span class="line">    loadServletsPackage(loader);</span><br><span class="line">    <span class="comment">// org.apache.catalina.session下的class；</span></span><br><span class="line">    loadSessionPackage(loader);</span><br><span class="line">    <span class="comment">// org.apache.catalina.util下的class</span></span><br><span class="line">    loadUtilPackage(loader);</span><br><span class="line">    <span class="comment">// org.apache.catalina.valves下的class</span></span><br><span class="line">    loadValvesPackage(loader);</span><br><span class="line">    <span class="comment">// javax.servlet.http.Cookie</span></span><br><span class="line">    loadJavaxPackage(loader);</span><br><span class="line">    <span class="comment">// org.apache.catalina.connector的class</span></span><br><span class="line">    loadConnectorPackage(loader);</span><br><span class="line">    <span class="comment">// org.apache.catalina.util路径下的class</span></span><br><span class="line">    loadTomcatPackage(loader);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到这里daemon就被创建完成了，启动也就结束了！</p>
+<h3 id="WebappClassLoader创建"><a href="#WebappClassLoader创建" class="headerlink" title="WebappClassLoader创建"></a>WebappClassLoader创建</h3><p>上面说了Tomcat类加载机制中的三大加载器，但是对于Tomcat来说WebappClassLoader或许是最关键的，因为应用里的类都靠它加载。看过Tomcat架构的都知道WebappClassLoader是和容器StandardContext绑定在一起的。所以我们跟StandardContext生命周期的启动方法<code>startInternal</code>进去看看（该方法比较长，省略很多内容，只看关键）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">startInternal</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (getLoader() == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 生成一个WebappLoader，parent为sharedClassLoader一直传递下去</span></span><br><span class="line">        WebappLoader webappLoader = <span class="keyword">new</span> WebappLoader(getParentClassLoader());</span><br><span class="line">        webappLoader.setDelegate(getDelegate());</span><br><span class="line">      	<span class="comment">// 绑定 StandardContext容器</span></span><br><span class="line">        setLoader(webappLoader);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (ok) &#123;</span><br><span class="line">            <span class="comment">// Start our subordinate components, if any</span></span><br><span class="line">            Loader loader = getLoader();</span><br><span class="line">            <span class="keyword">if</span> (loader <span class="keyword">instanceof</span> Lifecycle) &#123;</span><br><span class="line">              	<span class="comment">// 这里执行生命的周期的start方法，最后会回调到WebappLoader的startInternal方法</span></span><br><span class="line">                ((Lifecycle) loader).start();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      </span><br><span class="line">   <span class="comment">//....</span></span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="comment">// org.apache.catalina.loader.WebappLoader </span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">startInternal</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 创建WebAppClassLoader，跟进去</span></span><br><span class="line">        classLoader = createClassLoader();</span><br><span class="line">        <span class="comment">// 设置其资源路径为当前Webapp下某个context的类资源</span></span><br><span class="line">        classLoader.setResources(context.getResources());</span><br><span class="line">        classLoader.setDelegate(<span class="keyword">this</span>.delegate);</span><br><span class="line">		<span class="comment">// 生命周期钩子</span></span><br><span class="line">        ((Lifecycle) classLoader).start();</span><br><span class="line">		<span class="comment">// ...</span></span><br><span class="line">    &#125; </span><br><span class="line">&#125;  </span><br><span class="line"><span class="function"><span class="keyword">private</span> WebappClassLoaderBase <span class="title">createClassLoader</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// 通过反射实例化classLoader</span></span><br><span class="line">    <span class="comment">// 这里是ParallelWebappClassLoader</span></span><br><span class="line">    Class&lt;?&gt; clazz = Class.forName(loaderClass);</span><br><span class="line">    WebappClassLoaderBase classLoader = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">// 这里父类加载器是Catalina实例中的sharedClassLoader</span></span><br><span class="line">    <span class="keyword">if</span> (parentClassLoader == <span class="keyword">null</span>) &#123;</span><br><span class="line">        parentClassLoader = context.getParentClassLoader();</span><br><span class="line">    &#125;</span><br><span class="line">    Class&lt;?&gt;[] argTypes = &#123; ClassLoader.class &#125;;</span><br><span class="line">    Object[] args = &#123; parentClassLoader &#125;;</span><br><span class="line">    Constructor&lt;?&gt; constr = clazz.getConstructor(argTypes);</span><br><span class="line">    classLoader = (WebappClassLoaderBase) constr.newInstance(args);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> classLoader;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到这里，WebappClassLoader就被实例化完成了。</p>
+<h3 id="WebappClassLoader类加载"><a href="#WebappClassLoader类加载" class="headerlink" title="WebappClassLoader类加载"></a>WebappClassLoader类加载</h3><p><code>WebappClassLoader</code>就被实例化完成了，接下来我们就需要看看它是如何加载类的？找到他的<code>loaderClass</code>方法，<code>ParallelWebappClassLoader</code>的<code>loadClass</code>是在其父类<code>WebappClassLoaderBase</code>中实现的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">      	</span><br><span class="line">        Class&lt;?&gt; clazz = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (0) Check our previously loaded local class cache</span></span><br><span class="line">        <span class="comment">// 检查WebappClassLoader中是否加载过此类</span></span><br><span class="line">        <span class="comment">// 类中维护了一个resourceEntries的ConcurrentHashMap</span></span><br><span class="line">        clazz = findLoadedClass0(name);</span><br><span class="line">        <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                log.debug(<span class="string">"  Returning class from cache"</span>);</span><br><span class="line">            <span class="keyword">if</span> (resolve)</span><br><span class="line">                resolveClass(clazz);</span><br><span class="line">            <span class="keyword">return</span> clazz;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (0.1) Check our previously loaded class cache</span></span><br><span class="line">        <span class="comment">// 检查JVM虚拟机中是否加载过该类</span></span><br><span class="line">        clazz = findLoadedClass(name);</span><br><span class="line">        <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                log.debug(<span class="string">"  Returning class from cache"</span>);</span><br><span class="line">            <span class="keyword">if</span> (resolve)</span><br><span class="line">                resolveClass(clazz);</span><br><span class="line">            <span class="keyword">return</span> clazz;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (0.2) Try loading the class with the system class loader, to prevent</span></span><br><span class="line">        <span class="comment">//       the webapp from overriding Java SE classes. This implements</span></span><br><span class="line">        <span class="comment">//       SRV.10.7.2</span></span><br><span class="line">        <span class="comment">// 用应用类加载器加载该类（也就是当前JVM的ClassPath），为了防止覆盖基础类实现</span></span><br><span class="line">        String resourceName = binaryNameToPath(name, <span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        ClassLoader javaseLoader = getJavaseClassLoader();</span><br><span class="line">        <span class="keyword">boolean</span> tryLoadingFromJavaseLoader;</span><br><span class="line">     </span><br><span class="line">        <span class="keyword">if</span> (tryLoadingFromJavaseLoader) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                clazz = javaseLoader.loadClass(name);</span><br><span class="line">                <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (resolve)</span><br><span class="line">                        resolveClass(clazz);</span><br><span class="line">                    <span class="keyword">return</span> clazz;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// Ignore</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 先判断是否设置了delegate属性，设置为true，那么就会完全按照JVM的"双亲委托"机制流程加载类</span></span><br><span class="line">        <span class="keyword">boolean</span> delegateLoad = delegate || filter(name, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (1) Delegate to our parent if requested</span></span><br><span class="line">      	<span class="comment">// 双亲委派模式，从上到下加载</span></span><br><span class="line">        <span class="keyword">if</span> (delegateLoad) &#123;</span><br><span class="line">            <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                log.debug(<span class="string">"  Delegating to parent classloader1 "</span> + parent);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                clazz = Class.forName(name, <span class="keyword">false</span>, parent);</span><br><span class="line">                <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                        log.debug(<span class="string">"  Loading class from parent"</span>);</span><br><span class="line">                    <span class="keyword">if</span> (resolve)</span><br><span class="line">                        resolveClass(clazz);</span><br><span class="line">                    <span class="keyword">return</span> clazz;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// Ignore</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (2) Search local repositories</span></span><br><span class="line">        <span class="comment">// 若是默认的话，是先使用WebappClassLoader自己处理加载类的</span></span><br><span class="line">        <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">            log.debug(<span class="string">"  Searching local repositories"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 通过自定义findClass定义处理类加载规则</span></span><br><span class="line">            clazz = findClass(name);</span><br><span class="line">            <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                    log.debug(<span class="string">"  Loading class from local repository"</span>);</span><br><span class="line">                <span class="keyword">if</span> (resolve)</span><br><span class="line">                    resolveClass(clazz);</span><br><span class="line">                <span class="keyword">return</span> clazz;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">// Ignore</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// (3) Delegate to parent unconditionally</span></span><br><span class="line">        <span class="comment">// 若是WebappClassLoader在/WEB-INF/classes、/WEB-INF/lib下还是查找不到class</span></span><br><span class="line">        <span class="comment">// 那么委托给Common类加载器去查找该类 ，这里满足双亲委派原则</span></span><br><span class="line">        <span class="keyword">if</span> (!delegateLoad) &#123;</span><br><span class="line">            <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                log.debug(<span class="string">"  Delegating to parent classloader at end: "</span> + parent);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                clazz = Class.forName(name, <span class="keyword">false</span>, parent);</span><br><span class="line">                <span class="keyword">if</span> (clazz != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (log.isDebugEnabled())</span><br><span class="line">                        log.debug(<span class="string">"  Loading class from parent"</span>);</span><br><span class="line">                    <span class="keyword">if</span> (resolve)</span><br><span class="line">                        resolveClass(clazz);</span><br><span class="line">                    <span class="keyword">return</span> clazz;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// Ignore</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里总结一下delegate属性为false，即默认的情况下的加载顺序：</p>
+<ol>
+<li>检查本地缓存</li>
+<li>如果没有，检查虚拟机缓存</li>
+<li>如果没有，从AppClassLoader加载，这里会使用Java自己的类加载体系</li>
+<li>如果没有，则从WebappClassLoader加载（按照WEB-INF/classes、WEB-INF/lib的顺序）</li>
+<li>如果没有，则从父类加载器加载，由于父类加载器采用默认的委派模式，所以加载顺序是Common、Shared</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里用一到面试题结束：Tomcat的类加载机制是否违反了双亲委托原则？</p>
+<p>答案：是，具体怎么破坏了看本文理解。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><p>《深入剖析Tomcat》</p>
+</li>
+<li><p><a href="https://blog.csdn.net/qq_38245537/article/details/79009448" target="_blank" rel="noopener">四张图带你了解Tomcat系统架构</a></p>
+</li>
+<li><a href="https://yq.aliyun.com/articles/663198" target="_blank" rel="noopener">怎么读 Tomcat 源码？</a></li>
+<li><a href="http://todorex.com/2017/12/06/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3JVM-9-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/" target="_blank" rel="noopener">深入理解JVM<em>9</em>类加载器</a></li>
+<li><a href="https://www.cnblogs.com/aspirant/p/8991830.html" target="_blank" rel="noopener">图解Tomcat类加载机制(阿里面试题)</a></li>
+<li><a href="https://www.jianshu.com/p/69c4526b843d" target="_blank" rel="noopener">Tomcat源码分析 – Tomcat类加载器</a></li>
+<li><a href="https://blog.csdn.net/yangcheng33/article/details/52631940" target="_blank" rel="noopener">真正理解线程上下文类加载器（多案例分析）</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Tomcat/" rel="tag"># Tomcat</a>
+          
+            <a href="/tags/ClassLoader/" rel="tag"># ClassLoader</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/02/RocketMQ源码/RocketMQ源码分析——事务消息/" rel="next" title="RocketMQ源码分析——事务消息">
+                <i class="fa fa-chevron-left"></i> RocketMQ源码分析——事务消息
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">163</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java类加载机制"><span class="nav-number">2.</span> <span class="nav-text">Java类加载机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tomcat类加载机制"><span class="nav-number">3.</span> <span class="nav-text">Tomcat类加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#设计图"><span class="nav-number">3.1.</span> <span class="nav-text">设计图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码分析"><span class="nav-number">3.2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Tomcat启动"><span class="nav-number">3.2.1.</span> <span class="nav-text">Tomcat启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WebappClassLoader创建"><span class="nav-number">3.2.2.</span> <span class="nav-text">WebappClassLoader创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WebappClassLoader类加载"><span class="nav-number">3.2.3.</span> <span class="nav-text">WebappClassLoader类加载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
