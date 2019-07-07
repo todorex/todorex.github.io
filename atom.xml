@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2019-07-07T03:21:14.647Z</updated>
+  <updated>2019-07-07T06:51:32.351Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>文件读写哪家强？</title>
+    <link href="http://bestlixiang.site/2019/07/07/Java%E5%9F%BA%E7%A1%80/%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99%E5%93%AA%E5%AE%B6%E5%BC%BA%EF%BC%9F/"/>
+    <id>http://bestlixiang.site/2019/07/07/Java基础/文件读写哪家强？/</id>
+    <published>2019-07-07T11:11:27.000Z</published>
+    <updated>2019-07-07T06:51:32.351Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：最近看了零拷贝相关的内容，自然而然就会引申到文件的读写，文件读写无处不在，因为数据很重要，需要持久化。刚好最近也看看RocketMq，里面也有关于消息文件的读写，想狠狠了解一番，但是最终结果是只知道了性能结果，但是却不明白为什么，留下一些线索，等待回头<strong>证明</strong> ！徐大佬说要去看linux源码可能才有了解，先溜了！渴望c大神带我看一遍！<a id="more"></a></p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>Java 中的文件读写接口大致可以分为三类：</p>
+<ol>
+<li>标准 IO 读写，位于 java.io 包下，相关类：FileInputStream，FileOuputStream，RandomAccessFile</li>
+<li>NIO 读写，位于 java.nio 包下，相关类：FileChannel，ByteBuffer</li>
+<li>Mmap 内存映射，位于 java.nio 包下，相关类：FileChannel，MappedByteBuffer</li>
+</ol>
+<p>标准 IO 读写这里就不说，毕竟大家一开始学的都是这个，下面说说其他两种。</p>
+<h2 id="FileChannel"><a href="#FileChannel" class="headerlink" title="FileChannel"></a>FileChannel</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获得FileChannel</span></span><br><span class="line">FileChannel fileChannel = <span class="keyword">new</span> RandomAccessFile(<span class="keyword">new</span> File(<span class="string">"data"</span>), <span class="string">"rw"</span>).getChannel();</span><br><span class="line"><span class="comment">// 写</span></span><br><span class="line"><span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4096</span>];</span><br><span class="line"><span class="keyword">long</span> position = <span class="number">1024L</span>;</span><br><span class="line"><span class="comment">//指定 position 写入 4kb 的数据</span></span><br><span class="line">fileChannel.write(ByteBuffer.wrap(data), position);</span><br><span class="line"><span class="comment">//从当前文件指针的位置写入 4kb 的数据</span></span><br><span class="line">fileChannel.write(ByteBuffer.wrap(data));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读 </span></span><br><span class="line">ByteBuffer buffer = ByteBuffer.allocate(<span class="number">4096</span>);</span><br><span class="line"><span class="keyword">long</span> position = <span class="number">1024L</span>;</span><br><span class="line"><span class="comment">//指定 position 读取 4kb 的数据</span></span><br><span class="line">fileChannel.read(buffer,position)；</span><br><span class="line"><span class="comment">//从当前文件指针的位置读取 4kb 的数据</span></span><br><span class="line">fileChannel.read(buffer);</span><br></pre></td></tr></table></figure>
+<p>上面的<code>ByteBuffer</code> 也可以替换为<code>DirectByteBuffer</code>，这里不替换，在最后写入的时候也会替换，具体为什么，可以参考徐大佬的博客。</p>
+<h2 id="MappedByteBuffer"><a href="#MappedByteBuffer" class="headerlink" title="MappedByteBuffer"></a>MappedByteBuffer</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获得MappedByteBuffer</span></span><br><span class="line">FileChannel fileChannel = <span class="keyword">new</span> RandomAccessFile(<span class="keyword">new</span> File(<span class="string">"data"</span>), <span class="string">"rw"</span>).getChannel();</span><br><span class="line">MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, <span class="number">0</span>, filechannel.size());</span><br><span class="line"><span class="comment">// 写</span></span><br><span class="line"><span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span>];</span><br><span class="line"><span class="keyword">int</span> position = <span class="number">8</span>;</span><br><span class="line"><span class="comment">//从当前 mmap 指针的位置写入 4b 的数据</span></span><br><span class="line">mappedByteBuffer.put(data);</span><br><span class="line"><span class="comment">//指定 position 写入 4b 的数据</span></span><br><span class="line">MappedByteBuffer subBuffer = mappedByteBuffer.slice();</span><br><span class="line">subBuffer.position(position);</span><br><span class="line">subBuffer.put(data);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读</span></span><br><span class="line"><span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span>];</span><br><span class="line"><span class="keyword">int</span> position = <span class="number">8</span>;</span><br><span class="line"><span class="comment">//从当前 mmap 指针的位置读取 4b 的数据</span></span><br><span class="line">mappedByteBuffer.get(data)；</span><br><span class="line"><span class="comment">//指定 position 读取 4b 的数据</span></span><br><span class="line">MappedByteBuffer subBuffer = mappedByteBuffer.slice();</span><br><span class="line">subBuffer.position(position);</span><br><span class="line">subBuffer.get(data);</span><br></pre></td></tr></table></figure>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>自己跟着@莫那——鲁道的benchmark过了一遍，结论统一(原因不知)：</p>
+<table>
+<thead>
+<tr>
+<th>数据包大小</th>
+<th>读</th>
+<th>写</th>
+<th>force写</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>小于4kb</td>
+<td>mmap</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>大于4kb</td>
+<td>FileChannel</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>小于64b</td>
+<td></td>
+<td>FileChannel</td>
+<td>FileChannel</td>
+</tr>
+<tr>
+<td>大于64b</td>
+<td></td>
+<td>Mmap</td>
+<td>FileChannel</td>
+</tr>
+</tbody>
+</table>
+<h1 id="附言"><a href="#附言" class="headerlink" title="附言"></a>附言</h1><p>普通人一生必经的四个阶段：</p>
+<p>心比天高的无知与快乐</p>
+<p>愧不如人的奋斗与煎熬</p>
+<p>毫无回报的愤懑与失望</p>
+<p>坦然自若的平凡与颓废</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.jianshu.com/p/d0b4ac90dbcb" target="_blank" rel="noopener">MappedByteBuffer VS FileChannel 孰强孰弱？</a></li>
+<li><a href="https://www.cnkirito.moe/mq-million-queue/" target="_blank" rel="noopener">天池中间件大赛百万队列存储设计总结【复赛】</a></li>
+<li><a href="https://www.cnkirito.moe/file-io-best-practise/" target="_blank" rel="noopener">文件IO操作的一些最佳实践</a></li>
+<li><a href="https://www.cnkirito.moe/nio-buffer-recycle/" target="_blank" rel="noopener">一文探讨堆外内存的监控与回收</a></li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：最近看了零拷贝相关的内容，自然而然就会引申到文件的读写，文件读写无处不在，因为数据很重要，需要持久化。刚好最近也看看RocketMq，里面也有关于消息文件的读写，想狠狠了解一番，但是最终结果是只知道了性能结果，但是却不明白为什么，留下一些线索，等待回头&lt;strong&gt;证明&lt;/strong&gt; ！徐大佬说要去看linux源码可能才有了解，先溜了！渴望c大神带我看一遍！
+    
+    </summary>
+    
+      <category term="Java基础" scheme="http://bestlixiang.site/categories/Java%E5%9F%BA%E7%A1%80/"/>
+    
+    
+      <category term="IO" scheme="http://bestlixiang.site/tags/IO/"/>
+    
+  </entry>
   
   <entry>
     <title>零拷贝</title>
@@ -1075,67 +1156,6 @@
     <summary type="html">
     
       &lt;p&gt;原以为可以平结自己略懂的C++去看JVM源码，但是等到自己真正去打开源码，就算是对着博客看，也是十分吃力，还看了知乎R大对看JVM源码的看法。SO，我被自己和R大劝退了，可能目前的自己还不适合去看，希望自己以后&lt;strong&gt;有需要有梦想&lt;/strong&gt;再来看！
-    
-    </summary>
-    
-      <category term="JVM源码" scheme="http://bestlixiang.site/categories/JVM%E6%BA%90%E7%A0%81/"/>
-    
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JVM源码——Mac下编译JDK</title>
-    <link href="http://bestlixiang.site/2019/04/25/JVM%E6%BA%90%E7%A0%81/JVM%E6%BA%90%E7%A0%81%E2%80%94%E2%80%94Mac%E4%B8%8B%E7%BC%96%E8%AF%91JDK/"/>
-    <id>http://bestlixiang.site/2019/04/25/JVM源码/JVM源码——Mac下编译JDK/</id>
-    <published>2019-04-25T13:07:14.000Z</published>
-    <updated>2019-04-25T12:57:43.140Z</updated>
-    
-    <content type="html"><![CDATA[<p>引：好像是在大四的时候，自己按照《深入理解Java虚拟机》去编译JDK没有成功！但是在最近经历一些面试之后，感到JVM绝对是面试的一块重点，而看源码绝对是你深入理解JVM的一个很重要的点！在看源码，就需要调试，那么编译自己JDK越是必然的。这次我们在Mac下去编译OpenJDK9！！！<a id="more"></a><br><img src="https://upload-images.jianshu.io/upload_images/10354196-14707d615dd58eed.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="复联4.jpeg"></p>
-<p>4.24看完复联4，脑子太多的点化为<strong>爱你三千遍</strong>！</p>
-<p>进入今天的正题！！！</p>
-<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><p>关于编译JDK，其实在官方的源码包下有个帮助文件（openjdk/common/building.html/md）。这个文件会告诉我们在编译JDK之前需要做的准备以及编译的步骤。具体的大家可以仔细阅读看看。下次只讲述自己这次所编译的过程！</p>
-<p>我们需要准备一些东西，首先你需要准备 homebrew，homwbrew是mac下的包管理器，如果你的mac上没有安装，可以按照下面的方式来安装：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/ruby <span class="_">-e</span> <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></span><br></pre></td></tr></table></figure></p>
-<p>homwbrew下载完成之后，接下来准备编译环境：</p>
-<ul>
-<li>安装openjdk的版本管理工具mercurial（hg）</li>
-<li>安装ccache和freetype，ccache用来加速编译，freetype在编译过程也会依赖到</li>
-</ul>
-<p>安装脚本为：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew install mercurial</span><br><span class="line">brew install ccache</span><br><span class="line">brew install freetype</span><br></pre></td></tr></table></figure></p>
-<p>准备好之后就可以开始具体的操作了！</p>
-<h1 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h1><h2 id="官方推荐hg"><a href="#官方推荐hg" class="headerlink" title="官方推荐hg"></a>官方推荐hg</h2><p>hg：Mercurial source code management system<br>我为源码专门创建了一个目录 <code>~/jvm</code> ，然后运行下面的命令：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/jvm</span><br><span class="line">hg <span class="built_in">clone</span> http://hg.openjdk.java.net/jdk9/jdk9 jdk9</span><br></pre></td></tr></table></figure></p>
-<p>这条命令运行之后，openjdk的源码并没有下载下来，我们随后进入到<code>~/jvm/jdk9</code>目录，会发现有一个 <code>get_source.sh</code> 的文件，调用这个脚本下载完整的源码之前，需要做一下简单的修改，不然可能你在下载源码的过程中会数次中断。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Get clones of all absent nested repositories (harmless if already exist)</span></span><br><span class="line">sh ./common/bin/hgforest.sh <span class="built_in">clone</span> <span class="string">"<span class="variable">$@</span>"</span> || <span class="built_in">exit</span> $?</span><br><span class="line"></span><br><span class="line"><span class="comment"># Update all existing repositories to the latest sources</span></span><br><span class="line">sh ./common/bin/hgforest.sh pull -u</span><br></pre></td></tr></table></figure></p>
-<p>我们把上面几行的脚本删掉，替换成下面的脚本：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Get clones of all absent nested repositories (harmless if already exist)</span></span><br><span class="line">sh ./common/bin/hgforest.sh <span class="built_in">clone</span> <span class="string">"<span class="variable">$@</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> [ $? <span class="_">-ne</span> 0 ]</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    sh ./common/bin/hgforest.sh <span class="built_in">clone</span> <span class="string">"<span class="variable">$@</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Update all existing repositories to the latest sources</span></span><br><span class="line">sh ./common/bin/hgforest.sh pull -u</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> [ $? <span class="_">-ne</span> 0 ]</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    sh ./common/bin/hgforest.sh pull -u</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
-<p>然后，愉快地调用：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash ./get_source.sh</span><br></pre></td></tr></table></figure></p>
-<p>本人表示这个这个方法我没有成功，hhh。我在执行<code>hg clone</code> 的时候就一直报网络错误，可能是由于the great wall吧，还好有下面的方法。</p>
-<h2 id="github"><a href="#github" class="headerlink" title="github"></a>github</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. https://github.com/unofficial-openjdk/openjdk/</span><br><span class="line">2. https://github.com/dmlloyd/openjdk</span><br></pre></td></tr></table></figure>
-<p>我选择了第二个，切换到了jdk/jdk9分支，因为我们这次要编译jdk9。操作如下：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/jvm</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/dmlloyd/openjdk.git</span><br><span class="line"><span class="built_in">cd</span> openjdk</span><br><span class="line">git checkout -b jdk9 origin/jdk9/jdk9</span><br></pre></td></tr></table></figure></p>
-<p>这个还是挺顺利的，哈哈！</p>
-<h1 id="configure"><a href="#configure" class="headerlink" title="configure"></a>configure</h1><p>我们先进行编译前的配置（检查）：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --with-target-bits=64 --with-freetype=/usr/<span class="built_in">local</span>/Cellar/freetype/2.8.1 --enable-ccache --with-jvm-variants=server,client --with-boot-jdk-jvmargs=<span class="string">"-Xlint:deprecation -Xlint:unchecked"</span> --disable-zip-debug-info --disable-warnings-as-errors --with-debug-level=slowdebug 2&gt;&amp;1 | tee configure_mac_x64.log</span><br></pre></td></tr></table></figure></p>
-<p>有日志，出问题查问题也很方便！<br><strong>注意</strong>，上面的freetype，需要替换成本机实际安装的版本</p>
-<p>如果出现如下的提示，那么恭喜你，接下来就可以执行编译了：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">====================================================</span><br><span class="line">The existing configuration has been successfully updated <span class="keyword">in</span></span><br><span class="line">/Users/rex/jvm/openjdk/build/macosx-x86_64-normal-serverANDclient-slowdebug</span><br><span class="line">using configure arguments <span class="string">'--with-target-bits=64 --with-freetype=/usr/local/Cellar/freetype/2.10.0 --enable-ccache --with-jvm-variants=server,client --with-boot-jdk-jvmargs='</span>-Xlint:deprecation -Xlint:unchecked<span class="string">' --disable-warnings-as-errors --with-debug-level=slowdebug'</span>.</span><br><span class="line"></span><br><span class="line">Configuration summary:</span><br><span class="line">* Debug level:    slowdebug</span><br><span class="line">* HS debug level: debug</span><br><span class="line">* JDK variant:    normal</span><br><span class="line">* JVM variants:   server client</span><br><span class="line">* OpenJDK target: OS: macosx, CPU architecture: x86, address length: 64</span><br><span class="line">* Version string: 9-internal+0-adhoc.rex.openjdk (9-internal)</span><br><span class="line"></span><br><span class="line">Tools summary:</span><br><span class="line">* Boot JDK:       java version <span class="string">"9"</span> Java(TM) SE Runtime Environment (build 9+181) Java HotSpot(TM) 64-Bit Server VM (build 9+181, mixed mode)  (at /Library/Java/JavaVirtualMachines/jdk-9.jdk/Contents/Home)</span><br><span class="line">* Toolchain:      clang (clang/LLVM from Xcode 9.4.1)</span><br><span class="line">* C Compiler:     Version 9.1.0 (at /usr/bin/clang)</span><br><span class="line">* C++ Compiler:   Version 9.1.0 (at /usr/bin/clang++)</span><br><span class="line"></span><br><span class="line">Build performance summary:</span><br><span class="line">* Cores to use:   4</span><br><span class="line">* Memory <span class="built_in">limit</span>:   8192 MB</span><br><span class="line">* ccache status:  Active (3.6)</span><br><span class="line"></span><br><span class="line">NOTE: You have requested to build more than one version of the JVM, <span class="built_in">which</span></span><br><span class="line">will result <span class="keyword">in</span> longer build times.</span><br><span class="line"></span><br><span class="line">WARNING: The result of this configuration has overridden an older</span><br><span class="line">configuration. You *should* run <span class="string">'make clean'</span> to make sure you get a</span><br><span class="line">proper build. Failure to <span class="keyword">do</span> so might result <span class="keyword">in</span> strange build problems.</span><br></pre></td></tr></table></figure></p>
-<h1 id="make"><a href="#make" class="headerlink" title="make"></a>make</h1><p>我们执行下面的操作：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LANG=C</span><br><span class="line">make all LOG=debug  2&gt;&amp;1 | tee make_mac_x64.log</span><br></pre></td></tr></table></figure></p>
-<p>如果出现如下的提示，那么恭喜你，你的运气太好了！！！<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">----- Build <span class="built_in">times</span> -------</span><br><span class="line">Start 2019-04-25 18:55:19</span><br><span class="line">End   2019-04-25 19:00:57</span><br><span class="line"></span><br><span class="line">00:05:38 TOTAL</span><br><span class="line">-------------------------</span><br><span class="line"><span class="keyword">if</span> <span class="built_in">test</span> <span class="_">-f</span> /Users/rex/jvm/openjdk/build/macosx-x86_64-normal-serverANDclient-slowdebug/make-support/<span class="built_in">exit</span>-with-error ; <span class="keyword">then</span> \</span><br><span class="line">	    <span class="built_in">exit</span> 1 ; \</span><br><span class="line">	  <span class="keyword">fi</span></span><br><span class="line">/usr/bin/<span class="built_in">printf</span> <span class="string">"Finished building target 'all' in configuration 'macosx-x86_64-normal-serverANDclient-slowdebug'\n"</span> &gt; &gt;(/usr/bin/tee <span class="_">-a</span> /Users/rex/jvm/openjdk/build/macosx-x86_64-normal-serverANDclient-slowdebug/build.log) 2&gt; &gt;(/usr/bin/tee <span class="_">-a</span> /Users/rex/jvm/openjdk/build/macosx-x86_64-normal-serverANDclient-slowdebug/build.log &gt;&amp;2) &amp;&amp; <span class="built_in">wait</span></span><br><span class="line">Finished building target <span class="string">'all'</span> <span class="keyword">in</span> configuration <span class="string">'macosx-x86_64-normal-serverANDclient-slowdebug'</span></span><br></pre></td></tr></table></figure></p>
-<p>最后，验证一下<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> build/macosx-x86_64-normal-serverANDclient-slowdebug/jdk/bin</span><br><span class="line">./java -version</span><br></pre></td></tr></table></figure></p>
-<p>出现下面的提示就完美了：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openjdk version <span class="string">"9-internal"</span></span><br><span class="line">OpenJDK Runtime Environment (slowdebug build 9-internal+0-adhoc.rex.openjdk)</span><br><span class="line">OpenJDK 64-Bit Server VM (slowdebug build 9-internal+0-adhoc.rex.openjdk, mixed mode)</span><br></pre></td></tr></table></figure></p>
-<h1 id="编译过程中的问题"><a href="#编译过程中的问题" class="headerlink" title="编译过程中的问题"></a>编译过程中的问题</h1><p>根据<strong>墨菲定律</strong>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">一、任何事都没有表面看起来那么简单；</span><br><span class="line">二、所有的事都会比你预计的时间长；</span><br><span class="line">三、会出错的事总会出错；</span><br><span class="line">四、如果你担心某种情况发生，那么它就更有可能发生。</span><br></pre></td></tr></table></figure></p>
-<p>这个时间会比较长，出错是大概率事件，而我就碰到网上该有的所有错！！！！</p>
-<h2 id="Xcode版本问题"><a href="#Xcode版本问题" class="headerlink" title="Xcode版本问题"></a>Xcode版本问题</h2><p>我的Xcode版本原来为10+，XCode升级到10之后, 删除了底层目录下的libstdc++文件。导致在JDK的Make时会报错, 无法识别<new>类似这样的C++语法。而在XCode9时对应文件还是存在的。官方给出的意思是libstdc++已经被标记为过期5年了, 现在统一使用自己libc++。这个问题最简单的问题就是XCode版本回退到9之前即可。<a href="https://developer.apple.com/download/more/" target="_blank" rel="noopener">重新下载地址</a></new></p>
-<h2 id="三个空指针转换"><a href="#三个空指针转换" class="headerlink" title="三个空指针转换"></a>三个空指针转换</h2><p>日志被覆盖了，忘记存了，但是可能会出现这样的问题，下面的更改的答案：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1\. src/hotspot/share/memory/virtualspace.cpp # l585</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (base() != NULL) &#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">#2\. src/hotspot/share/opto/lcm.cpp # l42</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (Universe::narrow_oop_base() != NULL) &#123; // Implies UseCompressedOops.</span><br><span class="line"></span><br><span class="line"><span class="comment">#3\. src/hotspot/share/opto/loopPredicate.cpp # l915</span></span><br><span class="line"></span><br><span class="line">assert(rng-&gt;Opcode() == Op_LoadRange || iff-&gt;is_RangeCheck() || _igvn.type(rng)-&gt;is_int()-&gt;_lo &gt;= 0, <span class="string">"must be"</span>);</span><br></pre></td></tr></table></figure></p>
-<h2 id="JVM-crash"><a href="#JVM-crash" class="headerlink" title="JVM crash"></a>JVM crash</h2><p>  自己也忘记截图，所以也盗图了：<br>  <img src="https://upload-images.jianshu.io/upload_images/10354196-b5e7dae0682e7541.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="jvm crash.png"></p>
-<p>解决方法：<a href="https://stackoverflow.com/questions/50678467/building-openjdk-9-on-mac-os" target="_blank" rel="noopener">Building OpenJDK 9 on Mac os</a></p>
-<p>上面三个问题全被自己遇到了，运气真好，不过走到这里，终于是把JDK编译好了！</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>但行好事，莫问前程</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://www.jianshu.com/p/ee7e9176632c" target="_blank" rel="noopener">mac下编译openjdk1.9及集成clion动态调试</a></li>
-<li><a href="https://www.jianshu.com/p/38e697dcbaa5" target="_blank" rel="noopener">MacOS Mojave(10.14)编译openjdk9</a></li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;引：好像是在大四的时候，自己按照《深入理解Java虚拟机》去编译JDK没有成功！但是在最近经历一些面试之后，感到JVM绝对是面试的一块重点，而看源码绝对是你深入理解JVM的一个很重要的点！在看源码，就需要调试，那么编译自己JDK越是必然的。这次我们在Mac下去编译OpenJDK9！！！
     
     </summary>
     
