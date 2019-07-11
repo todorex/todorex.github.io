@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://bestlixiang.site/"/>
-  <updated>2019-07-07T06:51:32.351Z</updated>
+  <updated>2019-07-11T00:40:16.174Z</updated>
   <id>http://bestlixiang.site/</id>
   
   <author>
@@ -14,6 +14,128 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JVM问题解决思路总结</title>
+    <link href="http://bestlixiang.site/2019/07/11/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/JVM%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93/"/>
+    <id>http://bestlixiang.site/2019/07/11/深入理解Java虚拟机/JVM问题解决思路总结/</id>
+    <published>2019-07-11T00:41:21.000Z</published>
+    <updated>2019-07-11T00:40:16.174Z</updated>
+    
+    <content type="html"><![CDATA[<p>引：JVM对于大部分没有看过源码的人(包括我)来说是抽象的，自然也就看不见真相。此时我们所谓的”真相”更多是来自于博客和别人的话语，当这些抽象的概念被重复多次之后也就变成了我们所理解的”真相”，下面我们就来看看这些”真相”！并理解这些”真相”去解决问题。<a id="more"></a></p>
+<h1 id="前置真相"><a href="#前置真相" class="headerlink" title="前置真相"></a>前置真相</h1><ol>
+<li><p>JVM运行时内存结构，重点是<strong>堆的结构</strong>(最基础的，这里就不多说了)</p>
+</li>
+<li><p>Java垃圾收集器，重点是<strong>CMS收集器</strong>(看参考的那边文章就够啦)</p>
+</li>
+<li><p>对象<strong>从内存分配到垃圾回收</strong>，下面是自己的总结：</p>
+<ul>
+<li><p>内存分配</p>
+<ol>
+<li><p>对象如果开启TLAB先分配在TLAB(Thread Local Allocation Buffer)，不然分配在Eden区</p>
+</li>
+<li><p>大对象直接配置在老年代(具体参数为PretenureSizeThreshold)</p>
+</li>
+</ol>
+</li>
+<li><p>垃圾收集</p>
+<p>发生MinorGC，会将没死的对象复制在Survivor区，这里有两种情况：</p>
+<ol>
+<li>如果有相同年龄的对象大于Survivor区的一半，则进入老年代</li>
+<li>如果survivior区的对象年龄超过默认15（具体参数为MaxTenuringThreshold，这里可能会动态调整），进入老年代</li>
+</ol>
+<p>在进行MinorGC之前，有个空间担保的概念（老年代要放得下新生代的对象）的判断：</p>
+<p>如果老年代连续空间的大小 <strong>大于</strong> 新生代总大小或者历次晋升到老年代的平均大小 就会进行Minor GC，否则将进行Full GC</p>
+<p>进行FullGC还有下面几种情况：</p>
+<ol>
+<li>发生concurrent mode failure（由于并发清除阶段，用户线程产生的对象进入老年代）会引起Full GC，这种情况下会使用Serial Old收集器</li>
+<li>Minor GC后发生的担保失败（promotion failed）会触发FullGC</li>
+<li>永久代空间（Metaspace）不足会触发Full GC</li>
+<li>System.gc()引起的Full GC(一般会禁掉)</li>
+<li>老年代不足会触发FullGC</li>
+</ol>
+<p>这里再说一点，所谓的Full GC其实很多时候是和MajorGC相等的，只有在CMS的时候才有会MajorGC，因为只有它需要在老年代达到一定大小的时候会触发MajorGC(对应参数CMSInitiatingOccupancyFraction，默认92%)，其他都是发送在老年代满的时候发生FullGC，这时候包括MajorGC和MinorGC。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>上面这些”真相”对我们来说是解决问题的基础。</p>
+<h1 id="实践工具"><a href="#实践工具" class="headerlink" title="实践工具"></a>实践工具</h1><p>JDK的bin目录下提供了很多工具，我们可以利用这些工具来处理数据，这些<strong>数据</strong> 包括： 运行日志、异常堆栈、GC日志、线程快照(threaddump/javacore文件)、堆转储快照(heapdump/hprof文件)等。</p>
+<p>简单介绍几个工具：</p>
+<ol>
+<li>jps ：虚拟机进程状况工具，获得java进程</li>
+<li>jstat：虚拟机信息监控工具，可以获得类装载、内存、垃圾收集、JIT编译参数</li>
+<li>jinfo：配置信息工具，实时查看和调整虚拟机的各项参数</li>
+<li>jmap：内存映像工具，可以获得堆内存信息以及获得堆转储快照</li>
+<li>jstack：堆栈跟踪工具，可以获得线程快照</li>
+</ol>
+<p>上面都是命令行工具，下面说两个图形界面工具：</p>
+<ol>
+<li>VisualVM：多合一故障处理工具，通过插件扩展可以做到：<ul>
+<li>显示虚拟机进程以及配置信息(jps、jinfo)</li>
+<li>监控应用程序的CPU、GC、堆、方法区(Metaspace)、以及现场的信息(jstat、jstack)</li>
+<li>dump以及分析堆转储快照(jmap、jhat)</li>
+</ul>
+</li>
+<li>GC easy：图形化GC 日志</li>
+</ol>
+<h1 id="问题探索"><a href="#问题探索" class="headerlink" title="问题探索"></a>问题探索</h1><p>在我们拥有了相关”真相”知识和数据，还有工具，我们就可以解决很多问题，如下：</p>
+<h2 id="调优"><a href="#调优" class="headerlink" title="调优"></a>调优</h2><p>调优一般步骤可以概括为：确定目标、优化参数、验收结果</p>
+<p>明确应用程序的系统需求是性能优化的基础，系统的需求是指应用程序运行时某方面的要求，譬如： </p>
+<ul>
+<li>高可用，可用性达到几个9</li>
+<li>低延迟，请求必须多少毫秒内完成响应</li>
+<li>高吞吐，每秒完成多少次事务</li>
+</ul>
+<p>对于大部分应用来说，主要考虑两点：<strong>高可用和低延迟</strong>，其他再小一点就是<strong>低延迟</strong>，这也是我们为什么会使用<strong>ParNew+CMS</strong>的原因。</p>
+<p>对于低延迟，主要有两个考量：<strong>GC的次数和GC的时间 </strong>，所以下面列举几个需要优化的点：</p>
+<h3 id="MajorGC"><a href="#MajorGC" class="headerlink" title="MajorGC"></a>MajorGC</h3><p>虽然MajorGC 发生STW(stop the world)的时候比较短，但是次数多了影响也比价大，这里我们主要是减少它的次数，为了减少它的次数直接方法就是增加Eden区的大小，但是增加Eden区的大小会增加STW的时间，所以我们这里需要做一个权衡。下面是一个例子：</p>
+<ul>
+<li>扩容前：新生代容量为R ，假设对象A的存活时间为750ms，Minor GC间隔500ms，那么本次Minor GC时间= T1（扫描新生代R）+T2（复制对象A到S）。</li>
+<li>扩容后：新生代容量为2R ，对象A的生命周期为750ms，那么Minor GC间隔增加为1000ms，此时Minor GC对象A已不再存活，不需要把它复制到Survivor区，那么本次GC时间 = 2 × T1（扫描新生代R），没有T2复制时间。</li>
+</ul>
+<p>对于虚拟机来说，复制对象的成本要远高于扫描成本。因此如果堆<strong>短期对象很多</strong>，那么扩容新生代，单次Minor GC时间不会显著增加。关于这个周期就需要观察自己的应用代码以及GC日志或者利用Visual VM直接看扩容后MinorGC之后新生代内存的变化。增加了Eden的大小，还有一个好处就是老年代的对象也会减少。在《Java性能优化指南》的指导下，我们一般设置新生代的初始化为堆的3/8。</p>
+<h3 id="CMS的Remark"><a href="#CMS的Remark" class="headerlink" title="CMS的Remark"></a>CMS的Remark</h3><p>CMS垃圾收集器在Remark阶段是STW的，所以我们要尽力减少这段时间，由于新生代对象持有老年代中对象的引用，所以会扫描新生代和老年代，这个时候如果<strong>新生代的对象很多</strong>，会严重影响Remark阶段的耗时。由于新生代中对象的生命周期很短，这样如果在Remark前执行一次Minor GC，大部分对象就会被回收，可以很好的减少Remark阶段的耗时。<strong>为此CMS在Remark前增加了一个可中断的并发预清理阶段</strong>，该阶段主要工作仍然是并发标记对象是否存活，只是这个过程可被中断。此阶段在Eden区使用超过2M时启动，当然2M是默认的阈值，可以通过参数修改（在参考中CMS那边博客有详细说明）。如果此阶段执行时等到了Minor GC，那么新生代的部分对象将被回收，Reamark阶段需要扫描的对象就少了。除此之外CMS为了避免这个阶段没有等到Minor GC而陷入无限等待，提供了参数<strong>CMSMaxAbortablePrecleanTime </strong>，默认为5s，含义是如果可中断的预清理执行超过5s，不管发没发生Minor GC，都会中止此阶段，进入Remark阶段。 这个时候如果Remark时新生代中仍然有很多对象，耗时还是会很长，CMS提供<strong>CMSScavengeBeforeRemark</strong>参数，用来保证Remark前强制进行一次Minor GC。</p>
+<h3 id="FullGC"><a href="#FullGC" class="headerlink" title="FullGC"></a>FullGC</h3><p>对于CMS来说，FullGC的STW时间主要集中在Remark阶段，上面也只是减少GC时间，我们还有另外一个考量：GC次数。这次要用到我们刚开始说的”真相”了——FullGC发生的情况。通过GC日志，我们很容易确定发生FullGC的原因。我们可以根据具体的原因来调整参数。这里有一点就是如果是<strong>老年代不足会触发FullGC</strong>，我们就需要分析是否有<strong>内存泄漏</strong>，我们放在下面说。</p>
+<h2 id="内存溢出异常"><a href="#内存溢出异常" class="headerlink" title="内存溢出异常"></a>内存溢出异常</h2><p>这个会分为以下几种情况：</p>
+<ol>
+<li>堆溢出：这里我们需要分析代码中是否有大对象没有即时置空或者是否有内存泄漏，一般在堆溢出的时候我们会dump出堆转储快照，我们可以利用工具进行分析，具体分析可以在参考中找到，如果我们两次dump出文件对比发现有同样的对象都没有被回收，我们就需要看看是否有内存泄漏的可能性。</li>
+<li>栈溢出：栈溢出一般会在<strong>运行日志</strong>中输出异常堆栈，我们可以从异常堆栈中找到提示信息，最近我就遇到过一次，原因是下游系统提供的api中打印了利用fastjson序列化的一个SpringBean🤣，fastjson是递归去序列化的，而这个bean层级太深 ，也就到导致了栈溢出。这里也告诉我们一定要注意<strong>递归深度</strong>。</li>
+<li>Metaspace溢出：Metaspace主要是存一些类信息，在JDK8中它已经移动到直接内存中，这也表明了它受限于系统内存，一般情况下是不会溢出的。</li>
+<li>直接内存溢出：直接内存的溢出基本是由于DirectByteBuffer类和MappedByteBuffer类，堆外内存在VisualVM的Buffer Pools插件也可以监控得到。在参考中也有一篇文章是分析直接内存溢出的。</li>
+</ol>
+<h2 id="CPU飚高"><a href="#CPU飚高" class="headerlink" title="CPU飚高"></a>CPU飚高</h2><p>Java应用导致CPU飚高的有下面几种情况：</p>
+<ol>
+<li><p>程序计算比较密集，如FullGC频繁</p>
+</li>
+<li><p>程序死循环</p>
+</li>
+<li><p>程序逻请求堵塞，自旋</p>
+</li>
+<li>IO读写太高 </li>
+</ol>
+<p>有了上面的”真相”，我们解决问题起来也很好办了。主要是先找出cpu使用率高的线程(利用top命令)，然后利用jstack或者Visual VM找到相应的堆栈信息，根据堆栈信息定位代码，解决问题。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.cnblogs.com/littleLord/p/5380624.html" target="_blank" rel="noopener">详解CMS垃圾回收机制</a></li>
+<li><a href="https://tech.meituan.com/2017/12/29/jvm-optimize.html" target="_blank" rel="noopener">从实际案例聊聊Java应用的GC优化</a></li>
+<li><a href="https://blog.csdn.net/kl28978113/article/details/53817827" target="_blank" rel="noopener">JVisualVM简介与内存泄漏实战分析</a></li>
+<li>《深入理解Java虚拟机》</li>
+<li>《Java性能优化指南》</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;引：JVM对于大部分没有看过源码的人(包括我)来说是抽象的，自然也就看不见真相。此时我们所谓的”真相”更多是来自于博客和别人的话语，当这些抽象的概念被重复多次之后也就变成了我们所理解的”真相”，下面我们就来看看这些”真相”！并理解这些”真相”去解决问题。
+    
+    </summary>
+    
+      <category term="深入理解Java虚拟机" scheme="http://bestlixiang.site/categories/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+    
+      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
+    
+  </entry>
   
   <entry>
     <title>文件读写哪家强？</title>
@@ -1131,38 +1253,6 @@
       <category term="计算机组成" scheme="http://bestlixiang.site/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/"/>
     
       <category term="操作系统" scheme="http://bestlixiang.site/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JVM源码——劝退待起航</title>
-    <link href="http://bestlixiang.site/2019/04/26/JVM%E6%BA%90%E7%A0%81/JVM%E6%BA%90%E7%A0%81%E2%80%94%E2%80%94%E5%8A%9D%E9%80%80%E5%BE%85%E8%B5%B7%E8%88%AA/"/>
-    <id>http://bestlixiang.site/2019/04/26/JVM源码/JVM源码——劝退待起航/</id>
-    <published>2019-04-26T12:15:14.000Z</published>
-    <updated>2019-04-26T12:25:06.543Z</updated>
-    
-    <content type="html"><![CDATA[<p>原以为可以平结自己略懂的C++去看JVM源码，但是等到自己真正去打开源码，就算是对着博客看，也是十分吃力，还看了知乎R大对看JVM源码的看法。SO，我被自己和R大劝退了，可能目前的自己还不适合去看，希望自己以后<strong>有需要有梦想</strong>再来看！<a id="more"></a><br><img src="https://upload-images.jianshu.io/upload_images/10354196-a3eeb7ecd08d51cf.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="劝退.jpeg"></p>
-<h1 id="劝退"><a href="#劝退" class="headerlink" title="劝退"></a>劝退</h1><p><a href="https://www.zhihu.com/question/20097631" target="_blank" rel="noopener">R大关于 <strong>Java JVM怎么学习啊？从哪方面入手？</strong>的回答</a></p>
-<p>这完全取决于题主是为什么要学习JVM，想学到多深。前面 <a href="//www.zhihu.com/people/05f661615136170935175f54719ff0a0">@曹旭东</a> 和 <a href="//www.zhihu.com/people/7a082a33732215bdd02df94467fe6b1f">@Scott</a> 说得很对。<br>如果感觉摸不清东南西北的话请试试从我在豆瓣上发的豆单开始吧：<a href="https://link.zhihu.com/?target=http%3A//book.douban.com/doulist/2545443/" target="_blank" rel="noopener">从表到里学习JVM实现</a><br>如果一上来就想通过阅读OpenJDK里的HotSpot VM的源码来入手学习JVM，那么我推荐先读读我之前写的一个演示稿：<a href="https://link.zhihu.com/?target=http%3A//rednaxelafx.iteye.com/blog/1426530" target="_blank" rel="noopener">为啥别读HotSpot VM的源码</a></p>
-<p>虽然说现在不看了，但是自己还是留在几个JVM解析相关博客：</p>
-<ol>
-<li><a href="https://www.jianshu.com/nb/12554212" target="_blank" rel="noopener">JVM源码分析</a></li>
-<li><a href="https://hunterzhao.io/categories/#" target="_blank" rel="noopener">JVM源码揭秘</a></li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>但行好事，莫问前程</p>
-<p>状态：感觉什么都懂一点，又感觉什么都不懂 —— 不够深入</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;原以为可以平结自己略懂的C++去看JVM源码，但是等到自己真正去打开源码，就算是对着博客看，也是十分吃力，还看了知乎R大对看JVM源码的看法。SO，我被自己和R大劝退了，可能目前的自己还不适合去看，希望自己以后&lt;strong&gt;有需要有梦想&lt;/strong&gt;再来看！
-    
-    </summary>
-    
-      <category term="JVM源码" scheme="http://bestlixiang.site/categories/JVM%E6%BA%90%E7%A0%81/"/>
-    
-    
-      <category term="JVM" scheme="http://bestlixiang.site/tags/JVM/"/>
     
   </entry>
   

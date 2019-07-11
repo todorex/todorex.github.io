@@ -1,0 +1,1064 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="JVM,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="引：JVM对于大部分没有看过源码的人(包括我)来说是抽象的，自然也就看不见真相。此时我们所谓的”真相”更多是来自于博客和别人的话语，当这些抽象的概念被重复多次之后也就变成了我们所理解的”真相”，下面我们就来看看这些”真相”！并理解这些”真相”去解决问题。">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM问题解决思路总结">
+<meta property="og:url" content="http://bestlixiang.site/2019/07/11/深入理解Java虚拟机/JVM问题解决思路总结/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：JVM对于大部分没有看过源码的人(包括我)来说是抽象的，自然也就看不见真相。此时我们所谓的”真相”更多是来自于博客和别人的话语，当这些抽象的概念被重复多次之后也就变成了我们所理解的”真相”，下面我们就来看看这些”真相”！并理解这些”真相”去解决问题。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-11T00:40:16.174Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM问题解决思路总结">
+<meta name="twitter:description" content="引：JVM对于大部分没有看过源码的人(包括我)来说是抽象的，自然也就看不见真相。此时我们所谓的”真相”更多是来自于博客和别人的话语，当这些抽象的概念被重复多次之后也就变成了我们所理解的”真相”，下面我们就来看看这些”真相”！并理解这些”真相”去解决问题。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2019/07/11/深入理解Java虚拟机/JVM问题解决思路总结/">
+
+
+
+
+
+  <title> JVM问题解决思路总结 | rex note </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2019/07/11/深入理解Java虚拟机/JVM问题解决思路总结/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                JVM问题解决思路总结
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-11T08:41:21+08:00">
+                2019-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/深入理解Java虚拟机/" itemprop="url" rel="index">
+                    <span itemprop="name">深入理解Java虚拟机</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：JVM对于大部分没有看过源码的人(包括我)来说是抽象的，自然也就看不见真相。此时我们所谓的”真相”更多是来自于博客和别人的话语，当这些抽象的概念被重复多次之后也就变成了我们所理解的”真相”，下面我们就来看看这些”真相”！并理解这些”真相”去解决问题。<a id="more"></a></p>
+<h1 id="前置真相"><a href="#前置真相" class="headerlink" title="前置真相"></a>前置真相</h1><ol>
+<li><p>JVM运行时内存结构，重点是<strong>堆的结构</strong>(最基础的，这里就不多说了)</p>
+</li>
+<li><p>Java垃圾收集器，重点是<strong>CMS收集器</strong>(看参考的那边文章就够啦)</p>
+</li>
+<li><p>对象<strong>从内存分配到垃圾回收</strong>，下面是自己的总结：</p>
+<ul>
+<li><p>内存分配</p>
+<ol>
+<li><p>对象如果开启TLAB先分配在TLAB(Thread Local Allocation Buffer)，不然分配在Eden区</p>
+</li>
+<li><p>大对象直接配置在老年代(具体参数为PretenureSizeThreshold)</p>
+</li>
+</ol>
+</li>
+<li><p>垃圾收集</p>
+<p>发生MinorGC，会将没死的对象复制在Survivor区，这里有两种情况：</p>
+<ol>
+<li>如果有相同年龄的对象大于Survivor区的一半，则进入老年代</li>
+<li>如果survivior区的对象年龄超过默认15（具体参数为MaxTenuringThreshold，这里可能会动态调整），进入老年代</li>
+</ol>
+<p>在进行MinorGC之前，有个空间担保的概念（老年代要放得下新生代的对象）的判断：</p>
+<p>如果老年代连续空间的大小 <strong>大于</strong> 新生代总大小或者历次晋升到老年代的平均大小 就会进行Minor GC，否则将进行Full GC</p>
+<p>进行FullGC还有下面几种情况：</p>
+<ol>
+<li>发生concurrent mode failure（由于并发清除阶段，用户线程产生的对象进入老年代）会引起Full GC，这种情况下会使用Serial Old收集器</li>
+<li>Minor GC后发生的担保失败（promotion failed）会触发FullGC</li>
+<li>永久代空间（Metaspace）不足会触发Full GC</li>
+<li>System.gc()引起的Full GC(一般会禁掉)</li>
+<li>老年代不足会触发FullGC</li>
+</ol>
+<p>这里再说一点，所谓的Full GC其实很多时候是和MajorGC相等的，只有在CMS的时候才有会MajorGC，因为只有它需要在老年代达到一定大小的时候会触发MajorGC(对应参数CMSInitiatingOccupancyFraction，默认92%)，其他都是发送在老年代满的时候发生FullGC，这时候包括MajorGC和MinorGC。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>上面这些”真相”对我们来说是解决问题的基础。</p>
+<h1 id="实践工具"><a href="#实践工具" class="headerlink" title="实践工具"></a>实践工具</h1><p>JDK的bin目录下提供了很多工具，我们可以利用这些工具来处理数据，这些<strong>数据</strong> 包括： 运行日志、异常堆栈、GC日志、线程快照(threaddump/javacore文件)、堆转储快照(heapdump/hprof文件)等。</p>
+<p>简单介绍几个工具：</p>
+<ol>
+<li>jps ：虚拟机进程状况工具，获得java进程</li>
+<li>jstat：虚拟机信息监控工具，可以获得类装载、内存、垃圾收集、JIT编译参数</li>
+<li>jinfo：配置信息工具，实时查看和调整虚拟机的各项参数</li>
+<li>jmap：内存映像工具，可以获得堆内存信息以及获得堆转储快照</li>
+<li>jstack：堆栈跟踪工具，可以获得线程快照</li>
+</ol>
+<p>上面都是命令行工具，下面说两个图形界面工具：</p>
+<ol>
+<li>VisualVM：多合一故障处理工具，通过插件扩展可以做到：<ul>
+<li>显示虚拟机进程以及配置信息(jps、jinfo)</li>
+<li>监控应用程序的CPU、GC、堆、方法区(Metaspace)、以及现场的信息(jstat、jstack)</li>
+<li>dump以及分析堆转储快照(jmap、jhat)</li>
+</ul>
+</li>
+<li>GC easy：图形化GC 日志</li>
+</ol>
+<h1 id="问题探索"><a href="#问题探索" class="headerlink" title="问题探索"></a>问题探索</h1><p>在我们拥有了相关”真相”知识和数据，还有工具，我们就可以解决很多问题，如下：</p>
+<h2 id="调优"><a href="#调优" class="headerlink" title="调优"></a>调优</h2><p>调优一般步骤可以概括为：确定目标、优化参数、验收结果</p>
+<p>明确应用程序的系统需求是性能优化的基础，系统的需求是指应用程序运行时某方面的要求，譬如： </p>
+<ul>
+<li>高可用，可用性达到几个9</li>
+<li>低延迟，请求必须多少毫秒内完成响应</li>
+<li>高吞吐，每秒完成多少次事务</li>
+</ul>
+<p>对于大部分应用来说，主要考虑两点：<strong>高可用和低延迟</strong>，其他再小一点就是<strong>低延迟</strong>，这也是我们为什么会使用<strong>ParNew+CMS</strong>的原因。</p>
+<p>对于低延迟，主要有两个考量：<strong>GC的次数和GC的时间 </strong>，所以下面列举几个需要优化的点：</p>
+<h3 id="MajorGC"><a href="#MajorGC" class="headerlink" title="MajorGC"></a>MajorGC</h3><p>虽然MajorGC 发生STW(stop the world)的时候比较短，但是次数多了影响也比价大，这里我们主要是减少它的次数，为了减少它的次数直接方法就是增加Eden区的大小，但是增加Eden区的大小会增加STW的时间，所以我们这里需要做一个权衡。下面是一个例子：</p>
+<ul>
+<li>扩容前：新生代容量为R ，假设对象A的存活时间为750ms，Minor GC间隔500ms，那么本次Minor GC时间= T1（扫描新生代R）+T2（复制对象A到S）。</li>
+<li>扩容后：新生代容量为2R ，对象A的生命周期为750ms，那么Minor GC间隔增加为1000ms，此时Minor GC对象A已不再存活，不需要把它复制到Survivor区，那么本次GC时间 = 2 × T1（扫描新生代R），没有T2复制时间。</li>
+</ul>
+<p>对于虚拟机来说，复制对象的成本要远高于扫描成本。因此如果堆<strong>短期对象很多</strong>，那么扩容新生代，单次Minor GC时间不会显著增加。关于这个周期就需要观察自己的应用代码以及GC日志或者利用Visual VM直接看扩容后MinorGC之后新生代内存的变化。增加了Eden的大小，还有一个好处就是老年代的对象也会减少。在《Java性能优化指南》的指导下，我们一般设置新生代的初始化为堆的3/8。</p>
+<h3 id="CMS的Remark"><a href="#CMS的Remark" class="headerlink" title="CMS的Remark"></a>CMS的Remark</h3><p>CMS垃圾收集器在Remark阶段是STW的，所以我们要尽力减少这段时间，由于新生代对象持有老年代中对象的引用，所以会扫描新生代和老年代，这个时候如果<strong>新生代的对象很多</strong>，会严重影响Remark阶段的耗时。由于新生代中对象的生命周期很短，这样如果在Remark前执行一次Minor GC，大部分对象就会被回收，可以很好的减少Remark阶段的耗时。<strong>为此CMS在Remark前增加了一个可中断的并发预清理阶段</strong>，该阶段主要工作仍然是并发标记对象是否存活，只是这个过程可被中断。此阶段在Eden区使用超过2M时启动，当然2M是默认的阈值，可以通过参数修改（在参考中CMS那边博客有详细说明）。如果此阶段执行时等到了Minor GC，那么新生代的部分对象将被回收，Reamark阶段需要扫描的对象就少了。除此之外CMS为了避免这个阶段没有等到Minor GC而陷入无限等待，提供了参数<strong>CMSMaxAbortablePrecleanTime </strong>，默认为5s，含义是如果可中断的预清理执行超过5s，不管发没发生Minor GC，都会中止此阶段，进入Remark阶段。 这个时候如果Remark时新生代中仍然有很多对象，耗时还是会很长，CMS提供<strong>CMSScavengeBeforeRemark</strong>参数，用来保证Remark前强制进行一次Minor GC。</p>
+<h3 id="FullGC"><a href="#FullGC" class="headerlink" title="FullGC"></a>FullGC</h3><p>对于CMS来说，FullGC的STW时间主要集中在Remark阶段，上面也只是减少GC时间，我们还有另外一个考量：GC次数。这次要用到我们刚开始说的”真相”了——FullGC发生的情况。通过GC日志，我们很容易确定发生FullGC的原因。我们可以根据具体的原因来调整参数。这里有一点就是如果是<strong>老年代不足会触发FullGC</strong>，我们就需要分析是否有<strong>内存泄漏</strong>，我们放在下面说。</p>
+<h2 id="内存溢出异常"><a href="#内存溢出异常" class="headerlink" title="内存溢出异常"></a>内存溢出异常</h2><p>这个会分为以下几种情况：</p>
+<ol>
+<li>堆溢出：这里我们需要分析代码中是否有大对象没有即时置空或者是否有内存泄漏，一般在堆溢出的时候我们会dump出堆转储快照，我们可以利用工具进行分析，具体分析可以在参考中找到，如果我们两次dump出文件对比发现有同样的对象都没有被回收，我们就需要看看是否有内存泄漏的可能性。</li>
+<li>栈溢出：栈溢出一般会在<strong>运行日志</strong>中输出异常堆栈，我们可以从异常堆栈中找到提示信息，最近我就遇到过一次，原因是下游系统提供的api中打印了利用fastjson序列化的一个SpringBean🤣，fastjson是递归去序列化的，而这个bean层级太深 ，也就到导致了栈溢出。这里也告诉我们一定要注意<strong>递归深度</strong>。</li>
+<li>Metaspace溢出：Metaspace主要是存一些类信息，在JDK8中它已经移动到直接内存中，这也表明了它受限于系统内存，一般情况下是不会溢出的。</li>
+<li>直接内存溢出：直接内存的溢出基本是由于DirectByteBuffer类和MappedByteBuffer类，堆外内存在VisualVM的Buffer Pools插件也可以监控得到。在参考中也有一篇文章是分析直接内存溢出的。</li>
+</ol>
+<h2 id="CPU飚高"><a href="#CPU飚高" class="headerlink" title="CPU飚高"></a>CPU飚高</h2><p>Java应用导致CPU飚高的有下面几种情况：</p>
+<ol>
+<li><p>程序计算比较密集，如FullGC频繁</p>
+</li>
+<li><p>程序死循环</p>
+</li>
+<li><p>程序逻请求堵塞，自旋</p>
+</li>
+<li>IO读写太高 </li>
+</ol>
+<p>有了上面的”真相”，我们解决问题起来也很好办了。主要是先找出cpu使用率高的线程(利用top命令)，然后利用jstack或者Visual VM找到相应的堆栈信息，根据堆栈信息定位代码，解决问题。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://www.cnblogs.com/littleLord/p/5380624.html" target="_blank" rel="noopener">详解CMS垃圾回收机制</a></li>
+<li><a href="https://tech.meituan.com/2017/12/29/jvm-optimize.html" target="_blank" rel="noopener">从实际案例聊聊Java应用的GC优化</a></li>
+<li><a href="https://blog.csdn.net/kl28978113/article/details/53817827" target="_blank" rel="noopener">JVisualVM简介与内存泄漏实战分析</a></li>
+<li>《深入理解Java虚拟机》</li>
+<li>《Java性能优化指南》</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/07/Java基础/文件读写哪家强？/" rel="next" title="文件读写哪家强？">
+                <i class="fa fa-chevron-left"></i> 文件读写哪家强？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">167</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">86</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前置真相"><span class="nav-number">1.</span> <span class="nav-text">前置真相</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实践工具"><span class="nav-number">2.</span> <span class="nav-text">实践工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题探索"><span class="nav-number">3.</span> <span class="nav-text">问题探索</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#调优"><span class="nav-number">3.1.</span> <span class="nav-text">调优</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MajorGC"><span class="nav-number">3.1.1.</span> <span class="nav-text">MajorGC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CMS的Remark"><span class="nav-number">3.1.2.</span> <span class="nav-text">CMS的Remark</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FullGC"><span class="nav-number">3.1.3.</span> <span class="nav-text">FullGC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存溢出异常"><span class="nav-number">3.2.</span> <span class="nav-text">内存溢出异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU飚高"><span class="nav-number">3.3.</span> <span class="nav-text">CPU飚高</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
