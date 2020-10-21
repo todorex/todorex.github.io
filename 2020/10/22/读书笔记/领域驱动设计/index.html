@@ -1,0 +1,1412 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="DDD,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="引：业务开发必不可少！！">
+<meta name="keywords" content="DDD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《领域驱动设计》读书笔记">
+<meta property="og:url" content="http://bestlixiang.site/2020/10/22/读书笔记/领域驱动设计/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：业务开发必不可少！！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/WF7LSrD.jpg">
+<meta property="og:image" content="https://yyang.io/2015/12/31/DDD-and-Layered-Architecture/layered-architecture.png">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/702098/202003/702098-20200321120427928-2072921799.png">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/3397ed64af078ec42bb40e6ab31d8f19202.png">
+<meta property="og:image" content="http://gdut_yy.gitee.io/doc-ddd/figures/ch12/12inf01.jpg">
+<meta property="og:image" content="http://gdut_yy.gitee.io/doc-ddd/figures/ch12/12inf02.jpg">
+<meta property="og:image" content="http://gdut_yy.gitee.io/doc-ddd/figures/ch14/fg14-1.jpg">
+<meta property="og:image" content="http://gdut_yy.gitee.io/doc-ddd/figures/ch15/fg15-1.jpg">
+<meta property="og:image" content="http://gdut_yy.gitee.io/doc-ddd/figures/ch16/fg16-1.jpg">
+<meta property="og:updated_time" content="2020-10-21T16:10:02.086Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《领域驱动设计》读书笔记">
+<meta name="twitter:description" content="引：业务开发必不可少！！">
+<meta name="twitter:image" content="https://i.imgur.com/WF7LSrD.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2020/10/22/读书笔记/领域驱动设计/">
+
+
+
+
+
+  <title> 《领域驱动设计》读书笔记 | rex note </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2020/10/22/读书笔记/领域驱动设计/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                《领域驱动设计》读书笔记
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-22T00:09:41+08:00">
+                2020-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：业务开发必不可少！！<a id="more"></a></p>
+<p>本书<strong>为设计决策提供了一个框架</strong>，并且为讨论领域设计提供了一个<strong>技术词汇库</strong>。</p>
+<p>很多应用程序最主要的复杂性并不在技术上，而是来源于领域本身、用户的活动和业务（后续逻辑）。</p>
+<p>本书有两个前提：</p>
+<ol>
+<li>在大多数软件项目中，主要的焦点应该是领域和领域逻辑</li>
+<li>复杂的领域设计应该基于模型</li>
+</ol>
+<p>领域驱动设计的实质就是消化吸收大量知识、最后产生一个<strong>反应深层次领域支持</strong>，并聚焦关键概念的<strong>模型</strong>。</p>
+<h1 id="运用领域模型"><a href="#运用领域模型" class="headerlink" title="运用领域模型"></a>运用领域模型</h1><p><strong>提出领域驱动开发的基本目标</strong>， 这些目标是后面讨论的实践的驱动因素。</p>
+<p>用户应用软件的<strong>问题区域</strong>就是软件的<strong>领域</strong>，有些领域是无形的，比如会计程序的金融领域，源代码控制系统的领域是软件开发本身，领域驱动设计，让我们主动寻找领域模型，然后进行设计，然后形成解决某个领域的软件产品，<strong>软件的核心就是其为用户解决领域相关的问题的能力</strong>。</p>
+<p><strong>模型</strong>在领域驱动设计中的作用</p>
+<ol>
+<li>模型和设计相互影响</li>
+<li>模型是通用语言</li>
+<li>模型是浓缩的知识</li>
+</ol>
+<h2 id="消化知识，形成模型"><a href="#消化知识，形成模型" class="headerlink" title="消化知识，形成模型"></a>消化知识，形成模型</h2><p>领域知识，这是从领域专家或者领域用户来的，而不是开发脑子想的，我们需要不断用用户获取知识，完善开发的领域知识，更好的建模。</p>
+<p><strong>对于开发人员既要完善技术知识，也要培养一般的领域建模技巧。</strong></p>
+<p><strong>模型用于不是“发现名词”， 业务活动(Usecase)以及规则（domain service）和实体同样重要</strong></p>
+<p>关于一些规则不能放在业务活动的一个判断里，更应该将一些规则放到领域服务里</p>
+<p>领域知识 -》 领域建模技术 -》领域模型</p>
+<h2 id="模型对应了通用语言"><a href="#模型对应了通用语言" class="headerlink" title="模型对应了通用语言"></a>模型对应了通用语言</h2><p>领域模型可称为软件项目通用语言的核心</p>
+<p>通用语言的词汇包括类（领域对象）和主要操作（领域服务）的名称</p>
+<p><strong>对于通用语言的修改，就是对模型的修改，就是对代码的修改</strong></p>
+<p>对于不同的系统，模型可能是不同的，虽然他们对于现实的东西是一样的，所以我们需要定义不同系统和模型之间关系的<strong>界限上下文</strong></p>
+<p>讨论系统要结合模型，并使用模型进行交流，就会将这些模型和想法记录到图和代码中。</p>
+<p>关于文档和图，在讨论完模型（包括类和操作）之后，我们总是会以文档或图来展现，我们倾向于展现一些简单的小图（不是所以的编码对象），设计的重要谢姐应该在代码中体现出来。</p>
+<p>对于解释性模型，不一定是UML图，但是是有关联的，解释性模型是为了让人更好理解。</p>
+<h2 id="绑定领域模型和实现"><a href="#绑定领域模型和实现" class="headerlink" title="绑定领域模型和实现"></a>绑定领域模型和实现</h2><p><strong>领域模型驱动设计</strong> 要求模型不仅能够知道早期的分析工作（面向领域专家、面向产品），还应该成为设计的基础（面向开发）</p>
+<p>为了实现在模型和设计对应关系，所以我们一般会使用<strong>面向对象语言</strong> ，哈哈哈哈哈哈，所以<strong>面向对象设计就是目前大多数项目所使用的建模范式</strong></p>
+<p>软件开发就是一个不断净化模型、设计、和代码的统一的迭代过程</p>
+<p>将建模和编程过程完全分离是行不通的。</p>
+<h1 id="模型驱动设计的构造块"><a href="#模型驱动设计的构造块" class="headerlink" title="模型驱动设计的构造块"></a>模型驱动设计的构造块</h1><p><strong>将面向对象领域建模中的一些核心最佳实践提炼为一组基本的构造块</strong>，消除模型和实际运行的软件（实现）之间的鸿沟，同时可作为一些基本术语。</p>
+<p><strong>将领域设计与软件系统中的其他关注点分离</strong>会使设计与模型之间的关系更加清晰，根据不同的特征来定义模型元素则会使元素的意义更加鲜明。</p>
+<p>下面是在领域设计中基本元素的导航图：</p>
+<p><img src="https://i.imgur.com/WF7LSrD.jpg" alt="领域驱动设计读书笔记PART I &amp; II | El Psy Congroo"></p>
+<h2 id="分离领域"><a href="#分离领域" class="headerlink" title="分离领域"></a>分离领域</h2><p>我们需要将<strong>领域对象与系统中的其他功能分离</strong>，这样才能避免将领域概念和其他的软件技术相关概念搞混了。</p>
+<p><img src="https://yyang.io/2015/12/31/DDD-and-Layered-Architecture/layered-architecture.png" alt="DDD与分层架构| 秋水逍遥"></p>
+<p>要想创建能够处理复杂任务的程序，需要做到<strong>关注点分离</strong> ，使设计中的每个部分都得到单独的关注，在分离的同时，也需要维持系统内部复杂的交互关系。</p>
+<p>为了实现关注点分离，一般会采用上图的<strong>分层架构</strong> （整洁架构也是其中一种）， <strong>分层架构的基本原则是层汇总的任何元素都仅依赖于本层的其他元素或其下层的元素，向上的通信必须通过间接的方式进行</strong>。（间接的方式是什么？？？回调模式或观察者模式？？这是不还是直接调用？？）</p>
+<p>上图的四层主要是：</p>
+<ol>
+<li>用户界面层（表示层）：负责向用户显示信息和解释用户的指令，这里的用户可是另一个计算机系统（RPC调用）对于我们现在的微服务架构，就是<strong>服务接口层</strong>。</li>
+<li>应用层：<strong>定义软件要完成的任务</strong>，并且指挥表达领域概念的对象来解决问题，<strong>具有商业价值的一层</strong></li>
+<li>领域层（模型层）：<strong>负责表达业务的概念，业务的状态信息以及业务规则（特别是业务规则）</strong> 尽管保存业务状态的技术细节是由基础设施层完成的，但是反应业务情况的状态是由本层控制并且使用的。<strong>领域层是业务软件的核心</strong></li>
+<li>基础设置层：为上面各层提供通用的技术能力：为应用层传递消息，为领域层提供持久化机制等等，基础设置层还能够通过<strong>架构框架</strong>来支持4个层次的交互模式。不过不对具体的基础设置产生依赖，一般会采用<strong>依赖导致</strong>，让基础设施层去依赖领域层。</li>
+</ol>
+<p>SMART_UI模式：就是将应用程序分成小的功能模块，分别将他们实现成用户界面，并嵌入业务规则。用关系数据库作为共享的数据存储库。一对一，没有任务复用，优点：简单，能快速实现程序，在原型简单可以使用，维护程序员你可以迅速重写他们不明白的代码端，因为修改代码只会影响到代码所在的用户界面。缺点：不通过数据库很难继承模块，没有对行为的重用，也没有对业务问题的抽象，每当操作用到业务规则时，都必须重复这些规则。</p>
+<h2 id="软件中使用的模型"><a href="#软件中使用的模型" class="headerlink" title="软件中使用的模型"></a>软件中使用的模型</h2><p>为了不削弱模型驱动设计能力，我们需要将模型和实现个各个细节意义联系起来。</p>
+<p>对象之间的<strong>关联</strong>很容易想象出来，也很容易画出来，但是实现他们却存在很多潜在的麻烦，<strong>关联</strong>也表明了具体的<strong>实现决策</strong>在模型驱动设计中的重要性。</p>
+<p>在模型驱动设计中，用于表示模型的三个元素：</p>
+<ol>
+<li>Entity(实体)：具有连续性和标识的实物（可能就有不同的状态）</li>
+<li>Value Object(值对象)：描述某种状态的属性</li>
+<li>Service(服务，业务规则)：描述某项<strong>无状态</strong>的活动</li>
+</ol>
+<p>对象之间的<strong>关联</strong>是的建模和实现之间的交互更加复杂，如果一对多，多对一，多对多等等，为了使关联更易于控制，有下面这样的规定：</p>
+<ol>
+<li>规定一个遍历方向（虽然可以双向遍历的，但是从使用角度只保留一个方向）</li>
+<li>添加一个限定符（美国在1970年（1970就是限定符）的总统是乔治*华盛顿，把1对多，变成了一对一），通过增加限定条件（可以理解成一个查询条件）变成一对一</li>
+<li>消除不必要的关联 （识别出不重要的关联）</li>
+</ol>
+<h3 id="Entity"><a href="#Entity" class="headerlink" title="Entity"></a>Entity</h3><p>很多对象不是通过属性定义的，而是通过连续性（虽然属性变化，但是本质没有变）和<strong>标识</strong>（人的身份证号）定义的。</p>
+<p><strong>Entity</strong>：主要由<strong>标识</strong>定义的对象，这个标识是领域中的标识，而不是技术上的表示，比如对象的ID，地址等，对于标识的定义，有时需要根据应用的上下文来确定。</p>
+<h4 id="建模"><a href="#建模" class="headerlink" title="建模"></a>建模</h4><p>抓住Entity定义的最本质的特征，尤其是那些用于识别、查找或匹配对象的特征，只添加对概念至关重要的<strong>行为</strong>和这些行为所必须的<strong>属性</strong>，此外还应该将行为和属性转移到与核心实体关联的对象中。</p>
+<p>除了标识问题外，实体往往通过协调其关联对象的操作来完成自己的职责</p>
+<h4 id="设计标识操作"><a href="#设计标识操作" class="headerlink" title="设计标识操作"></a>设计标识操作</h4><p>需要理解领域，可能是一个属性唯一键，也可能是多个属性组成的唯一键，当都没有的时候就需要为对象增加一个唯一符号（系统生成的一个数字或者字符串）作为属性，如订单号</p>
+<h3 id="Value-Object"><a href="#Value-Object" class="headerlink" title="Value Object"></a>Value Object</h3><p><strong>value object</strong>: 用于描述领域的某个方面二本身<strong>没有概念标识</strong>的对象，识别还是要更具上下文来看的。</p>
+<p>值对象经常作为参数在对象之间传递消息，往往是临时对象，同时它也用作Entity的一个属性。Value Object应该是不可变的，如果变了就是另外一个Value Object。</p>
+<p>Value Object可以是用于复制，也可以是共享（如果可变则不能共享），看实现性能需求。</p>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>有些重要的<strong>领域操作</strong> 无法放到Entity或者Value Object中，这当中有些操作从本质上讲是一些活动或者操作，而不是事物。</p>
+<p>一些领域该你啊你不合适被建模为对象，如果勉强吧这些重要的<strong>领域功能</strong>归为Entity或Value Object的职责，就会破坏真正的对象。</p>
+<p><strong>Service</strong> 是作为借口提供的一种操作，他在模型是独立的，并且不像Entity和Value Object那样具有封装的<strong>状态</strong> 他强调的是与其他对象关系，往往是以一个活动动词来命名，Service应该有定义的职责，这种职责以及履行它的接口也应该给作为模型的一部分来加以定义。操作名称应该来源于统一语言，没有则加入统一语言，<strong>参数和结果都应该是领域对象</strong></p>
+<p>好的Service有以下三个特征：</p>
+<ol>
+<li>与领域概念相关的操作不是Entity或ValueObject的一个自然组成部分，如果是，更应该放到Entity或Value Object当中</li>
+<li>接口是更具模型领域的其他元素定义的</li>
+<li>操作是无状态 的</li>
+</ol>
+<p>由于<strong>Service</strong>太过常见，有应用层的Service，领域层的Service，基础设施层的Service，所以我们要认真识别，只将有领域概念的Service当做领域层的Service，具体的例子可以参考书本。<strong>除了表示领域操作，很多时候领域层的Service也用来防止领域组件粒度过细，将领域信息外泄，将细粒度的对象包装为中等粒度的对象传递出去。</strong></p>
+<p>关于Service访问：我们很多时候会使用依赖注入的方式来利用接口访问，但是要考虑业务的复杂性，如果简单，可以直接使用单例，而不使用依赖注入框架，但是现在感觉大部分都挺复杂的，还是用了好。</p>
+<h3 id="Module"><a href="#Module" class="headerlink" title="Module"></a>Module</h3><p>module之间是低耦合的，module之内是高内聚的，我们要联系紧密的领域元素放在一个module里面。可以理解为模块。领域层不可分割，至少作为一个单独的module</p>
+<p>这个要站在更好的维度去思考！他也算是一个统一语言，group模块，org模块</p>
+<h3 id="建模范式"><a href="#建模范式" class="headerlink" title="建模范式"></a>建模范式</h3><p><strong>模型驱动设计</strong>要求使员工一种与<strong>建模范式</strong>协调的实现技术</p>
+<p>主流的范式是<strong>面向对象设计</strong></p>
+<p>对于不适合使用面向对象范式的部分，可以使用其他范式，但是要通过<strong>统一语言</strong>来保持上下文</p>
+<p>规则引擎、工作流引擎不适合用对象方式来建模？？？（不太理解意思？？？？），然后是核心模型不应该包括业务信息，关于工作流引擎，业务信息变化太快，所以要抽离处理，还是不太懂</p>
+<h2 id="领域对象的生命周期"><a href="#领域对象的生命周期" class="headerlink" title="领域对象的生命周期"></a>领域对象的生命周期</h2><p>每个对象都有生命周期，对象自创建后，可能会经历各种不同的状态，直到最终消亡——要么存档，要么删除、对于临时对象来说，就是通过构造函数创建，做一些计算，然后由垃圾收集器回收。对于一些对象，比如Entity对象，他的生命周期更长，会经历一些状态变化，变化会遵守一些固定规则。大部分对象会经历下面的流程：</p>
+<p><img src="https://img2020.cnblogs.com/blog/702098/202003/702098-20200321120427928-2072921799.png" alt="六领域驱动设计-领域对象的生命周期- fingersnow - 博客园"></p>
+<p>管理这些对象主要的挑战如下：</p>
+<ol>
+<li>在整个生命周期维护完整性（完整性是指删除一个对象，也要删除属于它的对象）</li>
+<li>防止模型陷入管理生命周期复杂性造成的困境（应对不同的基础设施以及对象转换）</li>
+</ol>
+<p>为了解决上面的挑战，会使用到下面3中模式：</p>
+<ol>
+<li>聚合根（Aggregate）：定义清晰的所属关系和边界，并避免混乱、错综复杂的对象关系网，这对于维护生命周期哥各个阶段的完整性很有效果</li>
+<li>工厂（Factory）：使用工厂创建和重建复杂对象和聚合根，从而封装他们的内部结构，（主要是做数据库表示到领域对象的转换）</li>
+<li>存储库（Repository）：用来提供查找和检索持久化对象并封装庞大的基础设施</li>
+</ol>
+<h3 id="Aggregate"><a href="#Aggregate" class="headerlink" title="Aggregate"></a>Aggregate</h3><p>在具有复杂关联的模型中，要想保证对象的更改的一致性是苦难的，不仅互不关联的对象需要遵守一些固定规则，而且紧密联系的各组对象也要遵守一些固定规则，然而国语谨慎的<strong>锁定机制</strong>又会导致多个用户之间毫无意义的相互干扰（顺序加锁），从而使系统不可用。</p>
+<p>要想找到解决上面的方法，需要对领域有更加深刻的理解，比如要了解特定类实例之间的<strong>更改频率</strong>这样的深层次因素，我们需要找到一个<strong>使对象间冲突较少而固定规则联系更紧密</strong>的模型。</p>
+<p>我们需要一个抽象来封装模型中的引用。<strong>Aggregate</strong>就是一组相关对象的集合，我们把它作为数据修改的单元。每个<strong>Aggregate</strong>都有一个<strong>根</strong>（root）和一个<strong>边界</strong>（boundary），边界定义了Aggregate内部都有什么。根则是Aggregate所包含的一个特定的Entity。对Aggregate而言，外部对象只可以引用根，而边界内部的对象之间则可以互相引用。除了根以后的其他Enttiy都有本地标识。</p>
+<p><strong>固定规则</strong> 是指在数据变化时必须保持一致性的规则，其涉及Aggregate成员之内的内部关系。而跨越Aggregate的骨子额将不要求每时每刻都保持最终状态，通过事件处理或其他更新机制，保持最终一致性就好了。但是<strong>在每个事务完成时，Aggregate内部所应用的固定规则必须得到满足</strong>。</p>
+<p>为了实现上诉概念的Aggregate，我们需要所有事务应用一组规则：</p>
+<ul>
+<li>根Entity具有全局标识，他复杂检查固定规则</li>
+<li>根Enttiy具有全局标识，边界内的Entitty具有本地表示，这些表示只在Aggregate内部才是唯一的。</li>
+<li>Aggregate外部的对象不能引用除根Entity之外的任何内部对象，根Entity可以吧对内部Entity引用传递给他们，但是这些对象只能临时使用这些引用，而不能保持引用。（不太理解保持引用的意思，是指不能单独修改？？？？），根可以吧一个Value Object的副本传递给另一个对象，而不必关心他们发生什么变化。</li>
+<li>只有Aggregate的根才能直接通过数据库查询获取，其他对象必须通过遍历关联来发现。</li>
+<li>Aggregate内部的对象可以保持队其他Aggregate根的引用。</li>
+<li>删除操作必须一次删除Aggregate边界之内的所有对象（垃圾收集机制会自动实现，对于数据库要删除所有记录）</li>
+<li>当提交对Aggregate边界内部的任何对象的修改是，整个Aggregate的所有固定规则都必须被满足。</li>
+</ul>
+<p><strong>我们要通过合理改变模型，可减少数据库锁的争用</strong></p>
+<h3 id="Factory"><a href="#Factory" class="headerlink" title="Factory"></a>Factory</h3><p>对象的功能主要体现在其<strong>复杂的配置以及关联</strong>方面。一个对象在他的生命周期中药承担大量职责，如果再让复杂的对象负责自身的创建，那么<strong>职责过载</strong>将导致问题。<strong>我们需要将装配复杂的复合对象的工作和对象要执行的工作分开</strong>。</p>
+<p>Factory通常不表示模型的任何部分，但是他们是领域设计的一部分，能使对象更明确地表示除模型。</p>
+<p>复杂对象的创建和装配对应于领域中的重要事件（开立银行账户），对于这种具有领域概念的创建，我们需要一种新的元素，就是<strong>Factory</strong></p>
+<p><strong>Factory</strong>封装了创建复杂对象或Aggregate所需的知识，他提供了反应客户目标的接口，以及被创建对象的抽象视图。</p>
+<p>从设计模式角度考虑主要下面三种3种创建模式：1. 工厂方法（Factory Method）；2. 抽象工厂（Abstract Factory）；3. 构建器（Builder）</p>
+<p>任何好的工厂都需要满足两个基础要求：</p>
+<ol>
+<li>每个创建方法都是原子的，而且要保证被创建对象或Aggregate的所有固定规则。Factory生成的对象要处于一致的状态。如果无法创建，需要抛出Exception或error</li>
+<li>Factroy应用被抽象为所需的类型，而不是所要创建的具体类（？？？？）</li>
+</ol>
+<h4 id="Factory的应用位置"><a href="#Factory的应用位置" class="headerlink" title="Factory的应用位置"></a>Factory的应用位置</h4><p>Factory的作用是隐藏创建对象的细节，而且我们把Factory用在那些需要隐藏细节的地方，这些决定通常与<strong>Aggregate</strong>有关。</p>
+<p>两个常见应用位置：</p>
+<ol>
+<li>如果需要向一个已存在的Aggregate添加元素，可以在Aggregate的根上创建一个工厂方法，这样就可以把Aggregate的内部实现细节隐藏起来</li>
+<li>通过一个对象的创建主要使用另一个对象的数据时，前者不属于后者，可以在后者的对象上创建一个工厂方法，这样就不必将后者的信息提取到其他地方来创建前者。</li>
+</ol>
+<p>当有些细节需要隐藏而又找不到合适的地方来隐藏他们时，必须创建一个专用的<strong>Factory对象或Service</strong>。整个Aggreate通常需要一个独立的Factory来创建，Factory负责把根对应的引用传递出去，并确保创建出的Aggregate满足特定规则。</p>
+<h4 id="直接使用构造函数的位置"><a href="#直接使用构造函数的位置" class="headerlink" title="直接使用构造函数的位置"></a>直接使用构造函数的位置</h4><p>Factory会使那些不具有多态性的简单对象复杂化。在以下情况下最好使用简单、公共的构造函数：</p>
+<ol>
+<li>没有通过接口实现多态的类</li>
+<li>客户关心的实现，可能是将其作为选择策略的一种方式（？？？？不懂）</li>
+<li>客户可以访问对象的所有属性，因此<strong>向客户公开的构造函数中没有嵌套的对象创建</strong></li>
+<li>构造不复杂</li>
+<li>公共构造函数必须遵守Factory的相同规则：它必须是原子操作，而且要满足被创建对象的所有固定规则</li>
+</ol>
+<p>不要在构造函数中调用其他类的构造函数，如果需要，则使用Aggregate，使用Factory</p>
+<p><strong>构造函数和Factory可以共存，比如Java集合类库</strong></p>
+<h4 id="接口设计"><a href="#接口设计" class="headerlink" title="接口设计"></a>接口设计</h4><p>在设计Factory的方法签名时，无论是独立的Factory还是Factory Method，都要记住下面两点：</p>
+<ol>
+<li>每个操作必须是原子的</li>
+<li>Factory将与其参数发生耦合，所以尽量依赖其抽象类，而不依赖其具体类</li>
+</ol>
+<h4 id="固定规则的相关逻辑放在哪里"><a href="#固定规则的相关逻辑放在哪里" class="headerlink" title="固定规则的相关逻辑放在哪里"></a>固定规则的相关逻辑放在哪里</h4><p>Factory复杂确保他所创建的对象或Aggregate满足所有固定规则。Factroy可以将固定规则的检查工作委托给被穿件对象，这通常是最佳选择。</p>
+<p>对于聚合根，将固定规则相关逻辑放在Factory是比较好，可以让被创建的对象的职责更加清晰。</p>
+<p>固定规则不适合放到那些与其他领域对象关联的Factroy Method中 （？？？？）</p>
+<p>对于Entity Factory，需要在Factory来分配标识符ID</p>
+<h4 id="重建已存储的对象"><a href="#重建已存储的对象" class="headerlink" title="重建已存储的对象"></a>重建已存储的对象</h4><p>用于重建对象的Factory与用于创建对象的Factroy很类似，但是有以下两点不同：</p>
+<ol>
+<li>用于重建对象的Entity Factory不会分配新的标识ID，标识属性必须是输入参数的一部分</li>
+<li>当规则未被满足时，重建的Factory采用不同的处理方式，创建Factory时直接报错，对于重建，我们还需修复数据（这肯定是有脏数据了）</li>
+</ol>
+<h3 id="Repository"><a href="#Repository" class="headerlink" title="Repository"></a>Repository</h3><p>无论要用对象执行什么操作，都需要保持一个对它的应用，如果获得引用，一个方法是<strong>创建</strong>对象，另一个方法是<strong>遍历关联</strong>，从一个已知对象作为起点，向他请求一个关联的对象。还有第三种方案，基于对象的属性执行查询来找到对象，或者找到对象的组成部分，然后<strong>重建</strong>它。</p>
+<p><strong>如果基础设施提供了一种简单的方式获取已存在的领域对象的引用，那么开发人员就会增加很多遍历关系的关联，那么模型就会混乱。另一方面，如果开发人员直接从数据库提取他们所需的对象，而不是通过Aggregate来获取对象，那么会使模型变得不重要，我们需要很好的折中。</strong></p>
+<p>下面是一些原则：</p>
+<p>在所有持久化的对象中，有一<strong>小部分</strong>必须通过对象属性的搜索来<strong>全局访问</strong>，当很难通过遍历方式来访问某些Aggregate根的时候，就需使用这种方式。他们通常是Entity，有时候是具有复杂结构的Value Object，还有可能是枚举值（这个不懂）。而其他对象不宜还是员工这种访问方式。</p>
+<p>有大量的技术可以用来解决数据库访问的技术难题，如将SQL封装到Query Object中或者利用ORM进行对象和表之前的转换等。而<strong>Repository</strong>是一个概念框架，用于封装这些解决方案，让我们把注意力重新拉回到模型上。</p>
+<p><strong>Repository</strong> 将某种类型的所有对象表示为一个概念集合，他具有CRUD功能。这些功能提供了对Aggregate根的整个生命周期的全称访问。</p>
+<h4 id="Repository查询"><a href="#Repository查询" class="headerlink" title="Repository查询"></a>Repository查询</h4><p>大多数查询都返回一个对象或对象集合，但返回某些类型的汇总计算也符合Repository的概念，如对象数据，或者属性求和</p>
+<p><strong>一般我们需要一个支持灵活查询的Repository框架。基于Specification（规格）的查询是将Repository的好方法。但是很多框架不提供，需要自己实现，或者全都使用硬编码的方式</strong></p>
+<h4 id="Repository实现"><a href="#Repository实现" class="headerlink" title="Repository实现"></a>Repository实现</h4><p>将存储、检索和查询机制封装起来是Repository实现最基本的特征，客户不管先数据是存在数据库还是文件还是内存当中。</p>
+<p>在Repository实现的注意事项：</p>
+<ol>
+<li>对类型进行抽象</li>
+<li>充分利用与客户解耦的优点 ，这让我们可以很容易更改Repository的实现</li>
+<li><strong>将事务的控制权留给客户</strong>   （这个怎么做？？？？）</li>
+</ol>
+<p>这里还需要处理一点，<strong>Repository的对象和数据库的对象有时候会不同，这个时候我们需要进行一层转化</strong></p>
+<h4 id="Repository和Factory的关系"><a href="#Repository和Factory的关系" class="headerlink" title="Repository和Factory的关系"></a>Repository和Factory的关系</h4><p>Factory负责处理对象生命周期的开始（是创建，不包括重建），Repository帮助管理生命周期的中间和结束。Factroy负责制造新对象，Repository负责查找重建已有对象。同时Repository也可以委托Factroy来创建一个对象（这种情况很少很少，我还没想到？？？？）</p>
+<h3 id="为数据库设计对象"><a href="#为数据库设计对象" class="headerlink" title="为数据库设计对象"></a>为数据库设计对象</h3><p><strong>最常用的非对象组件就是关系数据库</strong> 他不是一个对象，他是用来描述一系列CRUD操作</p>
+<p>数据库对象和领域对象存在不一致，所以需要映射，对于映射来说，映射要保持透明，并且易于理解</p>
+<p>大多数情况下关系数据库是面向对象领域中的持久化存储形式，因此简单的对应关系是最好的，表中的一行包含一个对象，也可能还包含Aggregate的一些附属项。表中的外键应该转化为对另外一个Entity对象的引用。</p>
+<p>但是事与愿违，领域对象和数据库对象往往存在不一致，这样会失去透明性，这样会增加处理的复杂度。</p>
+<h2 id="一个扩展的示例"><a href="#一个扩展的示例" class="headerlink" title="一个扩展的示例"></a>一个扩展的示例</h2><p><strong>这是在已有领域模型的基础，通过构造块来绑定实现的示例</strong></p>
+<ol>
+<li>隔离领域：引入应用层</li>
+<li>将Entity和Value Object区别开</li>
+<li>设计领域中的关联，关联（遍历方向）能反应出领域的馆观察，尽量使用单向关联，因为单向关联可以减少另一个方向遍历带来的理解和实现成为，当然也是会有双向关联的，这是业务所决定的</li>
+<li>确定Aggregate边界，共享的Entity一般都是聚合根，拥有共同生命周期的一般是一个聚合根边界，关于聚合根的边界还要考虑锁竞争的问题，减少锁竞争就要缩小边界</li>
+<li>选择Repository，在聚合根内部的Entity不能拥有Repository</li>
+<li>对象的创建——Factory和构造函数</li>
+<li>重构，按照业务需求和性能考虑，重新梳理构造块</li>
+<li>module化，找出紧密联系的概念分成Module，虽然被划分成不同的模块，但是还是在同一个领域中，统一语言还是可以用的</li>
+<li>引用新系统时，如何处理<ul>
+<li>做一个反腐层，处理本领域到另外一个系统领域的翻译</li>
+<li>业务规则必须在领域层执行，不应该放在应用层，如果业务规则属于另外一个系统则需要在另外一个系统执行</li>
+<li>性能优化，如果另外一个系统的数据，可以使用缓存，避免多次请求，但是这又要维护缓存的一致性问题</li>
+</ul>
+</li>
+</ol>
+<p><strong>留了一个坑：分析模式——Enterprise Segment</strong></p>
+<h1 id="通过重构来加深理解"><a href="#通过重构来加深理解" class="headerlink" title="通过重构来加深理解"></a>通过重构来加深理解</h1><p><strong>提供一些建模指导原则，将构造块装配为实用的模型</strong>，这是一个逐步的过程。</p>
+<p><strong>真正的挑战是找到深层次的模型，这个模型不但能捕捉到领域专家的关注点，还可驱动切实可行的设计，这是一个需要不断重构的过程。</strong></p>
+<p><strong>重构</strong>分为两种：</p>
+<ol>
+<li>代码本身重构：分为设计模式重构和代码细节重构，细节重构可以看看《重构》</li>
+<li>代码模型重构：这里不是代码细节重构，但是也会用到一些设计模式，我们这里主要关注这个重构</li>
+</ol>
+<p>下面都会讨论一些<strong>改进领域模型</strong>的具体<strong>思考方式</strong>以及可<strong>实现这些领域模型</strong>的<strong>设计方法</strong>。</p>
+<p>模型驱动设计，设计改进模型，达成一个闭环。</p>
+<h2 id="突破"><a href="#突破" class="headerlink" title="突破"></a>突破</h2><p>如果有对了更深层理解，有了更深层次的模型请重构它，完成质的飞跃。</p>
+<p>没太看懂文中的例子？？？</p>
+<h2 id="将隐式概念转变成现实概念"><a href="#将隐式概念转变成现实概念" class="headerlink" title="将隐式概念转变成现实概念"></a>将隐式概念转变成现实概念</h2><p>深层建模听起来不错，因为他包含了领域的核心概念和抽象，能够以简单灵活的方式表达出基本的用户活动、问题以及解决方案。如何得到深层模型，我们需要一个思考过程。可是是下面这样的思考方式。</p>
+<h3 id="概念挖掘"><a href="#概念挖掘" class="headerlink" title="概念挖掘"></a>概念挖掘</h3><p>一般开发设计都是”名词即对象”，但是我们要清楚理解这个名词真实含义，并转为为设计中的模型，形成统一语言。</p>
+<p>概念怎么挖掘，通过与领域专家的交流以及查阅专业知识书籍等方式，还有就是阅读在此领域中有过开发经验的软件专业人员编写的资料，如《分析模式》</p>
+<ol>
+<li>与领域专家交流（靠谱的产品）</li>
+<li>查阅专业知识书籍，主动了解领域概念以及领域约束</li>
+<li>向做过的这个东西的人学习（经验丰富的同事）</li>
+</ol>
+<h3 id="为不太明显的概念建模"><a href="#为不太明显的概念建模" class="headerlink" title="为不太明显的概念建模"></a>为不太明显的概念建模</h3><h4 id="显示的约束"><a href="#显示的约束" class="headerlink" title="显示的约束"></a>显示的约束</h4><p>约束是概念模型中非常重要的类型。他们通常是隐含的，将他们显示的表现出来可以极大提高设计质量。</p>
+<p>简单方法：将这种约束作为领域对象的一个方法，而不是通过一个if-else 来做，防止他的丢失。</p>
+<p>如果约束的存在掩盖了对象的基本职责，或者如果约束在领域中非常突出但是在模型中却不明显，那么就可以将其提取到一个显示的对象中（约束类）。</p>
+<h4 id="将过程建模为领域对象"><a href="#将过程建模为领域对象" class="headerlink" title="将过程建模为领域对象"></a>将过程建模为领域对象</h4><p>一般不希望将过程建模为模型的<strong>主要部分</strong>，但是将像算法这样的计算过程封装成对象，或者说策略能够让我们的设计更加清晰。上面说过将约束建模为对象，这里讲过程也可以建模为对象。</p>
+<h4 id="Specification-规格"><a href="#Specification-规格" class="headerlink" title="Specification(规格)"></a>Specification(规格)</h4><p>将一些特定的规则（理解为谓词，表示真的，假的）表达为一个对象，可用来明确对象是否满足某些标准。这种规则的实现都有助于写出可测试的代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InvoiceDeliquency</span></span>&#123;</span><br><span class="line">	test(Invoice): <span class="keyword">boolean</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种规则就有扩展性，将几个规则组成一个规则，就可以用来描述复杂的规则。</p>
+<p>这个规则可以有属性，属于值对象。</p>
+<h4 id="Specification的应用和实现"><a href="#Specification的应用和实现" class="headerlink" title="Specification的应用和实现"></a>Specification的应用和实现</h4><p>有如下几种使用方式：</p>
+<ol>
+<li>验证对象，检查他是否能满足某些需求</li>
+<li>对象选择，从集合中选择一个对象  （可以用来对通用查询做一次转化）</li>
+<li>对象创建，创建的新对象必须满足某种需求</li>
+</ol>
+<h2 id="柔性设计"><a href="#柔性设计" class="headerlink" title="柔性设计"></a>柔性设计</h2><p><strong>软件的最终目的是为用户服务。但他首先必须为开发人员服务。在强调重构的软件开发过程中尤其如此。</strong></p>
+<p>为了使项目能够随着开发工作的进行加速前进，而不会由于他自己的老化停滞不前，设计必须要让人们乐于使用，而且易于做出修改，这就是<strong>柔性设计</strong>。</p>
+<p>为了获得柔性设计，我们需要采用一些方法（模式）</p>
+<p><img src="https://oscimg.oschina.net/oscnet/3397ed64af078ec42bb40e6ab31d8f19202.png" alt="领域驱动设计》学习笔记- osc_ymlf86ez的个人空间- OSCHINA"></p>
+<h3 id="Intention-Revealing-interfaces-意图明显的接口"><a href="#Intention-Revealing-interfaces-意图明显的接口" class="headerlink" title="Intention-Revealing interfaces (意图明显的接口)"></a>Intention-Revealing interfaces (意图明显的接口)</h3><p><strong>清楚表明了用途</strong></p>
+<p><strong>这里的接口不是特别指<code>interface</code>,它可能指一个方法，一个类，一个接口</strong></p>
+<p>如果开发人员为了使用一个组件而必须去去研究他的实现，那么就是去了封装的价值。</p>
+<p><strong>在命名类和操作时要描述他们的效果和目的，而不要表露他们是通过何种方式达到目的的</strong>，这样可以使客户开发人员必去去理解内部细节，这些名词应该与统一语言一直。</p>
+<p>对于命名困难的，一定要加好注释</p>
+<h3 id="Side-Effect-Free-Function-无副作用函数"><a href="#Side-Effect-Free-Function-无副作用函数" class="headerlink" title="Side-Effect-Free Function(无副作用函数)"></a>Side-Effect-Free Function(无副作用函数)</h3><p>我们可以宽泛得把操作分为两个大的类别：命令和查询。查询是从系统获取信息，查询的方式可能只是简单访问变量中的数据，也可能是用这些数据进行计算得到返回值。命令（也称修改器）是修改系统的操作（如设置变量）。</p>
+<p><strong>PS：</strong> “Side-Effect（副作用）”在标准英语中，这个词暗示着”意外的结果”，在计算机科学中，任何对系统状态产生印象的都叫做副作用。本书缩小含义：任何对未来操作产生印象的系统状态改变都可以成为副作用。</p>
+<p>返回结果，而不产生副作用的操作成为<strong>无副作用函数</strong>，这个函数可以被多次调用，每次调用都返回相同的值。</p>
+<p>在大多数软件系统中，命令的使用都是不可避免的，但是有两种方法可以减少命令产生的问题：</p>
+<ol>
+<li><p><strong>将命令和查询严格放在不同的操作中</strong>，确保导致状态改变的方法不返回领域数据，并尽可能保持简单。</p>
+</li>
+<li><p>使用新的模型和设计，他不要求对现有对象做任何修改，相反，他们创建并返回一个Value Object，用于表示计算结果。因为Value Object是不可变的，所以不会产生副作用。</p>
+</li>
+</ol>
+<h3 id="Assertion-断言"><a href="#Assertion-断言" class="headerlink" title="Assertion(断言)"></a>Assertion(断言)</h3><p>把复杂的计算封装到无副作用的函数中可以简化问题，但实体仍然会留有一些有副作用的命令，使用这些Entity的人必须了解使用这些命令的后果，在这种情况下，使用<strong>Assertion（断言）</strong>可以把副作用明确的表示出来，使他们更易于处理。</p>
+<p><strong>把操作的后置条件和类及Aggregate的固定规则描述清楚。如果在你的编程语言中不能直接编写Assertion(C++可以)，那么就把他们编写成自动的单元测试</strong></p>
+<p>一个单元测试包括：前置条件，固定规则，后置条件</p>
+<h3 id="Conceptual-Contour-概念轮廓"><a href="#Conceptual-Contour-概念轮廓" class="headerlink" title="Conceptual Contour(概念轮廓)"></a>Conceptual Contour(概念轮廓)</h3><p>把设计元素（操作、接口、类和Aggregate）分解为<strong>内聚单元</strong>，在这个过程中，你对领域中一切重要划分的直观认识也要考虑在内，在连续的重构过程中观察发送变化和<strong>保证稳定的规律性</strong>，并<strong>寻找能够解释这些变化的底层Conceptual contour</strong>（比如调度类？？？）。使模型与领域中那些一致的方面相匹配。</p>
+<p>这个不太懂？？？</p>
+<h3 id="Standalone-Class-独立的类"><a href="#Standalone-Class-独立的类" class="headerlink" title="Standalone Class(独立的类)"></a>Standalone Class(独立的类)</h3><p>互相依赖的模型和设计变得难以理解、测试和维护。而且，互相依赖很容易越积越多。</p>
+<p>每个关联都是一种依赖，每个方法的类型也是一个依赖，每个返回值也是一个依赖。</p>
+<p>Module和Aggregate的目的都是为了限制互相依赖的关系网。当我们识别出一个高度内聚的子领域并把他们提取到一个Module中的时候，一组对象也随着与系统其它部分解除了联系。</p>
+<p>低耦合是对象设计一个基本要素，尽一切可能保持低耦合，把其他所有无关概念提取到对象之外，这样类就变得完全独立了。</p>
+<p><strong>尽力最复杂的计算提取到独立的类中，实现此目的的一种方法就是存在大量依赖的类中将Value Object建模出来。 （可以看看例子）</strong></p>
+<p>低耦合是减少概念过载最基本的方法。独立的类是低耦合的极致。</p>
+<h3 id="Closure-Of-Operation-闭合操作"><a href="#Closure-Of-Operation-闭合操作" class="headerlink" title="Closure Of Operation(闭合操作)"></a>Closure Of Operation(闭合操作)</h3><p>依赖是必然存在的，当依赖是概念的一个基本属性时，他就不是坏事。</p>
+<p>在适当的情况下，在定义操作时让他的返回类型与其参数的类型相同。如果实现者的状态在计算中会被用到，那么是实现者实际上就是操作的一个参数（底层也是这样实现的），因此参数和返回值应该与实现者有相同的类型。这样的操作就是在该类型的实例集合中的<strong>闭合操作</strong>，闭合操作提供了一个高层接口，同时又不会引入对其他概念的依赖。</p>
+<p>这种模式更常用于Value Object的操作。</p>
+<h3 id="声明式设计以及风格"><a href="#声明式设计以及风格" class="headerlink" title="声明式设计以及风格"></a>声明式设计以及风格</h3><p>声明式设计通常值一种编程方式——吧程序或程序的一部分写成一种可执行的规格（Specification），有点像元编程呀。</p>
+<p>柔性设计能让我们的代码具有声明式风格。</p>
+<p>实现声明式风格很难！！！</p>
+<h3 id="切入问题的角度"><a href="#切入问题的角度" class="headerlink" title="切入问题的角度"></a>切入问题的角度</h3><p>下面是几种方法，让我们将上面的模式都结合起来使用</p>
+<h4 id="分割子领域"><a href="#分割子领域" class="headerlink" title="分割子领域"></a>分割子领域</h4><p>将模型的某个部分看做单独子模块。重点突出某个部分</p>
+<h4 id="尽可能利用已有的形式"><a href="#尽可能利用已有的形式" class="headerlink" title="尽可能利用已有的形式"></a>尽可能利用已有的形式</h4><p>对于不同的领域，如果有建立已久的概念系统，在复用的基础上，修改</p>
+<h2 id="应用分析模式"><a href="#应用分析模式" class="headerlink" title="应用分析模式"></a>应用分析模式</h2><p>直接从一个已经具有良好的表达力和易实现的模型开始工作开始工作。</p>
+<p>在《分析模式》一书中，martin fowler这样定义分析模式：</p>
+<p><strong>分析模式一种概念集合</strong>，用来表示业务建模中的常见结构，他可能只与一个领域有关，也可能跨越多个领域。</p>
+<p>分析模式最大的作用就是借鉴其他项目的经验。</p>
+<h2 id="将设计模式应用于模型"><a href="#将设计模式应用于模型" class="headerlink" title="将设计模式应用于模型"></a>将设计模式应用于模型</h2><p>《设计模式》：设计模式是对一些交互的对象和类的描述，我们通过定制这些对象和类来解决特定上下文中的一半设计问题。</p>
+<p>在《设计模式中》中，有些（但并非所有）模式可用作领域模式，但是这样使用的时候，需要变换一下重点。为了在<strong>领域驱动设计</strong>中重充分利用这些模式，我们必须从两个角度看待他们：<strong>从代码角度来看他们是技术设计模式，从模型的角度看他们是概念模式</strong></p>
+<h3 id="Strategy-Policy-策略模式"><a href="#Strategy-Policy-策略模式" class="headerlink" title="Strategy/Policy (策略模式)"></a>Strategy/Policy (策略模式)</h3><p><img src="http://gdut_yy.gitee.io/doc-ddd/figures/ch12/12inf01.jpg" alt="img"></p>
+<p>《设计模式》——策略模式：定义一组算法，将每个算法封装起来，并使他们可以互换。策略允许算法独立使用他的客户端而变化。</p>
+<p>领域模型包含了一些并非用于解决技术问题的过程，将他们包含进来是因为他们对处理问题领域具有实际的价值。当必须从多个过程中进行选择是，选择的复杂性加上多个过程的复杂性会使局面失去控制。</p>
+<p>我们需要的过程的<strong>易变部分</strong>提取到模型的一个单独策略对象中。将规则与它所控制的行为区分开来。按照策略模式来实现规则或可替换的过程。</p>
+<p><strong>通常，作为设计模式的策略侧重于替换不同的算法的能力，而当其作为领域模式时，其侧重点是表示概念的能力，这里的概念通常是指过程或者策略规则</strong></p>
+<h3 id="Composite-组合模式"><a href="#Composite-组合模式" class="headerlink" title="Composite(组合模式)"></a>Composite(组合模式)</h3><p><img src="http://gdut_yy.gitee.io/doc-ddd/figures/ch12/12inf02.jpg" alt="img"></p>
+<p>《设计模式》——组合模式：将对象组织为数表示部分——整体的层次结构，利用组合，客户可以对单独的对象和对象的组合进行同样的处理。</p>
+<p>定义一个把Composite的所有成员都包含在内抽象模型。在容器上实现那些查询信息的方法时，这些方法返回由容器内容所汇总的信息。而”叶“节点则基于他们自己的值来实现这些方法。客户只需要使用抽象类型，而无需区分”叶“和容器。</p>
+<p>我感觉还是一个”技术模式”，做了一个很好的抽象。但是告诉我们在学会在领域模式里进行抽象组合。</p>
+<h2 id="通过重构得到更深层的理解"><a href="#通过重构得到更深层的理解" class="headerlink" title="通过重构得到更深层的理解"></a>通过重构得到更深层的理解</h2><p>在做项目的过程中，我们总会随着理解的加深而去重构代码，下面重构时需要关注的点：</p>
+<ol>
+<li>以领域为本</li>
+<li>用一种不同的方式来看待事务</li>
+<li>始终坚持与领域专家对话</li>
+</ol>
+<h1 id="战略设计"><a href="#战略设计" class="headerlink" title="战略设计"></a>战略设计</h1><p><strong>站在更高维度，作为一个项目存在于一个大型系统时的设计原则（上下文、提炼、大型结构）</strong>，一般都是由多个团队共同设计。</p>
+<p>当我们无法通过分析对象来理解系统的时候，就需要掌握一些<strong>操纵和理解大模型的技术</strong>了</p>
+<p>有时，企业系统会继承各种不同来源的子系统，或者包含诸多不同的应用程序，以至于无法从同一个角度来看待领域。要把这些不同部分中隐含的模型统一起来可能要求过高了，通过为每个模型显示定义一个<strong>Bounded Context（界限上下文）</strong>，然后在必要的情况下定义它与<strong>其他上下文</strong>的关系，建模人员就可以避免模型变得混乱。</p>
+<p>通过<strong>精炼</strong>可以减少混乱，并且把注意力集中到正确的地方。战略（系统的远景）精炼可以使大的模型保持清晰。有了更清晰的视图后，<strong>Core Domain</strong>的设计就会发挥更大的作用。</p>
+<h2 id="保持模型的完整性"><a href="#保持模型的完整性" class="headerlink" title="保持模型的完整性"></a>保持模型的完整性</h2><p><strong>模型最基本的要求是保持内部的统一，不包含互相矛盾的规则。</strong>大型系统领域模型的完全统一既不可行，也不划算。</p>
+<p>我们需要一种方式来标记处不同模型之间的边界和关系。下面将会介绍一些<strong>识别、沟通和选择模型边界和关系</strong>的技术。</p>
+<p><img src="http://gdut_yy.gitee.io/doc-ddd/figures/ch14/fg14-1.jpg" alt="img"></p>
+<p>Overlap: 重叠</p>
+<p>Allied: 联盟</p>
+<p>Unilaterally : 单方面的</p>
+<p>insulate：隔离</p>
+<h3 id="Bound-Context-界限上下文"><a href="#Bound-Context-界限上下文" class="headerlink" title="Bound Context(界限上下文)"></a>Bound Context(界限上下文)</h3><p><strong>明确定义模型所应用的上下文</strong>。根据团队的组织、软件系统的各个部分的用法以及物理表现（代码和数据库模式等）来设置<strong>模型的边界</strong>。在这些边界内严格保持模型的一致性，而不要收到边界之外的问题的干扰和混淆。</p>
+<p>在一个系统中，系统的具体模型驱动的所有方方面面构成了其对应的<strong>Bouned Context</strong>，上下文包括模型对象、用于模型对象持久化的数据库模式以及应用程序。</p>
+<p><strong>PS:</strong> Module不是上下文，多个Module可能是同一个上下文。</p>
+<h3 id="Continuous-Intergration-持续集成"><a href="#Continuous-Intergration-持续集成" class="headerlink" title="Continuous Intergration (持续集成)"></a>Continuous Intergration (持续集成)</h3><p>当很多人在同一个上下文工作时，模型很容易发生分裂，团队越多，问题就越大，但是如果将系统分解为更小的上下文，又难以保持集成度和一致性。</p>
+<p>持续集成是指把上下文中的所有工作<strong>足够频繁的合并咋一起</strong>，并使他们保持一致，以便当模型发生分裂时，可以迅速发现并纠正。在领域驱动设计中持续集成分成两个级别的操作：</p>
+<ol>
+<li>模型概念的集成</li>
+<li>实现的集成</li>
+</ol>
+<h3 id="ContextMap-上下文地图"><a href="#ContextMap-上下文地图" class="headerlink" title="ContextMap(上下文地图)"></a>ContextMap(上下文地图)</h3><p>只有一个Bound Context并不能提供全局的视图，其他模型的上下文可能仍不清楚而且还在不断变化。这个时候需要一个<strong>ContextMap上下文地图</strong>。</p>
+<p>上下文之间的代码重用是很危险的，应该避免。功能和数据的集成必须通过转换去实现。</p>
+<p><strong>描述模型之间的联系点，明确所有通信需要做的转换，并突出任何共享的内容</strong></p>
+<h4 id="测试Context的边界"><a href="#测试Context的边界" class="headerlink" title="测试Context的边界"></a>测试Context的边界</h4><p>通过测试有租户解决转换时所存在的一些细微问题以及弥补沟通上存在的不足。</p>
+<h4 id="ContextMap的组织和文档化"><a href="#ContextMap的组织和文档化" class="headerlink" title="ContextMap的组织和文档化"></a>ContextMap的组织和文档化</h4><p>两个重点：</p>
+<ol>
+<li>Bounded Context 应该有名称，以便可以讨论他们，同时这些名称应该加入统一语言中</li>
+<li>每个人都知道边界在哪里，而且应该能够分辨出任何代码端的Context，或者任何情况的Context中</li>
+</ol>
+<h3 id="Bounded-Context之间的关系"><a href="#Bounded-Context之间的关系" class="headerlink" title="Bounded Context之间的关系"></a>Bounded Context之间的关系</h3><p>把模型联系在一起之后，就能把整个企业包含在一起，下面有放多方法将两个模型关联起来</p>
+<p>开发一个紧密集成的产品的优秀团队可以部署一个<strong>大的、统一的模型</strong>、如果团队需要为不同的用户群提供服务，或者团队的协调能力有限，可能就需要采用<strong>Share Kernel（共享内核）或Customer/Supplier（客户/供应商）关系</strong>。有时仔细研究需求之后可能发现集成并不重要，而系统最好采用<strong>Separate Way(各行其道)模式</strong>。当然，大多数项目都需要与遗留系统或外部系统进行一定程度的集成，这就需要使用<strong>Open Host Service（开放主机服务）或者Anticorruption Layer（防护层/防腐层）</strong></p>
+<h3 id="Shared-Kernel（内核模式）"><a href="#Shared-Kernel（内核模式）" class="headerlink" title="Shared Kernel（内核模式）"></a>Shared Kernel（内核模式）</h3><p><strong>从领域模型中选出两个团队都统一共享的子集，除了这个模型子集以外，还包括与该模型部分相关的代码子集，或数据设计的子集</strong>。这部分明确共享的内容具有特殊的地位，一个团队在没与另一个团队商量的情况下不应擅自更改它。</p>
+<p>如果这个共享子集发生修改是，两个团队都要运行测试。</p>
+<p><strong>Shared Kernel通常是Core Domain、或是一组Generic SubDomain（通用子领域）。他可以是两个团队都需要的任何一部分模型。</strong></p>
+<p><strong>使用Shared Kernel的目的是减少重复（并不是消除重复，因为只有在一个Bounded Context才能消除重复），并使两个子系统之间的集成变得相对容易一些。</strong></p>
+<h3 id="Customer-Supplier-Development-Team"><a href="#Customer-Supplier-Development-Team" class="headerlink" title="Customer/Supplier Development Team"></a>Customer/Supplier Development Team</h3><p><strong>这里上下游和调用的上下游好像是相反的，这里的上下游更像是数据的流向</strong></p>
+<p>这里是让下游成为”客户”，上游成为”服务者”；下游团队要参加上游团队的计划会议，上游团队直接与他们的”客户”讨论和权衡其所需的任务。</p>
+<p><strong>在两个团队之间建立一种明确额客户/供应商关系，在计划会议汇总，下游团队相当于团队的客户。根据下游团队的需求来协商需要执行的任务并未这些任务做预算，以便每个人都知道双方的约定和进度。</strong></p>
+<p><strong>两个团队都需要自动化测试。</strong></p>
+<p><strong>当下游不能完全使用上游的完整的Bounded Context，就不能把把上游当做Shared Kernel</strong></p>
+<h3 id="Conformist-跟随者"><a href="#Conformist-跟随者" class="headerlink" title="Conformist(跟随者)"></a>Conformist(跟随者)</h3><p>当两个具有上游/下游关系的团队不归一个管理者指挥时，Costomer/Supplier Development Team这种合作模式就不容易奏效。哈哈哈哈哈哈哈。</p>
+<p>如果上游不能很好的支持下游，那么有以下三种解决方式：</p>
+<ol>
+<li>完全放弃对上游的依赖，使用Separate Way（各行其道）的方式开发</li>
+<li>必须要依赖，而且上游的设计很难使用，那么下游团队仍然需要自己开发自己的模型，而且还要担负起转化层的全部责任，这就是Anticorruption layer</li>
+<li>必须要依赖，而且上游的设计还行，而且对上游依赖很大的情况下，使用Comfirmist（跟随者）模式</li>
+</ol>
+<p><strong>通过严格遵守上游团队的模型，可以消除在Bouned Context之间的转换的复杂性。尽管这会限制下游设计人员的风格，但选择Conformits可以极大简化集成</strong></p>
+<p>这个有点像Shared Kernel模式，都有一个重叠区域模型是相同的。但区别是Shared Kernel是两个合作模式，Comformist是一个团队依附另一个团队。</p>
+<h3 id="Anticorruption-Layer"><a href="#Anticorruption-Layer" class="headerlink" title="Anticorruption Layer"></a>Anticorruption Layer</h3><p>新系统与老系统集成是很常见的。但边界发生渗透时，转化层就要承担更多的防护责任。</p>
+<p><strong>创建一个隔离层，以便根据自己的领域模型来为客户提供相关的功能，这个层主要通过另一个系统现有接口与其对话，而只需对那个系统做出很少的修改，甚至无需修改，在内部，这个层在两个模型之间进行必要的双向转化。</strong></p>
+<h4 id="设计Anticorruption-Layer接口"><a href="#设计Anticorruption-Layer接口" class="headerlink" title="设计Anticorruption Layer接口"></a>设计Anticorruption Layer接口</h4><p><strong>Anticorruption Layer的公共接口通常以一组Service的形式出现</strong>，但偶尔也会采用Entity的形式。</p>
+<p>构建一个全新的层来负责两个系统之间的语义转化使我们能够重新对另外一个系统的行为进行抽象，并<strong>按照我们的模型一致</strong>的方式把服务和信息提供给我们的系统。</p>
+<h4 id="实现Anticorruption-Layer"><a href="#实现Anticorruption-Layer" class="headerlink" title="实现Anticorruption Layer"></a>实现Anticorruption Layer</h4><p>对Anticorruption Layer 进行组织的一种方法是把他实现为<strong>Facade、Adapter和转换器的组合</strong>。外加两个之间进行对话对话所需的通信和传输机制。</p>
+<p><strong>Facade</strong>是一个子系统的一个可供替换的接口。Facade并不改变底层系统的模型，他应该严格按照另一个系统的模型来编写。Facade应该属于另外一个系统Bounded Context。他只是为了满足你的专门需要而呈现出的一个更友好的外观。一般Facade在另外一个子系统里面，如果另外一个子系统很简单或者有一个整洁的额接口，可能就需要Facade。</p>
+<p><strong>Adapter</strong>是一个包装器。当客户向适配器发送一条消息是，Adapter把消息转为一条语义上等同的消息，并将其发送给”被适配者“。之后Adapter对响应消息进行转换，并将其发挥。</p>
+<p><strong>Service</strong>都需要一个支持其接口的Adapter，这个适配器还需要怎么样才能向其他系统及其Facade发送相应的请求。</p>
+<p><strong>Translator</strong>是一个转换器，他值属于它服务的Adapter，不需要用状态，他是负责将概念对象转为实际需要发送的对象。</p>
+<h3 id="Separate-Way-各行其道"><a href="#Separate-Way-各行其道" class="headerlink" title="Separate Way(各行其道)"></a>Separate Way(各行其道)</h3><p>如果两组功能之间的关系并不必不可少，那么两者完全可以彼此独立。</p>
+<p><strong>集成总是代价高昂，而有时收益却很小，此时声明一个与其他上下文毫无关联的Bounded Context，使开发人员在这个小范围内找到简单、专用的解决方案。</strong></p>
+<h3 id="Open-Host-Service（开放主机）"><a href="#Open-Host-Service（开放主机）" class="headerlink" title="Open Host Service（开放主机）"></a>Open Host Service（开放主机）</h3><p><strong>定义一个协议，把你的子系统作为一组Service，供其他系统访问，开放这个协议，以便所有需要与你子系统集成的人都可以使用它，当有新的集成需求时，就增强并扩展这个协议，但个别团队的特殊需求除外。满足这种特殊需求方法是使用一次性的转换器来扩充协议，以便使共享协议简单而内聚。</strong></p>
+<p>通过一种协议开放能力出去</p>
+<h3 id="Published-Language"><a href="#Published-Language" class="headerlink" title="Published Language"></a>Published Language</h3><p><strong>把一个良好文档化的、能够表达出所需领域信息的公共语言作为公共的通信媒介，必要时在其他信息与该语言进行转换。</strong></p>
+<p>XML、IDL？？</p>
+<h3 id="选择你模型上下文策略"><a href="#选择你模型上下文策略" class="headerlink" title="选择你模型上下文策略"></a>选择你模型上下文策略</h3><p>在任何事件、绘制出Context Map来反应当前情况都是很重要的。但是，一旦绘制好Context Map之后，你很可能改变现状。现在，你可以开始有意识地选择<strong>Context的边界和关系</strong>，以下是一些指导原则。</p>
+<ol>
+<li>团队决策或更高层的决策：在实践中，团队之间的行政关系往往决定了系统的集成方式。</li>
+<li>置身上下文中：自己根据所设计中系统，感受边界。</li>
+<li>转换边界：是选择较大的Bouned Context(任务更流畅)，还是选择较小的Bouned Context(沟通更流畅)</li>
+<li>接受那些我们无法更改的事务：描述外部系统，保持边界</li>
+<li>与外部系统的关系：三种模式（Separate way（不需要集成）、Confirmist（外部系统很重要）、Anticorruption layer（另外的系统设计很糟））</li>
+<li>设计中的系统：在自己设计的系统的Bouned Context，持续集成，保持统一，如果团队扩大，就要考虑Shared Kernel、Customer/Supplier Development team、Separate way。（一般一个团队对一个Bouned Context）</li>
+<li>用不同的模型满足不同的需求</li>
+<li>部署：不同的上下文关系，部署不一样</li>
+<li>权衡：我们需要在<strong>无缝功能集成的溢出和额外的协调和沟通</strong>成为做出权衡 ，不同关系对系统的控制程度以及团队的交流能力要求不同。</li>
+</ol>
+<h3 id="项目进行时"><a href="#项目进行时" class="headerlink" title="项目进行时"></a>项目进行时</h3><p>先确定一个ContextMap和组织架构。及时调整ContextMap，并及时调整团队组织架构。</p>
+<h3 id="转换"><a href="#转换" class="headerlink" title="转换"></a>转换</h3><p>一般而言，分割Context是很容易的，但合并他们或者改变他们之间的关系是比较难的。下面是几种有代表性的修改。</p>
+<ol>
+<li>合并Context：Separate Way -》 Shared Kernel</li>
+<li>合并Context：Shared Kernel -》 Continue Integration （单Context）</li>
+<li>逐步淘汰遗留系统</li>
+<li>Open Host Service -》 Publish Language （解决通信问题）</li>
+</ol>
+<h2 id="精炼"><a href="#精炼" class="headerlink" title="精炼"></a>精炼</h2><p><strong>精炼</strong>是把一堆混杂在一起的组件分开的过程，以便通过某种形式从中提取出最重要的内容。</p>
+<p><img src="http://gdut_yy.gitee.io/doc-ddd/figures/ch15/fg15-1.jpg" alt="img"></p>
+<h3 id="Core-Domain（核心领域）"><a href="#Core-Domain（核心领域）" class="headerlink" title="Core Domain（核心领域）"></a>Core Domain（核心领域）</h3><p><strong>为了使领域模型成为有价值的资产，必须整齐地梳理出模型的真正核心，并完全更具这个核心来创建应用程序的功能。</strong></p>
+<p><strong>如果软件的核心模型实现的很差，那么无论技术基础设施有多好，无论支持功能有多完善，应用程序都不会为用户提供真正有吸引力的功能。</strong></p>
+<p><strong>对模型进行精炼，找到Core Domain并提供一种易于区分的方法把他与那些起辅佐作用的模型和代码分开。最有价值和最专业的概念要轮廓分明。尽量压缩Core Domain。</strong></p>
+<p>下面是方法能够让我们更容易发现、使用、修改Core Domain</p>
+<h4 id="发现核心"><a href="#发现核心" class="headerlink" title="发现核心"></a>发现核心</h4><p>如果某个设计部分需要保密以便保持竞争优势，那么他就是你的<strong>Core Domain。</strong></p>
+<p>我们需要关注的是那些能够表示业务领域并解决业务问题的模型问题部分。</p>
+<h4 id="工作分配"><a href="#工作分配" class="headerlink" title="工作分配"></a>工作分配</h4><p>建立一支有核心开发人员和以为或多维领域专家组成的团队。</p>
+<h3 id="Generic-SubDomain-通用子领域"><a href="#Generic-SubDomain-通用子领域" class="headerlink" title="Generic SubDomain (通用子领域)"></a>Generic SubDomain (通用子领域)</h3><p>模型中充斥着大量周知的<strong>一般原则</strong>，或者是<strong>专门的细节</strong>，这些细节不是我们的主要关注点，而只是起到支持作用。然而无论他们是多么通用的元素，他们对实现系统功能和充分表达模型都是极为重要的，这就是<strong>Generic SubDomain。</strong></p>
+<p>识别出那些与<strong>项目意图无关</strong>的内聚子领域。把这些子领域的通用模型提取出来，并放到单独的Module中。任何专有的东西都不应用放在这些模块中。 比如调度中心、比如工作流？</p>
+<p>把他们分离出来，在继续开发的过程中，他们的优先级应低于Core Domain的优先级，并且不要分配核心开发人员来完成这些任务，此外，还可以考虑为这些Generic SubDomain使用现成的解决方案或者”公开发布的模型”。</p>
+<h4 id="通用不等于不可重用"><a href="#通用不等于不可重用" class="headerlink" title="通用不等于不可重用"></a>通用不等于不可重用</h4><p><strong>通用不一定是代码的重用，模型的重用是更高级的重用。</strong></p>
+<h3 id="Domain-Version-Statement（愿景说明）"><a href="#Domain-Version-Statement（愿景说明）" class="headerlink" title="Domain Version Statement（愿景说明）"></a>Domain Version Statement（愿景说明）</h3><p>Domain Version Statement：<strong>写一份Core Domain的简短描述以及它将创造的价值，展示出领域模型是如何实现和均衡各方利益的</strong>。它可以用来作为一个指南，帮助开发团队在精炼模型和代码的过程中保持统一的方向。</p>
+<h3 id="Highlighted-Core（突出核心）"><a href="#Highlighted-Core（突出核心）" class="headerlink" title="Highlighted Core（突出核心）"></a>Highlighted Core（突出核心）</h3><p>有了Domain Version Statement，团队成员大体上知道核心领域是什么构成的。但却不知道Core Domain到底包含哪些元素。</p>
+<p><strong>对代码所做的重大结构性改变是识别Core Domain的理想方式，但这些改动往往无法再短期完成，</strong> 这个时候我们需要其他方式。</p>
+<h4 id="精炼文档"><a href="#精炼文档" class="headerlink" title="精炼文档"></a>精炼文档</h4><p>创建一个单独的文档来描述和解释Core Domain。这个文档可能会很简单，只是最核心的概念对象的清单。它可能是一组描述这些对象的图、显示了他们最重要的关系（<strong>核心模型</strong>）、他可能在抽象层次上火通过示例来描述基本的交互过程（<strong>核心用例</strong>）。</p>
+<h3 id="Cohesive-Mechanism-封装机制"><a href="#Cohesive-Mechanism-封装机制" class="headerlink" title="Cohesive Mechanism (封装机制)"></a>Cohesive Mechanism (封装机制)</h3><p><strong>把算法计算封装到一个单独的轻量级的框架中，然后用Intention-Revealing interface接口暴露出来</strong></p>
+<p>比如组织架构相关问题变成图的计算、还有构造一个Specification框架，提供基本的组合操作</p>
+<p>Generic SubDomain 还是以模型为主，只是没有Core Domain 重要，而Cohesive Mecheanism是为了提出来解决一些复杂的计算问题。</p>
+<p>Cohesive Mecheanism可以是Core Domain的一部分，因为他很重要，在合适的时候也可以从新纳入Core Domain中。</p>
+<h3 id="Segregated-Core（分离核心）"><a href="#Segregated-Core（分离核心）" class="headerlink" title="Segregated Core（分离核心）"></a>Segregated Core（分离核心）</h3><p>通过重构得到Segregated Core的一般步骤如下所示：</p>
+<ol>
+<li>识别出一个Core子领域（可能是从精炼文档中得到的）</li>
+<li>把相关的类移到新的Module当中，并为模块命名</li>
+<li>对代码进行重构，吧哪些不直接表示概念的数据和功能分离出来，</li>
+<li>对新的Segregated Core Module进行重构，使其中的关系和交互变得交单</li>
+<li>对另一个Core子领域重复这个过程</li>
+</ol>
+<p>如果当系统有一个很大的、非常重要的Bouned Context时，但模型的关键部分被大量支持特性功能掩盖了，那么就需要创建Segregated Core了</p>
+<p><strong>看书上的例子， 很重要</strong></p>
+<h3 id="Abstract-Core-（抽象核心）"><a href="#Abstract-Core-（抽象核心）" class="headerlink" title="Abstract Core （抽象核心）"></a>Abstract Core （抽象核心）</h3><p><strong>把模型中最基本的概念识别出来，并分离到不同的类、抽象类、或接口中。设计这个抽象模型使之能够表达出重要组件之间的大部分交互。把这个完整的抽象模型放到他自己的Module中。而专用的、详细的实现类则留在各个子领域定义的Module中。</strong> （多态）</p>
+<p>现在，大部分专用的类都将应用Abstract Core Module，而不是其他专用的Module。Abstract Core提供了主要概念及其交互的简化视图。</p>
+<p>应用是啥，SPI ？？？</p>
+<h3 id="选择重构目标"><a href="#选择重构目标" class="headerlink" title="选择重构目标"></a>选择重构目标</h3><p>如果能重构Core Domain一定要接受挑战重构他。然后把支持性的子领域提炼成通用子领域。</p>
+<h2 id="大型架构"><a href="#大型架构" class="headerlink" title="大型架构"></a>大型架构</h2><p><strong>在一个大的系统中，如果因为缺少一个全局性的原则而使人们无法根据元素在Bounded Context的角色来解释这些元素，那么就容易陷入”只见树木，不见森林”的境地。</strong></p>
+<p>设计一种应用功能与整个系统的规则（或角色和关系）方法，使人们可以通过它在一定程度上了解各个部分在整理中所处的位置。这些方法如下：</p>
+<p><img src="http://gdut_yy.gitee.io/doc-ddd/figures/ch16/fg16-1.jpg" alt="img"></p>
+<p>大部分大型结构都无法用UML来表示，这些大型结构是用来勾画和解释模型和设计的。</p>
+<h3 id="Evolving-Order-演变的顺序"><a href="#Evolving-Order-演变的顺序" class="headerlink" title="Evolving Order(演变的顺序)"></a>Evolving Order(演变的顺序)</h3><p>让概念上的大型架构随着应用程序一起演变。在选择大型架构的时候，应该侧重于整体模型的管理。</p>
+<p>下面是几种常见的大型架构：</p>
+<h3 id="System-MetaPhor（系统隐喻）"><a href="#System-MetaPhor（系统隐喻）" class="headerlink" title="System MetaPhor（系统隐喻）"></a>System MetaPhor（系统隐喻）</h3><p>System Metaphor是一种松散的、抑郁理解的大型架构。</p>
+<p>完全看不懂，这到底是啥、？？</p>
+<h3 id="Repsonsibility-Layer（职责层）最常用"><a href="#Repsonsibility-Layer（职责层）最常用" class="headerlink" title="Repsonsibility Layer（职责层）最常用"></a>Repsonsibility Layer（职责层）最常用</h3><p><strong>如果每个对象的职责都是人为分配的，将没有统一的指导原则和一致性，也无法把领域作为一个整体来处理，为了保持大模型的一致，有必要再职责上分配一定的结构化控制。</strong></p>
+<p><strong>注意观察模型中的概念依赖性，以及领域中不同部分的变化频率和变化的原因。如果在领域中发现了自然的层次结构，就把他们转化为宽泛的抽象职责。这些职责应该描述系统的高层目标。对模型进行重构，使每个领域怼、Aggregate和Module的职责都清晰地位于一个职责层当中。</strong></p>
+<p>主要观察依赖，依赖总是从上往下。</p>
+<p>在为每个新模型定义层是不一定总是要从头开始。在一系列的相关领域中，有些层是固定的。</p>
+<ol>
+<li>潜能层。我们能做什么 （基础服务）</li>
+<li>作业做。我们在做什么（领域能力）</li>
+<li>决策支持层。应该采用什么行动或指定什么策略 ？？？</li>
+<li>策略层。规则和目标是什么？？</li>
+</ol>
+<p>没太看懂为什么一般从策略层依赖到潜能层？？？</p>
+<h3 id="Knowledge-Level（知识层）"><a href="#Knowledge-Level（知识层）" class="headerlink" title="Knowledge Level（知识层）"></a>Knowledge Level（知识层）</h3><p>Knowledge level是reflection（反射）模型在领域层的一种应用。</p>
+<p><strong>创建一组不同的对象，用他们来描述和约束基本模型的结构和行为。并把这些对象分层两个”级别“，一个是非常具体的级别，另外一个级别则提供了一些可供用户或超级用户定制的规则和知识。</strong></p>
+<p>看不太懂？？？大概就是提供一些可配置的规则层（知识层），然后另外是一个具体的类型，我也感觉知识层和策略层很像。</p>
+<h3 id="Pluggable-Component-Framework（可插入组件框架）"><a href="#Pluggable-Component-Framework（可插入组件框架）" class="headerlink" title="Pluggable Component Framework（可插入组件框架）"></a>Pluggable Component Framework（可插入组件框架）</h3><p>通常只有在同一个领域中实现了多个应用程序，才有机会使用可插入式组件框架。</p>
+<p>从结构和交互中提炼出一个Abstract Core，并创建一个框架，这个框架要允许这些接口的各种不同实现被自由替换。</p>
+<p>他的缺点是它是一种非常难以使用的模式，他需要高精度的接口设计和一个非常深入的模型，以便把一些必要的行为捕获到Abstract Core中。另外一个缺点是它只为应用程序提供了优先的选择。</p>
+<p>感觉很像大量使用SPI的框架。</p>
+<h2 id="领域设计的综合运用"><a href="#领域设计的综合运用" class="headerlink" title="领域设计的综合运用"></a>领域设计的综合运用</h2><p>战略设计的3个基本原则（上下文、精炼、和大型架构）并不是可以互相代替的，而是互为补充的，并且以多种方式进行互动。</p>
+<h3 id="大型结构和Bounded-Context结合"><a href="#大型结构和Bounded-Context结合" class="headerlink" title="大型结构和Bounded Context结合"></a>大型结构和Bounded Context结合</h3><p>例如，一种大型架构可以存在于一个Bounded Context中，也可以跨域多个Bounded Context存在，并用于组织Context Map。</p>
+<h3 id="大型结构与精炼结合起来使用"><a href="#大型结构与精炼结合起来使用" class="headerlink" title="大型结构与精炼结合起来使用"></a>大型结构与精炼结合起来使用</h3><p>例如，大型架构可以帮助解释Core Domain内部的关系以及Generic SubDomain之间的关系</p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>保持持续迭代</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DDD/" rel="tag"># DDD</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/04/生活/一段时间的思考/" rel="next" title="一段时间的思考">
+                <i class="fa fa-chevron-left"></i> 一段时间的思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">169</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">87</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#运用领域模型"><span class="nav-number">1.</span> <span class="nav-text">运用领域模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#消化知识，形成模型"><span class="nav-number">1.1.</span> <span class="nav-text">消化知识，形成模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型对应了通用语言"><span class="nav-number">1.2.</span> <span class="nav-text">模型对应了通用语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绑定领域模型和实现"><span class="nav-number">1.3.</span> <span class="nav-text">绑定领域模型和实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模型驱动设计的构造块"><span class="nav-number">2.</span> <span class="nav-text">模型驱动设计的构造块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分离领域"><span class="nav-number">2.1.</span> <span class="nav-text">分离领域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软件中使用的模型"><span class="nav-number">2.2.</span> <span class="nav-text">软件中使用的模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Entity"><span class="nav-number">2.2.1.</span> <span class="nav-text">Entity</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#建模"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">建模</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设计标识操作"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">设计标识操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Value-Object"><span class="nav-number">2.2.2.</span> <span class="nav-text">Value Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service"><span class="nav-number">2.2.3.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Module"><span class="nav-number">2.2.4.</span> <span class="nav-text">Module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建模范式"><span class="nav-number">2.2.5.</span> <span class="nav-text">建模范式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#领域对象的生命周期"><span class="nav-number">2.3.</span> <span class="nav-text">领域对象的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Aggregate"><span class="nav-number">2.3.1.</span> <span class="nav-text">Aggregate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Factory"><span class="nav-number">2.3.2.</span> <span class="nav-text">Factory</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Factory的应用位置"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">Factory的应用位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直接使用构造函数的位置"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">直接使用构造函数的位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接口设计"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">接口设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#固定规则的相关逻辑放在哪里"><span class="nav-number">2.3.2.4.</span> <span class="nav-text">固定规则的相关逻辑放在哪里</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重建已存储的对象"><span class="nav-number">2.3.2.5.</span> <span class="nav-text">重建已存储的对象</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Repository"><span class="nav-number">2.3.3.</span> <span class="nav-text">Repository</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Repository查询"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">Repository查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Repository实现"><span class="nav-number">2.3.3.2.</span> <span class="nav-text">Repository实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Repository和Factory的关系"><span class="nav-number">2.3.3.3.</span> <span class="nav-text">Repository和Factory的关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为数据库设计对象"><span class="nav-number">2.3.4.</span> <span class="nav-text">为数据库设计对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个扩展的示例"><span class="nav-number">2.4.</span> <span class="nav-text">一个扩展的示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#通过重构来加深理解"><span class="nav-number">3.</span> <span class="nav-text">通过重构来加深理解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#突破"><span class="nav-number">3.1.</span> <span class="nav-text">突破</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将隐式概念转变成现实概念"><span class="nav-number">3.2.</span> <span class="nav-text">将隐式概念转变成现实概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念挖掘"><span class="nav-number">3.2.1.</span> <span class="nav-text">概念挖掘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为不太明显的概念建模"><span class="nav-number">3.2.2.</span> <span class="nav-text">为不太明显的概念建模</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#显示的约束"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">显示的约束</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#将过程建模为领域对象"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">将过程建模为领域对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Specification-规格"><span class="nav-number">3.2.2.3.</span> <span class="nav-text">Specification(规格)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Specification的应用和实现"><span class="nav-number">3.2.2.4.</span> <span class="nav-text">Specification的应用和实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#柔性设计"><span class="nav-number">3.3.</span> <span class="nav-text">柔性设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Intention-Revealing-interfaces-意图明显的接口"><span class="nav-number">3.3.1.</span> <span class="nav-text">Intention-Revealing interfaces (意图明显的接口)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Side-Effect-Free-Function-无副作用函数"><span class="nav-number">3.3.2.</span> <span class="nav-text">Side-Effect-Free Function(无副作用函数)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Assertion-断言"><span class="nav-number">3.3.3.</span> <span class="nav-text">Assertion(断言)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conceptual-Contour-概念轮廓"><span class="nav-number">3.3.4.</span> <span class="nav-text">Conceptual Contour(概念轮廓)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Standalone-Class-独立的类"><span class="nav-number">3.3.5.</span> <span class="nav-text">Standalone Class(独立的类)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Closure-Of-Operation-闭合操作"><span class="nav-number">3.3.6.</span> <span class="nav-text">Closure Of Operation(闭合操作)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声明式设计以及风格"><span class="nav-number">3.3.7.</span> <span class="nav-text">声明式设计以及风格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切入问题的角度"><span class="nav-number">3.3.8.</span> <span class="nav-text">切入问题的角度</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分割子领域"><span class="nav-number">3.3.8.1.</span> <span class="nav-text">分割子领域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#尽可能利用已有的形式"><span class="nav-number">3.3.8.2.</span> <span class="nav-text">尽可能利用已有的形式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用分析模式"><span class="nav-number">3.4.</span> <span class="nav-text">应用分析模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将设计模式应用于模型"><span class="nav-number">3.5.</span> <span class="nav-text">将设计模式应用于模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Strategy-Policy-策略模式"><span class="nav-number">3.5.1.</span> <span class="nav-text">Strategy/Policy (策略模式)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Composite-组合模式"><span class="nav-number">3.5.2.</span> <span class="nav-text">Composite(组合模式)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过重构得到更深层的理解"><span class="nav-number">3.6.</span> <span class="nav-text">通过重构得到更深层的理解</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#战略设计"><span class="nav-number">4.</span> <span class="nav-text">战略设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#保持模型的完整性"><span class="nav-number">4.1.</span> <span class="nav-text">保持模型的完整性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bound-Context-界限上下文"><span class="nav-number">4.1.1.</span> <span class="nav-text">Bound Context(界限上下文)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Continuous-Intergration-持续集成"><span class="nav-number">4.1.2.</span> <span class="nav-text">Continuous Intergration (持续集成)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ContextMap-上下文地图"><span class="nav-number">4.1.3.</span> <span class="nav-text">ContextMap(上下文地图)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#测试Context的边界"><span class="nav-number">4.1.3.1.</span> <span class="nav-text">测试Context的边界</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ContextMap的组织和文档化"><span class="nav-number">4.1.3.2.</span> <span class="nav-text">ContextMap的组织和文档化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bounded-Context之间的关系"><span class="nav-number">4.1.4.</span> <span class="nav-text">Bounded Context之间的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shared-Kernel（内核模式）"><span class="nav-number">4.1.5.</span> <span class="nav-text">Shared Kernel（内核模式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Customer-Supplier-Development-Team"><span class="nav-number">4.1.6.</span> <span class="nav-text">Customer/Supplier Development Team</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conformist-跟随者"><span class="nav-number">4.1.7.</span> <span class="nav-text">Conformist(跟随者)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Anticorruption-Layer"><span class="nav-number">4.1.8.</span> <span class="nav-text">Anticorruption Layer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设计Anticorruption-Layer接口"><span class="nav-number">4.1.8.1.</span> <span class="nav-text">设计Anticorruption Layer接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现Anticorruption-Layer"><span class="nav-number">4.1.8.2.</span> <span class="nav-text">实现Anticorruption Layer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Separate-Way-各行其道"><span class="nav-number">4.1.9.</span> <span class="nav-text">Separate Way(各行其道)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Open-Host-Service（开放主机）"><span class="nav-number">4.1.10.</span> <span class="nav-text">Open Host Service（开放主机）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Published-Language"><span class="nav-number">4.1.11.</span> <span class="nav-text">Published Language</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择你模型上下文策略"><span class="nav-number">4.1.12.</span> <span class="nav-text">选择你模型上下文策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目进行时"><span class="nav-number">4.1.13.</span> <span class="nav-text">项目进行时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#转换"><span class="nav-number">4.1.14.</span> <span class="nav-text">转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#精炼"><span class="nav-number">4.2.</span> <span class="nav-text">精炼</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Domain（核心领域）"><span class="nav-number">4.2.1.</span> <span class="nav-text">Core Domain（核心领域）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#发现核心"><span class="nav-number">4.2.1.1.</span> <span class="nav-text">发现核心</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#工作分配"><span class="nav-number">4.2.1.2.</span> <span class="nav-text">工作分配</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generic-SubDomain-通用子领域"><span class="nav-number">4.2.2.</span> <span class="nav-text">Generic SubDomain (通用子领域)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通用不等于不可重用"><span class="nav-number">4.2.2.1.</span> <span class="nav-text">通用不等于不可重用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Domain-Version-Statement（愿景说明）"><span class="nav-number">4.2.3.</span> <span class="nav-text">Domain Version Statement（愿景说明）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Highlighted-Core（突出核心）"><span class="nav-number">4.2.4.</span> <span class="nav-text">Highlighted Core（突出核心）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#精炼文档"><span class="nav-number">4.2.4.1.</span> <span class="nav-text">精炼文档</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cohesive-Mechanism-封装机制"><span class="nav-number">4.2.5.</span> <span class="nav-text">Cohesive Mechanism (封装机制)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Segregated-Core（分离核心）"><span class="nav-number">4.2.6.</span> <span class="nav-text">Segregated Core（分离核心）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Abstract-Core-（抽象核心）"><span class="nav-number">4.2.7.</span> <span class="nav-text">Abstract Core （抽象核心）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择重构目标"><span class="nav-number">4.2.8.</span> <span class="nav-text">选择重构目标</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#大型架构"><span class="nav-number">4.3.</span> <span class="nav-text">大型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Evolving-Order-演变的顺序"><span class="nav-number">4.3.1.</span> <span class="nav-text">Evolving Order(演变的顺序)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#System-MetaPhor（系统隐喻）"><span class="nav-number">4.3.2.</span> <span class="nav-text">System MetaPhor（系统隐喻）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Repsonsibility-Layer（职责层）最常用"><span class="nav-number">4.3.3.</span> <span class="nav-text">Repsonsibility Layer（职责层）最常用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Knowledge-Level（知识层）"><span class="nav-number">4.3.4.</span> <span class="nav-text">Knowledge Level（知识层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pluggable-Component-Framework（可插入组件框架）"><span class="nav-number">4.3.5.</span> <span class="nav-text">Pluggable Component Framework（可插入组件框架）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#领域设计的综合运用"><span class="nav-number">4.4.</span> <span class="nav-text">领域设计的综合运用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#大型结构和Bounded-Context结合"><span class="nav-number">4.4.1.</span> <span class="nav-text">大型结构和Bounded Context结合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#大型结构与精炼结合起来使用"><span class="nav-number">4.4.2.</span> <span class="nav-text">大型结构与精炼结合起来使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后"><span class="nav-number">4.4.3.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
