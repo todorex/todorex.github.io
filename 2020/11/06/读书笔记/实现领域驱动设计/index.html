@@ -1,0 +1,1250 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="DDD,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="rex note" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="引：《领域驱动设计》为我们提供各种方式来更好的建模，以及更高视角来对待系统模型，同时还提供一组领域建模词汇库。但是关于如何使用，还差了点点点意思，而《实现领域驱动设计》更能让我们付诸实践。本书从顶向下，从战略到战术用一个虚构的案例贯穿全书。冲冲冲！">
+<meta name="keywords" content="DDD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《实现领域驱动设计》读书笔记">
+<meta property="og:url" content="http://bestlixiang.site/2020/11/06/读书笔记/实现领域驱动设计/index.html">
+<meta property="og:site_name" content="rex note">
+<meta property="og:description" content="引：《领域驱动设计》为我们提供各种方式来更好的建模，以及更高视角来对待系统模型，同时还提供一组领域建模词汇库。但是关于如何使用，还差了点点点意思，而《实现领域驱动设计》更能让我们付诸实践。本书从顶向下，从战略到战术用一个虚构的案例贯穿全书。冲冲冲！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-11-05T16:05:25.258Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《实现领域驱动设计》读书笔记">
+<meta name="twitter:description" content="引：《领域驱动设计》为我们提供各种方式来更好的建模，以及更高视角来对待系统模型，同时还提供一组领域建模词汇库。但是关于如何使用，还差了点点点意思，而《实现领域驱动设计》更能让我们付诸实践。本书从顶向下，从战略到战术用一个虚构的案例贯穿全书。冲冲冲！">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://bestlixiang.site/2020/11/06/读书笔记/实现领域驱动设计/">
+
+
+
+
+
+  <title> 《实现领域驱动设计》读书笔记 | rex note </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">rex note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">雨过，云过</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://bestlixiang.site/2020/11/06/读书笔记/实现领域驱动设计/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="rex">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/me.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="rex note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                《实现领域驱动设计》读书笔记
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-06T00:03:11+08:00">
+                2020-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>引：《领域驱动设计》为我们提供各种方式来更好的建模，以及更高视角来对待系统模型，同时还提供一组领域建模词汇库。但是关于如何使用，还差了点点点意思，而《实现领域驱动设计》更能让我们付诸实践。本书从顶向下，从战略到战术用一个虚构的案例贯穿全书。冲冲冲！<a id="more"></a></p>
+<h1 id="DDD入门"><a href="#DDD入门" class="headerlink" title="DDD入门"></a>DDD入门</h1><p>介绍DDD的好处，以及DDD的使用，用一个例子开篇</p>
+<p><strong>什么是领域模型？</strong>: 领域模型是关于某个特定领域的软件模型。通常，领域模型通过对象模型来实现，这些对象同时包含了数据和行为，并且表达了准确的业务含义。</p>
+<p>初级开发者：按照DDD去组织一部分代码</p>
+<p>中级开发者：按照DDD去组织一个项目</p>
+<p>高级开发者：按照DDD去组织一个系统</p>
+<p>领域专家：按照DDD去沟通</p>
+<p>项目经理：按照DDD去组织一个系统（包括技术和业务）</p>
+<p><strong>贫血对象的失忆症</strong>： Java Bean的get/set方法让人不知道业务属性，从而忘了该方法创建出来的作用。</p>
+<p><strong>如何DDD</strong>: 如果不谈实现细节，那么DDD最重要的东西就是通用语言和界限上下文。界限上下文是整个应用程序之内的一个概念性边界，这个边界之内的每种领域术语、词组和句子（通用语言），都有确定的上下文含义。</p>
+<p><strong>如何判断掌握通用语言</strong>：</p>
+<ul>
+<li>同时绘制物理模型图和概念模型图，并标以名字和行为</li>
+<li>创建一个包含简单定义的术语表</li>
+<li>让团队检查成果</li>
+</ul>
+<p><strong>DDD的业务价值</strong>：</p>
+<ol>
+<li>获得了一个非常有用的领域模型</li>
+<li>业务得到了更准确的定义和理解</li>
+<li>领域专家可以为软件设计做出贡献</li>
+<li>更好的用户体验</li>
+<li>清晰的模型边界</li>
+<li>更好的企业架构</li>
+<li>敏捷、迭代式和持续建模</li>
+<li>使用战略和战术新工具</li>
+</ol>
+<p><strong>实施DDD所面临的挑战</strong>:</p>
+<ul>
+<li>为创建通用语言腾出时间和精力</li>
+<li>持续地将领域专家引入项目</li>
+<li>改变改开发者对领域的思考方式</li>
+</ul>
+<p>哈哈哈 <strong>例子有点意思</strong>，从小拉大，以小应用作为突破点，给整体带来增长</p>
+<h1 id="领域、子域和界限上下文"><a href="#领域、子域和界限上下文" class="headerlink" title="领域、子域和界限上下文"></a>领域、子域和界限上下文</h1><p>战略设计：用界限上下文分离出子域和核心域</p>
+<p><strong>领域：</strong> 即是一个组织所做的事情以及其中所包含的一切。当时一个领域太大了，我们需要划分为若干<strong>子域</strong>，领域模型在<strong>界限上下文</strong>中开发。在开发一个领域模型时，我们关注的通常只是这个业务系统的某个子域。</p>
+<p>对于一个零售商来说，主要分为4个主要的子域：产品目录，订单，发票和物流，库存</p>
+<p>虚线表示不同的子域、实线表示界限上下文，不同子域和上下文之间的直线表示集成关系。</p>
+<p>在DDD中，简单的子域可以以<strong>模块</strong>的形式从核心域分离出来</p>
+<p>在一个好的界限上下文中，每个术语应该仅表示的一种领域概念，例如订单子域和产品目录子域对于顾客的含义是不一样的。</p>
+<p>一个业务系统领域包含：核心域（业务成功的主要促成因素）、支撑子域、通用子域（被应用于整个业务系统）</p>
+<p>协作模型中真正重要的是角色，而不是所谓的权限，要区分出一个对象在不同上下文中概念的不同，然后进行隔离</p>
+<p>在一个系统中，子域和界限上下文之间很难存在一对一的映射关系</p>
+<p>一个界限上下文不只包含领域模型，还包含了一种业务服务。</p>
+<p>如果数据库和领域模型不能完全对应，就要区分出两个不同的上下文。</p>
+<p>TODO：画一个上下文</p>
+<p>一个团队，一个界限上下文</p>
+<p>SasSOvation的拆分：敏捷项目管理（核心域）；协作（支撑）；<strong>身份与访问（通用，一定要区分开来）</strong></p>
+<p>协作上下文：论坛、共享日历、博客、即时消息、wiki、留言板、文档管理、通知与提醒、活动跟踪和RSS订阅</p>
+<p><strong>问题空间：</strong> 我们思考的是业务所面临的挑战，对问题的空间的开发将产生一个新的核心域，对问题空间的评估应该同时考虑已有的子域和额外所需子域。因此问题空间是核心域和其他子域的组合。</p>
+<p><strong>解决方案：</strong>我们思考的是如何实现软件以解决这些业务挑战，解决方案空间包括一个或多个界限上下文，即一组特定的软件模型。</p>
+<h1 id="上下文映射图"><a href="#上下文映射图" class="headerlink" title="上下文映射图"></a>上下文映射图</h1><p>上下文映射图帮助我们理解业务领域、模型间的边界，以及这些边界之间的集成方式。</p>
+<p>集成关系用上游和下游表示（上游的改变会影响下游）</p>
+<p>通过<strong>开放主机</strong>这种上下文关系区分出 协作上下文和身份和访问上下文，开发主机通过固定的协议与其他服务通信，这个协议可以包括（XML、JSON、Protocol Buffer、Thrift、消息（发布语言））等等。</p>
+<p>通过<strong>反腐层</strong>保护住协作上下文和敏捷项目管理上下文，<strong>下游的反腐层将返回内容翻译成本地上下文的领域对象</strong></p>
+<p>为了实现<strong>自治</strong>，敏捷项目管理上下文可能将保留本地模型（使用值对象），并通过事件的方式或者周期调用URL进行同步</p>
+<p>总结：</p>
+<p>对于一个上下文需要考虑到底要不要自治</p>
+<p>如果是自治，那就会存上游服务的内容，是一个值对象</p>
+<p>如果不是自治，那么这边就不会存上游服务的内容，用ID表示</p>
+<h1 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h1><p>各种架构  <strong>用例驱动架构</strong></p>
+<p>分层架构中使用依赖导致原则（整洁架构），可以在测试中轻易替换UI层和基础设施层</p>
+<h2 id="分层架构"><a href="#分层架构" class="headerlink" title="分层架构"></a>分层架构</h2><p>用户界面层 -》 应用层-》 领域层 -》 基础设施层</p>
+<p>原则：每层只能与位于其下方的层发生耦合，事实上，较低层也是可以和较高层发送耦合的，但这只局限与观察者模式或中介者模式？？？？</p>
+<p><strong>用户界面层：</strong>用户界面只用于处理用户系那是和用户请求，他不应该包含领域或业务逻辑，这里不包括对领域模型的验证，如果用户界面层使用了领域模型中的对象，那么此时的领域对象仅限于数据的渲染展示。这个时候，可以采用展现模型（Presentation Model，可能我们更喜欢叫View Object VO）。由于业务可能是人，也可能是其他系统，有时用户界面层将采用开发主机服务的方式向外提供API。</p>
+<p><strong>应用层：</strong> 应用服务位于应用层（也可以叫Usercase层）应用服务可以用于控制化事务和安全认证，或者向其他系统发送基于事件的消息通知。应用服务本身并不处理业务逻辑（这里特指领域服务）。他是领域模型的直接客户。应用服务</p>
+<p>应该给是很轻量的，他主要用于协调对领域对象的操作，比如聚合？？。同时应用服务是表达用例和用户故事的主要手段。因此，应用服务的通常用途是：接受来自用户界面的输入参数，再通过资源库获取到聚合实例，然后执行相应的命令操作。</p>
+<p><strong>基础设施层：</strong>在传统的分层架构中，将基础架构层放在最底层是有确定的，因为他适合写单元测试。一般会通过依赖倒置让基础设施层依赖高层模块。依赖倒置一般通过依赖注入来实现，而依赖注入一般交由依赖注入框架实现。</p>
+<h2 id="六边形架构（端口与适配器）"><a href="#六边形架构（端口与适配器）" class="headerlink" title="六边形架构（端口与适配器）"></a>六边形架构（端口与适配器）</h2><p>分为外部区域（各种<strong>适配器</strong>，这里可以是HTTP、RPC、MQ的输入或者是各种存储的输出）和内部区域（用例以及领域模型）</p>
+<p>其实和整洁架构很像，哈哈哈哈</p>
+<h2 id="面向服务架构"><a href="#面向服务架构" class="headerlink" title="面向服务架构"></a>面向服务架构</h2><p>服务设计原则：</p>
+<ol>
+<li>服务契约：通过锲约文档，服务阐述自身的目的与功能</li>
+<li>松耦合：服务将依赖关系最小化</li>
+<li>服务抽象：服务只发布契约，而向客户隐藏内部逻辑</li>
+<li>服务可重用性：一种服务可以被其他服务所重用</li>
+<li>服务自治性：服务自行控制环境与资源以保持独立性？？？感觉上肯定会有各种依赖</li>
+<li>服务无状态性：服务负责消费方的状态管理？？？</li>
+<li>服务可发现性：客户可以通过服务元数据来查找服务和理解服务</li>
+<li>服务组合性：一种服务可以由其他的服务组合而成，而不管其他服务的大小和复杂性如何</li>
+</ol>
+<h2 id="命令和查询职责分离——CQRS"><a href="#命令和查询职责分离——CQRS" class="headerlink" title="命令和查询职责分离——CQRS"></a>命令和查询职责分离——CQRS</h2><p>当我们需要从不同的Repository获取聚合实例数据的时候，我们将需要将这些实例数据组成成一个数据传输对象（Data Transfer Object, DTO）</p>
+<p><strong>CQRS</strong>是将紧缩对象（或组件）设计原则和命令——查询（CQS）应用在架构模式中的结果，具体解释是：一个方法要么是执行某种动作的命令，要么是返回数据的查询，而不能两者皆是。在对象层面，这意味着：</p>
+<ol>
+<li>如果一个方法修改了对象的状态，该方法便是一个命令（Command），他不应该返回数据。但是好像还是一般返回ID？？？（对应命令处理器），一个命令执行执行结束可能发出领域事件，这个时候可能有另外一个实例同步更新，这个时候需要保持最终一致性</li>
+<li>如果一个方法返回了数据，该方法便是一个查询（Query），此时他不应该通过直接或者间接的手段修改对象的状态。（对应查询模型，读库，一种是利用数据库自带的同步机制，另外一种是通过领域事件（事件源）来更新查询模型，还有一种是通过ETL将数据经过转化加载到查询模型）</li>
+</ol>
+<p>这样好像能够读写分离，但是现实中还是会有写后读的场景。</p>
+<p>大部分命令模型和查询模型之间的不同步并不是什么大问题，但是我们也可以通过其他方式来解决，比如通过引入观察者模式（？？）或者分布式缓存（这个可以理解）</p>
+<p>如果用户界面并不过去复杂，或者我们只需要在当个视图中处理聚合，那么引入CQRS反而会增加额外的复杂性（？？不太懂，感觉都挺好的样子）</p>
+<h2 id="事件驱动架构"><a href="#事件驱动架构" class="headerlink" title="事件驱动架构"></a>事件驱动架构</h2><p>事件驱动架构是一种用于处理事件的生成、发现和处理等任务的软件架构。</p>
+<p>该架构可以通过消息机制完成对所有系统的解耦。</p>
+<p>对于不同的界限上下文来说，不同的领域事件具有不同的含义，也有可能没有任何含义（如果使用消息过滤器或者路由关键字，消息订阅方可以避免接收对自己无意义的消息）</p>
+<h3 id="管道和处理器"><a href="#管道和处理器" class="headerlink" title="管道和处理器"></a>管道和处理器</h3><p>下面是基于消息的管道和过滤器处理过程的基本特征</p>
+<ol>
+<li>管道是消息通道：过滤器通过输入管道接收数据，过道输出管道发送数据</li>
+<li>端口连接过滤器和管道：过滤器通过端口连接到输入和输出管道。端口使得六边形架构成为首选的架构</li>
+<li>过滤器即是处理器：过滤器可以对消息进行处理，而不见得一定对消息进行过滤</li>
+<li>分离处理器：每个过滤处理器都是一个分离的组件</li>
+<li>松耦合：每个过滤器都是相对独立的参与处理过程，处理器组合可以通过配置完成</li>
+<li>可换性：更具用例需要，我们可以重新组织不同处理器的处理顺序，这同样是通过配置完成</li>
+<li>过滤器可以使用多个管道：消息过滤器可以从不同的管道中读写数据</li>
+<li>并行使用同种类型的过滤器：对于最繁忙的和最慢的过滤器来说，我们可以并行地采用多个相同类型的过滤器来增加处理量</li>
+</ol>
+<h3 id="长时处理过程（Saga）"><a href="#长时处理过程（Saga）" class="headerlink" title="长时处理过程（Saga）"></a>长时处理过程（Saga）</h3><p>在某个消息发出之后，走入不同的管道，最后回到同一个处理器</p>
+<p>这里有执行器（并行），最后的处理器（状态跟踪器），如果超时，则再发出一个取消事件（这是完成一致性）</p>
+<p>感觉这是一个分布式事务实现方案，但是书里却说和分布式事务没有什么关系（不懂？？？）</p>
+<h3 id="事件源"><a href="#事件源" class="headerlink" title="事件源"></a>事件源</h3><p>为了了解实体的变更，每个领域事件都将被保存到<strong>事件存储</strong>，然后如果要读取，则根据发生在改聚合上的历史事件来重建改聚合实例，事件的作用顺序应该与他们的产出顺序相同（<strong>有序消息</strong>）</p>
+<p>为了避免<strong>聚合事件操作</strong>对于业务操作繁忙的模型产生影响，我们可以通过聚合状态的<strong>快照</strong>的方式进行优化。快照并不是随意创建的，而是可以在所发生的时间达到某个数量时才创建的。</p>
+<p>下面是事件源技术所带来的业务优势：</p>
+<ol>
+<li>用新的或者修改后的时间存储打补丁可以修正许多问题。</li>
+<li>我们可以通过重放一组事件的方式来重做或测校对模型的修改、</li>
+<li>有了所有事件的历史信息，并基于此可以做很多事</li>
+</ol>
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>通过事件重建缓存，然后走缓存来实现查询模型</p>
+<h1 id="实体"><a href="#实体" class="headerlink" title="实体"></a>实体</h1><p><strong>实体</strong>是一个唯一的东西，并且可以在相当长的一段时间内持续的变化。</p>
+<p>在设计实体时，我们首先需要考虑<strong>实体的本质特征</strong>，特别是<strong>实体的唯一标识和对实体的查找</strong>，而不是一开始变关注实体的属性和行为。只有在对实体的本质特征有用的情况下，才加入相应的属性和行为。</p>
+<p>一些常用的创建实体身份标识的策略，从简单到复杂依次为：</p>
+<ol>
+<li>用户提供一个或多个初始唯一值作为程序输入，程序应该保证这些初始值的唯一 （比如用户创建一个用户名）</li>
+<li>程序内部通过某种算法自动生成身份识别，此时可以使用一些类库或框架，（UUID/snowflake雪花算法）</li>
+<li>程序依赖持久化存储，比如数据库来生成唯一标识（自增ID）</li>
+<li>另一个界限上下文（系统）已经决定出一个唯一标识，这作为程序的输入，用户可以在一组标识进行选择（比如邮箱、手机号）</li>
+</ol>
+<p>为了发布领域事件，我们需要提前发布领域事件（又让我想起了某个项目的某个坑）</p>
+<p>通过分析用例（或者说需求），提炼出实体、实体行为、值对象和领域服务</p>
+<p>所谓的Setter方法也要变成带有领域行为色彩的方法名</p>
+<p>建模的一个方面便是<strong>发现对象的角色和职责</strong>。通常来说，对角色和职责分析是可以应用在领域对象上的。</p>
+<p>角色就是接口？？？一个对象可以有多个角色，对应不同的职责活动</p>
+<p>验证：验证的主要目的在于检查模型的正确性、检查的对象可以是某个属性（采用自封装性），也可以是整个对象（使用规范或者策略（单独的验证类）来验证，延迟验证），甚至是多个对象的组合。</p>
+<p>跟踪变化：实体是可以变化的，在整个生命周期中，对于领域专家来说可能会更关心发生在模型中一些重要的事件，在实际的实现上，最实用的方式就是领域事件和时间存储了，文中说订阅方将事件保存在实践存储中（？？）</p>
+<h1 id="值对象"><a href="#值对象" class="headerlink" title="值对象"></a>值对象</h1><p>值对象的优点：值对象用于度量和描述事务，我们可以非常容易的对值对象进行创建、测试、使用、优化和维护。</p>
+<p>我们应该尽量使用值对象来建模而不是实体对象。</p>
+<p>当你只关心某个对象的属性是，该对象便可以成为一个值对象。为其添加有意义的属性，并赋予他相应的行为。我们需要将值对象看出不变对象，不要给他任何身份标识、还应该避免想实体对象一样的复杂性。</p>
+<p>当你决定一个领域概念是否是一个值对象时，你需要考虑是否拥有以下特征：</p>
+<ol>
+<li>他<strong>度量或者描述</strong>领域中的一件东西</li>
+<li>他可以作为不变量（只暴露初始化方法）</li>
+<li>他将不同的相关的属性组合成一个概念整体（概念必须是整体的）</li>
+<li>当度量和描述改变时，可以用另一个值对象予以替换 （是替换（a=3 =&gt; a = 4），不是修改(a= 3 =》 a = a + 1)）</li>
+<li>他可以和其他值对象进行相等性比较（属性都相等，那么这个值对象就是相等的）</li>
+<li>他不会对协作对象造成副作用（不修改对象的状态）</li>
+</ol>
+<p>在函数式编程中：只允许无副作用的行为存在，并且要求所有闭包只能接受和产生不变的值对象</p>
+<p><strong>最小化继承</strong>：在模型概念从上游上下文流入到下游上下文中，尽量使用值对象来表示这些概念。使用不变的值对象是的我们做更少的职责假设。</p>
+<p><strong>用值对象表示标准类型</strong>：就是类型的定义使用值对象，枚举；我们需要每组标准类型创建一个领域服务或工厂。</p>
+<p><strong>测试值对象</strong>：<strong>行为测试</strong>可以驱动对领域模型的设计。所以测试也应该具有领域含义。</p>
+<p><strong>实现值对象</strong>：拥有两个构造函数，一个是所有属性的构造函数，一个是拷贝构造函数（用于验证不变形）</p>
+<p><strong>持久化值对象</strong>：不应该使持久化机制影响到对值对象的建模，根据领域模型来设计数据模型，而不是根据数据模型来设计领域模型。（有时候可以将值对象放在实体一起进行数据库建模，对于List，可以json化后作为一列，这自然违反了数据库建模范式，但是好处是明显的，缺点是：数据库的列宽，必须查询，需要自定义类型；；；或者采用<strong>层超模型</strong>，隐藏值对象在数据库中的ID）</p>
+<h1 id="领域服务"><a href="#领域服务" class="headerlink" title="领域服务"></a>领域服务</h1><p>领域中的服务表示一个无状态的操作，他用于实现特定在某个领域的任务。当某个操作不适合放在聚合和值对象上时，最好的方式便是使用领域服务。</p>
+<p><strong>尽量避免在聚合中使用Repository</strong> </p>
+<p><strong>应用服务不关心业务逻辑、领域服务处理业务逻辑</strong></p>
+<p>我们可以使用<strong>领域服务</strong>进行下面的操作：</p>
+<ol>
+<li>执行一个显著的业务操作过程（需要多个聚合的输入）</li>
+<li>对领域对象进行转换</li>
+<li>以多个领域对象作为输入进行<strong>计算</strong>，结果产生一个值对象 （比如计算统计结果？？）</li>
+</ol>
+<p>比如认证就可以放在领域服务中 （需不需要独立的接口，看是否有多个实现）</p>
+<p><strong>在应用服务层关心事务</strong></p>
+<h1 id="领域事件"><a href="#领域事件" class="headerlink" title="领域事件"></a>领域事件</h1><p>聚合本身将发布领域事件</p>
+<p>使用<strong>领域事件</strong>来捕获发送在领域中的一些事情。领域事件时一个功能强大的建模工具，一旦使用了他，你便爱不释手（哈哈哈，解耦太舒服了），但是在你开始使用领域事件时，你要做的是对不同的事件进行<strong>定义</strong>。</p>
+<p><strong>领域事件：</strong> 领域专家锁关系的发生在领域中的一些事件。将领域中所发生的活动建模成一系列的离散事件，每个事件都用领域对象来表示，领域事件是领域模型的组成部分，表示领域中所发生的事情。</p>
+<p>注意听下面的话语：</p>
+<ol>
+<li>当…..</li>
+<li>如果发生….</li>
+<li>当….的时候，请通知我 （发出事件）</li>
+<li>发生….时</li>
+</ol>
+<p>当领域事件到达目的地之后，无论是本地系统还是外部系统，我们通常将领域事件用于维护事件的<strong>一致性</strong>，这是有意而为之的，这样可以消除两阶段提交（全局事务），还可以支持<strong>聚合</strong>原则。聚合的其中一个原则是，只允许对一个聚合实例进行修改，由此产生的其他改变必须在单独的事务中完成（所以应该将事务放在应用服务层吗？？）。因此，本地界限上下文中的其他聚合实例便可以通过领域事件的方式予以同步。另外，领域事件还可以用于使远程依赖系统与本地系统保持一致。本地系统和远程系统的解耦有助于提高双方协作服务的可伸缩性。</p>
+<p>对于批处理处理，可以利用领域事件，将一个大事务拆分成较小的处理单元。</p>
+<p><strong>命名：</strong>我们应该根据界限上下文中的通用语言来命名事件及其属性。如果事件由聚合上的命令操作产生，那么我们通常根据该操作方法的名字来命名领域事件。</p>
+<p><strong>组成：</strong>可以有一个公共的父类用于保证一些基本的信息，然后属性基本是各个ID；TenantID在Saas应用中是必须的</p>
+<p><strong>存在的方式：</strong> 有时，领域事件并不由<strong>聚合中的命令方法</strong>产生，而是直接由客户方所放出的请求产生，此时，领域事件可以建模成一个<strong>聚合（落库）</strong>，并且可以拥有自己的资源库。他也应该有自己的唯一表示（因为没有ID，不能判断是否是重复事件），客户方可以通过调用<strong>领域服务</strong>来创建事件，然后将其添加到资源库。然后通过发送事件。</p>
+<p><strong>发送：</strong>在聚合汇总添加一个简单的服务，该服务用于通知订阅费所发生的的领域事件，如果是在当个线程内，可以通过ThreadLocal来实现发布-订阅，可能在聚合中发出事件，也有可能在领域服务中发出</p>
+<p><strong>订阅：</strong> 通常来说，注册订阅方这种功能由应用服务完成，有时也有领域服务完成。</p>
+<p><strong>消息设施的一致性</strong>：有下面三种基本的方式：</p>
+<ol>
+<li>领域模型和消息设施共享持久化存储</li>
+<li>领域模型的持久化存储和消息的持久化存储由全局的XA事务（两阶段提交）</li>
+<li>在领域模型的持久化存储中，创建一个特殊的存储区域（比如一张数据库表，该区域用于存储领域事件），然后创建一个<strong>消息外发组件（可以利用binlog）</strong>将时间存储中的所有消息通过消息机制发送出去（这种方式很常用）</li>
+</ol>
+<p>通过异步的消息，服务可能达到更高层次——自治性，但是有些团队只提供RPC的方式</p>
+<p><strong>事件存储：</strong>对于单个界限上下文的所有领域事件来说，为他们维护一个事件存储是有好处的  （订阅方存储事件也是有好处的）</p>
+<p><strong>实现：</strong> 可以参考书本，利用RocketMQ + TimberMBean 或者 Quartz</p>
+<p><strong>事件去重：</strong> 这个就很常见啦，我们要保持<strong>幂等消费</strong>，一种方式就是通过持有久化存储事件，在每次消费之前都查看事件是否已经被消费</p>
+<p><strong>领域事件集成的两种方式：</strong>1. 基于REST的消息通知；2. 消息中间件</p>
+<h1 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h1><p>可以看场的Java的命名空间，包 import</p>
+<p>在DDD中，模型中的<strong>模块</strong>表示了一个命名的容器，用于存放领域中内聚在一起的类。将类放在不同模块中的目的在于达到<strong>松耦合性</strong>。下面是模块的设计原则：</p>
+<ol>
+<li>模块应该和领域概念保持协调一致：通常对于一个或一组内聚的聚合来说，我们都相应地创建一个模块。</li>
+<li>根据通用语言来命名模块：这也是DDD的基本目标</li>
+<li>不要机械式的根据通用的组件类型和模式来创建模块：就是不要把领域放在一个模块，把工厂放在一个模块</li>
+<li>设计松耦合的模块：模块间的松耦合性与类间的松耦合性具有相同的好处。</li>
+<li>当同层模块间出现耦合时，我们应该杜绝循环依赖：比如产品依赖开发团队，但是开发团队不依赖于产品</li>
+<li>在父模块和子模块之间放松原则：尽量避免</li>
+<li>不要将模块设计成一个静态的概念，而是与模型中的对象一道进行建模</li>
+</ol>
+<p><strong>命名：</strong> 上下文 + 分层 + 模型 + 模块 </p>
+<p>领域服务可用来当防腐层</p>
+<p>先考虑模块，再考虑界限上下文</p>
+<p>如果没有明确的上下文边界，使用模块即可</p>
+<h1 id="聚合"><a href="#聚合" class="headerlink" title="聚合"></a>聚合</h1><p>这里特别关注<strong>事务处理</strong>和<strong>保证最终一致性；淡然这些都是建立在用例之上的</strong></p>
+<p>聚合的粒度是需要关注的，因为他会影响性能，比如为了并发安全，采用多个聚合时候的时候，原来的最大的聚合更多时候变成了工厂。</p>
+<p><strong>一致性原则</strong>往往是聚合边界条件，为了保持一致性，意味着客户请求应该只在一个聚合实例上执行一个命令方法</p>
+<p><strong>设计小聚合</strong>往往是因为要考虑性能，可以减少失误的提交冲突</p>
+<p><strong>原则：通过唯一标识引用其他聚合  </strong> 对于在单个事务更新多个值对象的情况，可能应该通过最终一致性来保证，但是这种可能有性能问题，但是好处是增强模型的可伸缩性</p>
+<p><strong>原则：在边界之外使用最终一致性  </strong> 只要延迟可以接受 <strong>通过领域事件实现</strong></p>
+<p><strong>指导原则：</strong> 对于一个用例，问问是否应该由执行该用例的用户来保证数据的一致性。如果是，请使用事务一致性，当然此时已然遵循其他聚合原则，如果需要其他用户或者<strong>系统</strong>来保证数据一致性，请使用最终一致性。</p>
+<p><strong>打破原则的理由</strong> 有时我们确实会选择在单个事务中更新多个聚合实例，下面是一些理由：</p>
+<ol>
+<li>方便用户界面：对于有公共属性的多个对象</li>
+<li>缺乏技术机制：没有消息，定时器或者后台线程之类的技术</li>
+<li>全局事务：使用全局事务，使系统很难有好的伸缩性</li>
+<li>查询性能</li>
+</ol>
+<p>在分析具体的聚合根的时候，可以考虑将XXID作为值对象显示描述出来</p>
+<p><strong>实现：</strong> 使用<strong>迪米特法则</strong>和<strong>“告诉而非询问”原则</strong></p>
+<p><strong>迪米特法则（最小知识原则）：</strong>任何对象的任何方法只能调用以下对象的方法，该对象自身，它所创建的对象、自身所包含的对象、所传入的对象</p>
+<p><strong>告诉而非询问原则：</strong> 客户端对象不应该首先询问服务对象，然后根据询问结构，调用服务对象中的方法，而是应该通过调用服务对象的公共接口的方式来告诉服务对象所要执行的原则。</p>
+<p>尽量不要在聚合中注入资源库和领域服务，我们可以向应用功能服务注册如资源库和领域服务</p>
+<h1 id="工厂"><a href="#工厂" class="headerlink" title="工厂"></a>工厂</h1><p><strong>使用工厂的主要动机：</strong> 将创建复杂对象和聚合的职责分配给一个单独的对象，改对象本身并不承担模型中的职责。工厂应该提供一个创建对象的接口，改接口封装了所有创建对象的复杂操作过程，同时，它并不需要客户去应用那个实际被创建的对象。对于聚合来说，我们应该一次性创建整个聚合，并且确保他的不变条件得到满足。</p>
+<p>领域服务有时候也会扮演工厂的角色（在领域服务中调用防腐层），或者使用聚合的工厂方法（会隐藏？？）。如果有一个类层级的对象，我们可以考虑使用抽象工厂模式来创建不同类型的对象。</p>
+<h1 id="资源库"><a href="#资源库" class="headerlink" title="资源库"></a>资源库</h1><p>有两种类型的资源库设计：面向集合的设计 和 面向持久化的设计 （这两种风格我暂时分不出来）推荐面向持久化</p>
+<p><strong>面向集合资源库</strong>：使用集合的方法 add, addAll,remove,removeAll,size</p>
+<p>精要：一个资源库应该模拟一个Set集合，无论采用什么类型的持久化机制，我们都不应该允许多次添加一个聚合实例，另外，当从资源库获取到一个对象并对其进行修改时，我们并不需要”重新保存”该对象到资源库中。关于删除，需要注意逻辑删除。</p>
+<p><strong>面向持久化资源库：</strong> 这是一种基于保存操作（Save）的资源库</p>
+<p>精要：在向数据库存储中添加新建对象或修改既有对象时，我们都必须显示地调用put方法，该方法将以新的值来替换先前关联在某个键上的原子。这种类型的存储可以极大简化对聚合的读写。？？？？模拟的是一个Map</p>
+<p>对于资源库的不同实现，基础设施的依赖不一样。</p>
+<p><strong>下面是为资源库接口添加额外行为的原因：</strong></p>
+<p>如果我们需要获取聚合根下的某些子聚合：我们不用先从资源库中获取聚合根，然后再从聚合根中获取这些子聚合，而<strong>是可以直接从资源库中返回</strong>。</p>
+<p>如果我们需要在用户界面上显示数据，而这些数据来自于多个聚合，此时我们不用先分别获取到每个聚合，再从中提取出所需数据，而是可以使用<strong>用例优化查询</strong>的方法直接查询所需数据，然后将查询结果放在一个值对象返回</p>
+<p><strong>管理事务：</strong>对事务的管理绝对不应该放在领域模型和领域层中，通常来说，我们将事务放在<strong>应用层</strong>中。然后为每个主要的用例创建一个门面（保证事务方法），我们一般会采用<strong>声明事务</strong>。Spring使用声明式事务真方面，有空可以看看它的实现。</p>
+<p><strong>资源库和数据访问对象（DAO）的区别</strong>：一个DAO主要从数据库表的角度来看待问题，更适合事务脚本程序。一个Repository更加偏向于对象，被用于领域模型中</p>
+<p><strong>测试资源库：</strong> 首先，我们需要测试资源库本身是能正常工作的，其次还要测试对资源库的使用，以保障能够正确的保存和获取聚合实例（使用内存）。</p>
+<h1 id="集成界限上下文"><a href="#集成界限上下文" class="headerlink" title="集成界限上下文"></a>集成界限上下文</h1><p>上下文映射图存在的两种主要形式，一种是通过绘制一些简单的框图来展示他们之间的集成关系；另外一种则是通过代码来实现这些集成关系。</p>
+<p><strong>集成方式</strong> RPC or 消息 or HTTP REST</p>
+<ol>
+<li><p><strong>RPC</strong> ：一种集成方式就是在一个界限上下文中暴露应用程序接口（API），然后在另一个界限上下文中通过RPC的方式访问该API。在RPC需要考虑自治。</p>
+</li>
+<li><p><strong>消息</strong>：通过消息队列进行发布-订阅，这个方式能获得更高层次的自治性。事件命名（Topic）应该是模块+事件名；对于事件消费的第一步必然是对事件的过滤，有些时候需要保证消息的有序。<strong>要控制上下文事件的边界，尤其是对长时处理系统（可以再看看）</strong></p>
+</li>
+<li><p><strong>HTTP REST: </strong>和RPC不同的是，通过URI来表示资源</p>
+</li>
+</ol>
+<p><strong>分布式计算原则</strong>：</p>
+<ol>
+<li>网络是不可靠的</li>
+<li>总是存在时间延迟，有时非常严重</li>
+<li>带宽是有限的</li>
+<li>不要假设网络是安全的</li>
+<li>网络拓扑结构将发生变化</li>
+<li>知识和政策在多个管理员之间传播？？？</li>
+<li>网络传输是有成本的</li>
+<li>网络是异构的</li>
+</ol>
+<p><strong>共享内核：</strong> 是指可以直连数据库？？？</p>
+<p><strong>开放主机服务：</strong> 当一个界限上下文以URI的方式提供了大量的REST资源，然后得到一个值对象</p>
+<p><strong>防腐层：</strong> Service、Adapter、Translator、Facade（HTTP Client） (这个可以再理解理解，区别不同的子类)</p>
+<p>感觉上，资源库也是一种防腐层的实现</p>
+<h1 id="应用程序-系统-提供多个技术服务端口的业务服务"><a href="#应用程序-系统-提供多个技术服务端口的业务服务" class="headerlink" title="应用程序/系统/提供多个技术服务端口的业务服务"></a>应用程序/系统/提供多个技术服务端口的业务服务</h1><p>单个界限上下文的设计</p>
+<p><strong>应用程序：</strong> 表示哪些支持”核心域”模型的组件，通常包括领域模型本身、用户界面、内部使用的应用服务和基础设施组件等。</p>
+<p><strong>用户界面：</strong> Web用户界面、小程序、本地GUI</p>
+<ol>
+<li>渲染领域对象：用户界面可能需要渲染来自多个聚合实例的属性数据，但是在提交修改时，却只能一次修改一个实例</li>
+<li>渲染数据传输对象：一个渲染多个聚合实例的方法就是使用<strong>数据传输对象（DTO）</strong>，DTO将包含需要显示的所有属性值。应用服务通过<strong>资源库</strong>读取所需的聚合实例。然后使用一个DTO组装器（DTO Assemble）将需要显示的属性值映射到DTO中。</li>
+</ol>
+<p><strong>用例优化资源库查询：</strong> 利用资源库返回值对象。而不是聚合</p>
+<p><strong>处理不同类型的客户端：</strong> 通过在用例服务中插入一个数据转换器</p>
+<p><strong>基础设施：</strong> 框架也算一种基础设施（我之前的理解好像有点错？？比如HibenateXXXRepository）</p>
+<p>对于资源库的查找，可以通过<strong>依赖注入</strong>或者<strong>服务工厂</strong>隐式完成。</p>
+<h1 id="聚合和事件源"><a href="#聚合和事件源" class="headerlink" title="聚合和事件源"></a>聚合和事件源</h1><p><strong>事件源（Event Sourcing）</strong> 通过事件来表示一个<strong>聚合</strong>的完整状态，这里的事件时自聚合创建以来的一系列<strong>事件</strong>。通过按照产生时的顺序重放这些事件，我们可以重建聚合的状态。</p>
+<p>使用事件源维护聚合状态的方式称为A+ES（Aggregate + Event Source）</p>
+<p>优势：</p>
+<ol>
+<li>事件源确保每次聚合改变的原因都不会丢失。这种方式是具有长远的优势：可靠性、短期/长期商业智能化、数据分析、全日志记录和调试等。</li>
+<li>只追加（append-only）特性使事件源具有很高的性能（？？），并且支持不同对的数据复制方案。</li>
+<li>这种以事件为中心的聚合设计方式使得开发者将关注点集中于<strong>通用语言</strong>所表达的行为上，因此此时并不存在ORM的阻抗失配。（但是感觉这样查询麻烦多了）</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>为A+ES设计事件需要我们对业务领域具有很深的了解</li>
+<li>实现A+ES几乎必然得需要某种形式的命令-查询职责分离，我们很难对事件流进行查询（使用读模型投射）</li>
+</ol>
+<h1 id="Just-Do-It"><a href="#Just-Do-It" class="headerlink" title="Just Do It"></a>Just Do It</h1>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DDD/" rel="tag"># DDD</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/22/读书笔记/领域驱动设计/" rel="next" title="《领域驱动设计》读书笔记">
+                <i class="fa fa-chevron-left"></i> 《领域驱动设计》读书笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTUyOC82MDk2"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/me.jpeg" alt="rex">
+          <p class="site-author-name" itemprop="name">rex</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">170</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">87</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/todorex" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/todorex" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/163825403" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/yun-guo-17" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DDD入门"><span class="nav-number">1.</span> <span class="nav-text">DDD入门</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#领域、子域和界限上下文"><span class="nav-number">2.</span> <span class="nav-text">领域、子域和界限上下文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#上下文映射图"><span class="nav-number">3.</span> <span class="nav-text">上下文映射图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#架构"><span class="nav-number">4.</span> <span class="nav-text">架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分层架构"><span class="nav-number">4.1.</span> <span class="nav-text">分层架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六边形架构（端口与适配器）"><span class="nav-number">4.2.</span> <span class="nav-text">六边形架构（端口与适配器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面向服务架构"><span class="nav-number">4.3.</span> <span class="nav-text">面向服务架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令和查询职责分离——CQRS"><span class="nav-number">4.4.</span> <span class="nav-text">命令和查询职责分离——CQRS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件驱动架构"><span class="nav-number">4.5.</span> <span class="nav-text">事件驱动架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#管道和处理器"><span class="nav-number">4.5.1.</span> <span class="nav-text">管道和处理器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#长时处理过程（Saga）"><span class="nav-number">4.5.2.</span> <span class="nav-text">长时处理过程（Saga）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件源"><span class="nav-number">4.5.3.</span> <span class="nav-text">事件源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存"><span class="nav-number">4.5.4.</span> <span class="nav-text">缓存</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实体"><span class="nav-number">5.</span> <span class="nav-text">实体</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#值对象"><span class="nav-number">6.</span> <span class="nav-text">值对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#领域服务"><span class="nav-number">7.</span> <span class="nav-text">领域服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#领域事件"><span class="nav-number">8.</span> <span class="nav-text">领域事件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模块"><span class="nav-number">9.</span> <span class="nav-text">模块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#聚合"><span class="nav-number">10.</span> <span class="nav-text">聚合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工厂"><span class="nav-number">11.</span> <span class="nav-text">工厂</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#资源库"><span class="nav-number">12.</span> <span class="nav-text">资源库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集成界限上下文"><span class="nav-number">13.</span> <span class="nav-text">集成界限上下文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用程序-系统-提供多个技术服务端口的业务服务"><span class="nav-number">14.</span> <span class="nav-text">应用程序/系统/提供多个技术服务端口的业务服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#聚合和事件源"><span class="nav-number">15.</span> <span class="nav-text">聚合和事件源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Just-Do-It"><span class="nav-number">16.</span> <span class="nav-text">Just Do It</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">rex</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
